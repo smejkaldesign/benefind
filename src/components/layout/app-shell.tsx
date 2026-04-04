@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Home, MessageCircle, LayoutDashboard } from 'lucide-react';
 import { SignOutButton } from '@/components/sign-out-button';
+import { LanguageSelector } from '@/components/language-selector';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -15,7 +16,10 @@ export function AppShell({ children }: AppShellProps) {
           <Link href="/" className="text-lg font-bold text-brand">
             Benefind
           </Link>
-          <SignOutButton />
+          <div className="flex items-center gap-2">
+            <LanguageSelector compact />
+            <SignOutButton />
+          </div>
         </div>
       </header>
 
