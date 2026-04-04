@@ -8,6 +8,7 @@ import { ChatMessage, TypingIndicator } from '@/components/screening/chat-messag
 import { StepInput } from '@/components/screening/step-input';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Message {
   id: string;
@@ -23,6 +24,7 @@ export default function ScreeningPage() {
   const [result, setResult] = useState<ScreeningResult | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
+  const router = useRouter();
 
   const scrollToBottom = useCallback(() => {
     setTimeout(() => {
@@ -129,6 +131,7 @@ export default function ScreeningPage() {
           const input = answersToScreeningInput(newAnswers);
           const screeningResult = runScreening(input);
           setResult(screeningResult);
+          try { sessionStorage.setItem('screening_result', JSON.stringify(screeningResult)); } catch {}
 
           const eligible = screeningResult.programs.filter((p) => p.result.eligible);
           if (eligible.length > 0) {
@@ -282,12 +285,12 @@ export default function ScreeningPage() {
             </div>
 
             <div className="flex justify-center gap-3 pt-2">
-              <Link
-                href="/auth/login"
+              <button
+                onClick={() => router.push('/results')}
                 className="rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
               >
-                Save My Results
-              </Link>
+                View Full Results
+              </button>
               <button
                 onClick={handleRestart}
                 className="rounded-xl border border-border px-5 py-2.5 text-sm font-medium text-text-muted hover:border-brand hover:text-brand"
