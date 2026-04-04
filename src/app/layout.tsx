@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { I18nProvider } from '@/lib/i18n/context';
+import { ServiceWorkerRegister } from '@/components/service-worker-register';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -7,6 +8,12 @@ export const metadata: Metadata = {
   description:
     'AI-powered navigator that helps you find and apply for every government benefit you qualify for. Plain language, multilingual, free.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3010'),
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Benefind',
+  },
 };
 
 export const viewport: Viewport = {
@@ -20,7 +27,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-dvh">
-        <I18nProvider>{children}</I18nProvider>
+        <I18nProvider>
+          {children}
+          <ServiceWorkerRegister />
+        </I18nProvider>
       </body>
     </html>
   );
