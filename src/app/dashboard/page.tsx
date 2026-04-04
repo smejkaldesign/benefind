@@ -1,24 +1,20 @@
-import { redirect } from 'next/navigation';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { requireAuth } from '@/components/auth-guard';
+import { SignOutButton } from '@/components/sign-out-button';
 import Link from 'next/link';
 import { ArrowRight, FileSearch } from 'lucide-react';
 
 export default async function DashboardPage() {
-  const supabase = await createServerSupabase();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect('/auth/login');
-  }
+  const user = await requireAuth();
 
   return (
     <main className="min-h-dvh px-4 py-8">
       <div className="mx-auto max-w-2xl space-y-8">
-        <div>
-          <h1 className="text-2xl font-bold text-text">Welcome back</h1>
-          <p className="mt-1 text-text-muted">{user.email}</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-text">Welcome back</h1>
+            <p className="mt-1 text-text-muted">{user.email}</p>
+          </div>
+          <SignOutButton />
         </div>
 
         <div className="rounded-xl border border-border bg-surface-dim p-6 text-center">
