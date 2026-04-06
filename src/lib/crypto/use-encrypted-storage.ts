@@ -6,6 +6,13 @@ import { encryptScreeningData, decryptScreeningData } from './encryption';
 /**
  * Hook for encrypted localStorage operations.
  * All data is encrypted with the user's email before storage.
+ *
+ * Threat model: protects against casual localStorage inspection,
+ * browser extension snooping, and physical device access to stored data.
+ * Does NOT protect against active XSS (attacker can access userEmail
+ * in the JS heap and derive the same key). Web Crypto has no
+ * hardware-backed key isolation in browsers. For PII that must survive
+ * XSS, use server-side encryption with a per-user server secret.
  */
 export function useEncryptedStorage(userEmail: string | null) {
   const save = useCallback(

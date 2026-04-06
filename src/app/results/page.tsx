@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { ScreeningResult } from '@/lib/benefits/types';
 import { DocumentChecklist } from '@/components/screening/document-checklist';
 import { Badge } from '@/components/ui/badge';
@@ -53,9 +53,19 @@ export default function ResultsPage() {
   useEffect(() => {
     try {
       const stored = sessionStorage.getItem('screening_result');
-      if (stored) setResult(JSON.parse(stored));
+      if (!stored) return;
+      const parsed = JSON.parse(stored);
+      // Validate shape before trusting parsed data
+      if (
+        parsed &&
+        Array.isArray(parsed.programs) &&
+        typeof parsed.totalEstimatedMonthly === 'number' &&
+        typeof parsed.totalEstimatedAnnual === 'number'
+      ) {
+        setResult(parsed);
+      }
     } catch {
-      // No stored results
+      // Malformed or missing stored results
     }
   }, []);
 
@@ -77,11 +87,24 @@ export default function ResultsPage() {
   const eligible = result.programs.filter((p) => p.result.eligible);
   const notEligible = result.programs.filter((p) => !p.result.eligible);
   const eligibleIds = eligible.map((p) => p.program.id);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [showStickyTotal, setShowStickyTotal] = useState(false);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowStickyTotal(!entry.isIntersecting),
+      { threshold: 0 },
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <main className="min-h-dvh bg-surface">
       {/* Header with total */}
-      <div className="bg-brand px-4 py-8 text-white">
+      <div ref={heroRef} className="bg-brand px-4 py-8 text-white">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-medium text-white/70">You may qualify for</p>
           <p className="mt-1 text-4xl font-bold">
@@ -99,8 +122,15 @@ export default function ResultsPage() {
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs + sticky summary */}
       <div className="sticky top-0 z-20 border-b border-border bg-surface">
+        {showStickyTotal && (
+          <div className="border-b border-border bg-brand/5 px-4 py-1.5 text-center">
+            <p className="text-sm font-semibold text-brand">
+              ${result.totalEstimatedMonthly.toLocaleString()}/mo across {eligible.length} program{eligible.length !== 1 ? 's' : ''}
+            </p>
+          </div>
+        )}
         <div className="mx-auto flex max-w-2xl">
           <button
             onClick={() => setActiveTab('programs')}

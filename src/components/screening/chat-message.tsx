@@ -9,6 +9,7 @@ export function ChatMessage({ role, children }: ChatMessageProps) {
   return (
     <div className={`flex ${isAssistant ? 'justify-start' : 'justify-end'}`}>
       <div
+        aria-label={`${role} message`}
         className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed sm:max-w-[70%] ${
           isAssistant
             ? 'rounded-bl-md bg-surface-bright text-text'
@@ -23,7 +24,7 @@ export function ChatMessage({ role, children }: ChatMessageProps) {
 
 export function TypingIndicator() {
   return (
-    <div className="flex justify-start">
+    <div className="flex justify-start" role="status" aria-label="Assistant is typing">
       <div className="rounded-2xl rounded-bl-md bg-surface-bright px-4 py-3">
         <div className="flex gap-1">
           <span className="h-2 w-2 animate-bounce rounded-full bg-text-subtle [animation-delay:0ms]" />

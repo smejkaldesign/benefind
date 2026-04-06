@@ -26,9 +26,11 @@ export async function createServerSupabase() {
   );
 }
 
+/**
+ * Service client that bypasses RLS. Only use in trusted server contexts
+ * (API routes, server actions). Never import from client components.
+ */
 export function createServiceClient() {
-  // Dynamic import avoids bundling service key into client
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { createClient } = require('@supabase/supabase-js') as typeof import('@supabase/supabase-js');
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

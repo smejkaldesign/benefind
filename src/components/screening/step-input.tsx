@@ -62,14 +62,14 @@ export function StepInput({ step, onSubmit, disabled }: StepInputProps) {
             </button>
           ))}
         </div>
-        {error && <p className="text-xs text-error">{error}</p>}
+        {error && <p id={`error-${step.id}`} className="text-xs text-error" role="alert">{error}</p>}
       </div>
     );
   }
 
   if (step.type === 'multi-select') {
     return (
-      <div className="space-y-3">
+      <div className="space-y-2">
         <div className="flex flex-wrap gap-2">
           {step.options?.map((opt) => {
             const isSelected = selected.includes(opt.value);
@@ -107,7 +107,7 @@ export function StepInput({ step, onSubmit, disabled }: StepInputProps) {
             Continue
           </Button>
         )}
-        {error && <p className="text-xs text-error">{error}</p>}
+        {error && <p id={`error-${step.id}`} className="text-xs text-error" role="alert">{error}</p>}
       </div>
     );
   }
@@ -115,10 +115,13 @@ export function StepInput({ step, onSubmit, disabled }: StepInputProps) {
   if (step.type === 'state') {
     return (
       <div className="space-y-2">
+        <label htmlFor={`input-${step.id}`} className="sr-only">{step.question}</label>
         <select
+          id={`input-${step.id}`}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           disabled={disabled}
+          aria-describedby={error ? `error-${step.id}` : undefined}
           className="block h-11 w-full max-w-xs rounded-xl border border-border bg-surface px-3 text-sm text-text focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
         >
           <option value="">Select your state...</option>
@@ -133,7 +136,7 @@ export function StepInput({ step, onSubmit, disabled }: StepInputProps) {
             Continue
           </Button>
         )}
-        {error && <p className="text-xs text-error">{error}</p>}
+        {error && <p id={`error-${step.id}`} className="text-xs text-error" role="alert">{error}</p>}
       </div>
     );
   }
@@ -146,7 +149,9 @@ export function StepInput({ step, onSubmit, disabled }: StepInputProps) {
           {step.type === 'number' && step.id !== 'householdSize' && (
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-text-subtle">$</span>
           )}
+          <label htmlFor={`input-${step.id}`} className="sr-only">{step.question}</label>
           <input
+            id={`input-${step.id}`}
             type={step.type === 'number' ? 'number' : 'text'}
             inputMode={step.type === 'number' ? 'numeric' : 'text'}
             value={value}
@@ -158,6 +163,7 @@ export function StepInput({ step, onSubmit, disabled }: StepInputProps) {
               if (e.key === 'Enter') handleSubmit();
             }}
             disabled={disabled}
+            aria-describedby={error ? `error-${step.id}` : undefined}
             placeholder={step.type === 'number' && step.id !== 'householdSize' ? '0' : ''}
             className={`block h-11 w-full rounded-xl border border-border bg-surface text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50 ${
               step.type === 'number' && step.id !== 'householdSize' ? 'pl-7 pr-3' : 'px-3'
@@ -168,7 +174,7 @@ export function StepInput({ step, onSubmit, disabled }: StepInputProps) {
           <Send className="h-4 w-4" />
         </Button>
       </div>
-      {error && <p className="text-xs text-error">{error}</p>}
+      {error && <p id={`error-${step.id}`} className="text-xs text-error" role="alert">{error}</p>}
     </div>
   );
 }

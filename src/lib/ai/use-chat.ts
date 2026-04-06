@@ -66,6 +66,10 @@ export function useChat(options?: UseChatOptions) {
 
             try {
               const parsed = JSON.parse(data);
+              // Check error before text so stream errors aren't swallowed
+              if (parsed.error) {
+                throw new Error(parsed.error);
+              }
               if (parsed.text) {
                 assistantContent += parsed.text;
                 setMessages((prev) => {
@@ -77,11 +81,11 @@ export function useChat(options?: UseChatOptions) {
                   return updated;
                 });
               }
-              if (parsed.error) {
-                throw new Error(parsed.error);
+            } catch (parseErr) {
+              // Re-throw application errors; skip genuinely unparseable lines
+              if (parseErr instanceof Error && parseErr.message !== 'Unexpected token') {
+                throw parseErr;
               }
-            } catch {
-              // Skip unparseable lines
             }
           }
         }

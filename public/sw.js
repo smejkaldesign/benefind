@@ -1,3 +1,12 @@
+/**
+ * Benefind Service Worker — Cache Strategy
+ *
+ * Static assets (STATIC_ASSETS): precached on install.
+ * Navigation requests: network-first, fall back to cache for offline.
+ * Next.js static chunks (/_next/static/): cache on first fetch.
+ * API routes (/api/*): NEVER cached — always hit the server.
+ * Non-GET requests: bypassed entirely.
+ */
 const CACHE_NAME = 'benefind-v1';
 const STATIC_ASSETS = ['/', '/screening', '/results', '/auth/login'];
 

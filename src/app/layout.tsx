@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { I18nProvider } from '@/lib/i18n/context';
 import { ServiceWorkerRegister } from '@/components/service-worker-register';
+import { OfflineBanner } from '@/components/offline-banner';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <I18nProvider>
           {children}
           <ServiceWorkerRegister />
+          <OfflineBanner />
         </I18nProvider>
       </body>
     </html>

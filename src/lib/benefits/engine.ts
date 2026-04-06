@@ -8,7 +8,7 @@ import { chip } from './programs/chip';
 import { section8 } from './programs/section8';
 import { ssi } from './programs/ssi';
 import { pellGrant } from './programs/pell-grant';
-import { getStatePrograms } from './state-programs';
+import { getStatePrograms, getSupportedStates } from './state-programs';
 
 /** All registered federal benefit programs */
 export const ALL_PROGRAMS: BenefitProgram[] = [
@@ -68,8 +68,7 @@ export function runScreening(input: ScreeningInput): ScreeningResult {
 export function getProgram(id: string): BenefitProgram | undefined {
   const federal = ALL_PROGRAMS.find((p) => p.id === id);
   if (federal) return federal;
-  // Search all state programs
-  for (const state of ['CA', 'TX', 'FL', 'NY', 'PA']) {
+  for (const state of getSupportedStates()) {
     const found = getStatePrograms(state).find((p) => p.id === id);
     if (found) return found;
   }

@@ -24,14 +24,14 @@ export default function Home() {
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link
               href="/screening"
-              className="inline-flex h-12 items-center gap-2 rounded-xl bg-brand px-6 text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark"
+              className="inline-flex h-12 items-center gap-2 rounded-xl bg-brand px-6 text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             >
               {t.hero.cta}
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/auth/login"
-              className="inline-flex h-12 items-center gap-2 rounded-xl border border-border px-6 text-base font-medium text-text-muted transition-colors hover:border-brand hover:text-brand"
+              className="inline-flex h-12 items-center gap-2 rounded-xl px-6 text-base font-medium text-text-muted transition-colors hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             >
               {t.common.signIn}
             </Link>

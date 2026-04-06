@@ -34,6 +34,16 @@ export function DocumentChecklist({ programIds }: DocumentChecklistProps) {
 
   const progress = checklist.length > 0 ? Math.round((checked.size / checklist.length) * 100) : 0;
 
+  if (checklist.length === 0) {
+    return (
+      <div className="space-y-3 py-8 text-center">
+        <FileText className="mx-auto h-8 w-8 text-text-subtle" />
+        <p className="text-sm text-text-muted">No documents needed yet.</p>
+        <p className="text-xs text-text-subtle">Complete a screening to see your personalized document checklist.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -69,7 +79,9 @@ export function DocumentChecklist({ programIds }: DocumentChecklistProps) {
               <div className="flex items-start gap-3 p-3">
                 <button
                   onClick={() => toggleCheck(doc.name)}
-                  className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors ${
+                  aria-label={`Mark ${doc.name} as ${isChecked ? 'not gathered' : 'gathered'}`}
+                  aria-pressed={isChecked}
+                  className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
                     isChecked
                       ? 'border-success bg-success text-white'
                       : 'border-border hover:border-brand'
@@ -86,7 +98,9 @@ export function DocumentChecklist({ programIds }: DocumentChecklistProps) {
                     </p>
                     <button
                       onClick={() => toggleExpand(doc.name)}
-                      className="shrink-0 text-text-subtle hover:text-text"
+                      aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${doc.name} details`}
+                      aria-expanded={isExpanded}
+                      className="shrink-0 text-text-subtle hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
                     >
                       {isExpanded ? (
                         <ChevronDown className="h-4 w-4" />

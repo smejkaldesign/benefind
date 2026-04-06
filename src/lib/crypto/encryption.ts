@@ -9,11 +9,15 @@
  * - Each record gets a unique IV
  */
 
-const PBKDF2_ITERATIONS = 100_000;
+const PBKDF2_ITERATIONS = 600_000;
 const SALT_LENGTH = 16;
 const IV_LENGTH = 12;
+// App-level pepper adds entropy beyond the user secret (email).
+// Not a replacement for a high-entropy secret, but raises the bar
+// significantly against offline brute-force of encrypted blobs.
+const APP_PEPPER = 'benefind:v1:client-encryption';
 
-/** Derive an AES-GCM key from user's email (or any secret) */
+/** Derive an AES-GCM key from user secret + app pepper */
 export async function deriveKey(
   secret: string,
   salt: Uint8Array<ArrayBuffer>,
@@ -21,7 +25,7 @@ export async function deriveKey(
   const encoder = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey(
     'raw',
-    encoder.encode(secret),
+    encoder.encode(`${APP_PEPPER}:${secret}`),
     'PBKDF2',
     false,
     ['deriveKey'],
@@ -65,7 +69,7 @@ export async function encrypt(
   combined.set(iv, salt.length);
   combined.set(new Uint8Array(ciphertext), salt.length + iv.length);
 
-  return btoa(String.fromCharCode(...combined));
+  return btoa(Array.from(combined, (b) => String.fromCharCode(b)).join(''));
 }
 
 /** Decrypt a base64 encrypted string */
