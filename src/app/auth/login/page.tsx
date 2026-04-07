@@ -17,11 +17,13 @@ export default function LoginPage() {
   const supabase = createClient();
 
   const startCooldown = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
     setCooldown(RATE_LIMIT_SECONDS);
     timerRef.current = setInterval(() => {
       setCooldown((prev) => {
         if (prev <= 1) {
           if (timerRef.current) clearInterval(timerRef.current);
+          setError(null);
           return 0;
         }
         return prev - 1;
