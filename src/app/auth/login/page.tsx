@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { ArrowLeft, Mail, Loader2, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -12,30 +12,42 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cooldownEnd, setCooldownEnd] = useState<number | null>(null);
   const [cooldown, setCooldown] = useState(0);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const supabase = createClient();
 
-  const startCooldown = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    setCooldown(RATE_LIMIT_SECONDS);
-    timerRef.current = setInterval(() => {
-      setCooldown((prev) => {
-        if (prev <= 1) {
-          if (timerRef.current) clearInterval(timerRef.current);
-          setError(null);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  }, []);
-
   useEffect(() => {
+    if (!cooldownEnd) {
+      setCooldown(0);
+      return;
+    }
+
+    function tick() {
+      const remaining = Math.ceil((cooldownEnd! - Date.now()) / 1000);
+      if (remaining <= 0) {
+        setCooldown(0);
+        setCooldownEnd(null);
+        setError(null);
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
+      } else {
+        setCooldown(remaining);
+      }
+    }
+
+    tick();
+    timerRef.current = setInterval(tick, 1000);
+
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
     };
-  }, []);
+  }, [cooldownEnd]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -53,7 +65,7 @@ export default function LoginPage() {
       const msg = error.message.charAt(0).toUpperCase() + error.message.slice(1);
       setError(msg);
       if (error.message.toLowerCase().includes('rate limit')) {
-        startCooldown();
+        setCooldownEnd(Date.now() + RATE_LIMIT_SECONDS * 1000);
       }
       setLoading(false);
       return;
