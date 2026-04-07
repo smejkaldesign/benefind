@@ -1,16 +1,39 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { ArrowLeft, Mail, Loader2, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
+
+const RATE_LIMIT_SECONDS = 60;
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const supabase = createClient();
+
+  const startCooldown = useCallback(() => {
+    setCooldown(RATE_LIMIT_SECONDS);
+    timerRef.current = setInterval(() => {
+      setCooldown((prev) => {
+        if (prev <= 1) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -25,7 +48,11 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setError(error.message);
+      const msg = error.message.charAt(0).toUpperCase() + error.message.slice(1);
+      setError(msg);
+      if (error.message.toLowerCase().includes('rate limit')) {
+        startCooldown();
+      }
       setLoading(false);
       return;
     }
@@ -89,14 +116,19 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <p className="rounded-lg bg-error/5 px-3 py-2 text-sm text-error" role="alert">
+            <p className="rounded-lg bg-red-500/10 px-3 py-2 text-sm font-medium text-red-400" role="alert">
               {error}
+              {cooldown > 0 && (
+                <span className="ml-1 tabular-nums">
+                  ({cooldown}s)
+                </span>
+              )}
             </p>
           )}
 
           <button
             type="submit"
-            disabled={loading || !email}
+            disabled={loading || !email || cooldown > 0}
             className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand text-sm font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-50"
           >
             {loading ? (
@@ -104,6 +136,8 @@ export default function LoginPage() {
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Sending link...
               </>
+            ) : cooldown > 0 ? (
+              `Try again in ${cooldown}s`
             ) : (
               'Send magic link'
             )}
