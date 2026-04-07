@@ -1,8 +1,15 @@
 import type { Metadata, Viewport } from 'next';
+import { Plus_Jakarta_Sans } from 'next/font/google';
+import { ThemeProvider } from '@/lib/theme';
 import { I18nProvider } from '@/lib/i18n/context';
 import { ServiceWorkerRegister } from '@/components/service-worker-register';
 import { OfflineBanner } from '@/components/offline-banner';
 import './globals.css';
+
+const font = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Benefind — Find Every Benefit You Deserve',
@@ -26,13 +33,22 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-dvh">
-        <I18nProvider>
-          {children}
-          <ServiceWorkerRegister />
-          <OfflineBanner />
-        </I18nProvider>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('benefind-theme');var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}})()`,
+          }}
+        />
+      </head>
+      <body className={`${font.className} min-h-dvh`}>
+        <ThemeProvider>
+          <I18nProvider>
+            {children}
+            <ServiceWorkerRegister />
+            <OfflineBanner />
+          </I18nProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

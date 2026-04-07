@@ -30,7 +30,7 @@ export function LanguageSelector({ compact = false }: { compact?: boolean }) {
         aria-label="Change language"
       >
         <Globe className="h-4 w-4" />
-        {!compact && <span>{current?.nativeName}</span>}
+        {!compact && <span className="hidden sm:inline">{current?.nativeName}</span>}
       </button>
 
       {open && (
