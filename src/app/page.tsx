@@ -5,32 +5,108 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
-  Globe,
   FileCheck,
   Lock,
   Zap,
   MessageSquare,
-  Heart,
   ChevronDown,
   Sparkles,
   CheckCircle2,
+  Shield,
+  DollarSign,
+  Users,
+  Quote,
+  Code,
 } from 'lucide-react';
 import { LandingNav } from '@/components/landing-nav';
 import { useI18n } from '@/lib/i18n/context';
 
 const PROGRAMS = [
-  'SNAP',
-  'Medicaid',
-  'WIC',
-  'CHIP',
-  'SSI',
-  'SSDI',
-  'TANF',
-  'Section 8',
-  'LIHEAP',
-  'Pell Grant',
-  'EITC',
-  'CCDF',
+  { name: 'SNAP', emoji: '🍎' },
+  { name: 'Medicaid', emoji: '💊' },
+  { name: 'WIC', emoji: '🍼' },
+  { name: 'CHIP', emoji: '👶' },
+  { name: 'SSI', emoji: '💵' },
+  { name: 'SSDI', emoji: '🏥' },
+  { name: 'TANF', emoji: '👨‍👩‍👧' },
+  { name: 'Section 8', emoji: '🏠' },
+  { name: 'LIHEAP', emoji: '🔥' },
+  { name: 'Pell Grant', emoji: '🎓' },
+  { name: 'EITC', emoji: '💰' },
+  { name: 'CCDF', emoji: '🧒' },
+];
+
+// TODO: These need i18n keys added to the translation files
+const PAIN_POINTS = [
+  {
+    stat: '$80B+',
+    label: 'Unclaimed Every Year',
+    desc: 'Millions of eligible Americans miss out simply because they don\'t know what\'s available.',
+    icon: DollarSign,
+  },
+  {
+    stat: '45+ min',
+    label: 'Per Application',
+    desc: 'Long forms, confusing questions, and government jargon stop people before they even start.',
+    icon: FileCheck,
+  },
+  {
+    stat: '1 in 3',
+    label: 'Never Apply',
+    desc: 'Not because they don\'t need help, but because the process feels impossible.',
+    icon: Users,
+  },
+];
+
+// TODO: These need i18n keys added to the translation files
+const TRUST_POINTS = [
+  {
+    title: 'Encrypted on Your Device',
+    desc: 'Your information is encrypted before it ever leaves your phone or computer. We can\'t read it, even if we wanted to.',
+    icon: Lock,
+  },
+  {
+    title: 'We Never Sell Your Data',
+    desc: 'Not to advertisers. Not to data brokers. Not to anyone, ever. That\'s a promise.',
+    icon: Shield,
+  },
+  {
+    title: 'Open Source and Transparent',
+    desc: 'Our code is public. Anyone can inspect how Benefind works. No black boxes, no hidden tricks.',
+    icon: Code,
+  },
+];
+
+// TODO: These need i18n keys added to the translation files
+const TESTIMONIALS = [
+  {
+    quote: 'I had no idea I qualified for SNAP and LIHEAP. That\'s an extra $400 a month I was leaving on the table.',
+    name: 'Maria G.',
+    location: 'Houston, TX',
+    initials: 'MG',
+    color: 'bg-emerald-500',
+  },
+  {
+    quote: 'I\'m a single dad and the forms always overwhelmed me. Benefind walked me through it like a friend would. My kids are on CHIP now.',
+    name: 'James R.',
+    location: 'Atlanta, GA',
+    initials: 'JR',
+    color: 'bg-sky-500',
+  },
+  {
+    quote: 'My mom only speaks Vietnamese. She was able to use Benefind in her language and found out she qualifies for Medicaid.',
+    name: 'Linh T.',
+    location: 'San Jose, CA',
+    initials: 'LT',
+    color: 'bg-amber-500',
+  },
+  {
+    quote: 'I\'m a college student working part-time. I didn\'t think I qualified for anything. Turns out I\'m eligible for SNAP and a Pell Grant.',
+    name: 'Devon W.',
+    location: 'Chicago, IL',
+    initials: 'DW',
+    color: 'bg-violet-500',
+  },
 ];
 
 export default function Home() {
@@ -58,23 +134,6 @@ export default function Home() {
     },
   ];
 
-  const features = [
-    { title: t.landing.feat1Title, desc: t.landing.feat1Desc, icon: Globe },
-    {
-      title: t.landing.feat2Title,
-      desc: t.landing.feat2Desc,
-      icon: FileCheck,
-    },
-    { title: t.landing.feat3Title, desc: t.landing.feat3Desc, icon: Lock },
-    { title: t.landing.feat4Title, desc: t.landing.feat4Desc, icon: Zap },
-    {
-      title: t.landing.feat5Title,
-      desc: t.landing.feat5Desc,
-      icon: MessageSquare,
-    },
-    { title: t.landing.feat6Title, desc: t.landing.feat6Desc, icon: Heart },
-  ];
-
   const stats = [
     { value: t.landing.impact1Value, label: t.landing.impact1Label },
     { value: t.landing.impact2Value, label: t.landing.impact2Label },
@@ -92,45 +151,45 @@ export default function Home() {
   ];
 
   return (
-    <main className="flex min-h-dvh flex-col bg-surface">
+    <main className="flex min-h-dvh flex-col bg-zinc-950">
       <LandingNav />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden px-4 pt-28 pb-20 sm:pt-40 sm:pb-28">
+      <section className="relative overflow-hidden px-4 pt-32 pb-24 sm:pt-48 sm:pb-32">
         <div
           className="pointer-events-none absolute inset-0 overflow-hidden"
           aria-hidden="true"
         >
-          <div className="absolute -top-48 right-1/4 h-96 w-96 rounded-full bg-brand/10 blur-[100px]" />
-          <div className="absolute top-1/3 -left-24 h-72 w-72 rounded-full bg-brand/5 blur-[80px]" />
+          <div className="absolute -top-48 right-1/4 h-96 w-96 rounded-full bg-emerald-500/10 blur-[100px]" />
+          <div className="absolute top-1/3 -left-24 h-72 w-72 rounded-full bg-emerald-500/5 blur-[80px]" />
         </div>
 
-        <div className="relative mx-auto max-w-5xl text-center">
+        <div className="relative mx-auto max-w-6xl text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
           >
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/20 bg-brand-50 px-3.5 py-1 text-xs font-semibold tracking-wide text-brand">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/[0.12] px-3.5 py-1 text-xs font-semibold tracking-wide text-emerald-500">
               <Sparkles className="h-3 w-3" />
               {t.landing.badge}
             </span>
           </motion.div>
 
           <motion.h1
-            className="mt-8 text-3xl leading-[1.1] font-extrabold tracking-tight text-text sm:text-5xl lg:text-6xl"
+            className="mt-8 text-4xl leading-[1.1] font-extrabold tracking-tight text-zinc-50 sm:text-6xl lg:text-7xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             {t.landing.heroTitle1}{' '}
-            <span className="bg-gradient-to-r from-brand to-blue-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
               {t.landing.heroTitle2}
             </span>
           </motion.h1>
 
           <motion.p
-            className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-text-muted sm:text-lg"
+            className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-zinc-400 sm:text-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -146,59 +205,31 @@ export default function Home() {
           >
             <Link
               href="/screening"
-              className="group inline-flex h-12 items-center gap-2 rounded-xl bg-brand px-7 text-base font-semibold text-white shadow-lg shadow-brand/25 transition-all hover:bg-brand-dark hover:shadow-xl hover:shadow-brand/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              className="group inline-flex h-12 items-center gap-2 rounded-xl bg-emerald-500 px-7 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
             >
               {t.landing.heroCta}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
               href="#how-it-works"
-              className="inline-flex h-12 items-center gap-2 rounded-xl px-6 text-base font-medium text-text-muted transition-colors hover:text-brand"
+              className="inline-flex h-12 items-center gap-2 rounded-xl border border-zinc-700 px-6 text-base font-medium text-zinc-300 transition-colors hover:bg-zinc-800"
             >
               {t.landing.heroSecondaryCta}
             </Link>
-          </motion.div>
-
-          <motion.div
-            className="mt-14 flex items-center justify-center gap-6 sm:gap-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
-            <div className="text-center">
-              <p className="text-xl font-bold text-text sm:text-2xl">50+</p>
-              <p className="mt-0.5 text-[0.65rem] text-text-subtle sm:text-xs">
-                {t.landing.statPrograms}
-              </p>
-            </div>
-            <div className="h-8 w-px bg-border" aria-hidden="true" />
-            <div className="text-center">
-              <p className="text-xl font-bold text-text sm:text-2xl">5</p>
-              <p className="mt-0.5 text-[0.65rem] text-text-subtle sm:text-xs">
-                {t.landing.statLanguages}
-              </p>
-            </div>
-            <div className="h-8 w-px bg-border" aria-hidden="true" />
-            <div className="text-center">
-              <p className="text-xl font-bold text-text sm:text-2xl">~3 min</p>
-              <p className="mt-0.5 text-[0.65rem] text-text-subtle sm:text-xs">
-                {t.landing.statMinutes}
-              </p>
-            </div>
           </motion.div>
         </div>
       </section>
 
       {/* ── Programs Marquee ─────────────────────────────────── */}
-      <section className="overflow-hidden border-y border-border bg-surface-dim py-6">
-        <p className="mb-4 text-center text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-text-subtle">
+      <section className="overflow-hidden border-y border-zinc-800 bg-zinc-900 py-6">
+        <p className="mb-4 text-center text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-zinc-500">
           {t.landing.programsLabel}
         </p>
         <div className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-surface-dim to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-surface-dim to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-zinc-900 to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-zinc-900 to-transparent" />
           <div
-            className="flex gap-8 sm:gap-12"
+            className="flex gap-10 sm:gap-14"
             style={{
               width: 'max-content',
               animation: 'marquee 35s linear infinite',
@@ -208,9 +239,9 @@ export default function Home() {
               PROGRAMS.map((p, i) => (
                 <span
                   key={`${copy}-${i}`}
-                  className="shrink-0 text-sm font-medium text-text-muted/60"
+                  className="shrink-0 text-base font-medium text-zinc-400/60"
                 >
-                  {p}
+                  {p.emoji} {p.name}
                 </span>
               )),
             ).flat()}
@@ -218,9 +249,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── How It Works ─────────────────────────────────────── */}
-      <section id="how-it-works" className="px-4 py-24 sm:py-32">
-        <div className="mx-auto max-w-5xl">
+      {/* ── Problem Section ────────────────────────────────────── */}
+      {/* TODO: Hardcoded English text below needs i18n keys */}
+      <section className="px-4 py-24 sm:py-32">
+        <div className="mx-auto max-w-6xl">
           <motion.div
             className="text-center"
             initial={{ opacity: 0, y: 24 }}
@@ -228,10 +260,65 @@ export default function Home() {
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold tracking-tight text-text sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl lg:text-5xl">
+              Billions in Benefits Go Unclaimed Every Year
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-zinc-400">
+              The system is confusing. We made it simple.
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="mt-16 grid gap-6 sm:grid-cols-3"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-80px' }}
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.12 } },
+            }}
+          >
+            {PAIN_POINTS.map(({ stat, label, desc, icon: Icon }) => (
+              <motion.div
+                key={stat}
+                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/[0.12]">
+                  <Icon className="h-6 w-6 text-emerald-500" />
+                </div>
+                <p className="mt-6 text-3xl font-extrabold text-emerald-500 sm:text-4xl">
+                  {stat}
+                </p>
+                <p className="mt-1 text-sm font-semibold uppercase tracking-wider text-zinc-50">
+                  {label}
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+                  {desc}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── How It Works ─────────────────────────────────────── */}
+      <section id="how-it-works" className="bg-zinc-900/50 px-4 py-24 sm:py-32">
+        <div className="mx-auto max-w-6xl">
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
               {t.landing.howTitle}
             </h2>
-            <p className="mt-3 text-text-muted">{t.landing.howSubtitle}</p>
+            <p className="mt-3 text-zinc-400">{t.landing.howSubtitle}</p>
           </motion.div>
 
           <motion.div
@@ -247,72 +334,22 @@ export default function Home() {
             {steps.map(({ num, title, desc, icon: Icon }) => (
               <motion.div
                 key={num}
-                className="relative rounded-2xl border border-border bg-surface p-8"
+                className="relative rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
                 }}
               >
-                <span className="text-5xl font-black text-brand/10">
+                <span className="text-6xl font-black text-emerald-500/10">
                   {num}
                 </span>
                 <div className="mt-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand/10">
-                    <Icon className="h-5 w-5 text-brand" />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/[0.12]">
+                    <Icon className="h-5 w-5 text-emerald-500" />
                   </div>
-                  <h3 className="text-lg font-semibold text-text">{title}</h3>
+                  <h3 className="text-lg font-semibold text-zinc-50">{title}</h3>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-text-muted">
-                  {desc}
-                </p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── Features ─────────────────────────────────────────── */}
-      <section className="bg-surface-dim px-4 py-24 sm:py-32">
-        <div className="mx-auto max-w-5xl">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl font-bold tracking-tight text-text sm:text-4xl">
-              {t.landing.featuresTitle}
-            </h2>
-            <p className="mt-3 text-text-muted">
-              {t.landing.featuresSubtitle}
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.08 } },
-            }}
-          >
-            {features.map(({ title, desc, icon: Icon }) => (
-              <motion.div
-                key={title}
-                className="rounded-2xl border border-border bg-surface p-6"
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10">
-                  <Icon className="h-5 w-5 text-brand" />
-                </div>
-                <h3 className="mt-4 font-semibold text-text">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                <p className="mt-3 text-sm leading-relaxed text-zinc-400">
                   {desc}
                 </p>
               </motion.div>
@@ -322,18 +359,18 @@ export default function Home() {
       </section>
 
       {/* ── Impact / Stats ───────────────────────────────────── */}
-      <section className="bg-surface-dark px-4 py-24 sm:py-32">
-        <div className="mx-auto max-w-5xl text-center">
+      <section className="px-4 py-24 sm:py-32">
+        <div className="mx-auto max-w-6xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold tracking-tight text-text-on-dark sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
               {t.landing.impactTitle}
             </h2>
-            <p className="mt-3 text-text-on-dark-muted">
+            <p className="mt-3 text-zinc-400">
               {t.landing.impactSubtitle}
             </p>
           </motion.div>
@@ -356,10 +393,120 @@ export default function Home() {
                   visible: { opacity: 1, y: 0 },
                 }}
               >
-                <p className="text-3xl font-extrabold text-white sm:text-5xl">
+                <p className="text-3xl font-extrabold text-emerald-500 sm:text-5xl">
                   {value}
                 </p>
-                <p className="mt-2 text-sm text-text-on-dark-muted">{label}</p>
+                <p className="mt-2 text-sm text-zinc-400">{label}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Trust Section ──────────────────────────────────────── */}
+      {/* TODO: Hardcoded English text below needs i18n keys */}
+      <section className="bg-zinc-900/50 px-4 py-24 sm:py-32">
+        <div className="mx-auto max-w-6xl">
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
+              Your Data Stays Yours
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-zinc-400">
+              Private by design. We built Benefind to protect you, not profit from you.
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="mt-16 grid gap-6 sm:grid-cols-3"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-80px' }}
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.12 } },
+            }}
+          >
+            {TRUST_POINTS.map(({ title, desc, icon: Icon }) => (
+              <motion.div
+                key={title}
+                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/[0.12]">
+                  <Icon className="h-6 w-6 text-emerald-500" />
+                </div>
+                <h3 className="mt-6 text-lg font-semibold text-zinc-50">{title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+                  {desc}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Testimonials ───────────────────────────────────────── */}
+      {/* TODO: Hardcoded English text below needs i18n keys */}
+      <section className="px-4 py-24 sm:py-32">
+        <div className="mx-auto max-w-6xl">
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
+              Real Stories, Real Impact
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-zinc-400">
+              People just like you are finding benefits they never knew they had.
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="mt-16 grid gap-6 sm:grid-cols-2"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-80px' }}
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.1 } },
+            }}
+          >
+            {TESTIMONIALS.map(({ quote, name, location, initials, color }) => (
+              <motion.div
+                key={name}
+                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+              >
+                <Quote className="h-8 w-8 text-emerald-500/30" />
+                <p className="mt-4 text-base leading-relaxed text-zinc-300">
+                  &ldquo;{quote}&rdquo;
+                </p>
+                <div className="mt-6 flex items-center gap-3">
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white ${color}`}
+                  >
+                    {initials}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-zinc-50">{name}</p>
+                    <p className="text-xs text-zinc-500">{location}</p>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -367,7 +514,7 @@ export default function Home() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────────── */}
-      <section className="px-4 py-24 sm:py-32">
+      <section className="bg-zinc-900/50 px-4 py-24 sm:py-32">
         <div className="mx-auto max-w-2xl">
           <motion.div
             className="text-center"
@@ -376,10 +523,10 @@ export default function Home() {
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold tracking-tight text-text sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
               {t.landing.faqTitle}
             </h2>
-            <p className="mt-3 text-text-muted">{t.landing.faqSubtitle}</p>
+            <p className="mt-3 text-zinc-400">{t.landing.faqSubtitle}</p>
           </motion.div>
 
           <motion.div
@@ -392,16 +539,16 @@ export default function Home() {
             {faqs.map((faq, i) => (
               <div
                 key={i}
-                className="border-b border-border last:border-b-0"
+                className="border-b border-zinc-800 last:border-b-0"
               >
                 <button
                   type="button"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="flex w-full items-center justify-between py-5 text-start active:opacity-70"
                 >
-                  <span className="pr-4 font-medium text-text">{faq.q}</span>
+                  <span className="pr-4 font-medium text-zinc-50">{faq.q}</span>
                   <ChevronDown
-                    className={`h-5 w-5 shrink-0 text-text-subtle transition-transform duration-200 ${
+                    className={`h-5 w-5 shrink-0 text-zinc-500 transition-transform duration-200 ${
                       openFaq === i ? 'rotate-180' : ''
                     }`}
                   />
@@ -415,7 +562,7 @@ export default function Home() {
                       transition={{ duration: 0.2, ease: 'easeOut' }}
                       className="overflow-hidden"
                     >
-                      <p className="pb-5 text-sm leading-relaxed text-text-muted">
+                      <p className="pb-5 text-sm leading-relaxed text-zinc-400">
                         {faq.a}
                       </p>
                     </motion.div>
@@ -427,51 +574,56 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────────── */}
-      <section className="px-4 pb-24 sm:pb-32">
+      {/* ── Final CTA ──────────────────────────────────────────── */}
+      {/* TODO: Hardcoded English text below needs i18n keys */}
+      <section className="px-4 py-24 sm:py-32">
         <motion.div
-          className="mx-auto max-w-3xl rounded-3xl bg-gradient-to-br from-brand to-indigo-600 px-6 py-12 text-center sm:px-16 sm:py-16"
+          className="mx-auto max-w-3xl rounded-3xl border border-zinc-700/50 bg-zinc-900 px-6 py-12 text-center sm:px-16 sm:py-16"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-bold text-white sm:text-4xl">
-            {t.landing.ctaTitle}
+          <h2 className="text-3xl font-bold text-zinc-50 sm:text-4xl">
+            You Could Be Leaving Thousands on the Table
           </h2>
-          <p className="mt-4 text-blue-100">{t.landing.ctaSubtitle}</p>
+          <p className="mt-4 text-zinc-400">
+            Millions of Americans qualify for benefits they never claim. You might be one of them. There&apos;s only one way to find out.
+          </p>
           <Link
             href="/screening"
-            className="mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-white px-7 text-base font-semibold text-brand shadow-lg transition-all hover:bg-blue-50 hover:shadow-xl"
+            className="mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-emerald-500 px-7 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/30"
           >
-            {t.landing.ctaButton}
+            Start Your Free Screening
             <ArrowRight className="h-4 w-4" />
           </Link>
-          <p className="mt-4 text-sm text-blue-200">{t.landing.ctaNote}</p>
+          <p className="mt-4 text-sm text-zinc-500">
+            Free. 5 minutes. No signup required. 100% private.
+          </p>
         </motion.div>
       </section>
 
       {/* ── Footer ───────────────────────────────────────────── */}
-      <footer className="border-t border-border px-4 py-12">
-        <div className="mx-auto max-w-5xl">
+      <footer className="border-t border-zinc-800 px-4 py-12">
+        <div className="mx-auto max-w-6xl">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <span className="text-lg font-bold text-brand">
+              <span className="text-lg font-bold text-emerald-500">
                 {t.common.appName}
               </span>
-              <p className="mt-2 text-sm text-text-muted">
+              <p className="mt-2 text-sm text-zinc-400">
                 {t.landing.footerTagline}
               </p>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-text-subtle">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
                 {t.landing.footerProduct}
               </h4>
               <ul className="mt-3 space-y-2">
                 <li>
                   <Link
                     href="/screening"
-                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                    className="text-sm text-zinc-400 transition-colors hover:text-emerald-500"
                   >
                     {t.landing.footerScreening}
                   </Link>
@@ -479,7 +631,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="#how-it-works"
-                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                    className="text-sm text-zinc-400 transition-colors hover:text-emerald-500"
                   >
                     {t.landing.footerHowItWorks}
                   </Link>
@@ -487,14 +639,14 @@ export default function Home() {
               </ul>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-text-subtle">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
                 {t.landing.footerLegal}
               </h4>
               <ul className="mt-3 space-y-2">
                 <li>
                   <Link
                     href="/privacy"
-                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                    className="text-sm text-zinc-400 transition-colors hover:text-emerald-500"
                   >
                     {t.landing.footerPrivacy}
                   </Link>
@@ -502,7 +654,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/terms"
-                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                    className="text-sm text-zinc-400 transition-colors hover:text-emerald-500"
                   >
                     {t.landing.footerTerms}
                   </Link>
@@ -510,22 +662,25 @@ export default function Home() {
               </ul>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-text-subtle">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
                 {t.landing.footerLanguages}
               </h4>
               <ul className="mt-3 space-y-2">
-                <li className="text-sm text-text-muted">English</li>
-                <li className="text-sm text-text-muted">Español</li>
-                <li className="text-sm text-text-muted">中文</li>
-                <li className="text-sm text-text-muted">Tiếng Việt</li>
-                <li className="text-sm text-text-muted">العربية</li>
+                <li className="text-sm text-zinc-400">English</li>
+                <li className="text-sm text-zinc-400">Español</li>
+                <li className="text-sm text-zinc-400">中文</li>
+                <li className="text-sm text-zinc-400">Tiếng Việt</li>
+                <li className="text-sm text-zinc-400">العربية</li>
               </ul>
             </div>
           </div>
-          <div className="mt-10 border-t border-border pt-6 text-center text-sm text-text-subtle">
+          <div className="mt-10 border-t border-zinc-800 pt-6 text-center text-sm text-zinc-500">
             <p>
               &copy; {new Date().getFullYear()} {t.common.appName}.{' '}
               {t.common.free}
+            </p>
+            <p className="mt-1 text-zinc-600">
+              Built by Smejkal Design
             </p>
           </div>
         </div>
