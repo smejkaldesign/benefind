@@ -221,7 +221,7 @@ export default function Home() {
       </section>
 
       {/* ── Programs Marquee ─────────────────────────────────── */}
-      <section className="overflow-hidden border-y border-zinc-800 bg-zinc-900 py-6">
+      <section className="overflow-hidden border-y border-zinc-800 bg-zinc-900 py-6 sm:py-8">
         <p className="mb-4 text-center text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-zinc-500">
           {t.landing.programsLabel}
         </p>
@@ -281,7 +281,7 @@ export default function Home() {
             {PAIN_POINTS.map(({ stat, label, desc, icon: Icon }) => (
               <motion.div
                 key={stat}
-                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8"
+                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8 transition-all duration-300 hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
@@ -435,7 +435,7 @@ export default function Home() {
             {TRUST_POINTS.map(({ title, desc, icon: Icon }) => (
               <motion.div
                 key={title}
-                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8"
+                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8 transition-all duration-300 hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
@@ -486,7 +486,7 @@ export default function Home() {
             {TESTIMONIALS.map(({ quote, name, location, initials, color }) => (
               <motion.div
                 key={name}
-                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8"
+                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8 transition-all duration-300 hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
@@ -544,6 +544,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  aria-expanded={openFaq === i}
                   className="flex w-full items-center justify-between py-5 text-start active:opacity-70"
                 >
                   <span className="pr-4 font-medium text-zinc-50">{faq.q}</span>
