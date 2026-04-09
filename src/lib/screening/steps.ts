@@ -47,9 +47,9 @@ export const SCREENING_STEPS: ScreeningStep[] = [
     required: false,
   },
   {
-    id: 'monthlyIncome',
-    question: "What's your household's total monthly income before taxes?",
-    helpText: 'Include wages, salary, tips, Social Security, disability, child support — all sources.',
+    id: 'annualIncome',
+    question: "What's your household's total yearly income before taxes?",
+    helpText: 'Include wages, salary, tips, Social Security, disability, child support — all sources. Use your best estimate.',
     type: 'number',
     required: true,
     validation: (v) => {
@@ -113,7 +113,7 @@ export function answersToScreeningInput(
   answers: Record<string, string>,
 ): import('../benefits/types').ScreeningInput {
   const householdSize = parseInt(answers.householdSize) || 1;
-  const monthlyIncome = parseInt(answers.monthlyIncome) || 0;
+  const monthlyIncome = Math.round((parseInt(answers.annualIncome) || 0) / 12);
   const circumstances = (answers.specialCircumstances || '').split(',');
 
   // Build household members
