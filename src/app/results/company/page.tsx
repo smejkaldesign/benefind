@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { STORAGE_KEYS } from '@/lib/constants';
 import {
   ArrowRight,
   ExternalLink,
@@ -54,7 +55,7 @@ export default function CompanyResultsPage() {
 
   useEffect(() => {
     try {
-      const stored = sessionStorage.getItem('company_screening_result');
+      const stored = sessionStorage.getItem(STORAGE_KEYS.COMPANY_SCREENING_RESULT);
       if (!stored) return;
       const parsed = JSON.parse(stored);
       if (parsed && Array.isArray(parsed.programs) && typeof parsed.totalMatched === 'number') {

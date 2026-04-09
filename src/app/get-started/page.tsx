@@ -12,7 +12,6 @@ const tracks = [
     title: 'Individual',
     description: 'Personal benefits, tax credits, and assistance programs',
     examples: 'SNAP, Medicaid, EITC, WIC, Section 8, Pell Grant',
-    color: 'emerald',
   },
   {
     id: 'company',
@@ -21,7 +20,6 @@ const tracks = [
     title: 'Company',
     description: 'Grants, tax credits, and incentives for your business',
     examples: 'R&D Credit, SBIR, WOTC, Workforce Training, Export Grants',
-    color: 'emerald',
   },
 ] as const;
 

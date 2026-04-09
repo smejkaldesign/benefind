@@ -8,6 +8,7 @@ import { ChatMessage, TypingIndicator } from '@/components/screening/chat-messag
 import { StepInput } from '@/components/screening/step-input';
 import { InlineOptions, hasInlineOptions } from '@/components/screening/inline-options';
 import { AsciiWaves } from '@/components/ascii-waves';
+import { STORAGE_KEYS } from '@/lib/constants';
 import { ArrowLeft, RotateCcw, Building2, Search, CheckCircle2, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -145,7 +146,7 @@ export default function CompanyScreeningPage() {
           setResult(screeningResult);
           try {
             const { input: _pii, ...safeResult } = screeningResult;
-            sessionStorage.setItem('company_screening_result', JSON.stringify(safeResult));
+            sessionStorage.setItem(STORAGE_KEYS.COMPANY_SCREENING_RESULT, JSON.stringify(safeResult));
           } catch {}
 
           const eligible = screeningResult.programs.filter((p) => p.result.eligible);
@@ -174,7 +175,7 @@ export default function CompanyScreeningPage() {
     setCurrentStep(0);
     setAnswers({});
     setResult(null);
-    try { sessionStorage.removeItem('company_screening_result'); } catch {}
+    try { sessionStorage.removeItem(STORAGE_KEYS.COMPANY_SCREENING_RESULT); } catch {}
     initialized.current = false;
     setTimeout(() => {
       initialized.current = true;

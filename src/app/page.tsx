@@ -243,7 +243,7 @@ export default function Home() {
                   key={`${copy}-${i}`}
                   className="shrink-0 text-base font-medium text-gray-500/60 dark:text-zinc-400/60"
                 >
-                  {p.emoji} {p.name}
+                  <span aria-hidden="true">{p.emoji}</span> {p.name}
                 </span>
               )),
             ).flat()}
