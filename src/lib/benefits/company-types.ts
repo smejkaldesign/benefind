@@ -13,7 +13,6 @@ export interface CompanyScreeningInput {
   exportsOrPlans: boolean;
   isHiring: boolean;
   hasCleanEnergy: boolean;
-  websiteUrl?: string;
 }
 
 export type CompanyIndustry =

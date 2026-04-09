@@ -98,7 +98,7 @@ export default function CompanyResultsPage() {
     const hero = heroRef.current;
     if (!hero) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setShowStickyTotal(!entry!.isIntersecting),
+      ([entry]) => { if (entry) setShowStickyTotal(!entry.isIntersecting); },
       { threshold: 0 },
     );
     observer.observe(hero);

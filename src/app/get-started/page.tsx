@@ -90,7 +90,7 @@ export default function GetStartedPage() {
 
         {/* Privacy note */}
         <p className="mt-8 text-center text-xs text-gray-400">
-          Your answers are encrypted and never shared. No account required.
+          Your answers are stored locally on your device and never sent to a server. No account required.
         </p>
       </div>
     </div>

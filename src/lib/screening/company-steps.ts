@@ -8,6 +8,10 @@ export const COMPANY_SCREENING_STEPS: ScreeningStep[] = [
     helpText: "We'll use this to personalize your results.",
     type: 'text',
     required: true,
+    validation: (v) => {
+      if (v.length > 100) return 'Company name must be 100 characters or fewer';
+      return null;
+    },
   },
   {
     id: 'state',
@@ -160,23 +164,37 @@ export const COMPANY_SCREENING_STEPS: ScreeningStep[] = [
   },
 ];
 
+const VALID_INDUSTRIES: CompanyScreeningInput['industry'][] = ['technology', 'healthcare', 'manufacturing', 'agriculture', 'clean-energy', 'retail', 'services', 'construction', 'other'];
+const VALID_AGES: CompanyScreeningInput['companyAge'][] = ['<1', '1-5', '5-10', '10+'];
+const VALID_EMPLOYEE_RANGES: CompanyScreeningInput['employeeCount'][] = ['1-10', '11-50', '51-100', '101-500', '500+'];
+const VALID_REVENUE_RANGES: CompanyScreeningInput['annualRevenue'][] = ['<250k', '250k-1m', '1m-5m', '5m-25m', '25m+'];
+const VALID_OWNERSHIP: CompanyScreeningInput['ownershipDemographics'][number][] = ['minority', 'woman', 'veteran', 'none'];
+
 /** Convert chat answers to CompanyScreeningInput */
 export function answersToCompanyInput(
   answers: Record<string, string>,
 ): CompanyScreeningInput {
   const ownership = (answers.ownershipDemographics || 'none')
     .split(',')
-    .filter((v) => v !== 'none') as CompanyScreeningInput['ownershipDemographics'];
+    .filter((v): v is CompanyScreeningInput['ownershipDemographics'][number] =>
+      VALID_OWNERSHIP.includes(v as CompanyScreeningInput['ownershipDemographics'][number]) && v !== 'none'
+    );
+
+  const rawIndustry = answers.industry || 'other';
+  const rawAge = answers.companyAge || '1-5';
+  const rawEmployees = answers.employeeCount || '1-10';
+  const rawRevenue = answers.annualRevenue || '<250k';
+  const rndParsed = parseInt(answers.rndPercentage);
 
   return {
-    companyName: answers.companyName || 'Your Company',
+    companyName: (answers.companyName || 'Your Company').slice(0, 100),
     state: answers.state || 'CA',
-    industry: (answers.industry || 'other') as CompanyScreeningInput['industry'],
-    companyAge: (answers.companyAge || '1-5') as CompanyScreeningInput['companyAge'],
-    employeeCount: (answers.employeeCount || '1-10') as CompanyScreeningInput['employeeCount'],
-    annualRevenue: (answers.annualRevenue || '<250k') as CompanyScreeningInput['annualRevenue'],
+    industry: VALID_INDUSTRIES.includes(rawIndustry as CompanyScreeningInput['industry']) ? rawIndustry as CompanyScreeningInput['industry'] : 'other',
+    companyAge: VALID_AGES.includes(rawAge as CompanyScreeningInput['companyAge']) ? rawAge as CompanyScreeningInput['companyAge'] : '1-5',
+    employeeCount: VALID_EMPLOYEE_RANGES.includes(rawEmployees as CompanyScreeningInput['employeeCount']) ? rawEmployees as CompanyScreeningInput['employeeCount'] : '1-10',
+    annualRevenue: VALID_REVENUE_RANGES.includes(rawRevenue as CompanyScreeningInput['annualRevenue']) ? rawRevenue as CompanyScreeningInput['annualRevenue'] : '<250k',
     hasRnd: answers.hasRnd === 'yes',
-    rndPercentage: parseInt(answers.rndPercentage) || 0,
+    rndPercentage: Number.isFinite(rndParsed) ? rndParsed : 0,
     ownershipDemographics: ownership.length > 0 ? ownership : ['none'],
     isRural: answers.isRural === 'yes',
     exportsOrPlans: answers.exportsOrPlans === 'yes',
