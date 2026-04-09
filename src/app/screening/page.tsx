@@ -370,8 +370,9 @@ export default function ScreeningPage() {
           <div className="mt-12 flex items-start gap-3 rounded-xl border border-gray-200 bg-white/70 px-4 py-3.5 backdrop-blur-sm">
             <Lock className="h-4 w-4 text-gray-400 mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed text-gray-500">
-              Your answers are encrypted and never shared. We don&apos;t store personally
-              identifiable information. This is a screening tool, not a formal application.
+              Your answers are stored locally on your device and never sent to a server.
+              We don&apos;t store personally identifiable information. This is a screening
+              tool, not a formal application.
             </p>
           </div>
 

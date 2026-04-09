@@ -63,8 +63,8 @@ const PAIN_POINTS = [
 // TODO: These need i18n keys added to the translation files
 const TRUST_POINTS = [
   {
-    title: 'Encrypted on Your Device',
-    desc: 'Your information is encrypted before it ever leaves your phone or computer. We can\'t read it, even if we wanted to.',
+    title: 'Stored on Your Device',
+    desc: 'Your screening answers stay on your device and are never sent to our servers. We can\'t see them, even if we wanted to.',
     icon: Lock,
   },
   {
@@ -336,7 +336,7 @@ export default function Home() {
             {steps.map(({ num, title, desc, icon: Icon }) => (
               <motion.div
                 key={num}
-                className="relative rounded-2xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 p-8"
+                className="relative rounded-2xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 p-8 transition-all duration-300 hover:border-gray-300 dark:hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
@@ -547,6 +547,7 @@ export default function Home() {
                   type="button"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   aria-expanded={openFaq === i}
+                  aria-controls={`faq-answer-${i}`}
                   className="flex w-full items-center justify-between py-5 text-start active:opacity-70"
                 >
                   <span className="pr-4 font-medium text-gray-900 dark:text-zinc-50">{faq.q}</span>
@@ -559,6 +560,7 @@ export default function Home() {
                 <AnimatePresence initial={false}>
                   {openFaq === i && (
                     <motion.div
+                      id={`faq-answer-${i}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}

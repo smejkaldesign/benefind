@@ -209,7 +209,7 @@ const en: Dictionary = {
     guidanceDesc:
       'We explain every question on every form in plain language. No jargon.',
     privacyDesc:
-      'Your data is encrypted end-to-end. We never sell your information.',
+      'Your data stays on your device and is never sent to our servers. We never sell your information.',
   },
   landing: {
     badge: 'Free to Check Your Eligibility',
@@ -243,9 +243,9 @@ const en: Dictionary = {
     feat2Title: 'Plain Language',
     feat2Desc:
       'Government forms are confusing. We rewrite every question so anyone can understand it.',
-    feat3Title: 'Private & Encrypted',
+    feat3Title: 'Private & Secure',
     feat3Desc:
-      'Your data is encrypted end-to-end. We never sell your information. Period.',
+      'Your data stays on your device and is never sent to our servers. We never sell your information. Period.',
     feat4Title: 'AI-Powered Matching',
     feat4Desc:
       'Smart screening that cross-references your situation against dozens of programs simultaneously.',
@@ -277,7 +277,7 @@ const en: Dictionary = {
     faq4Q: 'Do I need to create an account?',
     faq4A: 'No. You can check your eligibility without creating an account. If you want to save your results and track your applications, you can optionally create a free account.',
     faq5Q: 'Is my information private?',
-    faq5A: 'Absolutely. Your data is encrypted end-to-end and never sold to third parties. We only use your answers to determine eligibility. You can delete your data at any time.',
+    faq5A: 'Absolutely. Your screening answers stay on your device and are never sent to our servers. We never sell your data to third parties. We only use your answers to determine eligibility.',
     faq6Q: 'How accurate are the results?',
     faq6A: 'Our AI-powered screening provides estimated eligibility based on the information you provide. Final eligibility is always determined by the program\'s administering agency. We aim to help you identify programs worth applying to.',
     ctaTitle: 'Ready to find what you\'re owed?',
@@ -370,7 +370,7 @@ const es: Dictionary = {
     guidanceDesc:
       'Explicamos cada pregunta de cada formulario en lenguaje simple. Sin jerga.',
     privacyDesc:
-      'Tus datos están cifrados de extremo a extremo. Nunca vendemos tu información.',
+      'Tus datos permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tu información.',
   },
   landing: {
     badge: 'Verificar elegibilidad gratis',
@@ -404,9 +404,9 @@ const es: Dictionary = {
     feat2Title: 'Lenguaje Simple',
     feat2Desc:
       'Los formularios gubernamentales son confusos. Reescribimos cada pregunta para que cualquiera pueda entenderla.',
-    feat3Title: 'Privado y Cifrado',
+    feat3Title: 'Privado y Seguro',
     feat3Desc:
-      'Tus datos están cifrados de extremo a extremo. Nunca vendemos tu información. Punto.',
+      'Tus datos permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tu información. Punto.',
     feat4Title: 'Matching con IA',
     feat4Desc:
       'Evaluación inteligente que cruza tu situación con docenas de programas simultáneamente.',
@@ -438,7 +438,7 @@ const es: Dictionary = {
     faq4Q: '¿Necesito crear una cuenta?',
     faq4A: 'No. Puedes verificar tu elegibilidad sin crear una cuenta. Si quieres guardar tus resultados, puedes crear una cuenta gratuita opcionalmente.',
     faq5Q: '¿Mi información es privada?',
-    faq5A: 'Absolutamente. Tus datos están cifrados de extremo a extremo y nunca se venden a terceros. Puedes eliminar tus datos en cualquier momento.',
+    faq5A: 'Absolutamente. Tus datos de evaluación permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tus datos a terceros.',
     faq6Q: '¿Qué tan precisos son los resultados?',
     faq6A: 'Nuestra evaluación con IA proporciona elegibilidad estimada basada en la información que proporcionas. La elegibilidad final la determina la agencia administradora del programa.',
     ctaTitle: '¿Listo para encontrar lo que te corresponde?',
