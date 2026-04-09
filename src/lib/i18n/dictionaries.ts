@@ -133,7 +133,42 @@ export interface Dictionary {
     footerPrivacy: string;
     footerTerms: string;
     footerScreening: string;
+    footerCompanyGrants: string;
     footerHowItWorks: string;
+    // Problem section
+    problemTitle: string;
+    problemSubtitle: string;
+    pain1Stat: string;
+    pain1Label: string;
+    pain1Desc: string;
+    pain2Stat: string;
+    pain2Label: string;
+    pain2Desc: string;
+    pain3Stat: string;
+    pain3Label: string;
+    pain3Desc: string;
+    // Trust section
+    trustTitle: string;
+    trustSubtitle: string;
+    trust1Title: string;
+    trust1Desc: string;
+    trust2Title: string;
+    trust2Desc: string;
+    trust3Title: string;
+    trust3Desc: string;
+    // Testimonials section
+    testimonialsTitle: string;
+    testimonialsSubtitle: string;
+    testimonials: {
+      quote: string;
+      name: string;
+      location: string;
+      initials: string;
+    }[];
+    // Final CTA
+    ctaHeadline: string;
+    ctaDesc: string;
+    ctaFree: string;
   };
 }
 
@@ -209,7 +244,7 @@ const en: Dictionary = {
     guidanceDesc:
       'We explain every question on every form in plain language. No jargon.',
     privacyDesc:
-      'Your data is encrypted end-to-end. We never sell your information.',
+      'Your data stays on your device and is never sent to our servers. We never sell your information.',
   },
   landing: {
     badge: 'Free to Check Your Eligibility',
@@ -243,9 +278,9 @@ const en: Dictionary = {
     feat2Title: 'Plain Language',
     feat2Desc:
       'Government forms are confusing. We rewrite every question so anyone can understand it.',
-    feat3Title: 'Private & Encrypted',
+    feat3Title: 'Private & Secure',
     feat3Desc:
-      'Your data is encrypted end-to-end. We never sell your information. Period.',
+      'Your data stays on your device and is never sent to our servers. We never sell your information. Period.',
     feat4Title: 'AI-Powered Matching',
     feat4Desc:
       'Smart screening that cross-references your situation against dozens of programs simultaneously.',
@@ -277,7 +312,7 @@ const en: Dictionary = {
     faq4Q: 'Do I need to create an account?',
     faq4A: 'No. You can check your eligibility without creating an account. If you want to save your results and track your applications, you can optionally create a free account.',
     faq5Q: 'Is my information private?',
-    faq5A: 'Absolutely. Your data is encrypted end-to-end and never sold to third parties. We only use your answers to determine eligibility. You can delete your data at any time.',
+    faq5A: 'Absolutely. Your screening answers stay on your device and are never sent to our servers. We never sell your data to third parties. We only use your answers to determine eligibility.',
     faq6Q: 'How accurate are the results?',
     faq6A: 'Our AI-powered screening provides estimated eligibility based on the information you provide. Final eligibility is always determined by the program\'s administering agency. We aim to help you identify programs worth applying to.',
     ctaTitle: 'Ready to find what you\'re owed?',
@@ -293,7 +328,74 @@ const en: Dictionary = {
     footerPrivacy: 'Privacy Policy',
     footerTerms: 'Terms of Service',
     footerScreening: 'Eligibility Screening',
+    footerCompanyGrants: 'Company Grants',
     footerHowItWorks: 'How It Works',
+    // Problem section
+    problemTitle: 'Billions in Benefits Go Unclaimed Every Year',
+    problemSubtitle: 'The system is confusing. We made it simple.',
+    pain1Stat: '$80B+',
+    pain1Label: 'Unclaimed Every Year',
+    pain1Desc: 'Millions of eligible Americans miss out simply because they don\'t know what\'s available.',
+    pain2Stat: '45+ min',
+    pain2Label: 'Per Application',
+    pain2Desc: 'Long forms, confusing questions, and government jargon stop people before they even start.',
+    pain3Stat: '1 in 3',
+    pain3Label: 'Never Apply',
+    pain3Desc: 'Not because they don\'t need help, but because the process feels impossible.',
+    // Trust section
+    trustTitle: 'Your Data Stays Yours',
+    trustSubtitle: 'Private by design. We built Benefind to protect you, not profit from you.',
+    trust1Title: 'Stored on Your Device',
+    trust1Desc: 'Your screening answers stay on your device and are never sent to our servers. We can\'t see them, even if we wanted to.',
+    trust2Title: 'We Never Sell Your Data',
+    trust2Desc: 'Not to advertisers. Not to data brokers. Not to anyone, ever. That\'s a promise.',
+    trust3Title: 'Open Source and Transparent',
+    trust3Desc: 'Our code is public. Anyone can inspect how Benefind works. No black boxes, no hidden tricks.',
+    // Testimonials section
+    testimonialsTitle: 'Real Stories, Real Impact',
+    testimonialsSubtitle: 'People and businesses are finding benefits they never knew they had.',
+    testimonials: [
+      {
+        quote: 'I had no idea I qualified for SNAP and LIHEAP. That\'s an extra $400 a month I was leaving on the table.',
+        name: 'Maria G.',
+        location: 'Houston, TX',
+        initials: 'MG',
+      },
+      {
+        quote: 'I\'m a single dad and the forms always overwhelmed me. Benefind walked me through it like a friend would. My kids are on CHIP now.',
+        name: 'James R.',
+        location: 'Atlanta, GA',
+        initials: 'JR',
+      },
+      {
+        quote: 'We\'re a 12-person startup and had no idea we qualified for the R&D Tax Credit. Benefind found us $47K in annual savings in under 5 minutes.',
+        name: 'Priya K.',
+        location: 'Austin, TX',
+        initials: 'PK',
+      },
+      {
+        quote: 'My mom only speaks Vietnamese. She was able to use Benefind in her language and found out she qualifies for Medicaid.',
+        name: 'Linh T.',
+        location: 'San Jose, CA',
+        initials: 'LT',
+      },
+      {
+        quote: 'We run a small manufacturing shop in a rural county. Benefind matched us with USDA grants and state workforce training we never would have found on our own.',
+        name: 'Tom & Linda B.',
+        location: 'Asheville, NC',
+        initials: 'TB',
+      },
+      {
+        quote: 'As a woman-owned business, I didn\'t know about the WOSB contracting program. Benefind showed me how to access federal contracts set aside for businesses like mine.',
+        name: 'Rachel M.',
+        location: 'Denver, CO',
+        initials: 'RM',
+      },
+    ],
+    // Final CTA
+    ctaHeadline: 'You Could Be Leaving Thousands on the Table',
+    ctaDesc: 'Individuals and companies alike qualify for programs they never claim. Whether it\'s personal benefits or business grants, there\'s only one way to find out.',
+    ctaFree: 'Free. 5 minutes. No signup required. 100% private.',
   },
 };
 
@@ -370,7 +472,7 @@ const es: Dictionary = {
     guidanceDesc:
       'Explicamos cada pregunta de cada formulario en lenguaje simple. Sin jerga.',
     privacyDesc:
-      'Tus datos están cifrados de extremo a extremo. Nunca vendemos tu información.',
+      'Tus datos permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tu información.',
   },
   landing: {
     badge: 'Verificar elegibilidad gratis',
@@ -404,9 +506,9 @@ const es: Dictionary = {
     feat2Title: 'Lenguaje Simple',
     feat2Desc:
       'Los formularios gubernamentales son confusos. Reescribimos cada pregunta para que cualquiera pueda entenderla.',
-    feat3Title: 'Privado y Cifrado',
+    feat3Title: 'Privado y Seguro',
     feat3Desc:
-      'Tus datos están cifrados de extremo a extremo. Nunca vendemos tu información. Punto.',
+      'Tus datos permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tu información. Punto.',
     feat4Title: 'Matching con IA',
     feat4Desc:
       'Evaluación inteligente que cruza tu situación con docenas de programas simultáneamente.',
@@ -438,7 +540,7 @@ const es: Dictionary = {
     faq4Q: '¿Necesito crear una cuenta?',
     faq4A: 'No. Puedes verificar tu elegibilidad sin crear una cuenta. Si quieres guardar tus resultados, puedes crear una cuenta gratuita opcionalmente.',
     faq5Q: '¿Mi información es privada?',
-    faq5A: 'Absolutamente. Tus datos están cifrados de extremo a extremo y nunca se venden a terceros. Puedes eliminar tus datos en cualquier momento.',
+    faq5A: 'Absolutamente. Tus datos de evaluación permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tus datos a terceros.',
     faq6Q: '¿Qué tan precisos son los resultados?',
     faq6A: 'Nuestra evaluación con IA proporciona elegibilidad estimada basada en la información que proporcionas. La elegibilidad final la determina la agencia administradora del programa.',
     ctaTitle: '¿Listo para encontrar lo que te corresponde?',
@@ -454,7 +556,74 @@ const es: Dictionary = {
     footerPrivacy: 'Política de Privacidad',
     footerTerms: 'Términos de Servicio',
     footerScreening: 'Evaluación de Elegibilidad',
+    footerCompanyGrants: 'Subvenciones Empresariales',
     footerHowItWorks: 'Cómo Funciona',
+    // Problem section
+    problemTitle: 'Miles de Millones en Beneficios No Se Reclaman Cada Año',
+    problemSubtitle: 'El sistema es confuso. Lo hicimos simple.',
+    pain1Stat: '$80B+',
+    pain1Label: 'No Reclamados Cada Año',
+    pain1Desc: 'Millones de estadounidenses elegibles se lo pierden simplemente porque no saben lo que hay disponible.',
+    pain2Stat: '45+ min',
+    pain2Label: 'Por Solicitud',
+    pain2Desc: 'Formularios largos, preguntas confusas y jerga gubernamental detienen a la gente antes de empezar.',
+    pain3Stat: '1 de 3',
+    pain3Label: 'Nunca Solicitan',
+    pain3Desc: 'No porque no necesiten ayuda, sino porque el proceso se siente imposible.',
+    // Trust section
+    trustTitle: 'Tus Datos Son Tuyos',
+    trustSubtitle: 'Privacidad por diseño. Construimos Benefind para protegerte, no para lucrar contigo.',
+    trust1Title: 'Almacenado en Tu Dispositivo',
+    trust1Desc: 'Tus respuestas de evaluación permanecen en tu dispositivo y nunca se envían a nuestros servidores. No podemos verlas, aunque quisiéramos.',
+    trust2Title: 'Nunca Vendemos Tus Datos',
+    trust2Desc: 'Ni a anunciantes. Ni a corredores de datos. Ni a nadie, nunca. Eso es una promesa.',
+    trust3Title: 'Código Abierto y Transparente',
+    trust3Desc: 'Nuestro código es público. Cualquiera puede inspeccionar cómo funciona Benefind. Sin cajas negras, sin trucos ocultos.',
+    // Testimonials section
+    testimonialsTitle: 'Historias Reales, Impacto Real',
+    testimonialsSubtitle: 'Personas y empresas están encontrando beneficios que nunca supieron que tenían.',
+    testimonials: [
+      {
+        quote: 'No tenía idea de que calificaba para SNAP y LIHEAP. Son $400 extra al mes que estaba dejando sobre la mesa.',
+        name: 'Maria G.',
+        location: 'Houston, TX',
+        initials: 'MG',
+      },
+      {
+        quote: 'Soy padre soltero y los formularios siempre me abrumaban. Benefind me guió como lo haría un amigo. Mis hijos ahora tienen CHIP.',
+        name: 'James R.',
+        location: 'Atlanta, GA',
+        initials: 'JR',
+      },
+      {
+        quote: 'Somos una startup de 12 personas y no sabíamos que calificábamos para el Crédito Fiscal de I+D. Benefind nos encontró $47K en ahorros anuales en menos de 5 minutos.',
+        name: 'Priya K.',
+        location: 'Austin, TX',
+        initials: 'PK',
+      },
+      {
+        quote: 'Mi mamá solo habla vietnamita. Pudo usar Benefind en su idioma y descubrió que califica para Medicaid.',
+        name: 'Linh T.',
+        location: 'San Jose, CA',
+        initials: 'LT',
+      },
+      {
+        quote: 'Tenemos un pequeño taller de manufactura en un condado rural. Benefind nos conectó con subvenciones del USDA y capacitación laboral estatal que nunca hubiéramos encontrado solos.',
+        name: 'Tom y Linda B.',
+        location: 'Asheville, NC',
+        initials: 'TB',
+      },
+      {
+        quote: 'Como negocio de propiedad femenina, no conocía el programa de contratación WOSB. Benefind me mostró cómo acceder a contratos federales reservados para negocios como el mío.',
+        name: 'Rachel M.',
+        location: 'Denver, CO',
+        initials: 'RM',
+      },
+    ],
+    // Final CTA
+    ctaHeadline: 'Podrías Estar Dejando Miles de Dólares Sobre la Mesa',
+    ctaDesc: 'Tanto individuos como empresas califican para programas que nunca reclaman. Ya sean beneficios personales o subvenciones empresariales, solo hay una forma de averiguarlo.',
+    ctaFree: 'Gratis. 5 minutos. Sin registro. 100% privado.',
   },
 };
 
@@ -601,7 +770,33 @@ const zh: Dictionary = {
     footerPrivacy: '隐私政策',
     footerTerms: '服务条款',
     footerScreening: '资格筛查',
+    footerCompanyGrants: '企业补助',
     footerHowItWorks: '如何运作',
+    problemTitle: '每年数十亿福利无人认领',
+    problemSubtitle: '系统太复杂了。我们让它变得简单。',
+    pain1Stat: '$800亿+',
+    pain1Label: '每年无人认领',
+    pain1Desc: '数百万符合条件的美国人错失机会，只因为他们不知道有什么可用。',
+    pain2Stat: '45+分钟',
+    pain2Label: '每份申请',
+    pain2Desc: '冗长的表格、令人困惑的问题和政府术语让人们在开始之前就放弃了。',
+    pain3Stat: '三分之一',
+    pain3Label: '从不申请',
+    pain3Desc: '不是因为他们不需要帮助，而是因为这个过程感觉不可能。',
+    trustTitle: '您的数据归您所有',
+    trustSubtitle: '隐私设计。我们建立Benefind是为了保护您，而不是从您身上获利。',
+    trust1Title: '存储在您的设备上',
+    trust1Desc: '您的筛查答案保留在您的设备上，从不发送到我们的服务器。即使我们想看也看不到。',
+    trust2Title: '我们绝不出售您的数据',
+    trust2Desc: '不卖给广告商。不卖给数据经纪商。不卖给任何人，永远不会。这是承诺。',
+    trust3Title: '开源透明',
+    trust3Desc: '我们的代码是公开的。任何人都可以查看Benefind如何运作。没有黑箱，没有隐藏的把戏。',
+    testimonialsTitle: '真实故事，真实影响',
+    testimonialsSubtitle: '个人和企业正在发现他们从未知道的福利。',
+    testimonials: en.landing.testimonials,
+    ctaHeadline: '您可能正在错失数千美元',
+    ctaDesc: '个人和企业都有资格获得他们从未申请的项目。无论是个人福利还是企业补助，只有一种方式可以知道。',
+    ctaFree: '免费。5分钟。无需注册。100%私密。',
   },
 };
 
@@ -760,7 +955,33 @@ const vi: Dictionary = {
     footerPrivacy: 'Chính sách bảo mật',
     footerTerms: 'Điều khoản dịch vụ',
     footerScreening: 'Kiểm tra điều kiện',
+    footerCompanyGrants: 'Trợ cấp doanh nghiệp',
     footerHowItWorks: 'Cách hoạt động',
+    problemTitle: 'Hàng tỷ đô la trợ cấp không được nhận mỗi năm',
+    problemSubtitle: 'Hệ thống quá phức tạp. Chúng tôi đã đơn giản hóa nó.',
+    pain1Stat: '$80T+',
+    pain1Label: 'Không được nhận mỗi năm',
+    pain1Desc: 'Hàng triệu người Mỹ đủ điều kiện bỏ lỡ cơ hội chỉ vì họ không biết có gì.',
+    pain2Stat: '45+ phút',
+    pain2Label: 'Mỗi đơn xin',
+    pain2Desc: 'Biểu mẫu dài, câu hỏi khó hiểu và thuật ngữ chính phủ khiến mọi người bỏ cuộc trước khi bắt đầu.',
+    pain3Stat: '1/3',
+    pain3Label: 'Không bao giờ nộp đơn',
+    pain3Desc: 'Không phải vì họ không cần giúp đỡ, mà vì quy trình có vẻ không thể.',
+    trustTitle: 'Dữ liệu của bạn thuộc về bạn',
+    trustSubtitle: 'Bảo mật theo thiết kế. Chúng tôi xây dựng Benefind để bảo vệ bạn, không phải để kiếm lợi từ bạn.',
+    trust1Title: 'Lưu trữ trên thiết bị của bạn',
+    trust1Desc: 'Câu trả lời sàng lọc của bạn được lưu trên thiết bị và không bao giờ được gửi đến máy chủ của chúng tôi.',
+    trust2Title: 'Chúng tôi không bao giờ bán dữ liệu của bạn',
+    trust2Desc: 'Không cho nhà quảng cáo. Không cho môi giới dữ liệu. Không cho bất kỳ ai, mãi mãi.',
+    trust3Title: 'Mã nguồn mở và minh bạch',
+    trust3Desc: 'Mã của chúng tôi là công khai. Bất kỳ ai cũng có thể kiểm tra cách Benefind hoạt động.',
+    testimonialsTitle: 'Câu chuyện thực, tác động thực',
+    testimonialsSubtitle: 'Cá nhân và doanh nghiệp đang tìm thấy các trợ cấp mà họ không bao giờ biết.',
+    testimonials: en.landing.testimonials,
+    ctaHeadline: 'Bạn có thể đang bỏ lỡ hàng ngàn đô la',
+    ctaDesc: 'Cả cá nhân và doanh nghiệp đều đủ điều kiện cho các chương trình mà họ không bao giờ yêu cầu. Chỉ có một cách để biết.',
+    ctaFree: 'Miễn phí. 5 phút. Không cần đăng ký. 100% riêng tư.',
   },
 };
 
@@ -913,7 +1134,33 @@ const ar: Dictionary = {
     footerPrivacy: 'سياسة الخصوصية',
     footerTerms: 'شروط الخدمة',
     footerScreening: 'فحص الأهلية',
+    footerCompanyGrants: 'منح الشركات',
     footerHowItWorks: 'كيف يعمل',
+    problemTitle: 'مليارات من المزايا لا يتم المطالبة بها كل عام',
+    problemSubtitle: 'النظام معقد. جعلناه بسيطاً.',
+    pain1Stat: '+$80 مليار',
+    pain1Label: 'غير مطالب بها سنوياً',
+    pain1Desc: 'ملايين الأمريكيين المؤهلين يفوتهم الفرص لمجرد أنهم لا يعرفون ما هو متاح.',
+    pain2Stat: '+45 دقيقة',
+    pain2Label: 'لكل طلب',
+    pain2Desc: 'نماذج طويلة وأسئلة محيرة ومصطلحات حكومية توقف الناس قبل أن يبدأوا.',
+    pain3Stat: '1 من 3',
+    pain3Label: 'لا يتقدمون أبداً',
+    pain3Desc: 'ليس لأنهم لا يحتاجون المساعدة، بل لأن العملية تبدو مستحيلة.',
+    trustTitle: 'بياناتك ملكك',
+    trustSubtitle: 'خصوصية بالتصميم. بنينا Benefind لحمايتك، لا للربح منك.',
+    trust1Title: 'مخزنة على جهازك',
+    trust1Desc: 'إجاباتك تبقى على جهازك ولا يتم إرسالها أبداً إلى خوادمنا. لا يمكننا رؤيتها حتى لو أردنا.',
+    trust2Title: 'لا نبيع بياناتك أبداً',
+    trust2Desc: 'لا للمعلنين. لا لوسطاء البيانات. لا لأي شخص، أبداً. هذا وعد.',
+    trust3Title: 'مفتوح المصدر وشفاف',
+    trust3Desc: 'شفرتنا عامة. يمكن لأي شخص فحص كيف يعمل Benefind. لا صناديق سوداء، لا حيل مخفية.',
+    testimonialsTitle: 'قصص حقيقية، تأثير حقيقي',
+    testimonialsSubtitle: 'الأفراد والشركات يجدون مزايا لم يعرفوا بوجودها.',
+    testimonials: en.landing.testimonials,
+    ctaHeadline: 'قد تكون تترك آلاف الدولارات على الطاولة',
+    ctaDesc: 'الأفراد والشركات على حد سواء مؤهلون لبرامج لا يطالبون بها أبداً. سواء كانت مزايا شخصية أو منح تجارية، هناك طريقة واحدة فقط لمعرفة ذلك.',
+    ctaFree: 'مجاني. 5 دقائق. بدون تسجيل. خاص 100%.',
   },
 };
 

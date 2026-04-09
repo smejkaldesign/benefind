@@ -40,7 +40,7 @@ function apply(resolved: Resolved) {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeRaw] = useState<Theme>('system');
+  const [theme, setThemeRaw] = useState<Theme>('light');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

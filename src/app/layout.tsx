@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/lib/theme';
 import { I18nProvider } from '@/lib/i18n/context';
 import { ServiceWorkerRegister } from '@/components/service-worker-register';
 import { OfflineBanner } from '@/components/offline-banner';
+import { AuthErrorRedirect } from '@/components/auth-error-redirect';
 import './globals.css';
 
 const font = Plus_Jakarta_Sans({
@@ -28,7 +29,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#2563eb',
+  themeColor: '#10B981',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -37,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('benefind-theme');var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem('benefind-theme');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}})()`,
           }}
         />
       </head>
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <I18nProvider>
             {children}
+            <AuthErrorRedirect />
             <ServiceWorkerRegister />
             <OfflineBanner />
           </I18nProvider>

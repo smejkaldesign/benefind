@@ -38,7 +38,7 @@ const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>
 const CATEGORY_COLORS: Record<string, string> = {
   food: 'bg-orange-500/10 text-orange-600',
   healthcare: 'bg-red-500/10 text-red-600',
-  housing: 'bg-blue-500/10 text-blue-600',
+  housing: 'bg-emerald-500/10 text-emerald-600',
   income: 'bg-green-500/10 text-green-600',
   energy: 'bg-yellow-500/10 text-yellow-600',
   education: 'bg-purple-500/10 text-purple-600',
