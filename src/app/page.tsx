@@ -38,78 +38,9 @@ const PROGRAMS = [
   { name: 'Workforce Training', emoji: '🎯' },
 ];
 
-// TODO: These need i18n keys added to the translation files
-const PAIN_POINTS = [
-  {
-    stat: '$80B+',
-    label: 'Unclaimed Every Year',
-    desc: 'Millions of eligible Americans miss out simply because they don\'t know what\'s available.',
-    icon: DollarSign,
-  },
-  {
-    stat: '45+ min',
-    label: 'Per Application',
-    desc: 'Long forms, confusing questions, and government jargon stop people before they even start.',
-    icon: FileCheck,
-  },
-  {
-    stat: '1 in 3',
-    label: 'Never Apply',
-    desc: 'Not because they don\'t need help, but because the process feels impossible.',
-    icon: Users,
-  },
-];
-
-// TODO: These need i18n keys added to the translation files
-const TRUST_POINTS = [
-  {
-    title: 'Stored on Your Device',
-    desc: 'Your screening answers stay on your device and are never sent to our servers. We can\'t see them, even if we wanted to.',
-    icon: Lock,
-  },
-  {
-    title: 'We Never Sell Your Data',
-    desc: 'Not to advertisers. Not to data brokers. Not to anyone, ever. That\'s a promise.',
-    icon: Shield,
-  },
-  {
-    title: 'Open Source and Transparent',
-    desc: 'Our code is public. Anyone can inspect how Benefind works. No black boxes, no hidden tricks.',
-    icon: Code,
-  },
-];
-
-// TODO: These need i18n keys added to the translation files
-const TESTIMONIALS = [
-  {
-    quote: 'I had no idea I qualified for SNAP and LIHEAP. That\'s an extra $400 a month I was leaving on the table.',
-    name: 'Maria G.',
-    location: 'Houston, TX',
-    initials: 'MG',
-    color: 'bg-emerald-500',
-  },
-  {
-    quote: 'I\'m a single dad and the forms always overwhelmed me. Benefind walked me through it like a friend would. My kids are on CHIP now.',
-    name: 'James R.',
-    location: 'Atlanta, GA',
-    initials: 'JR',
-    color: 'bg-sky-500',
-  },
-  {
-    quote: 'My mom only speaks Vietnamese. She was able to use Benefind in her language and found out she qualifies for Medicaid.',
-    name: 'Linh T.',
-    location: 'San Jose, CA',
-    initials: 'LT',
-    color: 'bg-amber-500',
-  },
-  {
-    quote: 'I\'m a college student working part-time. I didn\'t think I qualified for anything. Turns out I\'m eligible for SNAP and a Pell Grant.',
-    name: 'Devon W.',
-    location: 'Chicago, IL',
-    initials: 'DW',
-    color: 'bg-violet-500',
-  },
-];
+const PAIN_ICONS = [DollarSign, FileCheck, Users];
+const TRUST_ICONS = [Lock, Shield, Code];
+const TESTIMONIAL_COLORS = ['bg-emerald-500', 'bg-sky-500', 'bg-purple-500', 'bg-amber-500', 'bg-rose-500', 'bg-violet-500'];
 
 export default function Home() {
   const { t } = useI18n();
@@ -252,7 +183,6 @@ export default function Home() {
       </section>
 
       {/* ── Problem Section ────────────────────────────────────── */}
-      {/* TODO: Hardcoded English text below needs i18n keys */}
       <section className="px-4 py-24 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <motion.div
@@ -263,10 +193,10 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-zinc-50 sm:text-4xl lg:text-5xl">
-              Billions in Benefits Go Unclaimed Every Year
+              {t.landing.problemTitle}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-gray-500 dark:text-zinc-400">
-              The system is confusing. We made it simple.
+              {t.landing.problemSubtitle}
             </p>
           </motion.div>
 
@@ -280,29 +210,36 @@ export default function Home() {
               visible: { transition: { staggerChildren: 0.12 } },
             }}
           >
-            {PAIN_POINTS.map(({ stat, label, desc, icon: Icon }) => (
-              <motion.div
-                key={stat}
-                className="rounded-2xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 p-8 transition-all duration-300 hover:border-gray-300 dark:hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/[0.12]">
-                  <Icon className="h-6 w-6 text-emerald-500" />
-                </div>
-                <p className="mt-6 text-3xl font-extrabold text-emerald-500 sm:text-4xl">
-                  {stat}
-                </p>
-                <p className="mt-1 text-sm font-semibold uppercase tracking-wider text-gray-800 dark:text-zinc-50">
-                  {label}
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-gray-500 dark:text-zinc-400">
-                  {desc}
-                </p>
-              </motion.div>
-            ))}
+            {([
+              { stat: t.landing.pain1Stat, label: t.landing.pain1Label, desc: t.landing.pain1Desc },
+              { stat: t.landing.pain2Stat, label: t.landing.pain2Label, desc: t.landing.pain2Desc },
+              { stat: t.landing.pain3Stat, label: t.landing.pain3Label, desc: t.landing.pain3Desc },
+            ] as const).map(({ stat, label, desc }, i) => {
+              const Icon = PAIN_ICONS[i]!;
+              return (
+                <motion.div
+                  key={stat}
+                  className="rounded-2xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 p-8 transition-all duration-300 hover:border-gray-300 dark:hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/[0.12]">
+                    <Icon className="h-6 w-6 text-emerald-500" />
+                  </div>
+                  <p className="mt-6 text-3xl font-extrabold text-emerald-500 sm:text-4xl">
+                    {stat}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold uppercase tracking-wider text-gray-800 dark:text-zinc-50">
+                    {label}
+                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-500 dark:text-zinc-400">
+                    {desc}
+                  </p>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </section>
@@ -406,7 +343,6 @@ export default function Home() {
       </section>
 
       {/* ── Trust Section ──────────────────────────────────────── */}
-      {/* TODO: Hardcoded English text below needs i18n keys */}
       <section className="bg-gray-50/50 dark:bg-zinc-900/50 px-4 py-24 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <motion.div
@@ -417,10 +353,10 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-zinc-50 sm:text-4xl">
-              Your Data Stays Yours
+              {t.landing.trustTitle}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-gray-500 dark:text-zinc-400">
-              Private by design. We built Benefind to protect you, not profit from you.
+              {t.landing.trustSubtitle}
             </p>
           </motion.div>
 
@@ -434,30 +370,36 @@ export default function Home() {
               visible: { transition: { staggerChildren: 0.12 } },
             }}
           >
-            {TRUST_POINTS.map(({ title, desc, icon: Icon }) => (
-              <motion.div
-                key={title}
-                className="rounded-2xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 p-8 transition-all duration-300 hover:border-gray-300 dark:hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/[0.12]">
-                  <Icon className="h-6 w-6 text-emerald-500" />
-                </div>
-                <h3 className="mt-6 text-lg font-semibold text-gray-900 dark:text-zinc-50">{title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-gray-500 dark:text-zinc-400">
-                  {desc}
-                </p>
-              </motion.div>
-            ))}
+            {([
+              { title: t.landing.trust1Title, desc: t.landing.trust1Desc },
+              { title: t.landing.trust2Title, desc: t.landing.trust2Desc },
+              { title: t.landing.trust3Title, desc: t.landing.trust3Desc },
+            ] as const).map(({ title, desc }, i) => {
+              const Icon = TRUST_ICONS[i]!;
+              return (
+                <motion.div
+                  key={title}
+                  className="rounded-2xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 p-8 transition-all duration-300 hover:border-gray-300 dark:hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/[0.12]">
+                    <Icon className="h-6 w-6 text-emerald-500" />
+                  </div>
+                  <h3 className="mt-6 text-lg font-semibold text-gray-900 dark:text-zinc-50">{title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-500 dark:text-zinc-400">
+                    {desc}
+                  </p>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </section>
 
       {/* ── Testimonials ───────────────────────────────────────── */}
-      {/* TODO: Hardcoded English text below needs i18n keys */}
       <section className="px-4 py-24 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <motion.div
@@ -468,15 +410,15 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-zinc-50 sm:text-4xl">
-              Real Stories, Real Impact
+              {t.landing.testimonialsTitle}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-gray-500 dark:text-zinc-400">
-              People just like you are finding benefits they never knew they had.
+              {t.landing.testimonialsSubtitle}
             </p>
           </motion.div>
 
           <motion.div
-            className="mt-16 grid gap-6 sm:grid-cols-2"
+            className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-80px' }}
@@ -485,7 +427,7 @@ export default function Home() {
               visible: { transition: { staggerChildren: 0.1 } },
             }}
           >
-            {TESTIMONIALS.map(({ quote, name, location, initials, color }) => (
+            {t.landing.testimonials.map(({ quote, name, location, initials }, i) => (
               <motion.div
                 key={name}
                 className="rounded-2xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 p-8 transition-all duration-300 hover:border-gray-300 dark:hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
@@ -500,7 +442,7 @@ export default function Home() {
                 </p>
                 <div className="mt-6 flex items-center gap-3">
                   <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white ${color}`}
+                    className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white ${TESTIMONIAL_COLORS[i % TESTIMONIAL_COLORS.length]}`}
                   >
                     {initials}
                   </div>
@@ -580,7 +522,6 @@ export default function Home() {
       </section>
 
       {/* ── Final CTA ──────────────────────────────────────────── */}
-      {/* TODO: Hardcoded English text below needs i18n keys */}
       <section className="px-4 py-24 sm:py-32">
         <motion.div
           className="mx-auto max-w-3xl rounded-3xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 px-6 py-12 text-center sm:px-16 sm:py-16"
@@ -590,20 +531,20 @@ export default function Home() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl font-bold text-gray-900 dark:text-zinc-50 sm:text-4xl">
-            You Could Be Leaving Thousands on the Table
+            {t.landing.ctaHeadline}
           </h2>
           <p className="mt-4 text-gray-500 dark:text-zinc-400">
-            Individuals and companies alike qualify for programs they never claim. Whether it&apos;s personal benefits or business grants, there&apos;s only one way to find out.
+            {t.landing.ctaDesc}
           </p>
           <Link
             href="/get-started"
             className="mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-emerald-500 px-7 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/30"
           >
-            Start Your Free Screening
+            {t.landing.ctaButton}
             <ArrowRight className="h-4 w-4" />
           </Link>
           <p className="mt-4 text-sm text-gray-400 dark:text-zinc-500">
-            Free. 5 minutes. No signup required. 100% private.
+            {t.landing.ctaFree}
           </p>
         </motion.div>
       </section>
@@ -638,7 +579,7 @@ export default function Home() {
                     href="/screening/company"
                     className="text-sm text-gray-500 dark:text-zinc-400 transition-colors hover:text-emerald-500"
                   >
-                    Company Grants
+                    {t.landing.footerCompanyGrants}
                   </Link>
                 </li>
                 <li>
