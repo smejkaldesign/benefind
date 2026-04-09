@@ -28,12 +28,14 @@ const PROGRAMS = [
   { name: 'CHIP', emoji: '👶' },
   { name: 'SSI', emoji: '💵' },
   { name: 'SSDI', emoji: '🏥' },
-  { name: 'TANF', emoji: '👨‍👩‍👧' },
   { name: 'Section 8', emoji: '🏠' },
   { name: 'LIHEAP', emoji: '🔥' },
   { name: 'Pell Grant', emoji: '🎓' },
   { name: 'EITC', emoji: '💰' },
-  { name: 'CCDF', emoji: '🧒' },
+  { name: 'R&D Tax Credit', emoji: '🔬' },
+  { name: 'SBIR Grants', emoji: '🚀' },
+  { name: 'WOTC', emoji: '👥' },
+  { name: 'Workforce Training', emoji: '🎯' },
 ];
 
 // TODO: These need i18n keys added to the translation files
@@ -151,7 +153,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="flex min-h-dvh flex-col bg-zinc-950">
+    <main className="flex min-h-dvh flex-col bg-white dark:bg-zinc-950">
       <LandingNav />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
@@ -177,7 +179,7 @@ export default function Home() {
           </motion.div>
 
           <motion.h1
-            className="mt-8 text-4xl leading-[1.1] font-extrabold tracking-tight text-zinc-50 sm:text-6xl lg:text-7xl"
+            className="mt-8 text-4xl leading-[1.1] font-extrabold tracking-tight text-gray-900 dark:text-zinc-50 sm:text-6xl lg:text-7xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -189,7 +191,7 @@ export default function Home() {
           </motion.h1>
 
           <motion.p
-            className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-zinc-400 sm:text-lg"
+            className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-gray-500 dark:text-zinc-400 sm:text-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -204,7 +206,7 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <Link
-              href="/screening"
+              href="/get-started"
               className="group inline-flex h-12 items-center gap-2 rounded-xl bg-emerald-500 px-7 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
             >
               {t.landing.heroCta}
@@ -212,7 +214,7 @@ export default function Home() {
             </Link>
             <Link
               href="#how-it-works"
-              className="inline-flex h-12 items-center gap-2 rounded-xl border border-zinc-700 px-6 text-base font-medium text-zinc-300 transition-colors hover:bg-zinc-800"
+              className="inline-flex h-12 items-center gap-2 rounded-xl border border-gray-300 dark:border-zinc-700 px-6 text-base font-medium text-gray-600 dark:text-zinc-300 transition-colors hover:bg-gray-100 dark:hover:bg-zinc-800"
             >
               {t.landing.heroSecondaryCta}
             </Link>
@@ -221,13 +223,13 @@ export default function Home() {
       </section>
 
       {/* ── Programs Marquee ─────────────────────────────────── */}
-      <section className="overflow-hidden border-y border-zinc-800 bg-zinc-900 py-6 sm:py-8">
-        <p className="mb-4 text-center text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+      <section className="overflow-hidden border-y border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900 py-6 sm:py-8">
+        <p className="mb-4 text-center text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-zinc-500">
           {t.landing.programsLabel}
         </p>
         <div className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-zinc-900 to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-zinc-900 to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-gray-50 dark:from-zinc-900 to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-gray-50 dark:from-zinc-900 to-transparent" />
           <div
             className="flex gap-10 sm:gap-14"
             style={{
@@ -239,7 +241,7 @@ export default function Home() {
               PROGRAMS.map((p, i) => (
                 <span
                   key={`${copy}-${i}`}
-                  className="shrink-0 text-base font-medium text-zinc-400/60"
+                  className="shrink-0 text-base font-medium text-gray-500/60 dark:text-zinc-400/60"
                 >
                   {p.emoji} {p.name}
                 </span>
@@ -260,10 +262,10 @@ export default function Home() {
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl lg:text-5xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-zinc-50 sm:text-4xl lg:text-5xl">
               Billions in Benefits Go Unclaimed Every Year
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-zinc-400">
+            <p className="mx-auto mt-4 max-w-2xl text-gray-500 dark:text-zinc-400">
               The system is confusing. We made it simple.
             </p>
           </motion.div>
@@ -281,7 +283,7 @@ export default function Home() {
             {PAIN_POINTS.map(({ stat, label, desc, icon: Icon }) => (
               <motion.div
                 key={stat}
-                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8 transition-all duration-300 hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
+                className="rounded-2xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 p-8 transition-all duration-300 hover:border-gray-300 dark:hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
@@ -293,10 +295,10 @@ export default function Home() {
                 <p className="mt-6 text-3xl font-extrabold text-emerald-500 sm:text-4xl">
                   {stat}
                 </p>
-                <p className="mt-1 text-sm font-semibold uppercase tracking-wider text-zinc-50">
+                <p className="mt-1 text-sm font-semibold uppercase tracking-wider text-gray-800 dark:text-zinc-50">
                   {label}
                 </p>
-                <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+                <p className="mt-3 text-sm leading-relaxed text-gray-500 dark:text-zinc-400">
                   {desc}
                 </p>
               </motion.div>
@@ -306,7 +308,7 @@ export default function Home() {
       </section>
 
       {/* ── How It Works ─────────────────────────────────────── */}
-      <section id="how-it-works" className="bg-zinc-900/50 px-4 py-24 sm:py-32">
+      <section id="how-it-works" className="bg-gray-50/50 dark:bg-zinc-900/50 px-4 py-24 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <motion.div
             className="text-center"
@@ -315,10 +317,10 @@ export default function Home() {
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-zinc-50 sm:text-4xl">
               {t.landing.howTitle}
             </h2>
-            <p className="mt-3 text-zinc-400">{t.landing.howSubtitle}</p>
+            <p className="mt-3 text-gray-500 dark:text-zinc-400">{t.landing.howSubtitle}</p>
           </motion.div>
 
           <motion.div
@@ -334,7 +336,7 @@ export default function Home() {
             {steps.map(({ num, title, desc, icon: Icon }) => (
               <motion.div
                 key={num}
-                className="relative rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8"
+                className="relative rounded-2xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 p-8"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
@@ -347,9 +349,9 @@ export default function Home() {
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/[0.12]">
                     <Icon className="h-5 w-5 text-emerald-500" />
                   </div>
-                  <h3 className="text-lg font-semibold text-zinc-50">{title}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-zinc-50">{title}</h3>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+                <p className="mt-3 text-sm leading-relaxed text-gray-500 dark:text-zinc-400">
                   {desc}
                 </p>
               </motion.div>
@@ -367,10 +369,10 @@ export default function Home() {
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-zinc-50 sm:text-4xl">
               {t.landing.impactTitle}
             </h2>
-            <p className="mt-3 text-zinc-400">
+            <p className="mt-3 text-gray-500 dark:text-zinc-400">
               {t.landing.impactSubtitle}
             </p>
           </motion.div>
@@ -396,7 +398,7 @@ export default function Home() {
                 <p className="text-3xl font-extrabold text-emerald-500 sm:text-5xl">
                   {value}
                 </p>
-                <p className="mt-2 text-sm text-zinc-400">{label}</p>
+                <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400">{label}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -405,7 +407,7 @@ export default function Home() {
 
       {/* ── Trust Section ──────────────────────────────────────── */}
       {/* TODO: Hardcoded English text below needs i18n keys */}
-      <section className="bg-zinc-900/50 px-4 py-24 sm:py-32">
+      <section className="bg-gray-50/50 dark:bg-zinc-900/50 px-4 py-24 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <motion.div
             className="text-center"
@@ -414,10 +416,10 @@ export default function Home() {
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-zinc-50 sm:text-4xl">
               Your Data Stays Yours
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-zinc-400">
+            <p className="mx-auto mt-4 max-w-2xl text-gray-500 dark:text-zinc-400">
               Private by design. We built Benefind to protect you, not profit from you.
             </p>
           </motion.div>
@@ -435,7 +437,7 @@ export default function Home() {
             {TRUST_POINTS.map(({ title, desc, icon: Icon }) => (
               <motion.div
                 key={title}
-                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8 transition-all duration-300 hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
+                className="rounded-2xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 p-8 transition-all duration-300 hover:border-gray-300 dark:hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
@@ -444,8 +446,8 @@ export default function Home() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/[0.12]">
                   <Icon className="h-6 w-6 text-emerald-500" />
                 </div>
-                <h3 className="mt-6 text-lg font-semibold text-zinc-50">{title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+                <h3 className="mt-6 text-lg font-semibold text-gray-900 dark:text-zinc-50">{title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-gray-500 dark:text-zinc-400">
                   {desc}
                 </p>
               </motion.div>
@@ -465,10 +467,10 @@ export default function Home() {
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-zinc-50 sm:text-4xl">
               Real Stories, Real Impact
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-zinc-400">
+            <p className="mx-auto mt-4 max-w-2xl text-gray-500 dark:text-zinc-400">
               People just like you are finding benefits they never knew they had.
             </p>
           </motion.div>
@@ -486,14 +488,14 @@ export default function Home() {
             {TESTIMONIALS.map(({ quote, name, location, initials, color }) => (
               <motion.div
                 key={name}
-                className="rounded-2xl border border-zinc-700/50 bg-zinc-900 p-8 transition-all duration-300 hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
+                className="rounded-2xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 p-8 transition-all duration-300 hover:border-gray-300 dark:hover:border-zinc-600 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
                 }}
               >
                 <Quote className="h-8 w-8 text-emerald-500/30" />
-                <p className="mt-4 text-base leading-relaxed text-zinc-300">
+                <p className="mt-4 text-base leading-relaxed text-gray-600 dark:text-zinc-300">
                   &ldquo;{quote}&rdquo;
                 </p>
                 <div className="mt-6 flex items-center gap-3">
@@ -503,8 +505,8 @@ export default function Home() {
                     {initials}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-zinc-50">{name}</p>
-                    <p className="text-xs text-zinc-500">{location}</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-zinc-50">{name}</p>
+                    <p className="text-xs text-gray-400 dark:text-zinc-500">{location}</p>
                   </div>
                 </div>
               </motion.div>
@@ -514,7 +516,7 @@ export default function Home() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────────── */}
-      <section className="bg-zinc-900/50 px-4 py-24 sm:py-32">
+      <section className="bg-gray-50/50 dark:bg-zinc-900/50 px-4 py-24 sm:py-32">
         <div className="mx-auto max-w-2xl">
           <motion.div
             className="text-center"
@@ -523,10 +525,10 @@ export default function Home() {
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-50 sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-zinc-50 sm:text-4xl">
               {t.landing.faqTitle}
             </h2>
-            <p className="mt-3 text-zinc-400">{t.landing.faqSubtitle}</p>
+            <p className="mt-3 text-gray-500 dark:text-zinc-400">{t.landing.faqSubtitle}</p>
           </motion.div>
 
           <motion.div
@@ -539,7 +541,7 @@ export default function Home() {
             {faqs.map((faq, i) => (
               <div
                 key={i}
-                className="border-b border-zinc-800 last:border-b-0"
+                className="border-b border-gray-200 dark:border-zinc-800 last:border-b-0"
               >
                 <button
                   type="button"
@@ -547,9 +549,9 @@ export default function Home() {
                   aria-expanded={openFaq === i}
                   className="flex w-full items-center justify-between py-5 text-start active:opacity-70"
                 >
-                  <span className="pr-4 font-medium text-zinc-50">{faq.q}</span>
+                  <span className="pr-4 font-medium text-gray-900 dark:text-zinc-50">{faq.q}</span>
                   <ChevronDown
-                    className={`h-5 w-5 shrink-0 text-zinc-500 transition-transform duration-200 ${
+                    className={`h-5 w-5 shrink-0 text-gray-400 dark:text-zinc-500 transition-transform duration-200 ${
                       openFaq === i ? 'rotate-180' : ''
                     }`}
                   />
@@ -563,7 +565,7 @@ export default function Home() {
                       transition={{ duration: 0.2, ease: 'easeOut' }}
                       className="overflow-hidden"
                     >
-                      <p className="pb-5 text-sm leading-relaxed text-zinc-400">
+                      <p className="pb-5 text-sm leading-relaxed text-gray-500 dark:text-zinc-400">
                         {faq.a}
                       </p>
                     </motion.div>
@@ -579,60 +581,68 @@ export default function Home() {
       {/* TODO: Hardcoded English text below needs i18n keys */}
       <section className="px-4 py-24 sm:py-32">
         <motion.div
-          className="mx-auto max-w-3xl rounded-3xl border border-zinc-700/50 bg-zinc-900 px-6 py-12 text-center sm:px-16 sm:py-16"
+          className="mx-auto max-w-3xl rounded-3xl border border-gray-200/50 dark:border-zinc-700/50 bg-white dark:bg-zinc-900 px-6 py-12 text-center sm:px-16 sm:py-16"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-bold text-zinc-50 sm:text-4xl">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-zinc-50 sm:text-4xl">
             You Could Be Leaving Thousands on the Table
           </h2>
-          <p className="mt-4 text-zinc-400">
-            Millions of Americans qualify for benefits they never claim. You might be one of them. There&apos;s only one way to find out.
+          <p className="mt-4 text-gray-500 dark:text-zinc-400">
+            Individuals and companies alike qualify for programs they never claim. Whether it&apos;s personal benefits or business grants, there&apos;s only one way to find out.
           </p>
           <Link
-            href="/screening"
+            href="/get-started"
             className="mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-emerald-500 px-7 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-600 hover:shadow-xl hover:shadow-emerald-500/30"
           >
             Start Your Free Screening
             <ArrowRight className="h-4 w-4" />
           </Link>
-          <p className="mt-4 text-sm text-zinc-500">
+          <p className="mt-4 text-sm text-gray-400 dark:text-zinc-500">
             Free. 5 minutes. No signup required. 100% private.
           </p>
         </motion.div>
       </section>
 
       {/* ── Footer ───────────────────────────────────────────── */}
-      <footer className="border-t border-zinc-800 px-4 py-12">
+      <footer className="border-t border-gray-200 dark:border-zinc-800 px-4 py-12">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <span className="text-lg font-bold text-emerald-500">
                 {t.common.appName}
               </span>
-              <p className="mt-2 text-sm text-zinc-400">
+              <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400">
                 {t.landing.footerTagline}
               </p>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500">
                 {t.landing.footerProduct}
               </h4>
               <ul className="mt-3 space-y-2">
                 <li>
                   <Link
                     href="/screening"
-                    className="text-sm text-zinc-400 transition-colors hover:text-emerald-500"
+                    className="text-sm text-gray-500 dark:text-zinc-400 transition-colors hover:text-emerald-500"
                   >
                     {t.landing.footerScreening}
                   </Link>
                 </li>
                 <li>
                   <Link
+                    href="/screening/company"
+                    className="text-sm text-gray-500 dark:text-zinc-400 transition-colors hover:text-emerald-500"
+                  >
+                    Company Grants
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="#how-it-works"
-                    className="text-sm text-zinc-400 transition-colors hover:text-emerald-500"
+                    className="text-sm text-gray-500 dark:text-zinc-400 transition-colors hover:text-emerald-500"
                   >
                     {t.landing.footerHowItWorks}
                   </Link>
@@ -640,14 +650,14 @@ export default function Home() {
               </ul>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500">
                 {t.landing.footerLegal}
               </h4>
               <ul className="mt-3 space-y-2">
                 <li>
                   <Link
                     href="/privacy"
-                    className="text-sm text-zinc-400 transition-colors hover:text-emerald-500"
+                    className="text-sm text-gray-500 dark:text-zinc-400 transition-colors hover:text-emerald-500"
                   >
                     {t.landing.footerPrivacy}
                   </Link>
@@ -655,7 +665,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/terms"
-                    className="text-sm text-zinc-400 transition-colors hover:text-emerald-500"
+                    className="text-sm text-gray-500 dark:text-zinc-400 transition-colors hover:text-emerald-500"
                   >
                     {t.landing.footerTerms}
                   </Link>
@@ -663,24 +673,24 @@ export default function Home() {
               </ul>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500">
                 {t.landing.footerLanguages}
               </h4>
               <ul className="mt-3 space-y-2">
-                <li className="text-sm text-zinc-400">English</li>
-                <li className="text-sm text-zinc-400">Español</li>
-                <li className="text-sm text-zinc-400">中文</li>
-                <li className="text-sm text-zinc-400">Tiếng Việt</li>
-                <li className="text-sm text-zinc-400">العربية</li>
+                <li className="text-sm text-gray-500 dark:text-zinc-400">English</li>
+                <li className="text-sm text-gray-500 dark:text-zinc-400">Español</li>
+                <li className="text-sm text-gray-500 dark:text-zinc-400">中文</li>
+                <li className="text-sm text-gray-500 dark:text-zinc-400">Tiếng Việt</li>
+                <li className="text-sm text-gray-500 dark:text-zinc-400">العربية</li>
               </ul>
             </div>
           </div>
-          <div className="mt-10 border-t border-zinc-800 pt-6 text-center text-sm text-zinc-500">
+          <div className="mt-10 border-t border-gray-200 dark:border-zinc-800 pt-6 text-center text-sm text-gray-400 dark:text-zinc-500">
             <p>
               &copy; {new Date().getFullYear()} {t.common.appName}.{' '}
               {t.common.free}
             </p>
-            <p className="mt-1 text-zinc-600">
+            <p className="mt-1 text-gray-400 dark:text-zinc-600">
               Built by Smejkal Design
             </p>
           </div>

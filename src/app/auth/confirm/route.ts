@@ -15,8 +15,9 @@ function safePath(raw: string | null): string {
 }
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin;
+  const requestUrl = new URL(request.url);
+  const { searchParams } = requestUrl;
+  const origin = requestUrl.origin;
   const token_hash = searchParams.get('token_hash');
   const type = searchParams.get('type') as EmailOtpType | null;
   const next = safePath(searchParams.get('next'));

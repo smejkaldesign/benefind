@@ -12,6 +12,16 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const err = params.get('error');
+    if (err === 'link_expired') {
+      setError('That sign-in link has expired or already been used. Request a new one below.');
+    } else if (err === 'auth_failed') {
+      setError('Sign-in failed. Please try again.');
+    }
+  }, []);
   const [cooldownEnd, setCooldownEnd] = useState<number | null>(null);
   const [cooldown, setCooldown] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
