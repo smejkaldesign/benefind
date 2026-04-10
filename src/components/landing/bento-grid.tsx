@@ -1,42 +1,62 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, MessageSquare, Globe, Users, Play } from "lucide-react";
+import {
+  Sparkles,
+  MessageSquare,
+  Users,
+  Lock,
+  Play,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { MagicBento, MagicBentoCard } from "@/components/magic-bento";
+import { BorderGlow } from "@/components/border-glow";
+import "@/components/magic-bento.css";
 
 interface Feature {
   title: string;
   description: string;
   icon: LucideIcon;
+  /** Optional grid span class for varying widths */
+  span?: string;
 }
 
 const features: Feature[] = [
   {
     title: "AI-Powered Screening",
     description:
-      "Our AI asks simple questions and matches you against 80+ programs instantly.",
+      "Answer a few simple questions about your household. Our AI matches you against 80+ federal and state programs in about five minutes.",
     icon: Sparkles,
   },
   {
     title: "Plain Language",
     description:
-      "No government jargon. Every program explained in words you understand.",
+      "No government jargon. Every program is explained in words you actually understand, with the next step spelled out.",
     icon: MessageSquare,
+    span: "magic-bento-span-2-col",
   },
   {
-    title: "Multilingual",
+    title: "People & Companies",
     description:
-      "Available in English, Spanish, Chinese, Vietnamese, and Arabic. Every program explanation, every result, every next step, all translated.",
-    icon: Globe,
-  },
-  {
-    title: "For People & Companies",
-    description:
-      "Individuals find personal benefits like SNAP and Medicaid. Companies find grants, tax credits, and incentives like R&D and SBIR.",
+      "Individuals find SNAP, Medicaid, WIC, and housing assistance. Companies find R&D Tax Credits, SBIR grants, and WOTC incentives.",
     icon: Users,
+    span: "magic-bento-span-2-col",
+  },
+  {
+    title: "Privacy by Design",
+    description:
+      "Your data stays on your device. Nothing is sent to a server. No signup, no email, no tracking. Free, always.",
+    icon: Lock,
   },
 ];
+
+// Match the StatsStrip BorderGlow palette so the bento reads as a continuation
+// of the "top callouts" above it.
+const glowProps = {
+  backgroundColor: "#1A1A1A",
+  borderRadius: 16,
+  glowColor: "270 80 80",
+  colors: ["#CAB1F7", "#DEB0F7", "#B19EEF"],
+};
 
 export function BentoGrid() {
   return (
@@ -69,52 +89,61 @@ export function BentoGrid() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5, delay: 0.15 }}
+          className="magic-bento-grid"
         >
-          <MagicBento
-            glowColor="202, 177, 247"
-            spotlightRadius={350}
-            enableSpotlight
-          >
-            {/* Big square: video card */}
-            <MagicBentoCard className="magic-bento-span-2-col magic-bento-span-2-row">
-              <div className="relative flex h-full min-h-[380px] w-full items-center justify-center bg-gradient-to-br from-brand/10 via-transparent to-brand-dark/10">
-                <button
-                  type="button"
-                  aria-label="Play demo video"
-                  className="group relative flex h-24 w-24 items-center justify-center rounded-full bg-white/10 backdrop-blur transition hover:bg-white/20"
-                >
-                  <span className="absolute inset-0 rounded-full ring-1 ring-white/20" />
-                  <Play
-                    className="ml-1 h-10 w-10 text-white"
-                    fill="currentColor"
-                  />
-                </button>
-                <p className="absolute bottom-6 left-6 text-sm text-text-subtle">
-                  Demo coming soon
+          {/* Video card — 1 col wide, 2 rows tall */}
+          <BorderGlow {...glowProps} className="magic-bento-span-2-row">
+            <div className="relative h-full min-h-[380px] w-full overflow-hidden rounded-[15px] bg-gradient-to-br from-brand/20 via-surface-bright to-brand-dark/20">
+              <video
+                className="absolute inset-0 h-full w-full object-cover"
+                poster="/video/benefind-demo-poster.jpg"
+                preload="metadata"
+                controls
+                playsInline
+              >
+                <source src="/video/benefind-demo.mp4" type="video/mp4" />
+              </video>
+              {/* Soft overlay for legibility on the poster */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              <div className="pointer-events-none absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur">
+                <Play className="h-3 w-3" fill="currentColor" />
+                90-second walkthrough
+              </div>
+              <div className="pointer-events-none absolute bottom-5 left-5 right-5">
+                <p className="font-display text-xl font-semibold text-white">
+                  See it in action
+                </p>
+                <p className="mt-1 text-xs text-white/80">
+                  From first question to qualified programs in under five
+                  minutes.
                 </p>
               </div>
-            </MagicBentoCard>
+            </div>
+          </BorderGlow>
 
-            {/* 4 feature cards */}
-            {features.map((feature) => {
-              const Icon = feature.icon;
-              return (
-                <MagicBentoCard key={feature.title}>
-                  <div className="flex h-full flex-col justify-between p-6">
-                    <Icon className="h-6 w-6 text-accent" />
-                    <div>
-                      <h3 className="font-display text-xl font-semibold text-text">
-                        {feature.title}
-                      </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-text-muted">
-                        {feature.description}
-                      </p>
-                    </div>
+          {/* 4 feature cards with varying widths */}
+          {features.map((feature) => {
+            const Icon = feature.icon;
+            return (
+              <BorderGlow
+                key={feature.title}
+                {...glowProps}
+                className={feature.span}
+              >
+                <div className="flex h-full min-h-[180px] flex-col justify-between p-6">
+                  <Icon className="h-6 w-6 text-accent" />
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-text">
+                      {feature.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                      {feature.description}
+                    </p>
                   </div>
-                </MagicBentoCard>
-              );
-            })}
-          </MagicBento>
+                </div>
+              </BorderGlow>
+            );
+          })}
         </motion.div>
       </div>
     </section>
