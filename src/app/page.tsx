@@ -102,11 +102,12 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* Animated dither fade — bottom 35%, behind callouts (z-12) */}
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[12] h-[35%]">
-              <DitherFade color="#121212" />
-            </div>
           </VantaClouds>
+
+          {/* Animated dither fade — positioned in the clipped container, bottom 35% */}
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[12] h-[35%]">
+            <DitherFade color="#121212" />
+          </div>
         </div>
 
         {/* Scrolling chips — full viewport width, on top of everything */}

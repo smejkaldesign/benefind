@@ -126,7 +126,7 @@ export function SuccessChips() {
           "linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 10%, rgba(0,0,0,1) 20%, rgba(0,0,0,1) 80%, rgba(0,0,0,0.2) 90%, rgba(0,0,0,0.2) 100%)",
       }}
     >
-      <div className="relative flex h-full flex-col items-start justify-center gap-[60px] overflow-hidden">
+      <div className="relative flex h-full flex-col items-start justify-center gap-[30px] overflow-hidden">
         <ChipRow chips={ROW_1} duration={104} />
         <ChipRow chips={ROW_2} duration={124} />
       </div>
