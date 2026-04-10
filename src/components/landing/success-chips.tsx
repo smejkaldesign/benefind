@@ -1,32 +1,37 @@
 "use client";
 
 /**
- * Oz-style scrolling chip cards — fewer, larger, loosely placed.
- * Chips sit INSIDE the hero so Vanta clouds render over them.
- * Only ~5-6 visible at a time across 2 staggered rows.
+ * Oz-style scrolling callout cards.
+ * - All rows scroll LEFT
+ * - Rows at staggered vertical positions
+ * - Randomized gaps between cards
+ * - Emoji in square icon container
+ * - Taller cards with more padding
  */
 
 const ROW_1 = [
-  { emoji: "🍎", text: "Maria saved $340/mo on groceries" },
-  { emoji: "🚀", text: "TechStart Inc. received $150K SBIR grant" },
-  { emoji: "🌱", text: "GreenBuild Co. saved $45K in clean energy credits" },
-  { emoji: "🎓", text: "Lin received a $6,500 Pell Grant" },
+  { emoji: "🍎", text: "Maria saved $340/mo on groceries", gap: 48 },
+  { emoji: "🚀", text: "TechStart Inc. received $150K SBIR grant", gap: 72 },
+  { emoji: "🌱", text: "GreenBuild Co. saved $45K in energy credits", gap: 36 },
+  { emoji: "🎓", text: "Lin received a $6,500 Pell Grant", gap: 64 },
+  { emoji: "💊", text: "Sarah qualified for free healthcare", gap: 52 },
 ];
 
 const ROW_2 = [
-  { emoji: "💊", text: "Sarah qualified for free healthcare" },
-  { emoji: "🎯", text: "Acme Logistics got $12K workforce training grant" },
-  { emoji: "💰", text: "David found $8,200 in annual benefits" },
+  { emoji: "🔥", text: "James got $2,400 in heating assistance", gap: 80 },
+  { emoji: "🎯", text: "Acme Logistics got $12K workforce grant", gap: 44 },
+  { emoji: "💰", text: "David found $8,200 in annual benefits", gap: 68 },
+  { emoji: "🏠", text: "Rosa found Section 8 housing assistance", gap: 56 },
 ];
 
 function ChipRow({
   chips,
   duration,
-  reverse,
+  offsetY,
 }: {
-  chips: { emoji: string; text: string }[];
+  chips: { emoji: string; text: string; gap: number }[];
   duration: number;
-  reverse?: boolean;
+  offsetY: string;
 }) {
   const tripled = [...chips, ...chips, ...chips];
 
@@ -36,21 +41,19 @@ function ChipRow({
         display: "flex",
         alignItems: "center",
         width: "200%",
-        maxWidth: "2200px",
-        height: "60px",
-        gap: "48px",
+        maxWidth: "2400px",
         mask: "linear-gradient(270deg, transparent 0%, black 20.38% 78.23%, transparent 100%)",
         WebkitMask:
           "linear-gradient(270deg, transparent 0%, black 20.38% 78.23%, transparent 100%)",
         overflow: "visible",
+        transform: `translateY(${offsetY})`,
       }}
     >
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "48px",
-          animation: `chip-scroll ${duration}s linear infinite${reverse ? " reverse" : ""}`,
+          animation: `chip-scroll ${duration}s linear infinite`,
           flexShrink: 0,
         }}
       >
@@ -61,7 +64,8 @@ function ChipRow({
               display: "flex",
               alignItems: "center",
               gap: "14px",
-              padding: "14px 24px",
+              padding: "18px 24px",
+              marginRight: `${chip.gap}px`,
               backgroundColor: "rgb(236, 222, 255)",
               borderRadius: "16px",
               border: "0.6px solid rgba(255, 255, 255, 0.5)",
@@ -73,9 +77,24 @@ function ChipRow({
               whiteSpace: "nowrap" as const,
             }}
           >
-            <span style={{ fontSize: "22px", lineHeight: 1 }}>
+            {/* Emoji in square icon container */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "40px",
+                height: "40px",
+                borderRadius: "10px",
+                backgroundColor: "rgba(255, 255, 255, 0.6)",
+                border: "0.6px solid rgba(0, 0, 0, 0.08)",
+                flexShrink: 0,
+                fontSize: "20px",
+                lineHeight: 1,
+              }}
+            >
               {chip.emoji}
-            </span>
+            </div>
             <span
               style={{
                 fontSize: "15px",
@@ -97,11 +116,11 @@ export function SuccessChips() {
   return (
     <div
       className="pointer-events-none absolute inset-x-0 z-[5]"
-      style={{ bottom: "15%" }}
+      style={{ bottom: "12%", top: "52%" }}
     >
-      <div className="flex flex-col items-center gap-8">
-        <ChipRow chips={ROW_1} duration={80} />
-        <ChipRow chips={ROW_2} duration={90} reverse />
+      <div className="relative flex h-full flex-col justify-around">
+        <ChipRow chips={ROW_1} duration={80} offsetY="-10px" />
+        <ChipRow chips={ROW_2} duration={95} offsetY="20px" />
       </div>
     </div>
   );
