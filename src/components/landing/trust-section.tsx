@@ -84,7 +84,7 @@ const cardVariants = {
 export function TrustSection() {
   return (
     <section className="w-full bg-surface py-24">
-      <div className="mx-auto max-w-[1400px] px-6">
+      <div className="mx-auto max-w-[1520px] px-6">
         {/* Section header */}
         <div className="mb-12 text-center">
           <h2 className="font-display text-4xl text-text md:text-5xl">

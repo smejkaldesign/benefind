@@ -51,7 +51,7 @@ export default function Home() {
           }}
         />
         <div
-          className="relative mx-auto max-w-[1480px] overflow-hidden rounded-t-[20px]"
+          className="relative mx-auto max-w-[1600px] overflow-hidden rounded-t-[20px]"
           style={{
             height: "clamp(805px, 80vh, 1035px)",
             backgroundColor: "#5227FF",
@@ -219,7 +219,7 @@ export default function Home() {
 
       {/* ── Footer ───────────────────────────────────────────── */}
       <footer className="border-t border-border px-6 py-12">
-        <div className="mx-auto max-w-[1400px]">
+        <div className="mx-auto max-w-[1520px]">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <span className="text-lg font-bold text-brand">

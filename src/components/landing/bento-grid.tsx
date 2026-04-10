@@ -51,7 +51,7 @@ const features: Feature[] = [
 export function BentoGrid() {
   return (
     <section className="px-6 py-20 sm:py-28">
-      <div className="mx-auto max-w-[1400px]">
+      <div className="mx-auto max-w-[1520px]">
         {/* Section header */}
         <div className="mb-12 text-center sm:mb-16">
           <motion.h2

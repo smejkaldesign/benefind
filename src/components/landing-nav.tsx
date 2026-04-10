@@ -39,7 +39,7 @@ export function LandingNav() {
           : ""
       }`}
     >
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between">
+      <div className="mx-auto flex max-w-[1520px] items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2">
             <Image

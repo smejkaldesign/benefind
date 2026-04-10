@@ -71,7 +71,7 @@ const cardVariants = {
 export function GetStartedCTA() {
   return (
     <section className="w-full px-6 py-24">
-      <div className="mx-auto max-w-[1400px]">
+      <div className="mx-auto max-w-[1520px]">
         <div className="mb-12 text-center">
           <h2 className="font-display text-4xl text-text sm:text-5xl">
             Get Started
