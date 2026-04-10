@@ -344,7 +344,7 @@ export default function CompanyResultsPage() {
         {/* Actions */}
         <div className="flex flex-col items-center gap-3 pt-4">
           <Link href="/screening/company">
-            <Button variant="secondary" size="md">
+            <Button variant="secondary" size="default">
               <RotateCcw className="h-4 w-4" />
               Update Company Info
             </Button>

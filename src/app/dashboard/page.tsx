@@ -20,7 +20,7 @@ export default async function DashboardPage() {
         </p>
         <div className="mt-4">
           <Link href="/screening">
-            <Button size="md">
+            <Button size="default">
               Start Screening
               <ArrowRight className="h-4 w-4" />
             </Button>

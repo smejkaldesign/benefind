@@ -18,12 +18,12 @@ export default function Error({
           An unexpected error occurred. Your data is safe.
         </p>
         <div className="flex justify-center gap-3">
-          <Button onClick={reset} variant="primary" size="md">
+          <Button onClick={reset} variant="default" size="default">
             <RotateCcw className="h-4 w-4" />
             Try again
           </Button>
           <Link href="/">
-            <Button variant="secondary" size="md">
+            <Button variant="secondary" size="default">
               Go home
             </Button>
           </Link>
