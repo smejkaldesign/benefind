@@ -31,7 +31,7 @@ const stats: Stat[] = [
 
 export function StatsStrip() {
   return (
-    <section className="px-6 py-20 sm:py-28">
+    <section className="px-6 pb-20 pt-[180px] sm:pb-28 sm:pt-[212px]">
       <div className="mx-auto grid max-w-[1520px] grid-cols-1 gap-6 sm:grid-cols-3">
         {stats.map((stat, i) => {
           const Icon = stat.icon;

@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Geist } from "next/font/google";
 import { I18nProvider } from "@/lib/i18n/context";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { OfflineBanner } from "@/components/offline-banner";
 import { AuthErrorRedirect } from "@/components/auth-error-redirect";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -41,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={cn("dark", "font-sans", geist.variable)}>
       <body className={`${inter.variable} ${inter.className} min-h-dvh`}>
         <I18nProvider>
           <SmoothScroll />

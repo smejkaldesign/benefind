@@ -1,76 +1,44 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Sparkles,
-  MessageSquare,
-  Globe,
-  Users,
-  Play,
-} from "lucide-react";
+import { motion } from "framer-motion";
+import { Sparkles, MessageSquare, Globe, Users, Play } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { MagicBento, MagicBentoCard } from "@/components/magic-bento";
 
-interface Tab {
-  id: string;
-  label: string;
+interface Feature {
+  title: string;
   description: string;
   icon: LucideIcon;
 }
 
-const tabs: Tab[] = [
+const features: Feature[] = [
   {
-    id: "ai-screening",
-    label: "AI-Powered Screening",
+    title: "AI-Powered Screening",
     description:
       "Our AI asks simple questions and matches you against 80+ programs instantly.",
     icon: Sparkles,
   },
   {
-    id: "plain-language",
-    label: "Plain Language",
+    title: "Plain Language",
     description:
       "No government jargon. Every program explained in words you understand.",
     icon: MessageSquare,
   },
   {
-    id: "multilingual",
-    label: "Multilingual",
+    title: "Multilingual",
     description:
       "Available in English, Spanish, Chinese, Vietnamese, and Arabic. Every program explanation, every result, every next step, all translated.",
     icon: Globe,
   },
   {
-    id: "people-companies",
-    label: "For People & Companies",
+    title: "For People & Companies",
     description:
       "Individuals find personal benefits like SNAP and Medicaid. Companies find grants, tax credits, and incentives like R&D and SBIR.",
     icon: Users,
   },
 ];
 
-function VideoPlaceholder() {
-  return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-[20px] border border-border bg-surface-bright">
-      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-brand/5" />
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-        <button
-          type="button"
-          className="flex h-20 w-20 items-center justify-center rounded-full bg-accent/20 backdrop-blur transition hover:bg-accent/30"
-          aria-label="Play demo video"
-        >
-          <Play className="ml-1 h-8 w-8 text-accent" fill="currentColor" />
-        </button>
-        <p className="text-sm text-text-subtle">Demo coming soon</p>
-      </div>
-    </div>
-  );
-}
-
 export function BentoGrid() {
-  const [activeTab, setActiveTab] = useState(tabs[0]!.id);
-  const active = tabs.find((t) => t.id === activeTab) ?? tabs[0]!;
-
   return (
     <section className="px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-[1520px]">
@@ -96,115 +64,57 @@ export function BentoGrid() {
           </motion.p>
         </div>
 
-        {/* Mobile: pill tabs */}
-        <div
-          className="mb-6 flex gap-2 overflow-x-auto pb-2 sm:hidden"
-          role="tablist"
-        >
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = tab.id === activeTab;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                aria-controls={`panel-${tab.id}`}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm transition ${
-                  isActive
-                    ? "border-accent bg-surface-bright text-text"
-                    : "border-border bg-surface text-text-muted hover:border-accent/30"
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Mobile: video + description */}
-        <div className="sm:hidden">
-          <VideoPlaceholder />
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={active.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="mt-4 text-sm text-text-muted"
-            >
-              {active.description}
-            </motion.p>
-          </AnimatePresence>
-        </div>
-
-        {/* Desktop: side-by-side accordion + video */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="hidden gap-8 sm:flex lg:gap-12"
         >
-          {/* Left: accordion tabs */}
-          <div className="flex w-2/5 flex-col gap-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = tab.id === activeTab;
-              return (
+          <MagicBento
+            glowColor="202, 177, 247"
+            spotlightRadius={350}
+            enableSpotlight
+          >
+            {/* Big square: video card */}
+            <MagicBentoCard className="magic-bento-span-2-col magic-bento-span-2-row">
+              <div className="relative flex h-full min-h-[380px] w-full items-center justify-center bg-gradient-to-br from-brand/10 via-transparent to-brand-dark/10">
                 <button
-                  key={tab.id}
                   type="button"
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`group relative rounded-[10px] border p-5 text-left transition ${
-                    isActive
-                      ? "border-border bg-surface-bright"
-                      : "border-transparent hover:border-border/50 hover:bg-surface-dim"
-                  }`}
+                  aria-label="Play demo video"
+                  className="group relative flex h-24 w-24 items-center justify-center rounded-full bg-white/10 backdrop-blur transition hover:bg-white/20"
                 >
-                  <div
-                    className={`absolute left-0 top-3 bottom-3 w-[3px] rounded-full transition ${
-                      isActive ? "bg-accent" : "bg-transparent"
-                    }`}
+                  <span className="absolute inset-0 rounded-full ring-1 ring-white/20" />
+                  <Play
+                    className="ml-1 h-10 w-10 text-white"
+                    fill="currentColor"
                   />
-                  <div className="flex items-center gap-3">
-                    <Icon
-                      className={`h-5 w-5 transition ${
-                        isActive
-                          ? "text-accent"
-                          : "text-text-subtle group-hover:text-text-muted"
-                      }`}
-                    />
-                    <span className="font-semibold text-text">
-                      {tab.label}
-                    </span>
-                  </div>
-                  <AnimatePresence mode="wait">
-                    {isActive && (
-                      <motion.p
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.25 }}
-                        className="mt-3 overflow-hidden text-sm leading-relaxed text-text-muted"
-                      >
-                        {tab.description}
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
                 </button>
+                <p className="absolute bottom-6 left-6 text-sm text-text-subtle">
+                  Demo coming soon
+                </p>
+              </div>
+            </MagicBentoCard>
+
+            {/* 4 feature cards */}
+            {features.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <MagicBentoCard key={feature.title}>
+                  <div className="flex h-full flex-col justify-between p-6">
+                    <Icon className="h-6 w-6 text-accent" />
+                    <div>
+                      <h3 className="font-display text-xl font-semibold text-text">
+                        {feature.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                </MagicBentoCard>
               );
             })}
-          </div>
-
-          {/* Right: video placeholder */}
-          <div className="w-3/5">
-            <VideoPlaceholder />
-          </div>
+          </MagicBento>
         </motion.div>
       </div>
     </section>
