@@ -57,19 +57,30 @@ export default function Home() {
             backgroundColor: "#5227FF",
           }}
         >
-          {/* Grainient gradient background */}
+          {/* Grainient gradient background — dark anchored at top, pink pushed lower */}
           <div className="absolute inset-0">
             <Grainient
               color1="#FF9FFC"
               color2="#5227FF"
               color3="#B19EEF"
               timeSpeed={0.25}
+              rotationAmount={120}
+              centerY={-0.25}
+              colorBalance={0.15}
             />
           </div>
+          {/* Dark vignette behind hero text — top fade for legibility */}
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-[55%]"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(20,10,40,0.55) 0%, rgba(20,10,40,0.35) 40%, transparent 100%)",
+            }}
+          />
           {/* Inner wrapper to keep children rendering above grainient */}
           <div className="absolute inset-0">
-            {/* Hero text — top portion */}
-            <div className="relative z-10 flex flex-col items-center px-4 pt-20 sm:pt-28">
+            {/* Hero text — lowered ~40px */}
+            <div className="relative z-10 flex flex-col items-center px-4 pt-32 sm:pt-40">
               <motion.h1
                 className="max-w-[900px] text-center font-display text-4xl leading-[1.05] font-semibold tracking-tight text-white sm:text-6xl lg:text-[64px]"
                 initial={{ opacity: 0, y: 20 }}
