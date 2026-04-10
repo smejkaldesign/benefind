@@ -2,11 +2,10 @@
 
 /**
  * Oz-style scrolling callout cards.
+ * - Positioned absolutely over the hero section (outside container)
+ * - Full viewport width, extending off right edge, fading into left
  * - All rows scroll LEFT
- * - Rows at staggered vertical positions
- * - Randomized gaps between cards
- * - Emoji in square icon container
- * - Taller cards with more padding
+ * - On top of dither overlay (z-20)
  */
 
 const ROW_1 = [
@@ -40,11 +39,6 @@ function ChipRow({
       style={{
         display: "flex",
         alignItems: "center",
-        width: "200%",
-        maxWidth: "2400px",
-        mask: "linear-gradient(270deg, transparent 0%, black 20.38% 78.23%, transparent 100%)",
-        WebkitMask:
-          "linear-gradient(270deg, transparent 0%, black 20.38% 78.23%, transparent 100%)",
         overflow: "visible",
         transform: `translateY(${offsetY})`,
       }}
@@ -77,7 +71,6 @@ function ChipRow({
               whiteSpace: "nowrap" as const,
             }}
           >
-            {/* Emoji in square icon container */}
             <div
               style={{
                 display: "flex",
@@ -115,10 +108,29 @@ function ChipRow({
 export function SuccessChips() {
   return (
     <div
-      className="pointer-events-none absolute inset-x-0 z-[5]"
-      style={{ bottom: "12%", top: "52%" }}
+      className="pointer-events-none absolute z-20"
+      style={{
+        /* Full viewport width — break out of container */
+        left: "50%",
+        right: 0,
+        width: "100vw",
+        marginLeft: "-50vw",
+        /* Positioned over bottom portion of hero */
+        bottom: "8%",
+        top: "50%",
+      }}
     >
-      <div className="relative flex h-full flex-col justify-around">
+      {/* Left edge fade — chips dissolve into nothing on the left */}
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 z-10"
+        style={{
+          width: "15vw",
+          background: "linear-gradient(to right, #121212 0%, transparent 100%)",
+        }}
+      />
+      {/* Right edge — no fade, chips come in from the right cleanly */}
+
+      <div className="relative flex h-full flex-col justify-around overflow-hidden">
         <ChipRow chips={ROW_1} duration={80} offsetY="-10px" />
         <ChipRow chips={ROW_2} duration={95} offsetY="20px" />
       </div>

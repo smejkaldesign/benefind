@@ -78,15 +78,15 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* Scrolling success chips */}
-            <SuccessChips />
-
             {/* Animated dither fade — bottom 25%, fully dark at bottom */}
             <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[15] h-[25%]">
               <DitherFade color="#121212" pixelSize={3} speed={0.4} />
             </div>
           </VantaClouds>
         </div>
+
+        {/* Scrolling chips — full viewport width, on top of everything */}
+        <SuccessChips />
       </section>
 
       {/* ── Stats Strip ──────────────────────────────────────── */}
