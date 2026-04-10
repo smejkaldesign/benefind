@@ -127,8 +127,8 @@ export function SuccessChips() {
       }}
     >
       <div className="relative flex h-full flex-col items-start justify-center gap-[60px] overflow-hidden">
-        <ChipRow chips={ROW_1} duration={80} />
-        <ChipRow chips={ROW_2} duration={95} />
+        <ChipRow chips={ROW_1} duration={104} />
+        <ChipRow chips={ROW_2} duration={124} />
       </div>
     </div>
   );
