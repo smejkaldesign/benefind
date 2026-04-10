@@ -77,6 +77,61 @@ const POSTS = [
     },
     shapes: "fractals",
   },
+  {
+    slug: "medicaid-expansion-state-by-state-2026",
+    colors: {
+      bg0: "#11121a",
+      bg1: "#1c1a2e",
+      glow1: "#b9a5f4",
+      glow2: "#d2b4f5",
+      accent: "#a085e3",
+    },
+    shapes: "bands",
+  },
+  {
+    slug: "sbir-vs-sttr-which-grant-fits-your-startup",
+    colors: {
+      bg0: "#0e0f16",
+      bg1: "#1b1a2a",
+      glow1: "#c0a8f3",
+      glow2: "#b89df0",
+      accent: "#9d85d4",
+    },
+    shapes: "halos",
+  },
+  {
+    slug: "childcare-assistance-programs-you-havent-heard-of",
+    colors: {
+      bg0: "#131019",
+      bg1: "#221c2e",
+      glow1: "#ecc5f3",
+      glow2: "#e3b8f5",
+      accent: "#cab1f7",
+    },
+    shapes: "droplets",
+  },
+  {
+    slug: "wic-eligibility-myths-debunked",
+    colors: {
+      bg0: "#0f1218",
+      bg1: "#1a1a28",
+      glow1: "#d4bff5",
+      glow2: "#b6a0ec",
+      accent: "#deb0f7",
+    },
+    shapes: "ribbons",
+  },
+  {
+    slug: "how-to-read-your-benefits-award-letter",
+    colors: {
+      bg0: "#100e17",
+      bg1: "#1a1624",
+      glow1: "#c1abf2",
+      glow2: "#a892e0",
+      accent: "#b89df0",
+    },
+    shapes: "fractals",
+  },
 ];
 
 const WIDTH = 1440;
