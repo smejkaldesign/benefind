@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { TrendingUp, Clock, DollarSign } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { BorderGlow } from "@/components/border-glow";
 
 interface Stat {
   value: string;
@@ -41,13 +42,21 @@ export function StatsStrip() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: i * 0.12 }}
-              className="relative rounded-[16px] border border-border bg-surface-bright p-8 transition hover:border-accent/30"
             >
-              <Icon className="absolute right-6 top-6 h-5 w-5 text-accent opacity-50" />
-              <p className="font-display text-5xl font-semibold text-text">
-                {stat.value}
-              </p>
-              <p className="mt-2 text-sm text-text-muted">{stat.label}</p>
+              <BorderGlow
+                backgroundColor="#1A1A1A"
+                borderRadius={16}
+                glowColor="270 80 80"
+                colors={["#CAB1F7", "#DEB0F7", "#B19EEF"]}
+              >
+                <div className="relative p-8">
+                  <Icon className="absolute right-6 top-6 h-5 w-5 text-accent opacity-50" />
+                  <p className="font-display text-5xl font-semibold text-text">
+                    {stat.value}
+                  </p>
+                  <p className="mt-2 text-sm text-text-muted">{stat.label}</p>
+                </div>
+              </BorderGlow>
             </motion.div>
           );
         })}
