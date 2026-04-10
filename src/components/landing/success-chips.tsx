@@ -2,35 +2,57 @@
 
 /**
  * Oz-style scrolling callout cards.
- * - Positioned absolutely over the hero section (outside container)
- * - Full viewport width, extending off right edge, fading into left
- * - All rows scroll LEFT
- * - On top of dither overlay (z-20)
+ * - Each chip has a random Y offset within its row for a scattered feel
+ * - Chips fade to 20% opacity at edges, 100% when inside hero container
+ * - Full viewport width, dark edge gradients handled by parent
  */
 
 const ROW_1 = [
-  { emoji: "🍎", text: "Maria saved $340/mo on groceries", gap: 48 },
-  { emoji: "🚀", text: "TechStart Inc. received $150K SBIR grant", gap: 72 },
-  { emoji: "🌱", text: "GreenBuild Co. saved $45K in energy credits", gap: 36 },
-  { emoji: "🎓", text: "Lin received a $6,500 Pell Grant", gap: 64 },
-  { emoji: "💊", text: "Sarah qualified for free healthcare", gap: 52 },
+  { emoji: "🍎", text: "Maria saved $340/mo on groceries", gap: 48, y: -18 },
+  {
+    emoji: "🚀",
+    text: "TechStart Inc. received $150K SBIR grant",
+    gap: 72,
+    y: 12,
+  },
+  {
+    emoji: "🌱",
+    text: "GreenBuild Co. saved $45K in energy credits",
+    gap: 36,
+    y: -8,
+  },
+  { emoji: "🎓", text: "Lin received a $6,500 Pell Grant", gap: 64, y: 22 },
+  { emoji: "💊", text: "Sarah qualified for free healthcare", gap: 52, y: -14 },
 ];
 
 const ROW_2 = [
-  { emoji: "🔥", text: "James got $2,400 in heating assistance", gap: 80 },
-  { emoji: "🎯", text: "Acme Logistics got $12K workforce grant", gap: 44 },
-  { emoji: "💰", text: "David found $8,200 in annual benefits", gap: 68 },
-  { emoji: "🏠", text: "Rosa found Section 8 housing assistance", gap: 56 },
+  {
+    emoji: "🔥",
+    text: "James got $2,400 in heating assistance",
+    gap: 80,
+    y: 16,
+  },
+  {
+    emoji: "🎯",
+    text: "Acme Logistics got $12K workforce grant",
+    gap: 44,
+    y: -20,
+  },
+  { emoji: "💰", text: "David found $8,200 in annual benefits", gap: 68, y: 8 },
+  {
+    emoji: "🏠",
+    text: "Rosa found Section 8 housing assistance",
+    gap: 56,
+    y: -12,
+  },
 ];
 
 function ChipRow({
   chips,
   duration,
-  offsetY,
 }: {
-  chips: { emoji: string; text: string; gap: number }[];
+  chips: { emoji: string; text: string; gap: number; y: number }[];
   duration: number;
-  offsetY: string;
 }) {
   const tripled = [...chips, ...chips, ...chips];
 
@@ -40,7 +62,8 @@ function ChipRow({
         display: "flex",
         alignItems: "center",
         overflow: "visible",
-        transform: `translateY(${offsetY})`,
+        /* Row height is 1.8x the card height (~76px card → ~137px row) */
+        height: "137px",
       }}
     >
       <div
@@ -60,6 +83,8 @@ function ChipRow({
               gap: "14px",
               padding: "18px 24px",
               marginRight: `${chip.gap}px`,
+              /* Random vertical shift within the row */
+              transform: `translateY(${chip.y}px)`,
               backgroundColor: "rgb(236, 222, 255)",
               borderRadius: "16px",
               border: "0.6px solid rgba(255, 255, 255, 0.5)",
@@ -110,19 +135,25 @@ export function SuccessChips() {
     <div
       className="pointer-events-none absolute z-20"
       style={{
-        /* Full viewport width — break out of container */
         left: "50%",
         right: 0,
         width: "100vw",
         marginLeft: "-50vw",
-        /* Positioned over bottom portion of hero */
         bottom: "8%",
         top: "50%",
+        /*
+         * Opacity mask: 20% at edges → 100% in the center (hero container area).
+         * The hero container is ~1400px centered, so roughly the middle 70% of viewport.
+         * Edges (0-15% and 85-100%) stay at 20% opacity.
+         */
+        mask: "linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 10%, rgba(0,0,0,1) 20%, rgba(0,0,0,1) 80%, rgba(0,0,0,0.2) 90%, rgba(0,0,0,0.2) 100%)",
+        WebkitMask:
+          "linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 10%, rgba(0,0,0,1) 20%, rgba(0,0,0,1) 80%, rgba(0,0,0,0.2) 90%, rgba(0,0,0,0.2) 100%)",
       }}
     >
       <div className="relative flex h-full flex-col items-start justify-center gap-[60px] overflow-hidden">
-        <ChipRow chips={ROW_1} duration={80} offsetY="-10px" />
-        <ChipRow chips={ROW_2} duration={95} offsetY="20px" />
+        <ChipRow chips={ROW_1} duration={80} />
+        <ChipRow chips={ROW_2} duration={95} />
       </div>
     </div>
   );
