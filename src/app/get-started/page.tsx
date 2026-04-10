@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { User, Building2, ArrowLeft } from 'lucide-react';
-import { AsciiWaves } from '@/components/ascii-waves';
 
 const tracks = [
   {
@@ -25,24 +25,12 @@ const tracks = [
 
 export default function GetStartedPage() {
   return (
-    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-white px-4 py-16">
-      {/* Background */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.08]">
-        <AsciiWaves
-          color="#10B981"
-          speed={0.2}
-          intensity={0.5}
-          elementSize={14}
-          waveTension={0.2}
-          waveTwist={0.04}
-        />
-      </div>
-
+    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-surface px-4 py-16">
       <div className="relative z-10 mx-auto w-full max-w-2xl">
         {/* Back link */}
         <Link
           href="/"
-          className="mb-8 inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors"
+          className="mb-8 inline-flex items-center gap-1.5 text-sm text-text-subtle hover:text-text-muted transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           Back
@@ -50,11 +38,17 @@ export default function GetStartedPage() {
 
         {/* Header */}
         <div className="mb-10">
-          <span className="text-xl font-bold text-emerald-500">Benefind</span>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <Image
+            src="/images/brand/logo-light.svg"
+            alt="Benefind"
+            width={100}
+            height={18}
+            className="mb-4"
+          />
+          <h1 className="mt-3 font-display text-3xl font-medium tracking-tight text-text sm:text-4xl">
             What are you looking for?
           </h1>
-          <p className="mt-2 text-base text-gray-500">
+          <p className="mt-2 text-base text-text-muted">
             Choose your path. Both take about 3 minutes.
           </p>
         </div>
@@ -67,17 +61,15 @@ export default function GetStartedPage() {
               <Link
                 key={track.id}
                 href={track.href}
-                className="group relative rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:border-emerald-400 hover:shadow-lg hover:shadow-emerald-500/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+                className="group relative rounded-[16px] border border-border bg-surface-bright p-6 transition-all hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 transition-colors group-hover:bg-emerald-500/20">
-                  <Icon className="h-6 w-6 text-emerald-600" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-brand/10 transition-colors group-hover:bg-brand/20">
+                  <Icon className="h-6 w-6 text-brand" />
                 </div>
-                <h2 className="mt-4 text-xl font-bold text-gray-900">{track.title}</h2>
-                <p className="mt-1.5 text-sm text-gray-500">{track.description}</p>
-                <p className="mt-3 text-xs text-gray-400">
-                  {track.examples}
-                </p>
-                <div className="mt-4 flex items-center gap-1 text-sm font-medium text-emerald-600 opacity-0 transition-opacity group-hover:opacity-100">
+                <h2 className="mt-4 text-xl font-bold text-text">{track.title}</h2>
+                <p className="mt-1.5 text-sm text-text-muted">{track.description}</p>
+                <p className="mt-3 text-xs text-text-subtle">{track.examples}</p>
+                <div className="mt-4 flex items-center gap-1 text-sm font-medium text-brand opacity-0 transition-opacity group-hover:opacity-100">
                   Get started
                   <ArrowLeft className="h-3.5 w-3.5 rotate-180" />
                 </div>
@@ -87,7 +79,7 @@ export default function GetStartedPage() {
         </div>
 
         {/* Privacy note */}
-        <p className="mt-8 text-center text-xs text-gray-400">
+        <p className="mt-8 text-center text-xs text-text-subtle">
           Your answers are stored locally on your device and never sent to a server. No account required.
         </p>
       </div>

@@ -5,60 +5,27 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
-  FileCheck,
   Lock,
-  Zap,
-  MessageSquare,
   ChevronDown,
   Sparkles,
-  CheckCircle2,
   Shield,
-  DollarSign,
-  Users,
   Quote,
   Code,
 } from 'lucide-react';
 import { LandingNav } from '@/components/landing-nav';
 import { VantaClouds } from '@/components/vanta-clouds';
+import { SuccessChips } from '@/components/landing/success-chips';
+import { StatsStrip } from '@/components/landing/stats-strip';
+import { BentoGrid } from '@/components/landing/bento-grid';
+import { VideoSection } from '@/components/landing/video-section';
 import { useI18n } from '@/lib/i18n/context';
 
-const PROGRAMS = [
-  { name: 'SNAP', emoji: '🍎' },
-  { name: 'Medicaid', emoji: '💊' },
-  { name: 'WIC', emoji: '🍼' },
-  { name: 'CHIP', emoji: '👶' },
-  { name: 'SSI', emoji: '💵' },
-  { name: 'SSDI', emoji: '🏥' },
-  { name: 'Section 8', emoji: '🏠' },
-  { name: 'LIHEAP', emoji: '🔥' },
-  { name: 'Pell Grant', emoji: '🎓' },
-  { name: 'EITC', emoji: '💰' },
-  { name: 'R&D Tax Credit', emoji: '🔬' },
-  { name: 'SBIR Grants', emoji: '🚀' },
-  { name: 'WOTC', emoji: '👥' },
-  { name: 'Workforce Training', emoji: '🎯' },
-];
-
-const PAIN_ICONS = [DollarSign, FileCheck, Users];
 const TRUST_ICONS = [Lock, Shield, Code];
 const TESTIMONIAL_COLORS = ['bg-emerald-500', 'bg-sky-500', 'bg-purple-500', 'bg-amber-500', 'bg-rose-500', 'bg-violet-500'];
 
 export default function Home() {
   const { t } = useI18n();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  const steps = [
-    { num: '01', title: t.landing.step1Title, desc: t.landing.step1Desc, icon: MessageSquare },
-    { num: '02', title: t.landing.step2Title, desc: t.landing.step2Desc, icon: Zap },
-    { num: '03', title: t.landing.step3Title, desc: t.landing.step3Desc, icon: CheckCircle2 },
-  ];
-
-  const stats = [
-    { value: t.landing.impact1Value, label: t.landing.impact1Label },
-    { value: t.landing.impact2Value, label: t.landing.impact2Label },
-    { value: t.landing.impact3Value, label: t.landing.impact3Label },
-    { value: t.landing.impact4Value, label: t.landing.impact4Label },
-  ];
 
   const faqs = [
     { q: t.landing.faq1Q, a: t.landing.faq1A },
@@ -134,172 +101,29 @@ export default function Home() {
           {/* Dither fade to blend hero into page background */}
           <div
             className="pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-40"
-            style={{
-              background: 'linear-gradient(to bottom, transparent, #121212)',
-            }}
+            style={{ background: 'linear-gradient(to bottom, transparent, #121212)' }}
           />
         </VantaClouds>
       </section>
 
-      {/* ── Programs Marquee ─────────────────────────────────── */}
-      <section className="overflow-hidden border-y border-border bg-surface-dim py-6 sm:py-8">
-        <p className="mb-4 text-center text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-text-subtle">
-          {t.landing.programsLabel}
-        </p>
-        <div className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-surface-dim to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-surface-dim to-transparent" />
-          <div
-            className="flex gap-10 sm:gap-14"
-            style={{
-              width: 'max-content',
-              animation: 'marquee 35s linear infinite',
-            }}
-          >
-            {Array.from({ length: 3 }, (_, copy) =>
-              PROGRAMS.map((p, i) => (
-                <span
-                  key={`${copy}-${i}`}
-                  className="shrink-0 text-base font-medium text-text-subtle/60"
-                >
-                  <span aria-hidden="true">{p.emoji}</span> {p.name}
-                </span>
-              )),
-            ).flat()}
-          </div>
-        </div>
-      </section>
+      {/* ── Success Story Chips ───────────────────────────────── */}
+      <SuccessChips />
 
-      {/* ── Problem Section ────────────────────────────────────── */}
-      <section className="px-4 py-24 sm:py-32">
-        <div className="mx-auto max-w-[1400px]">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="font-display text-3xl font-medium tracking-tight text-text sm:text-4xl lg:text-5xl">
-              {t.landing.problemTitle}
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-text-muted">
-              {t.landing.problemSubtitle}
-            </p>
-          </motion.div>
+      {/* ── Stats Strip ──────────────────────────────────────── */}
+      <StatsStrip />
 
-          <motion.div
-            className="mt-16 grid gap-6 sm:grid-cols-3"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
-          >
-            {([
-              { stat: t.landing.pain1Stat, label: t.landing.pain1Label, desc: t.landing.pain1Desc },
-              { stat: t.landing.pain2Stat, label: t.landing.pain2Label, desc: t.landing.pain2Desc },
-              { stat: t.landing.pain3Stat, label: t.landing.pain3Label, desc: t.landing.pain3Desc },
-            ] as const).map(({ stat, label, desc }, i) => {
-              const Icon = PAIN_ICONS[i]!;
-              return (
-                <motion.div
-                  key={stat}
-                  className="rounded-[16px] border border-border bg-surface-bright p-8 transition-all duration-300 hover:border-border-light/20 hover:-translate-y-0.5"
-                  variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-brand/10">
-                    <Icon className="h-6 w-6 text-brand" />
-                  </div>
-                  <p className="mt-6 text-3xl font-extrabold text-brand sm:text-4xl">{stat}</p>
-                  <p className="mt-1 text-sm font-semibold uppercase tracking-wider text-text">{label}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-text-muted">{desc}</p>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </section>
+      {/* ── Bento Feature Grid ───────────────────────────────── */}
+      <div id="how-it-works">
+        <BentoGrid />
+      </div>
 
-      {/* ── How It Works ─────────────────────────────────────── */}
-      <section id="how-it-works" className="bg-surface-dim px-4 py-24 sm:py-32">
-        <div className="mx-auto max-w-[1400px]">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="font-display text-3xl font-medium tracking-tight text-text sm:text-4xl">
-              {t.landing.howTitle}
-            </h2>
-            <p className="mt-3 text-text-muted">{t.landing.howSubtitle}</p>
-          </motion.div>
-
-          <motion.div
-            className="mt-16 grid gap-6 sm:grid-cols-3"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
-          >
-            {steps.map(({ num, title, desc, icon: Icon }) => (
-              <motion.div
-                key={num}
-                className="relative rounded-[16px] border border-border bg-surface-bright p-8 transition-all duration-300 hover:border-border-light/20 hover:-translate-y-0.5"
-                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-              >
-                <span className="text-6xl font-black text-brand/10">{num}</span>
-                <div className="mt-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-brand/10">
-                    <Icon className="h-5 w-5 text-brand" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-text">{title}</h3>
-                </div>
-                <p className="mt-3 text-sm leading-relaxed text-text-muted">{desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── Impact / Stats ───────────────────────────────────── */}
-      <section className="px-4 py-24 sm:py-32">
-        <div className="mx-auto max-w-[1400px] text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="font-display text-3xl font-medium tracking-tight text-text sm:text-4xl">
-              {t.landing.impactTitle}
-            </h2>
-            <p className="mt-3 text-text-muted">{t.landing.impactSubtitle}</p>
-          </motion.div>
-
-          <motion.div
-            className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
-          >
-            {stats.map(({ value, label }) => (
-              <motion.div
-                key={label}
-                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-              >
-                <p className="text-3xl font-extrabold text-brand sm:text-5xl">{value}</p>
-                <p className="mt-2 text-sm text-text-muted">{label}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+      {/* ── Video Section ────────────────────────────────────── */}
+      <div className="bg-surface-dim">
+        <VideoSection />
+      </div>
 
       {/* ── Trust Section ──────────────────────────────────────── */}
-      <section className="bg-surface-dim px-4 py-24 sm:py-32">
+      <section className="px-4 py-24 sm:py-32">
         <div className="mx-auto max-w-[1400px]">
           <motion.div
             className="text-center"
@@ -346,7 +170,7 @@ export default function Home() {
       </section>
 
       {/* ── Testimonials ───────────────────────────────────────── */}
-      <section className="px-4 py-24 sm:py-32">
+      <section className="bg-surface-dim px-4 py-24 sm:py-32">
         <div className="mx-auto max-w-[1400px]">
           <motion.div
             className="text-center"
@@ -375,9 +199,7 @@ export default function Home() {
                 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
               >
                 <Quote className="h-8 w-8 text-accent/30" />
-                <p className="mt-4 text-base leading-relaxed text-text-muted">
-                  &ldquo;{quote}&rdquo;
-                </p>
+                <p className="mt-4 text-base leading-relaxed text-text-muted">&ldquo;{quote}&rdquo;</p>
                 <div className="mt-6 flex items-center gap-3">
                   <div
                     className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white ${TESTIMONIAL_COLORS[i % TESTIMONIAL_COLORS.length]}`}
@@ -396,7 +218,7 @@ export default function Home() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────────── */}
-      <section className="bg-surface-dim px-4 py-24 sm:py-32">
+      <section className="px-4 py-24 sm:py-32">
         <div className="mx-auto max-w-2xl">
           <motion.div
             className="text-center"
@@ -537,9 +359,7 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-10 border-t border-border pt-6 text-center text-sm text-text-subtle">
-            <p>
-              &copy; {new Date().getFullYear()} {t.common.appName}. {t.common.free}
-            </p>
+            <p>&copy; {new Date().getFullYear()} {t.common.appName}. {t.common.free}</p>
             <p className="mt-1 text-text-subtle/60">Built by Smejkal Design</p>
           </div>
         </div>
