@@ -120,7 +120,7 @@ export function SuccessChips() {
         top: "50%",
       }}
     >
-      <div className="relative flex h-full flex-col justify-around overflow-hidden">
+      <div className="relative flex h-full flex-col items-start justify-center gap-[60px] overflow-hidden">
         <ChipRow chips={ROW_1} duration={80} offsetY="-10px" />
         <ChipRow chips={ROW_2} duration={95} offsetY="20px" />
       </div>
