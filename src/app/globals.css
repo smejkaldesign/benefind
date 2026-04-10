@@ -93,6 +93,20 @@
   }
 }
 
+/* ── Dither fade (Warp Oz style) ─────────────────────────── */
+.dither-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #121212 1px, transparent 1px);
+  background-size: 4px 4px;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+}
+
 /* ── Base ────────────────────────────────────────────────── */
 @layer base {
   html {

@@ -28,12 +28,13 @@ export function VantaClouds({ className, children }: VantaCloudsProps) {
         effectRef.current = CLOUDS({
           el: containerRef.current,
           THREE,
-          skyColor: 0x1e2b4d,
-          cloudColor: 0xcab1f7,
-          cloudShadowColor: 0x121212,
-          sunColor: 0xdeb0f7,
-          sunGlareColor: 0xdeb0f7,
-          sunlightColor: 0xcab1f7,
+          // Normal blue sky with white clouds (matching Warp Oz)
+          skyColor: 0x8b9fd4,
+          cloudColor: 0xc4b5e3,
+          cloudShadowColor: 0x4a5082,
+          sunColor: 0xd4c5f0,
+          sunGlareColor: 0xc9b8e8,
+          sunlightColor: 0xb5a0d8,
           speed: 0.8,
           mouseControls: true,
           touchControls: true,
@@ -64,15 +65,16 @@ export function VantaClouds({ className, children }: VantaCloudsProps) {
       className={className}
       style={{
         position: "relative",
-        backgroundColor: "#1E2B4D",
+        backgroundColor: "#8b9fd4",
       }}
     >
+      {/* Fallback gradient visible until Vanta loads */}
       {!loaded && (
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(135deg, #1E2B4D 0%, #2A1F4D 50%, #121212 100%)",
+              "linear-gradient(180deg, #a0b0e0 0%, #8b9fd4 40%, #7a8dc0 100%)",
           }}
         />
       )}
