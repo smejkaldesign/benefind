@@ -4,6 +4,7 @@ import { I18nProvider } from "@/lib/i18n/context";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { OfflineBanner } from "@/components/offline-banner";
 import { AuthErrorRedirect } from "@/components/auth-error-redirect";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
 const inter = Inter({
@@ -43,6 +44,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${inter.className} min-h-dvh`}>
         <I18nProvider>
+          <SmoothScroll />
           {children}
           <AuthErrorRedirect />
           <ServiceWorkerRegister />

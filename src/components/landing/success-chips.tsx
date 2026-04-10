@@ -47,6 +47,10 @@ function ChipRow({
           alignItems: "center",
           animation: `chip-scroll ${duration}s linear infinite`,
           flexShrink: 0,
+          /* GPU acceleration */
+          willChange: "transform",
+          transform: "translate3d(0, 0, 0)",
+          backfaceVisibility: "hidden",
         }}
       >
         {tripled.map((chip, i) => (
@@ -63,8 +67,6 @@ function ChipRow({
               backgroundColor: "rgb(236, 222, 255)",
               borderRadius: "16px",
               border: "0.6px solid rgba(255, 255, 255, 0.5)",
-              backdropFilter: "blur(5px)",
-              WebkitBackdropFilter: "blur(5px)",
               boxShadow:
                 "0px 0.6px 0.6px -1.25px rgba(0,0,0,0.18), 0px 2.3px 2.3px -2.5px rgba(0,0,0,0.16), 0px 10px 10px -3.75px rgba(0,0,0,0.06)",
               flexShrink: 0,

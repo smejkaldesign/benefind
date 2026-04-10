@@ -52,12 +52,15 @@ export default function Home() {
         />
         <div
           className="relative mx-auto max-w-[1400px] overflow-hidden rounded-t-[20px]"
-          style={{ height: "clamp(805px, 80vh, 1035px)" }}
+          style={{
+            height: "clamp(805px, 80vh, 1035px)",
+            backgroundColor: "#68b8d7",
+          }}
         >
-          {/* Vanta at 200% height — clouds pushed to bottom half, sky fills top */}
+          {/* Vanta at 200% height, shifted down 100px so clouds appear lower */}
           <VantaClouds
-            className="absolute inset-x-0 top-0"
-            style={{ height: "200%" }}
+            className="absolute inset-x-0"
+            style={{ height: "200%", top: "100px" }}
           >
             {/* Hero text — top portion */}
             <div className="relative z-10 flex flex-col items-center px-4 pt-20 sm:pt-28">
