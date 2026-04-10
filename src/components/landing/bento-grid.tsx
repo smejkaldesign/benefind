@@ -50,7 +50,7 @@ const features: Feature[] = [
 
 export function BentoGrid() {
   return (
-    <section className="px-4 py-20 sm:py-28">
+    <section className="px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-[1400px]">
         {/* Section header */}
         <div className="mb-12 text-center sm:mb-16">

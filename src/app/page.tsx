@@ -32,7 +32,7 @@ export default function Home() {
       <LandingNav />
 
       {/* ── Hero with Vanta.js Clouds (Oz-style container) ──── */}
-      <section className="relative px-4 sm:px-6">
+      <section className="relative">
         {/* Dark edge gradients — full height, on top of everything (z-30) */}
         <div
           className="pointer-events-none absolute inset-y-0 left-0 z-30"
@@ -156,7 +156,7 @@ export default function Home() {
       <TrustSection />
 
       {/* ── FAQ ──────────────────────────────────────────────── */}
-      <section className="px-4 py-24 sm:py-32">
+      <section className="px-6 py-24 sm:py-32">
         <div className="mx-auto max-w-2xl">
           <motion.div
             className="text-center"
@@ -218,7 +218,7 @@ export default function Home() {
       <GetStartedCTA />
 
       {/* ── Footer ───────────────────────────────────────────── */}
-      <footer className="border-t border-border px-4 py-12">
+      <footer className="border-t border-border px-6 py-12">
         <div className="mx-auto max-w-[1400px]">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div>

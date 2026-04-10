@@ -61,7 +61,7 @@ export function VideoSection() {
   const active = tabs.find((t) => t.id === activeTab) ?? tabs[0];
 
   return (
-    <section className="px-4 py-20 sm:py-28">
+    <section className="px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-[1400px]">
         {/* Header */}
         <div className="mb-12 text-center sm:mb-16">

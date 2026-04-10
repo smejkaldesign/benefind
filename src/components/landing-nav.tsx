@@ -18,7 +18,7 @@ export function LandingNav() {
 
   return (
     <header
-      className={`fixed top-0 right-0 left-0 z-50 px-4 py-4 transition-all duration-300 ${
+      className={`fixed top-0 right-0 left-0 z-50 px-6 py-4 transition-all duration-300 ${
         scrolled
           ? "bg-surface/80 shadow-[0_0_16px_rgba(18,18,18,0.4)] backdrop-blur-[30px]"
           : ""
