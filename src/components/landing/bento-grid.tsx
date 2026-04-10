@@ -1,14 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Sparkles,
-  MessageSquare,
-  Globe,
-  Users,
-  Lock,
-  Heart,
-} from "lucide-react";
+import { Sparkles, MessageSquare, Globe, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 interface Feature {
@@ -18,8 +11,6 @@ interface Feature {
   /** Tailwind col-span class for desktop grid */
   span: string;
   accentColor: "brand" | "accent";
-  /** Show a gradient edge on larger cards */
-  gradient?: boolean;
 }
 
 const features: Feature[] = [
@@ -28,9 +19,8 @@ const features: Feature[] = [
     description:
       "Our AI asks simple questions and matches you against 80+ programs instantly",
     icon: Sparkles,
-    span: "sm:col-span-2",
+    span: "sm:col-span-1",
     accentColor: "accent",
-    gradient: true,
   },
   {
     title: "Plain Language",
@@ -53,21 +43,6 @@ const features: Feature[] = [
     description:
       "Individuals find benefits. Companies find grants, tax credits, and incentives",
     icon: Users,
-    span: "sm:col-span-2",
-    accentColor: "accent",
-    gradient: true,
-  },
-  {
-    title: "Privacy First",
-    description: "Your data stays on your device. Nothing is sent to a server",
-    icon: Lock,
-    span: "sm:col-span-1",
-    accentColor: "brand",
-  },
-  {
-    title: "Always Free",
-    description: "No signup required. No hidden costs. Free for everyone",
-    icon: Heart,
     span: "sm:col-span-1",
     accentColor: "accent",
   },
@@ -100,7 +75,7 @@ export function BentoGrid() {
         </div>
 
         {/* Bento grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
           {features.map((feature, i) => {
             const Icon = feature.icon;
             const iconBg =
@@ -117,10 +92,14 @@ export function BentoGrid() {
                 transition={{ duration: 0.5, delay: i * 0.08 }}
                 className={`relative overflow-hidden rounded-[16px] border border-border bg-surface-bright p-6 transition hover:border-accent/20 sm:p-8 ${feature.span}`}
               >
-                {/* Gradient accent edge for large cards */}
-                {feature.gradient && (
-                  <div className="pointer-events-none absolute inset-y-0 left-0 w-[2px] bg-gradient-to-b from-accent to-accent-end opacity-60" />
-                )}
+                {/* Left accent divider matching icon color */}
+                <div
+                  className={`pointer-events-none absolute inset-y-0 left-0 w-[2px] opacity-60 ${
+                    feature.accentColor === "brand"
+                      ? "bg-brand"
+                      : "bg-gradient-to-b from-accent to-accent-end"
+                  }`}
+                />
 
                 {/* Icon */}
                 <div
