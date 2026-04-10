@@ -9,7 +9,6 @@ import { Grainient } from "@/components/grainient";
 import { SuccessChips } from "@/components/landing/success-chips";
 import { StatsStrip } from "@/components/landing/stats-strip";
 import { BentoGrid } from "@/components/landing/bento-grid";
-import { VideoSection } from "@/components/landing/video-section";
 import { TrustSection } from "@/components/landing/trust-section";
 import { GetStartedCTA } from "@/components/landing/get-started-cta";
 import { useI18n } from "@/lib/i18n/context";
@@ -143,11 +142,6 @@ export default function Home() {
       {/* ── Bento Feature Grid ───────────────────────────────── */}
       <div id="how-it-works">
         <BentoGrid />
-      </div>
-
-      {/* ── Video Section ────────────────────────────────────── */}
-      <div className="bg-surface-dim">
-        <VideoSection />
       </div>
 
       {/* ── Trust + Testimonials ────────────────────────────── */}
