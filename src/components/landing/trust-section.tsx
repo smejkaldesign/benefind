@@ -10,7 +10,7 @@ const trustBadges = [
 ];
 
 const avatarColors = [
-  "bg-emerald-500",
+  "bg-brand",
   "bg-sky-500",
   "bg-purple-500",
   "bg-amber-500",

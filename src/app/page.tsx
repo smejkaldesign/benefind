@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, User, Building2 } from "lucide-react";
+import { ChevronDown, User, Building2, ArrowRight } from "lucide-react";
 import { LandingNav } from "@/components/landing-nav";
 import { Grainient } from "@/components/grainient";
 import { SuccessChips } from "@/components/landing/success-chips";
@@ -32,7 +32,7 @@ export default function Home() {
       <LandingNav />
 
       {/* ── Hero with Vanta.js Clouds (Oz-style container) ──── */}
-      <section className="relative px-4 pt-20 sm:px-6 sm:pt-24">
+      <section className="relative px-4 sm:px-6">
         {/* Dark edge gradients — full height, on top of everything (z-30) */}
         <div
           className="pointer-events-none absolute inset-y-0 left-0 z-30"
@@ -51,7 +51,7 @@ export default function Home() {
           }}
         />
         <div
-          className="relative mx-auto max-w-[1400px] overflow-hidden rounded-t-[20px]"
+          className="relative mx-auto max-w-[1400px] overflow-hidden"
           style={{
             height: "clamp(805px, 80vh, 1035px)",
             backgroundColor: "#5227FF",
@@ -107,17 +107,19 @@ export default function Home() {
               >
                 <Link
                   href="/screening"
-                  className="inline-flex h-11 items-center gap-2 rounded-lg border border-surface/20 bg-white px-6 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/90"
+                  className="group inline-flex h-[52px] items-center gap-2 rounded-lg border border-surface/20 bg-white px-6 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/95"
                 >
                   <User className="h-4 w-4" />
                   Personal Benefits
+                  <ArrowRight className="h-4 w-4 max-w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-200 group-hover:max-w-[16px] group-hover:translate-x-0 group-hover:opacity-100" />
                 </Link>
                 <Link
                   href="/screening/company"
-                  className="inline-flex h-11 items-center gap-2 rounded-lg border border-surface/20 bg-white px-6 text-sm font-semibold text-surface transition-colors hover:bg-white/90 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                  className="group inline-flex h-[52px] items-center gap-2 rounded-lg border border-surface/20 bg-white px-6 text-sm font-semibold text-surface transition-colors hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
                 >
                   <Building2 className="h-4 w-4" />
                   Business Benefits
+                  <ArrowRight className="h-4 w-4 max-w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-200 group-hover:max-w-[16px] group-hover:translate-x-0 group-hover:opacity-100" />
                 </Link>
               </motion.div>
             </div>

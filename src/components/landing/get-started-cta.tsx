@@ -17,7 +17,7 @@ const cards = [
     href: "/screening",
     iconBg: "bg-brand/10",
     iconColor: "text-brand",
-    buttonClass: "bg-brand text-white hover:bg-brand/90",
+    buttonClass: "bg-brand text-surface hover:bg-brand-dark",
   },
   {
     icon: Building2,
@@ -31,7 +31,7 @@ const cards = [
     href: "/screening/company",
     iconBg: "bg-brand/10",
     iconColor: "text-brand",
-    buttonClass: "bg-brand text-white hover:bg-brand/90",
+    buttonClass: "bg-brand text-surface hover:bg-brand-dark",
   },
   {
     icon: MessageCircle,

@@ -28,11 +28,11 @@
   /* Typography */
   --font-display: "Aguzzo-TRIAL", "Instrument Serif", serif;
 
-  /* Brand (emerald for CTAs and actions) */
-  --color-brand: #10b981;
-  --color-brand-light: #34d399;
-  --color-brand-dark: #059669;
-  --color-brand-50: rgba(16, 185, 129, 0.12);
+  /* Brand (lilac for CTAs and actions) */
+  --color-brand: #cab1f7;
+  --color-brand-light: #deb0f7;
+  --color-brand-dark: #b19eef;
+  --color-brand-50: rgba(202, 177, 247, 0.12);
 
   /* Surfaces */
   --color-surface: #121212;

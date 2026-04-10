@@ -18,7 +18,7 @@ export function LandingNav() {
 
   return (
     <header
-      className={`fixed top-0 right-0 left-0 z-50 px-4 py-3 transition-all duration-300 ${
+      className={`fixed top-0 right-0 left-0 z-50 px-4 py-4 transition-all duration-300 ${
         scrolled
           ? "bg-surface/80 shadow-[0_0_16px_rgba(18,18,18,0.4)] backdrop-blur-[30px]"
           : ""
@@ -44,7 +44,7 @@ export function LandingNav() {
           </Link>
           <Link
             href="/get-started"
-            className="hidden rounded-lg bg-brand px-5 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus-visible:outline-none sm:inline-flex"
+            className="hidden rounded-lg bg-brand px-5 py-1.5 text-sm font-semibold text-surface transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus-visible:outline-none sm:inline-flex"
           >
             {t.landing.heroCta}
           </Link>
