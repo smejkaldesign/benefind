@@ -1,0 +1,112 @@
+.magic-bento-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(180px, auto);
+}
+
+@media (max-width: 1024px) {
+  .magic-bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .magic-bento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.magic-bento-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #1a1a1a;
+  color: #fafaf9;
+  isolation: isolate;
+  transform: translate3d(0, 0, 0.01px);
+  transition: border-color 0.25s ease;
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-intensity: 0;
+  --glow-radius: 300px;
+  --glow-color: 202, 177, 247;
+}
+
+.magic-bento-card:hover {
+  border-color: rgba(202, 177, 247, 0.25);
+}
+
+.magic-bento-card--border-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.8)) 0%,
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.4)) 30%,
+    transparent 60%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+  opacity: var(--glow-intensity);
+  transition: opacity 0.3s ease;
+}
+
+.magic-bento-card--border-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.12)) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--glow-intensity);
+  transition: opacity 0.3s ease;
+}
+
+.magic-bento-card > * {
+  position: relative;
+  z-index: 3;
+}
+
+/* Layout helpers — set on the card via className */
+.magic-bento-span-2-col {
+  grid-column: span 2;
+}
+
+.magic-bento-span-2-row {
+  grid-row: span 2;
+}
+
+@media (max-width: 1024px) {
+  .magic-bento-span-2-col {
+    grid-column: span 2;
+  }
+  .magic-bento-span-2-row {
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .magic-bento-span-2-col,
+  .magic-bento-span-2-row {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}

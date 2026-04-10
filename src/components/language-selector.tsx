@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useI18n } from '@/lib/i18n/context';
-import { LOCALES } from '@/lib/i18n/types';
-import { Globe } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useI18n } from "@/lib/i18n/context";
+import { LOCALES } from "@/lib/i18n/types";
+import { Globe } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 
 export function LanguageSelector({ compact = false }: { compact?: boolean }) {
   const { locale, setLocale } = useI18n();
@@ -16,8 +16,8 @@ export function LanguageSelector({ compact = false }: { compact?: boolean }) {
         setOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const current = LOCALES.find((l) => l.code === locale);
@@ -30,11 +30,13 @@ export function LanguageSelector({ compact = false }: { compact?: boolean }) {
         aria-label="Change language"
       >
         <Globe className="h-4 w-4" />
-        {!compact && <span className="hidden sm:inline">{current?.nativeName}</span>}
+        {!compact && (
+          <span className="hidden sm:inline">{current?.nativeName}</span>
+        )}
       </button>
 
       {open && (
-        <div className="absolute end-0 top-full z-50 mt-1 w-44 rounded-xl border border-border bg-surface py-1 shadow-lg">
+        <div className="absolute start-0 top-full z-50 mt-1 w-44 rounded-xl border border-border bg-surface py-1 shadow-lg">
           {LOCALES.map((l) => (
             <button
               key={l.code}
@@ -43,7 +45,7 @@ export function LanguageSelector({ compact = false }: { compact?: boolean }) {
                 setOpen(false);
               }}
               className={`flex w-full items-center justify-between px-3 py-2 text-sm transition-colors hover:bg-surface-bright ${
-                l.code === locale ? 'font-semibold text-brand' : 'text-text'
+                l.code === locale ? "font-semibold text-brand" : "text-text"
               }`}
             >
               <span>{l.nativeName}</span>

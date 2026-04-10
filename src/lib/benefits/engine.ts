@@ -1,14 +1,14 @@
-import type { BenefitProgram, ScreeningInput, ScreeningResult } from './types';
-import { snap } from './programs/snap';
-import { medicaid } from './programs/medicaid';
-import { eitc } from './programs/eitc';
-import { wic } from './programs/wic';
-import { liheap } from './programs/liheap';
-import { chip } from './programs/chip';
-import { section8 } from './programs/section8';
-import { ssi } from './programs/ssi';
-import { pellGrant } from './programs/pell-grant';
-import { getStatePrograms, getSupportedStates } from './state-programs';
+import type { BenefitProgram, ScreeningInput, ScreeningResult } from "./types";
+import { snap } from "./programs/snap";
+import { medicaid } from "./programs/medicaid";
+import { eitc } from "./programs/eitc";
+import { wic } from "./programs/wic";
+import { liheap } from "./programs/liheap";
+import { chip } from "./programs/chip";
+import { section8 } from "./programs/section8";
+import { ssi } from "./programs/ssi";
+import { pellGrant } from "./programs/pell-grant";
+import { getStatePrograms, getSupportedStates } from "./state-programs";
 
 /** All registered federal benefit programs */
 export const ALL_PROGRAMS: BenefitProgram[] = [
@@ -42,7 +42,10 @@ export function runScreening(input: ScreeningInput): ScreeningResult {
     if (a.result.eligible !== b.result.eligible) {
       return a.result.eligible ? -1 : 1;
     }
-    return (b.result.estimatedAnnualValue ?? 0) - (a.result.estimatedAnnualValue ?? 0);
+    return (
+      (b.result.estimatedAnnualValue ?? 0) -
+      (a.result.estimatedAnnualValue ?? 0)
+    );
   });
 
   const eligible = results.filter((r) => r.result.eligible);

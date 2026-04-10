@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   return NextResponse.json({
-    status: 'ok',
-    app: 'benefind',
+    status: "ok",
+    app: "benefind",
     timestamp: new Date().toISOString(),
   });
 }

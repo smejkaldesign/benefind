@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { RotateCcw } from 'lucide-react';
-import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
+import Link from "next/link";
 
 export default function Error({
   reset,
@@ -23,7 +23,9 @@ export default function Error({
             Try again
           </Button>
           <Link href="/">
-            <Button variant="secondary" size="md">Go home</Button>
+            <Button variant="secondary" size="md">
+              Go home
+            </Button>
           </Link>
         </div>
       </div>

@@ -15,7 +15,7 @@ const IV_LENGTH = 12;
 // App-level pepper adds entropy beyond the user secret (email).
 // Not a replacement for a high-entropy secret, but raises the bar
 // significantly against offline brute-force of encrypted blobs.
-const APP_PEPPER = 'benefind:v1:client-encryption';
+const APP_PEPPER = "benefind:v1:client-encryption";
 
 /** Derive an AES-GCM key from user secret + app pepper */
 export async function deriveKey(
@@ -24,24 +24,24 @@ export async function deriveKey(
 ): Promise<CryptoKey> {
   const encoder = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey(
-    'raw',
+    "raw",
     encoder.encode(`${APP_PEPPER}:${secret}`),
-    'PBKDF2',
+    "PBKDF2",
     false,
-    ['deriveKey'],
+    ["deriveKey"],
   );
 
   return crypto.subtle.deriveKey(
     {
-      name: 'PBKDF2',
+      name: "PBKDF2",
       salt,
       iterations: PBKDF2_ITERATIONS,
-      hash: 'SHA-256',
+      hash: "SHA-256",
     },
     keyMaterial,
-    { name: 'AES-GCM', length: 256 },
+    { name: "AES-GCM", length: 256 },
     false,
-    ['encrypt', 'decrypt'],
+    ["encrypt", "decrypt"],
   );
 }
 
@@ -56,7 +56,7 @@ export async function encrypt(
   const key = await deriveKey(userSecret, salt);
 
   const ciphertext = await crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv },
+    { name: "AES-GCM", iv },
     key,
     encoder.encode(plaintext),
   );
@@ -69,7 +69,7 @@ export async function encrypt(
   combined.set(iv, salt.length);
   combined.set(new Uint8Array(ciphertext), salt.length + iv.length);
 
-  return btoa(Array.from(combined, (b) => String.fromCharCode(b)).join(''));
+  return btoa(Array.from(combined, (b) => String.fromCharCode(b)).join(""));
 }
 
 /** Decrypt a base64 encrypted string */
@@ -79,7 +79,7 @@ export async function decrypt(
 ): Promise<string> {
   const combined = new Uint8Array(
     atob(encrypted)
-      .split('')
+      .split("")
       .map((c) => c.charCodeAt(0)),
   );
 
@@ -90,7 +90,7 @@ export async function decrypt(
   const key = await deriveKey(userSecret, salt);
 
   const plaintext = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv },
+    { name: "AES-GCM", iv },
     key,
     ciphertext,
   );

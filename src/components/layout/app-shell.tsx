@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import { Home, MessageCircle, LayoutDashboard } from 'lucide-react';
-import { SignOutButton } from '@/components/sign-out-button';
-import { LanguageSelector } from '@/components/language-selector';
+import Link from "next/link";
+import { Home, MessageCircle, LayoutDashboard } from "lucide-react";
+import { SignOutButton } from "@/components/sign-out-button";
+import { LanguageSelector } from "@/components/language-selector";
 
 interface AppShellProps {
   children: React.ReactNode;

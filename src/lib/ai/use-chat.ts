@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from "react";
 
 interface ChatMessage {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
 }
 
@@ -20,7 +20,7 @@ export function useChat(options?: UseChatOptions) {
   const sendMessage = useCallback(
     async (content: string) => {
       setError(null);
-      const userMessage: ChatMessage = { role: 'user', content };
+      const userMessage: ChatMessage = { role: "user", content };
       const updatedMessages = [...messages, userMessage];
       setMessages(updatedMessages);
       setIsStreaming(true);
@@ -28,9 +28,9 @@ export function useChat(options?: UseChatOptions) {
       try {
         abortRef.current = new AbortController();
 
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             messages: updatedMessages,
             context: options?.context,
@@ -40,29 +40,29 @@ export function useChat(options?: UseChatOptions) {
 
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
-          throw new Error(data.error || 'Failed to send message');
+          throw new Error(data.error || "Failed to send message");
         }
 
         const reader = res.body?.getReader();
-        if (!reader) throw new Error('No response stream');
+        if (!reader) throw new Error("No response stream");
 
         const decoder = new TextDecoder();
-        let assistantContent = '';
+        let assistantContent = "";
 
         // Add placeholder assistant message
-        setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
+        setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
           const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
+          const lines = chunk.split("\n");
 
           for (const line of lines) {
-            if (!line.startsWith('data: ')) continue;
+            if (!line.startsWith("data: ")) continue;
             const data = line.slice(6);
-            if (data === '[DONE]') break;
+            if (data === "[DONE]") break;
 
             try {
               const parsed = JSON.parse(data);
@@ -75,7 +75,7 @@ export function useChat(options?: UseChatOptions) {
                 setMessages((prev) => {
                   const updated = [...prev];
                   updated[updated.length - 1] = {
-                    role: 'assistant',
+                    role: "assistant",
                     content: assistantContent,
                   };
                   return updated;
@@ -83,18 +83,21 @@ export function useChat(options?: UseChatOptions) {
               }
             } catch (parseErr) {
               // Re-throw application errors; skip genuinely unparseable lines
-              if (parseErr instanceof Error && parseErr.message !== 'Unexpected token') {
+              if (
+                parseErr instanceof Error &&
+                parseErr.message !== "Unexpected token"
+              ) {
                 throw parseErr;
               }
             }
           }
         }
       } catch (err) {
-        if (err instanceof Error && err.name === 'AbortError') return;
-        setError(err instanceof Error ? err.message : 'Something went wrong');
+        if (err instanceof Error && err.name === "AbortError") return;
+        setError(err instanceof Error ? err.message : "Something went wrong");
         // Remove the empty assistant message if error
         setMessages((prev) => {
-          if (prev.length > 0 && prev[prev.length - 1]?.content === '') {
+          if (prev.length > 0 && prev[prev.length - 1]?.content === "") {
             return prev.slice(0, -1);
           }
           return prev;

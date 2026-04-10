@@ -1,22 +1,28 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import type { Locale } from './types';
-import { DEFAULT_LOCALE, getLocaleConfig } from './types';
-import { getDictionary, type Dictionary } from './dictionaries';
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
+import type { Locale } from "./types";
+import { DEFAULT_LOCALE, getLocaleConfig } from "./types";
+import { getDictionary, type Dictionary } from "./dictionaries";
 
 interface I18nContext {
   locale: Locale;
   setLocale: (locale: Locale) => void;
   t: Dictionary;
-  dir: 'ltr' | 'rtl';
+  dir: "ltr" | "rtl";
 }
 
 const I18nCtx = createContext<I18nContext>({
   locale: DEFAULT_LOCALE,
   setLocale: () => {},
   t: getDictionary(DEFAULT_LOCALE),
-  dir: 'ltr',
+  dir: "ltr",
 });
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
@@ -24,8 +30,8 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('benefind_locale') as Locale | null;
-      if (stored && ['en', 'es', 'zh', 'vi', 'ar'].includes(stored)) {
+      const stored = localStorage.getItem("benefind_locale") as Locale | null;
+      if (stored && ["en", "es", "zh", "vi", "ar"].includes(stored)) {
         setLocaleState(stored);
       }
     } catch {}
@@ -34,7 +40,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
     try {
-      localStorage.setItem('benefind_locale', newLocale);
+      localStorage.setItem("benefind_locale", newLocale);
     } catch {}
     // Update html dir and lang
     document.documentElement.lang = newLocale;

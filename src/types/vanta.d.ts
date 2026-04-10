@@ -1,0 +1,26 @@
+declare module "vanta/dist/vanta.clouds.min" {
+  interface VantaEffect {
+    destroy: () => void;
+  }
+
+  interface VantaOptions {
+    el: HTMLElement;
+    THREE: typeof import("three");
+    backgroundColor?: number;
+    skyColor?: number;
+    cloudColor?: number;
+    cloudShadowColor?: number;
+    sunColor?: number;
+    sunGlareColor?: number;
+    sunlightColor?: number;
+    speed?: number;
+    mouseControls?: boolean;
+    touchControls?: boolean;
+    minHeight?: number;
+    minWidth?: number;
+    scale?: number;
+    scaleMobile?: number;
+  }
+
+  export default function CLOUDS(options: VantaOptions): VantaEffect;
+}

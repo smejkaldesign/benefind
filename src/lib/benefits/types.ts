@@ -1,7 +1,7 @@
 /** Household member for eligibility calculation */
 export interface HouseholdMember {
   age: number;
-  relationship: 'self' | 'spouse' | 'child' | 'parent' | 'other';
+  relationship: "self" | "spouse" | "child" | "parent" | "other";
   isDisabled?: boolean;
   isPregnant?: boolean;
   isVeteran?: boolean;
@@ -32,7 +32,7 @@ export interface BenefitProgram {
   shortName: string;
   description: string;
   category: ProgramCategory;
-  federalOrState: 'federal' | 'state';
+  federalOrState: "federal" | "state";
   applicationUrl?: string;
   documentsNeeded: string[];
   estimateMonthly?: (input: ScreeningInput) => number | null;
@@ -40,18 +40,18 @@ export interface BenefitProgram {
 }
 
 export type ProgramCategory =
-  | 'food'
-  | 'healthcare'
-  | 'housing'
-  | 'income'
-  | 'childcare'
-  | 'energy'
-  | 'education'
-  | 'tax-credit';
+  | "food"
+  | "healthcare"
+  | "housing"
+  | "income"
+  | "childcare"
+  | "energy"
+  | "education"
+  | "tax-credit";
 
 export interface EligibilityResult {
   eligible: boolean;
-  confidence: 'high' | 'medium' | 'low';
+  confidence: "high" | "medium" | "low";
   reason: string;
   estimatedMonthlyValue?: number;
   estimatedAnnualValue?: number;

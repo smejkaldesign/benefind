@@ -1,19 +1,16 @@
-import { requireAuth } from '@/components/auth-guard';
-import { PageHeader } from '@/components/layout/page-header';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { ArrowRight, FileSearch } from 'lucide-react';
+import { requireAuth } from "@/components/auth-guard";
+import { PageHeader } from "@/components/layout/page-header";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowRight, FileSearch } from "lucide-react";
 
 export default async function DashboardPage() {
   const user = await requireAuth();
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Welcome back"
-        description={user.email ?? undefined}
-      />
+      <PageHeader title="Welcome back" description={user.email ?? undefined} />
 
       <Card className="text-center">
         <FileSearch className="mx-auto h-10 w-10 text-text-subtle" />
