@@ -9,17 +9,52 @@
 
 const ROW_1 = [
   { emoji: "🍎", text: "Maria saved $340/mo on groceries", gap: 180, y: -18 },
-  { emoji: "🚀", text: "TechStart Inc. received $150K SBIR grant", gap: 280, y: 12 },
-  { emoji: "🌱", text: "GreenBuild Co. saved $45K in energy credits", gap: 140, y: -8 },
+  {
+    emoji: "🚀",
+    text: "TechStart Inc. received $150K SBIR grant",
+    gap: 280,
+    y: 12,
+  },
+  {
+    emoji: "🌱",
+    text: "GreenBuild Co. saved $45K in energy credits",
+    gap: 140,
+    y: -8,
+  },
   { emoji: "🎓", text: "Lin received a $6,500 Pell Grant", gap: 320, y: 22 },
-  { emoji: "💊", text: "Sarah qualified for free healthcare", gap: 200, y: -14 },
+  {
+    emoji: "💊",
+    text: "Sarah qualified for free healthcare",
+    gap: 200,
+    y: -14,
+  },
 ];
 
 const ROW_2 = [
-  { emoji: "🔥", text: "James got $2,400 in heating assistance", gap: 260, y: 16 },
-  { emoji: "🎯", text: "Acme Logistics got $12K workforce grant", gap: 160, y: -20 },
-  { emoji: "💰", text: "David found $8,200 in annual benefits", gap: 300, y: 8 },
-  { emoji: "🏠", text: "Rosa found Section 8 housing assistance", gap: 220, y: -12 },
+  {
+    emoji: "🔥",
+    text: "James got $2,400 in heating assistance",
+    gap: 260,
+    y: 16,
+  },
+  {
+    emoji: "🎯",
+    text: "Acme Logistics got $12K workforce grant",
+    gap: 160,
+    y: -20,
+  },
+  {
+    emoji: "💰",
+    text: "David found $8,200 in annual benefits",
+    gap: 300,
+    y: 8,
+  },
+  {
+    emoji: "🏠",
+    text: "Rosa found Section 8 housing assistance",
+    gap: 220,
+    y: -12,
+  },
 ];
 
 function ChipRow({

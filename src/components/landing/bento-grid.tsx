@@ -1,13 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Sparkles,
-  MessageSquare,
-  Users,
-  Lock,
-  Play,
-} from "lucide-react";
+import { Sparkles, MessageSquare, Users, Lock, Play } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { BorderGlow } from "@/components/border-glow";
 import "@/components/magic-bento.css";
