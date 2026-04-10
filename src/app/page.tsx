@@ -33,13 +33,13 @@ export default function Home() {
 
       {/* ── Hero with Vanta.js Clouds (Oz-style container) ──── */}
       <section className="relative px-4 pt-20 sm:px-6 sm:pt-24">
-        {/* Rounded cloud container */}
+        {/* Rounded cloud container — matches Oz: max-w-[1400px], rounded-[20px] */}
         <div className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[20px]">
-          <VantaClouds className="min-h-[650px] sm:min-h-[780px]">
-            {/* Hero content — positioned in upper portion */}
-            <div className="relative z-10 flex min-h-[400px] flex-col items-center justify-center px-4 pt-16 sm:min-h-[420px] sm:pt-24">
+          <VantaClouds className="min-h-[700px] sm:min-h-[900px]">
+            {/* Hero content — upper portion, Oz uses 260px top padding */}
+            <div className="relative z-10 flex flex-col items-center px-4 pt-36 sm:pt-52">
               <motion.h1
-                className="max-w-4xl text-center font-display text-4xl leading-[1.05] font-semibold tracking-tight text-surface sm:text-6xl lg:text-7xl"
+                className="max-w-[900px] text-center font-display text-4xl leading-[1.05] font-semibold tracking-tight text-surface sm:text-6xl lg:text-[64px]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
@@ -48,7 +48,7 @@ export default function Home() {
               </motion.h1>
 
               <motion.p
-                className="mx-auto mt-6 max-w-xl text-center text-base leading-relaxed text-surface/70 sm:text-lg"
+                className="mx-auto mt-5 max-w-2xl text-center text-sm leading-relaxed text-surface/70 sm:text-base"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
@@ -57,34 +57,34 @@ export default function Home() {
               </motion.p>
 
               <motion.div
-                className="mt-10 flex flex-col items-center gap-3 sm:flex-row"
+                className="mt-8 flex flex-col items-center gap-3 sm:flex-row"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
                 <Link
                   href="/get-started"
-                  className="group inline-flex h-12 items-center gap-2 rounded-[50px] border border-surface/30 bg-white/90 px-8 text-base font-semibold text-surface shadow-sm backdrop-blur-sm transition-all hover:bg-white"
+                  className="group inline-flex h-11 items-center gap-2 rounded-lg border border-surface/20 bg-white px-6 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/90"
                 >
                   {t.landing.heroCta}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   href="#how-it-works"
-                  className="inline-flex h-12 items-center gap-2 rounded-[50px] border border-surface/30 bg-white/90 px-6 text-base font-medium text-surface backdrop-blur-sm transition-colors hover:bg-white focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                  className="inline-flex h-11 items-center gap-2 rounded-lg border border-surface/20 bg-white px-6 text-sm font-semibold text-surface transition-colors hover:bg-white/90 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
                 >
                   {t.landing.heroSecondaryCta}
                 </Link>
               </motion.div>
             </div>
 
+            {/* Scrolling success chips overlaid on lower clouds */}
+            <SuccessChips />
+
             {/* Dither fade at bottom (Oz-style pixelated transition) */}
             <div className="dither-fade z-20" />
           </VantaClouds>
         </div>
-
-        {/* Scrolling success chips — overflow container edges */}
-        <SuccessChips />
       </section>
 
       {/* ── Stats Strip ──────────────────────────────────────── */}

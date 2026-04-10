@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useCallback } from 'react';
-import { encryptScreeningData, decryptScreeningData } from './encryption';
+import { useCallback } from "react";
+import { encryptScreeningData, decryptScreeningData } from "./encryption";
 
 /**
  * Hook for encrypted localStorage operations.
@@ -22,21 +22,21 @@ export function useEncryptedStorage(userEmail: string | null) {
         const encrypted = await encryptScreeningData(data, userEmail);
         localStorage.setItem(`bf_${key}`, encrypted);
       } catch (err) {
-        console.error('[encrypted-storage] Failed to encrypt:', err);
+        console.error("[encrypted-storage] Failed to encrypt:", err);
       }
     },
     [userEmail],
   );
 
   const load = useCallback(
-    async <T,>(key: string): Promise<T | null> => {
+    async <T>(key: string): Promise<T | null> => {
       if (!userEmail) return null;
       try {
         const encrypted = localStorage.getItem(`bf_${key}`);
         if (!encrypted) return null;
         return await decryptScreeningData<T>(encrypted, userEmail);
       } catch (err) {
-        console.error('[encrypted-storage] Failed to decrypt:', err);
+        console.error("[encrypted-storage] Failed to decrypt:", err);
         return null;
       }
     },
@@ -48,7 +48,7 @@ export function useEncryptedStorage(userEmail: string | null) {
   }, []);
 
   const clearAll = useCallback(() => {
-    const keys = Object.keys(localStorage).filter((k) => k.startsWith('bf_'));
+    const keys = Object.keys(localStorage).filter((k) => k.startsWith("bf_"));
     keys.forEach((k) => localStorage.removeItem(k));
   }, []);
 

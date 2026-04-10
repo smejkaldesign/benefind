@@ -1,9 +1,11 @@
-'use client';
+"use client";
 
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback } from "react";
 
 function flowField(px: number, py: number, t: number): number {
-  return Math.sin(px + Math.sin(py + t * 0.1)) * Math.sin(py * px * 0.1 + t * 0.2);
+  return (
+    Math.sin(px + Math.sin(py + t * 0.1)) * Math.sin(py * px * 0.1 + t * 0.2)
+  );
 }
 
 function computeField(
@@ -50,8 +52,8 @@ interface AsciiWavesProps {
 }
 
 export function AsciiWaves({
-  characters = ' .:-+*=%@#',
-  color = '#10B981',
+  characters = " .:-+*=%@#",
+  color = "#10B981",
   invert = false,
   noiseScale = 2.0,
   elementSize = 14,
@@ -59,7 +61,7 @@ export function AsciiWaves({
   intensity = 0.8,
   waveTension = 0.3,
   waveTwist = 0.08,
-  className = '',
+  className = "",
   centerFade = 0,
 }: AsciiWavesProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -70,7 +72,7 @@ export function AsciiWaves({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const rect = canvas.getBoundingClientRect();
@@ -92,8 +94,8 @@ export function AsciiWaves({
 
     ctx.clearRect(0, 0, w, h);
     ctx.font = `bold ${elementSize * 0.85}px monospace`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     ctx.fillStyle = color;
 
     for (let row = 0; row < rows; row++) {
@@ -118,14 +120,20 @@ export function AsciiWaves({
           const ny = (row / rows) * 2 - 1;
           const dist = Math.sqrt(nx * nx + ny * ny);
           const fadeStart = centerFade * 0.6;
-          const fadeFactor = Math.min(1, Math.max(0, (dist - fadeStart) / (centerFade * 0.8)));
+          const fadeFactor = Math.min(
+            1,
+            Math.max(0, (dist - fadeStart) / (centerFade * 0.8)),
+          );
           val *= fadeFactor * fadeFactor * (3 - 2 * fadeFactor);
         }
 
-        const charIdx = Math.min(Math.floor(val * (charCount - 1)), charCount - 1);
+        const charIdx = Math.min(
+          Math.floor(val * (charCount - 1)),
+          charCount - 1,
+        );
         const char = characters[charIdx];
 
-        if (char === ' ') continue;
+        if (char === " ") continue;
 
         const alpha = val * 0.8 + 0.2;
         ctx.globalAlpha = alpha;
@@ -156,7 +164,11 @@ export function AsciiWaves({
 
   return (
     <div className={`relative h-full w-full overflow-hidden ${className}`}>
-      <canvas ref={canvasRef} className="h-full w-full" style={{ display: 'block' }} />
+      <canvas
+        ref={canvasRef}
+        className="h-full w-full"
+        style={{ display: "block" }}
+      />
     </div>
   );
 }

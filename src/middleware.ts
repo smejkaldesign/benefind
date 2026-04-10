@@ -1,12 +1,14 @@
-import { type NextRequest, NextResponse } from 'next/server';
-import { updateSession } from '@/lib/supabase/middleware';
-import { createServerClient } from '@supabase/ssr';
+import { type NextRequest, NextResponse } from "next/server";
+import { updateSession } from "@/lib/supabase/middleware";
+import { createServerClient } from "@supabase/ssr";
 
-const PUBLIC_PATHS = ['/', '/auth', '/screening', '/api/health'];
+const PUBLIC_PATHS = ["/", "/auth", "/screening", "/api/health"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const isPublic = PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + '/'));
+  const isPublic = PUBLIC_PATHS.some(
+    (p) => pathname === p || pathname.startsWith(p + "/"),
+  );
 
   // Always refresh the session cookie
   const response = await updateSession(request);
@@ -34,8 +36,8 @@ export async function middleware(request: NextRequest) {
 
     if (!user) {
       const url = request.nextUrl.clone();
-      url.pathname = '/auth/login';
-      url.searchParams.set('next', pathname);
+      url.pathname = "/auth/login";
+      url.searchParams.set("next", pathname);
       return NextResponse.redirect(url);
     }
   }
@@ -44,5 +46,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };

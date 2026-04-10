@@ -1,13 +1,13 @@
-import { type EmailOtpType } from '@supabase/supabase-js';
-import { NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { type EmailOtpType } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 function safePath(raw: string | null): string {
-  const fallback = '/dashboard';
-  if (!raw || !raw.startsWith('/') || raw.startsWith('//')) return fallback;
+  const fallback = "/dashboard";
+  if (!raw || !raw.startsWith("/") || raw.startsWith("//")) return fallback;
   try {
-    const url = new URL(raw, 'http://localhost');
-    if (url.hostname !== 'localhost') return fallback;
+    const url = new URL(raw, "http://localhost");
+    if (url.hostname !== "localhost") return fallback;
   } catch {
     return fallback;
   }
@@ -18,9 +18,9 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const { searchParams } = requestUrl;
   const origin = requestUrl.origin;
-  const token_hash = searchParams.get('token_hash');
-  const type = searchParams.get('type') as EmailOtpType | null;
-  const next = safePath(searchParams.get('next'));
+  const token_hash = searchParams.get("token_hash");
+  const type = searchParams.get("type") as EmailOtpType | null;
+  const next = safePath(searchParams.get("next"));
 
   if (token_hash && type) {
     const supabase = await createServerSupabase();
@@ -30,5 +30,7 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/auth/login?error=verification_failed`);
+  return NextResponse.redirect(
+    `${origin}/auth/login?error=verification_failed`,
+  );
 }

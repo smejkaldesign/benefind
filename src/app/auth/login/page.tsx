@@ -1,25 +1,27 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import { ArrowLeft, Mail, Loader2, CheckCircle } from 'lucide-react';
-import Link from 'next/link';
+import { useState, useEffect, useRef } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { ArrowLeft, Mail, Loader2, CheckCircle } from "lucide-react";
+import Link from "next/link";
 
 const RATE_LIMIT_SECONDS = 60;
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const err = params.get('error');
-    if (err === 'link_expired') {
-      setError('That sign-in link has expired or already been used. Request a new one below.');
-    } else if (err === 'auth_failed') {
-      setError('Sign-in failed. Please try again.');
+    const err = params.get("error");
+    if (err === "link_expired") {
+      setError(
+        "That sign-in link has expired or already been used. Request a new one below.",
+      );
+    } else if (err === "auth_failed") {
+      setError("Sign-in failed. Please try again.");
     }
   }, []);
   const [cooldownEnd, setCooldownEnd] = useState<number | null>(null);
@@ -72,9 +74,10 @@ export default function LoginPage() {
     });
 
     if (error) {
-      const msg = error.message.charAt(0).toUpperCase() + error.message.slice(1);
+      const msg =
+        error.message.charAt(0).toUpperCase() + error.message.slice(1);
       setError(msg);
-      if (error.message.toLowerCase().includes('rate limit')) {
+      if (error.message.toLowerCase().includes("rate limit")) {
         setCooldownEnd(Date.now() + RATE_LIMIT_SECONDS * 1000);
       }
       setLoading(false);
@@ -94,8 +97,9 @@ export default function LoginPage() {
           </div>
           <h1 className="text-2xl font-bold text-text">Check your email</h1>
           <p className="text-text-muted">
-            We sent a magic link to <strong className="text-text">{email}</strong>. Click the link
-            to sign in.
+            We sent a magic link to{" "}
+            <strong className="text-text">{email}</strong>. Click the link to
+            sign in.
           </p>
           <button
             onClick={() => setSent(false)}
@@ -140,12 +144,13 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <p className="rounded-lg bg-red-500/10 px-3 py-2 text-sm font-medium text-red-400" role="alert">
+            <p
+              className="rounded-lg bg-red-500/10 px-3 py-2 text-sm font-medium text-red-400"
+              role="alert"
+            >
               {error}
               {cooldown > 0 && (
-                <span className="ml-1 tabular-nums">
-                  ({cooldown}s)
-                </span>
+                <span className="ml-1 tabular-nums">({cooldown}s)</span>
               )}
             </p>
           )}
@@ -163,7 +168,7 @@ export default function LoginPage() {
             ) : cooldown > 0 ? (
               `Try again in ${cooldown}s`
             ) : (
-              'Send magic link'
+              "Send magic link"
             )}
           </button>
         </form>

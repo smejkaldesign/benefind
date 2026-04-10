@@ -117,7 +117,7 @@ export function GetStartedCTA() {
 
                 <Link
                   href={card.href}
-                  className={`mt-auto inline-flex items-center justify-center rounded-[50px] px-6 py-3 text-sm font-medium transition-colors ${card.buttonClass} mt-8`}
+                  className={`mt-auto inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold transition-colors ${card.buttonClass} mt-8`}
                 >
                   {card.cta}
                 </Link>

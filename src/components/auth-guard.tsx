@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { redirect } from "next/navigation";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 export async function requireAuth() {
   const supabase = await createServerSupabase();
@@ -8,7 +8,7 @@ export async function requireAuth() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect('/auth/login');
+    redirect("/auth/login");
   }
 
   return user;

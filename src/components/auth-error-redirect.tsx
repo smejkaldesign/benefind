@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 /**
  * Catches Supabase auth errors that land on the site URL (homepage).
@@ -14,13 +14,13 @@ export function AuthErrorRedirect() {
 
   useEffect(() => {
     const search = new URLSearchParams(window.location.search);
-    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
 
-    const error = search.get('error') ?? hash.get('error');
-    const errorCode = search.get('error_code') ?? hash.get('error_code');
+    const error = search.get("error") ?? hash.get("error");
+    const errorCode = search.get("error_code") ?? hash.get("error_code");
 
-    if (error === 'access_denied') {
-      const msg = errorCode === 'otp_expired' ? 'link_expired' : 'auth_failed';
+    if (error === "access_denied") {
+      const msg = errorCode === "otp_expired" ? "link_expired" : "auth_failed";
       router.replace(`/auth/login?error=${msg}`);
     }
   }, [router]);

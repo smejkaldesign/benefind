@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef } from "react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -6,7 +6,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, id, className = '', ...props }, ref) => {
+  ({ label, error, id, className = "", ...props }, ref) => {
     return (
       <div className="space-y-1.5">
         {label && (
@@ -19,8 +19,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           id={id}
           className={`block h-11 w-full rounded-xl border bg-surface px-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:ring-2 focus:outline-none disabled:opacity-50 ${
             error
-              ? 'border-error focus:border-error focus:ring-error/20'
-              : 'border-border focus:border-brand focus:ring-brand/20'
+              ? "border-error focus:border-error focus:ring-error/20"
+              : "border-border focus:border-brand focus:ring-brand/20"
           } ${className}`}
           {...props}
         />
@@ -30,4 +30,4 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   },
 );
 
-Input.displayName = 'Input';
+Input.displayName = "Input";

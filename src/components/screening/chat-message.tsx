@@ -1,19 +1,19 @@
 interface ChatMessageProps {
-  role: 'assistant' | 'user';
+  role: "assistant" | "user";
   children: React.ReactNode;
 }
 
 export function ChatMessage({ role, children }: ChatMessageProps) {
-  const isAssistant = role === 'assistant';
+  const isAssistant = role === "assistant";
 
   return (
-    <div className={`flex ${isAssistant ? 'justify-start' : 'justify-end'}`}>
+    <div className={`flex ${isAssistant ? "justify-start" : "justify-end"}`}>
       <div
         aria-label={`${role} message`}
         className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed sm:max-w-[70%] ${
           isAssistant
-            ? 'rounded-bl-md bg-surface-bright text-text'
-            : 'rounded-br-md bg-brand text-white'
+            ? "rounded-bl-md bg-surface-bright text-text"
+            : "rounded-br-md bg-brand text-white"
         }`}
       >
         {children}

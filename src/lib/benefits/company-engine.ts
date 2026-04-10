@@ -1,13 +1,17 @@
-import type { CompanyProgram, CompanyScreeningInput, CompanyScreeningResult } from './company-types';
-import { rndTaxCredit } from './company-programs/rnd-tax-credit';
-import { sbirPhaseI, sbirPhaseII } from './company-programs/sbir-sttr';
-import { wotc } from './company-programs/wotc';
-import { stateWorkforceTraining } from './company-programs/state-workforce-training';
-import { stepExport } from './company-programs/step-export';
-import { opportunityZones } from './company-programs/opportunity-zones';
-import { sba8a, wosbContracting } from './company-programs/sba-8a';
-import { cleanEnergyItc, section179d } from './company-programs/clean-energy';
-import { usdaRuralBusiness } from './company-programs/usda-rural';
+import type {
+  CompanyProgram,
+  CompanyScreeningInput,
+  CompanyScreeningResult,
+} from "./company-types";
+import { rndTaxCredit } from "./company-programs/rnd-tax-credit";
+import { sbirPhaseI, sbirPhaseII } from "./company-programs/sbir-sttr";
+import { wotc } from "./company-programs/wotc";
+import { stateWorkforceTraining } from "./company-programs/state-workforce-training";
+import { stepExport } from "./company-programs/step-export";
+import { opportunityZones } from "./company-programs/opportunity-zones";
+import { sba8a, wosbContracting } from "./company-programs/sba-8a";
+import { cleanEnergyItc, section179d } from "./company-programs/clean-energy";
+import { usdaRuralBusiness } from "./company-programs/usda-rural";
 
 /** All registered company programs */
 export const ALL_COMPANY_PROGRAMS: CompanyProgram[] = [
@@ -34,7 +38,9 @@ export const ALL_COMPANY_PROGRAMS: CompanyProgram[] = [
  * Run company eligibility screening across all registered programs.
  * Returns results sorted by match score (highest first), eligible programs first.
  */
-export function runCompanyScreening(input: CompanyScreeningInput): CompanyScreeningResult {
+export function runCompanyScreening(
+  input: CompanyScreeningInput,
+): CompanyScreeningResult {
   const results = ALL_COMPANY_PROGRAMS.map((program) => ({
     program,
     result: program.checkEligibility(input),

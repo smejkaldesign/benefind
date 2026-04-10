@@ -1,38 +1,54 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { SCREENING_STEPS, answersToScreeningInput } from '@/lib/screening/steps';
-import { runScreening } from '@/lib/benefits/engine';
-import type { ScreeningResult } from '@/lib/benefits/types';
-import { ChatMessage, TypingIndicator } from '@/components/screening/chat-message';
-import { StepInput } from '@/components/screening/step-input';
-import { InlineOptions, hasInlineOptions } from '@/components/screening/inline-options';
-import { AsciiWaves } from '@/components/ascii-waves';
-import { ArrowLeft, RotateCcw, MessageSquare, Zap, CheckCircle2, Lock } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { US_STATES } from '@/lib/screening/us-states';
+import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  SCREENING_STEPS,
+  answersToScreeningInput,
+} from "@/lib/screening/steps";
+import { runScreening } from "@/lib/benefits/engine";
+import type { ScreeningResult } from "@/lib/benefits/types";
+import {
+  ChatMessage,
+  TypingIndicator,
+} from "@/components/screening/chat-message";
+import { StepInput } from "@/components/screening/step-input";
+import {
+  InlineOptions,
+  hasInlineOptions,
+} from "@/components/screening/inline-options";
+import { AsciiWaves } from "@/components/ascii-waves";
+import {
+  ArrowLeft,
+  RotateCcw,
+  MessageSquare,
+  Zap,
+  CheckCircle2,
+  Lock,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { US_STATES } from "@/lib/screening/us-states";
 
 interface Message {
   id: string;
-  role: 'assistant' | 'user';
+  role: "assistant" | "user";
   content: string;
 }
 
 const STEPS_PREVIEW = [
   {
     icon: MessageSquare,
-    label: 'Answer a few questions',
-    desc: 'Household size, income, and where you live. Takes about 3 minutes.',
+    label: "Answer a few questions",
+    desc: "Household size, income, and where you live. Takes about 3 minutes.",
   },
   {
     icon: Zap,
-    label: 'We match you instantly',
-    desc: 'Our engine checks eligibility across 12+ federal programs in real time.',
+    label: "We match you instantly",
+    desc: "Our engine checks eligibility across 12+ federal programs in real time.",
   },
   {
     icon: CheckCircle2,
-    label: 'See your results',
+    label: "See your results",
     desc: "View every program you qualify for, with estimated amounts and next steps.",
   },
 ];
@@ -51,13 +67,13 @@ export default function ScreeningPage() {
     setTimeout(() => {
       scrollRef.current?.scrollTo({
         top: scrollRef.current.scrollHeight,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }, 100);
   }, []);
 
   const addMessage = useCallback(
-    (role: 'assistant' | 'user', content: string) => {
+    (role: "assistant" | "user", content: string) => {
       setMessages((prev) => [
         ...prev,
         { id: crypto.randomUUID(), role, content },
@@ -75,10 +91,10 @@ export default function ScreeningPage() {
       setIsTyping(true);
       setTimeout(() => {
         setIsTyping(false);
-        addMessage('assistant', step.question);
+        addMessage("assistant", step.question);
         if (step.helpText) {
           setTimeout(() => {
-            addMessage('assistant', step.helpText!);
+            addMessage("assistant", step.helpText!);
           }, 300);
         }
       }, 600);
@@ -91,11 +107,14 @@ export default function ScreeningPage() {
     initialized.current = true;
 
     addMessage(
-      'assistant',
+      "assistant",
       "Hi! I'm here to help you find government benefits you may qualify for. This takes about 3 minutes.",
     );
     setTimeout(() => {
-      addMessage('assistant', "Your answers are private and won't be shared with anyone. Let's get started.");
+      addMessage(
+        "assistant",
+        "Your answers are private and won't be shared with anyone. Let's get started.",
+      );
       setTimeout(() => showStep(0), 400);
     }, 800);
   }, [addMessage, showStep]);
@@ -105,32 +124,35 @@ export default function ScreeningPage() {
     if (!step) return;
 
     let displayValue = value;
-    if (step.type === 'select' || step.type === 'state') {
+    if (step.type === "select" || step.type === "state") {
       const opt = step.options?.find((o) => o.value === value);
       displayValue = opt?.label ?? value;
-      if (step.type === 'state') {
+      if (step.type === "state") {
         const state = US_STATES.find((s) => s.value === value);
         displayValue = state?.label ?? value;
       }
     }
-    if (step.type === 'multi-select') {
+    if (step.type === "multi-select") {
       const labels = value
-        .split(',')
+        .split(",")
         .map((v) => step.options?.find((o) => o.value === v)?.label ?? v);
-      displayValue = labels.join(', ');
+      displayValue = labels.join(", ");
     }
-    if (step.type === 'number' && step.id !== 'householdSize') {
+    if (step.type === "number" && step.id !== "householdSize") {
       displayValue = `$${parseInt(value).toLocaleString()}`;
     }
 
-    addMessage('user', displayValue);
+    addMessage("user", displayValue);
 
     const newAnswers = { ...answers, [step.id]: value };
     setAnswers(newAnswers);
 
     let nextStep = currentStep + 1;
 
-    if (SCREENING_STEPS[nextStep]?.id === 'childrenAges' && newAnswers.hasChildren !== 'yes') {
+    if (
+      SCREENING_STEPS[nextStep]?.id === "childrenAges" &&
+      newAnswers.hasChildren !== "yes"
+    ) {
       nextStep++;
     }
 
@@ -138,7 +160,10 @@ export default function ScreeningPage() {
       setIsTyping(true);
       setTimeout(() => {
         setIsTyping(false);
-        addMessage('assistant', "Great, I have everything I need. Let me check which programs you qualify for...");
+        addMessage(
+          "assistant",
+          "Great, I have everything I need. Let me check which programs you qualify for...",
+        );
         setIsTyping(true);
         setTimeout(() => {
           setIsTyping(false);
@@ -147,18 +172,23 @@ export default function ScreeningPage() {
           setResult(screeningResult);
           try {
             const { input: _pii, ...safeResult } = screeningResult;
-            sessionStorage.setItem('screening_result', JSON.stringify(safeResult));
+            sessionStorage.setItem(
+              "screening_result",
+              JSON.stringify(safeResult),
+            );
           } catch {}
 
-          const eligible = screeningResult.programs.filter((p) => p.result.eligible);
+          const eligible = screeningResult.programs.filter(
+            (p) => p.result.eligible,
+          );
           if (eligible.length > 0) {
             addMessage(
-              'assistant',
-              `You may qualify for ${eligible.length} program${eligible.length > 1 ? 's' : ''} worth an estimated $${screeningResult.totalEstimatedMonthly.toLocaleString()}/month ($${screeningResult.totalEstimatedAnnual.toLocaleString()}/year). Scroll down to see your results.`,
+              "assistant",
+              `You may qualify for ${eligible.length} program${eligible.length > 1 ? "s" : ""} worth an estimated $${screeningResult.totalEstimatedMonthly.toLocaleString()}/month ($${screeningResult.totalEstimatedAnnual.toLocaleString()}/year). Scroll down to see your results.`,
             );
           } else {
             addMessage(
-              'assistant',
+              "assistant",
               "Based on the information provided, you may not qualify for the programs we currently check. This doesn't mean there aren't other programs available — check with your local social services office.",
             );
           }
@@ -178,7 +208,10 @@ export default function ScreeningPage() {
     initialized.current = false;
     setTimeout(() => {
       initialized.current = true;
-      addMessage('assistant', "Let's start fresh. I'll ask you the same questions again.");
+      addMessage(
+        "assistant",
+        "Let's start fresh. I'll ask you the same questions again.",
+      );
       setTimeout(() => showStep(0), 400);
     }, 100);
   }
@@ -188,19 +221,22 @@ export default function ScreeningPage() {
 
   return (
     <div className="flex h-dvh overflow-hidden bg-white">
-
       {/* ── Left panel: conversation ──────────────────────────── */}
       <div className="flex flex-1 flex-col overflow-hidden lg:max-w-[55%]">
-
         {/* Header */}
         <header className="shrink-0 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
           <div className="flex h-14 items-center gap-3 px-4">
-            <Link href="/" className="text-gray-400 hover:text-gray-700 transition-colors">
+            <Link
+              href="/"
+              className="text-gray-400 hover:text-gray-700 transition-colors"
+            >
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-semibold text-gray-900">Eligibility Check</h1>
+                <h1 className="text-sm font-semibold text-gray-900">
+                  Eligibility Check
+                </h1>
                 {result && (
                   <button
                     onClick={handleRestart}
@@ -229,10 +265,19 @@ export default function ScreeningPage() {
         </header>
 
         {/* Messages — anchored to bottom, grows upward, stable scrollbar gutter */}
-        <div ref={scrollRef} className="flex-1 overflow-y-scroll" style={{ scrollbarGutter: 'stable' }}>
+        <div
+          ref={scrollRef}
+          className="flex-1 overflow-y-scroll"
+          style={{ scrollbarGutter: "stable" }}
+        >
           <div className="flex min-h-full flex-col justify-end px-4 py-6">
             <div className="mx-auto w-full max-w-xl">
-              <div className="space-y-3" role="log" aria-live="polite" aria-label="Conversation">
+              <div
+                className="space-y-3"
+                role="log"
+                aria-live="polite"
+                aria-label="Conversation"
+              >
                 {messages.map((msg) => (
                   <ChatMessage key={msg.id} role={msg.role}>
                     {msg.content}
@@ -244,9 +289,15 @@ export default function ScreeningPage() {
                   </ChatMessage>
                 )}
                 {/* Inline quick-pick options rendered in the conversation */}
-                {!result && !isTyping && currentStepData && hasInlineOptions(currentStepData) && (
-                  <InlineOptions step={currentStepData} onSubmit={handleAnswer} />
-                )}
+                {!result &&
+                  !isTyping &&
+                  currentStepData &&
+                  hasInlineOptions(currentStepData) && (
+                    <InlineOptions
+                      step={currentStepData}
+                      onSubmit={handleAnswer}
+                    />
+                  )}
               </div>
             </div>
           </div>
@@ -275,9 +326,13 @@ export default function ScreeningPage() {
                   ${result.totalEstimatedMonthly.toLocaleString()}/month
                 </p>
                 <p className="text-sm text-gray-500">
-                  Estimated ${result.totalEstimatedAnnual.toLocaleString()}/year across{' '}
-                  {result.programs.filter((p) => p.result.eligible).length} program
-                  {result.programs.filter((p) => p.result.eligible).length !== 1 ? 's' : ''}
+                  Estimated ${result.totalEstimatedAnnual.toLocaleString()}/year
+                  across{" "}
+                  {result.programs.filter((p) => p.result.eligible).length}{" "}
+                  program
+                  {result.programs.filter((p) => p.result.eligible).length !== 1
+                    ? "s"
+                    : ""}
                 </p>
                 <div className="flex flex-wrap justify-center gap-1.5 pt-1">
                   {result.programs
@@ -292,12 +347,13 @@ export default function ScreeningPage() {
                     ))}
                 </div>
                 <p className="text-xs text-gray-400 pt-1">
-                  These are estimates. Actual amounts depend on your situation and state.
+                  These are estimates. Actual amounts depend on your situation
+                  and state.
                 </p>
               </div>
               <div className="flex justify-center gap-3 pt-2">
                 <button
-                  onClick={() => router.push('/results')}
+                  onClick={() => router.push("/results")}
                   className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
                 >
                   View Full Results
@@ -316,7 +372,6 @@ export default function ScreeningPage() {
 
       {/* ── Right panel: ASCII + value prop — never scrolls ─── */}
       <div className="hidden lg:flex lg:flex-1 relative border-l border-gray-100 bg-gray-50 overflow-hidden h-full">
-
         {/* ASCII waves — light mode: emerald on white, very low opacity */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.18]">
           <AsciiWaves
@@ -331,11 +386,12 @@ export default function ScreeningPage() {
 
         {/* Value prop content */}
         <div className="relative z-10 flex flex-col justify-center px-12 py-16 xl:px-16">
-
           {/* Logo/wordmark */}
           <div className="mb-10">
             <span className="text-xl font-bold text-emerald-500">Benefind</span>
-            <p className="mt-1 text-sm text-gray-400">Benefits navigator, built for you</p>
+            <p className="mt-1 text-sm text-gray-400">
+              Benefits navigator, built for you
+            </p>
           </div>
 
           {/* Headline */}
@@ -343,7 +399,8 @@ export default function ScreeningPage() {
             Here&apos;s what&apos;s about to happen
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-gray-500 max-w-xs">
-            A short conversation is all it takes. No account needed. No paperwork. Just answers.
+            A short conversation is all it takes. No account needed. No
+            paperwork. Just answers.
           </p>
 
           {/* Steps */}
@@ -360,7 +417,9 @@ export default function ScreeningPage() {
                     </span>
                   </div>
                   <p className="text-sm font-semibold text-gray-800">{label}</p>
-                  <p className="mt-0.5 text-sm text-gray-400 leading-relaxed">{desc}</p>
+                  <p className="mt-0.5 text-sm text-gray-400 leading-relaxed">
+                    {desc}
+                  </p>
                 </div>
               </div>
             ))}
@@ -370,16 +429,18 @@ export default function ScreeningPage() {
           <div className="mt-12 flex items-start gap-3 rounded-xl border border-gray-200 bg-white/70 px-4 py-3.5 backdrop-blur-sm">
             <Lock className="h-4 w-4 text-gray-400 mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed text-gray-500">
-              Your answers are stored locally on your device and never sent to a server.
-              We don&apos;t store personally identifiable information. This is a screening
-              tool, not a formal application.
+              Your answers are stored locally on your device and never sent to a
+              server. We don&apos;t store personally identifiable information.
+              This is a screening tool, not a formal application.
             </p>
           </div>
 
           {/* Programs count */}
           <p className="mt-6 text-xs text-gray-400">
-            Checks eligibility across{' '}
-            <span className="font-semibold text-gray-600">12+ federal and state programs</span>{' '}
+            Checks eligibility across{" "}
+            <span className="font-semibold text-gray-600">
+              12+ federal and state programs
+            </span>{" "}
             including SNAP, Medicaid, WIC, SSI, and more.
           </p>
         </div>

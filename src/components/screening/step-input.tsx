@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { ArrowUp } from 'lucide-react';
-import type { ScreeningStep } from '@/lib/screening/steps';
+import { useState } from "react";
+import { ArrowUp } from "lucide-react";
+import type { ScreeningStep } from "@/lib/screening/steps";
 
 interface StepInputProps {
   step: ScreeningStep;
@@ -12,29 +12,37 @@ interface StepInputProps {
   isSecondary?: boolean;
 }
 
-export function StepInput({ step, onSubmit, disabled, isSecondary }: StepInputProps) {
-  const [value, setValue] = useState('');
+export function StepInput({
+  step,
+  onSubmit,
+  disabled,
+  isSecondary,
+}: StepInputProps) {
+  const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const isNumber = step.type === 'number';
-  const isMoney = isNumber && step.id !== 'householdSize';
+  const isNumber = step.type === "number";
+  const isMoney = isNumber && step.id !== "householdSize";
   const placeholder = isSecondary
-    ? 'Or type your answer...'
+    ? "Or type your answer..."
     : isMoney
-      ? '0'
-      : 'Type your answer...';
+      ? "0"
+      : "Type your answer...";
 
   function handleSubmit() {
     if (disabled || !value.trim()) return;
 
     if (step.validation) {
       const err = step.validation(value.trim());
-      if (err) { setError(err); return; }
+      if (err) {
+        setError(err);
+        return;
+      }
     }
 
     setError(null);
     onSubmit(value.trim());
-    setValue('');
+    setValue("");
   }
 
   return (
@@ -46,16 +54,21 @@ export function StepInput({ step, onSubmit, disabled, isSecondary }: StepInputPr
           </span>
         )}
         <input
-          type={isNumber ? 'number' : 'text'}
-          inputMode={isNumber ? 'numeric' : 'text'}
+          type={isNumber ? "number" : "text"}
+          inputMode={isNumber ? "numeric" : "text"}
           value={value}
-          onChange={(e) => { setValue(e.target.value); setError(null); }}
-          onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
+          onChange={(e) => {
+            setValue(e.target.value);
+            setError(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSubmit();
+          }}
           disabled={disabled}
           placeholder={placeholder}
           aria-label={step.question}
           className={`block h-11 w-full rounded-full border border-gray-200 bg-gray-50 text-sm text-gray-900 transition-colors placeholder:text-gray-400 focus:border-emerald-400 focus:bg-white focus:ring-2 focus:ring-emerald-400/20 focus:outline-none disabled:opacity-50 ${
-            isMoney ? 'pl-7 pr-14' : 'pl-4 pr-14'
+            isMoney ? "pl-7 pr-14" : "pl-4 pr-14"
           }`}
         />
         <button
