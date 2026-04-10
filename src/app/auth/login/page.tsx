@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ArrowLeft, Mail, Loader2, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { LandingNav } from "@/components/landing-nav";
 import { GradientBlinds } from "@/components/gradient-blinds";
 
@@ -101,6 +102,15 @@ export default function LoginPage() {
 
         {/* Sign-in container — Celune style */}
         <div className="relative z-10 flex w-full max-w-[534px] flex-col items-center rounded-xl border border-white/[0.05] bg-black/75 px-8 py-16 shadow-2xl shadow-black/50 backdrop-blur-sm sm:px-12 sm:py-20">
+          {/* Favicon — 64px square at top */}
+          <Image
+            src="/images/brand/favilight.png"
+            alt="Benefind"
+            width={64}
+            height={64}
+            className="mb-8 h-16 w-16"
+            priority
+          />
           {sent ? (
             <div className="w-full space-y-6 text-center">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand/15">
