@@ -36,13 +36,13 @@ export function VantaClouds({ className, children }: VantaCloudsProps) {
           sunGlareColor: 0xff6633,
           sunlightColor: 0xff9933,
           speed: 0.3,
-          mouseControls: false,
-          touchControls: false,
-          minHeight: 600,
+          mouseControls: true,
+          touchControls: true,
+          minHeight: 200,
           minWidth: 200,
-          // Scale up to push cloud horizon lower (center of container)
-          scale: 1.5,
-          scaleMobile: 1.5,
+          // Scale 3 pushes cloud horizon much lower, sky fills upper half
+          scale: 3,
+          scaleMobile: 12,
         });
         setLoaded(true);
       } catch {
