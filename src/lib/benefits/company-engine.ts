@@ -3,6 +3,8 @@ import type {
   CompanyScreeningInput,
   CompanyScreeningResult,
 } from "./company-types";
+import { tierFromScore } from "./scoring";
+import { ENGINE_VERSION } from "./types";
 import { rndTaxCredit } from "./company-programs/rnd-tax-credit";
 import { sbirPhaseI, sbirPhaseII } from "./company-programs/sbir-sttr";
 import { wotc } from "./company-programs/wotc";
@@ -36,31 +38,52 @@ export const ALL_COMPANY_PROGRAMS: CompanyProgram[] = [
 
 /**
  * Run company eligibility screening across all registered programs.
- * Returns results sorted by match score (highest first), eligible programs first.
+ *
+ * The company programs already return numeric `matchScore` values (0-100),
+ * so the engine doesn't need the rule/signal normalization that the
+ * individual screening engine does. We DO annotate each result with an
+ * `eligibilityTier` derived from the matchScore via the same tierFromScore
+ * helper, so the downstream UI and screening_results rows use a uniform
+ * bucket taxonomy across both tracks.
+ *
+ * Programs are sorted by matchScore descending. Ties break on matchScore
+ * alone (we don't have a separate "value" dimension for the company track
+ * because estimatedValue is a free-form string).
  */
 export function runCompanyScreening(
   input: CompanyScreeningInput,
 ): CompanyScreeningResult {
-  const results = ALL_COMPANY_PROGRAMS.map((program) => ({
-    program,
-    result: program.checkEligibility(input),
-  }));
-
-  // Sort: eligible first, then by match score descending
-  results.sort((a, b) => {
-    if (a.result.eligible !== b.result.eligible) {
-      return a.result.eligible ? -1 : 1;
-    }
-    return b.result.matchScore - a.result.matchScore;
+  const results = ALL_COMPANY_PROGRAMS.map((program) => {
+    const raw = program.checkEligibility(input);
+    return {
+      program,
+      result: {
+        ...raw,
+        // Derive canonical tier from the matchScore so dashboards render
+        // the same 5-bucket UI as the individual screening results.
+        eligibilityTier: tierFromScore(raw.matchScore),
+      },
+    };
   });
 
-  const eligible = results.filter((r) => r.result.eligible);
+  // Sort by matchScore descending
+  results.sort((a, b) => b.result.matchScore - a.result.matchScore);
+
+  // "Matched" means at least "probably_eligible" (matchScore >= 50).
+  // Old semantics used the `eligible` boolean which this metric now
+  // approximates with the tier boundary.
+  const matched = results.filter(
+    (r) =>
+      r.result.eligibilityTier === "eligible_with_requirements" ||
+      r.result.eligibilityTier === "probably_eligible",
+  );
 
   return {
     input,
     timestamp: new Date().toISOString(),
+    engineVersion: ENGINE_VERSION,
     programs: results,
-    totalMatched: eligible.length,
+    totalMatched: matched.length,
   };
 }
 

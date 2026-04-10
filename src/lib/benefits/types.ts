@@ -36,7 +36,15 @@ export interface BenefitProgram {
   applicationUrl?: string;
   documentsNeeded: string[];
   estimateMonthly?: (input: ScreeningInput) => number | null;
-  checkEligibility: (input: ScreeningInput) => EligibilityResult;
+  /**
+   * Returns either the legacy EligibilityResult shape or the new rich
+   * EligibilityEvaluation shape. The engine normalizes both into the
+   * canonical scored form via `scoreEvaluation()`.
+   *
+   * New programs should return EligibilityEvaluation. Legacy programs
+   * are bridged automatically.
+   */
+  checkEligibility: (input: ScreeningInput) => EligibilityResult | EligibilityEvaluation;
 }
 
 export type ProgramCategory =
@@ -49,6 +57,14 @@ export type ProgramCategory =
   | "education"
   | "tax-credit";
 
+// ============================================================================
+// Legacy result shape (pre-refactor, still supported via the bridge)
+// ============================================================================
+
+/**
+ * @deprecated Use EligibilityEvaluation for new programs. The engine
+ * bridges this shape to the canonical scored form automatically.
+ */
 export interface EligibilityResult {
   eligible: boolean;
   confidence: "high" | "medium" | "low";
@@ -58,13 +74,126 @@ export interface EligibilityResult {
   nextSteps?: string[];
 }
 
+// ============================================================================
+// New rich evaluation shape (canonical going forward)
+// ============================================================================
+
+/**
+ * A single rule the engine evaluated. Rules are hard constraints with
+ * weights. A rule with `veto: true` that fails immediately sets the
+ * final score to 0 regardless of other signals.
+ */
+export interface RuleResult {
+  /** Stable identifier for this rule (e.g., "income_under_130_fpl") */
+  name: string;
+  /** Human-readable label shown in the "Why am I eligible?" panel */
+  label: string;
+  /** Did the rule pass? */
+  passed: boolean;
+  /** Relative weight of this rule (higher = more impactful) */
+  weight: number;
+  /** If true and passed=false, this is a hard disqualifier (score=0, tier=ineligible) */
+  veto?: boolean;
+  /** The actual value measured (optional, for display) */
+  actual?: string;
+  /** The threshold the rule is checking against (optional, for display) */
+  threshold?: string;
+}
+
+/** A soft signal that nudges the score but cannot veto. */
+export interface Signal {
+  /** Stable identifier (e.g., "has_dependents") */
+  name: string;
+  /** Human-readable label */
+  label: string;
+  /** Did the signal match? */
+  matched: boolean;
+  /** Weight (typically smaller than rule weights) */
+  weight: number;
+}
+
+/** A field the screener did not collect, reducing confidence. */
+export interface MissingField {
+  /** Field name (e.g., "tax_filing_status") */
+  field: string;
+  /** Human-readable label */
+  label: string;
+  /** Penalty applied to the final score (subtracted after weighted sum) */
+  penalty: number;
+}
+
+/**
+ * The rich evaluation shape new programs return. The engine computes
+ * the final `confidenceScore` from rules + signals - missing penalties
+ * via `scoreEvaluation()`.
+ */
+export interface EligibilityEvaluation {
+  rules: RuleResult[];
+  signals?: Signal[];
+  missing?: MissingField[];
+  /** Short user-facing reason — used as the primary dashboard blurb */
+  reason: string;
+  estimatedMonthlyValue?: number;
+  estimatedAnnualValue?: number;
+  nextSteps?: string[];
+}
+
+// ============================================================================
+// Canonical scored result (what the engine returns to callers)
+// ============================================================================
+
+/** 5-tier eligibility bucket, derived from confidenceScore. */
+export type EligibilityTier =
+  | "eligible_with_requirements" // 70-100
+  | "probably_eligible" // 50-69
+  | "maybe_eligible" // 25-49
+  | "not_likely" // 5-24
+  | "ineligible"; // 0-4
+
+/** The rule-engine version string written into every result. */
+export const ENGINE_VERSION = "1.0.0";
+
+/**
+ * The reasons jsonb payload stored on screening_results rows.
+ * Shape matches the canonical data model §D3.
+ */
+export interface ReasonsPayload {
+  rules: RuleResult[];
+  signals: Signal[];
+  missing: MissingField[];
+  computed_score: number;
+  engine_version: string;
+}
+
+/**
+ * Canonical scored result. Every program ultimately produces this shape,
+ * either directly (new programs via EligibilityEvaluation) or via the
+ * bridge from the legacy EligibilityResult.
+ */
+export interface ScoredEligibilityResult {
+  /** Integer 0-100 confidence score. */
+  confidenceScore: number;
+  /** Generated tier from the score (matches DB generated column). */
+  eligibilityTier: EligibilityTier;
+  /** Short user-facing reason. */
+  reason: string;
+  /** Structured explainability payload. */
+  reasons: ReasonsPayload;
+  /** Estimated monetary values (if computable). */
+  estimatedMonthlyValue?: number;
+  estimatedAnnualValue?: number;
+  /** Next-step checklist for the user. */
+  nextSteps?: string[];
+}
+
 /** Full screening result for a user */
 export interface ScreeningResult {
   input: ScreeningInput;
   timestamp: string;
+  engineVersion: string;
   programs: {
     program: BenefitProgram;
-    result: EligibilityResult;
+    result: ScoredEligibilityResult;
   }[];
   totalEstimatedMonthly: number;
   totalEstimatedAnnual: number;

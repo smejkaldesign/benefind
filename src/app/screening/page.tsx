@@ -180,7 +180,9 @@ export default function ScreeningPage() {
           } catch {}
 
           const eligible = screeningResult.programs.filter(
-            (p) => p.result.eligible,
+            (p) =>
+              p.result.eligibilityTier === "eligible_with_requirements" ||
+              p.result.eligibilityTier === "probably_eligible",
           );
           if (eligible.length > 0) {
             addMessage(
@@ -328,15 +330,32 @@ export default function ScreeningPage() {
                 <p className="text-sm text-text-muted">
                   Estimated ${result.totalEstimatedAnnual.toLocaleString()}/year
                   across{" "}
-                  {result.programs.filter((p) => p.result.eligible).length}{" "}
+                  {
+                    result.programs.filter(
+                      (p) =>
+                        p.result.eligibilityTier ===
+                          "eligible_with_requirements" ||
+                        p.result.eligibilityTier === "probably_eligible",
+                    ).length
+                  }{" "}
                   program
-                  {result.programs.filter((p) => p.result.eligible).length !== 1
+                  {result.programs.filter(
+                    (p) =>
+                      p.result.eligibilityTier ===
+                        "eligible_with_requirements" ||
+                      p.result.eligibilityTier === "probably_eligible",
+                  ).length !== 1
                     ? "s"
                     : ""}
                 </p>
                 <div className="flex flex-wrap justify-center gap-1.5 pt-1">
                   {result.programs
-                    .filter((p) => p.result.eligible)
+                    .filter(
+                      (p) =>
+                        p.result.eligibilityTier ===
+                          "eligible_with_requirements" ||
+                        p.result.eligibilityTier === "probably_eligible",
+                    )
                     .map(({ program }) => (
                       <span
                         key={program.id}
