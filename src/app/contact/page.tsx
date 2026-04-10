@@ -1,16 +1,16 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default function ContactPage() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    const form = e.currentTarget
-    form.reset()
-    const msg = document.getElementById('success-msg')
-    if (msg) msg.classList.remove('hidden')
+    e.preventDefault();
+    const form = e.currentTarget;
+    form.reset();
+    const msg = document.getElementById("success-msg");
+    if (msg) msg.classList.remove("hidden");
   }
 
   return (
@@ -52,7 +52,10 @@ export default function ContactPage() {
           <div className="space-y-6">
             {/* Name */}
             <div className="flex flex-col">
-              <label htmlFor="name" className="text-sm font-medium text-text-muted mb-1.5">
+              <label
+                htmlFor="name"
+                className="text-sm font-medium text-text-muted mb-1.5"
+              >
                 Name
               </label>
               <input
@@ -67,7 +70,10 @@ export default function ContactPage() {
 
             {/* Email */}
             <div className="flex flex-col">
-              <label htmlFor="email" className="text-sm font-medium text-text-muted mb-1.5">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-text-muted mb-1.5"
+              >
                 Email
               </label>
               <input
@@ -82,7 +88,10 @@ export default function ContactPage() {
 
             {/* Subject */}
             <div className="flex flex-col">
-              <label htmlFor="subject" className="text-sm font-medium text-text-muted mb-1.5">
+              <label
+                htmlFor="subject"
+                className="text-sm font-medium text-text-muted mb-1.5"
+              >
                 Subject
               </label>
               <select
@@ -102,7 +111,10 @@ export default function ContactPage() {
 
             {/* Message */}
             <div className="flex flex-col">
-              <label htmlFor="message" className="text-sm font-medium text-text-muted mb-1.5">
+              <label
+                htmlFor="message"
+                className="text-sm font-medium text-text-muted mb-1.5"
+              >
                 Message
               </label>
               <textarea
@@ -124,7 +136,10 @@ export default function ContactPage() {
             </button>
           </div>
 
-          <div id="success-msg" className="hidden mt-4 rounded-[10px] bg-brand/10 border border-brand/30 px-4 py-3 text-sm text-brand">
+          <div
+            id="success-msg"
+            className="hidden mt-4 rounded-[10px] bg-brand/10 border border-brand/30 px-4 py-3 text-sm text-brand"
+          >
             Message sent! We&apos;ll get back to you soon.
           </div>
         </form>
@@ -132,8 +147,11 @@ export default function ContactPage() {
         {/* Alternative contact */}
         <div className="text-center mb-8">
           <p className="text-text-muted mb-1">
-            Or email us directly at{' '}
-            <a href="mailto:hello@benefind.ai" className="text-accent hover:underline">
+            Or email us directly at{" "}
+            <a
+              href="mailto:hello@benefind.ai"
+              className="text-accent hover:underline"
+            >
               hello@benefind.ai
             </a>
           </p>
@@ -144,9 +162,10 @@ export default function ContactPage() {
 
         {/* Privacy note */}
         <p className="text-xs text-text-subtle text-center">
-          Your information is only used to respond to your inquiry. We never share your data.
+          Your information is only used to respond to your inquiry. We never
+          share your data.
         </p>
       </div>
     </div>
-  )
+  );
 }

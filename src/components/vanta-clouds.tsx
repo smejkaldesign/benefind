@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import type CLOUDS_FN from 'vanta/dist/vanta.clouds.min';
+import { useEffect, useRef, useState } from "react";
+import type CLOUDS_FN from "vanta/dist/vanta.clouds.min";
 
 type VantaEffect = ReturnType<typeof CLOUDS_FN>;
 
@@ -20,8 +20,8 @@ export function VantaClouds({ className, children }: VantaCloudsProps) {
 
     const loadVanta = async () => {
       try {
-        const THREE = await import('three');
-        const CLOUDS = (await import('vanta/dist/vanta.clouds.min')).default;
+        const THREE = await import("three");
+        const CLOUDS = (await import("vanta/dist/vanta.clouds.min")).default;
 
         if (destroyed || !containerRef.current) return;
 
@@ -63,15 +63,16 @@ export function VantaClouds({ className, children }: VantaCloudsProps) {
       ref={containerRef}
       className={className}
       style={{
-        position: 'relative',
-        backgroundColor: '#1E2B4D',
+        position: "relative",
+        backgroundColor: "#1E2B4D",
       }}
     >
       {!loaded && (
         <div
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(135deg, #1E2B4D 0%, #2A1F4D 50%, #121212 100%)',
+            background:
+              "linear-gradient(135deg, #1E2B4D 0%, #2A1F4D 50%, #121212 100%)",
           }}
         />
       )}

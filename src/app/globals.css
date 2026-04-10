@@ -1,23 +1,23 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 /* ── Aguzzo-TRIAL display font ──────────────────────────── */
 @font-face {
-  font-family: 'Aguzzo-TRIAL';
-  src: url('/fonts/Aguzzo-TRIAL-Regular.woff2') format('woff2');
+  font-family: "Aguzzo-TRIAL";
+  src: url("/fonts/Aguzzo-TRIAL-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Aguzzo-TRIAL';
-  src: url('/fonts/Aguzzo-TRIAL-Medium.woff2') format('woff2');
+  font-family: "Aguzzo-TRIAL";
+  src: url("/fonts/Aguzzo-TRIAL-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Aguzzo-TRIAL';
-  src: url('/fonts/Aguzzo-TRIAL-Bold.woff2') format('woff2');
+  font-family: "Aguzzo-TRIAL";
+  src: url("/fonts/Aguzzo-TRIAL-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -26,58 +26,71 @@
 /* ── Design tokens (Warp-inspired dark palette) ──────────── */
 @theme {
   /* Typography */
-  --font-display: 'Aguzzo-TRIAL', 'Instrument Serif', serif;
+  --font-display: "Aguzzo-TRIAL", "Instrument Serif", serif;
 
   /* Brand (emerald for CTAs and actions) */
-  --color-brand: #10B981;
-  --color-brand-light: #34D399;
+  --color-brand: #10b981;
+  --color-brand-light: #34d399;
   --color-brand-dark: #059669;
   --color-brand-50: rgba(16, 185, 129, 0.12);
 
   /* Surfaces */
   --color-surface: #121212;
-  --color-surface-dim: #1A1A1A;
-  --color-surface-bright: #2A2B25;
-  --color-surface-dark: #0E0E0E;
-  --color-surface-dark-dim: #0A0A0A;
+  --color-surface-dim: #1a1a1a;
+  --color-surface-bright: #2a2b25;
+  --color-surface-dark: #0e0e0e;
+  --color-surface-dark-dim: #0a0a0a;
 
   /* Text */
-  --color-text: #FAF9F6;
-  --color-text-muted: #AFAEAC;
+  --color-text: #faf9f6;
+  --color-text-muted: #afaeac;
   --color-text-subtle: #868584;
-  --color-text-on-dark: #FAF9F6;
-  --color-text-on-dark-muted: #AFAEAC;
+  --color-text-on-dark: #faf9f6;
+  --color-text-on-dark-muted: #afaeac;
 
   /* Borders */
   --color-border: #353534;
-  --color-border-dark: #2A2B25;
-  --color-border-light: #E3E2E0;
+  --color-border-dark: #2a2b25;
+  --color-border-light: #e3e2e0;
 
   /* Accent gradient (lavender) */
-  --color-accent: #CAB1F7;
-  --color-accent-end: #DEB0F7;
-  --color-navy: #1E2B4D;
+  --color-accent: #cab1f7;
+  --color-accent-end: #deb0f7;
+  --color-navy: #1e2b4d;
 
   /* Status */
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-error: #EF4444;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
 }
 
 /* ── Animations ──────────────────────────────────────────── */
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(calc(-100% / 3)); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% / 3));
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 @keyframes chip-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 /* ── Base ────────────────────────────────────────────────── */
@@ -93,12 +106,12 @@
   }
   a,
   button,
-  [role='button'],
+  [role="button"],
   select,
   summary,
-  [type='button'],
-  [type='submit'],
-  [type='reset'] {
+  [type="button"],
+  [type="submit"],
+  [type="reset"] {
     cursor: pointer;
   }
 }

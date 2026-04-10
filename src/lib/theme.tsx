@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { createContext, useContext, type ReactNode } from 'react';
+import { createContext, useContext, type ReactNode } from "react";
 
-type Resolved = 'dark';
+type Resolved = "dark";
 
 interface ThemeCtx {
-  theme: 'dark';
+  theme: "dark";
   resolved: Resolved;
   setTheme: (t: string) => void;
   toggle: () => void;
 }
 
 const ThemeContext = createContext<ThemeCtx>({
-  theme: 'dark',
-  resolved: 'dark',
+  theme: "dark",
+  resolved: "dark",
   setTheme: () => {},
   toggle: () => {},
 });
@@ -24,8 +24,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return (
     <ThemeContext.Provider
       value={{
-        theme: 'dark',
-        resolved: 'dark',
+        theme: "dark",
+        resolved: "dark",
         setTheme: () => {},
         toggle: () => {},
       }}

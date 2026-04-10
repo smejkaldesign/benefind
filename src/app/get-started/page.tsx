@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { User, Building2, ArrowLeft } from 'lucide-react';
+import Link from "next/link";
+import Image from "next/image";
+import { User, Building2, ArrowLeft } from "lucide-react";
 
 const tracks = [
   {
-    id: 'individual',
-    href: '/screening',
+    id: "individual",
+    href: "/screening",
     icon: User,
-    title: 'Individual',
-    description: 'Personal benefits, tax credits, and assistance programs',
-    examples: 'SNAP, Medicaid, EITC, WIC, Section 8, Pell Grant',
+    title: "Individual",
+    description: "Personal benefits, tax credits, and assistance programs",
+    examples: "SNAP, Medicaid, EITC, WIC, Section 8, Pell Grant",
   },
   {
-    id: 'company',
-    href: '/screening/company',
+    id: "company",
+    href: "/screening/company",
     icon: Building2,
-    title: 'Company',
-    description: 'Grants, tax credits, and incentives for your business',
-    examples: 'R&D Credit, SBIR, WOTC, Workforce Training, Export Grants',
+    title: "Company",
+    description: "Grants, tax credits, and incentives for your business",
+    examples: "R&D Credit, SBIR, WOTC, Workforce Training, Export Grants",
   },
 ] as const;
 
@@ -66,9 +66,15 @@ export default function GetStartedPage() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-brand/10 transition-colors group-hover:bg-brand/20">
                   <Icon className="h-6 w-6 text-brand" />
                 </div>
-                <h2 className="mt-4 text-xl font-bold text-text">{track.title}</h2>
-                <p className="mt-1.5 text-sm text-text-muted">{track.description}</p>
-                <p className="mt-3 text-xs text-text-subtle">{track.examples}</p>
+                <h2 className="mt-4 text-xl font-bold text-text">
+                  {track.title}
+                </h2>
+                <p className="mt-1.5 text-sm text-text-muted">
+                  {track.description}
+                </p>
+                <p className="mt-3 text-xs text-text-subtle">
+                  {track.examples}
+                </p>
                 <div className="mt-4 flex items-center gap-1 text-sm font-medium text-brand opacity-0 transition-opacity group-hover:opacity-100">
                   Get started
                   <ArrowLeft className="h-3.5 w-3.5 rotate-180" />
@@ -80,7 +86,8 @@ export default function GetStartedPage() {
 
         {/* Privacy note */}
         <p className="mt-8 text-center text-xs text-text-subtle">
-          Your answers are stored locally on your device and never sent to a server. No account required.
+          Your answers are stored locally on your device and never sent to a
+          server. No account required.
         </p>
       </div>
     </div>

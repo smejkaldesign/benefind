@@ -86,7 +86,10 @@ export function VideoSection() {
         </div>
 
         {/* Mobile: horizontal scrollable pills */}
-        <div className="mb-6 flex gap-2 overflow-x-auto pb-2 sm:hidden" role="tablist">
+        <div
+          className="mb-6 flex gap-2 overflow-x-auto pb-2 sm:hidden"
+          role="tablist"
+        >
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = tab.id === activeTab;
@@ -162,7 +165,9 @@ export function VideoSection() {
                   <div className="flex items-center gap-3">
                     <Icon
                       className={`h-5 w-5 transition ${
-                        isActive ? "text-accent" : "text-text-subtle group-hover:text-text-muted"
+                        isActive
+                          ? "text-accent"
+                          : "text-text-subtle group-hover:text-text-muted"
                       }`}
                     />
                     <span className="font-semibold text-text">{tab.label}</span>

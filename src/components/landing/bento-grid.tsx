@@ -59,16 +59,14 @@ const features: Feature[] = [
   },
   {
     title: "Privacy First",
-    description:
-      "Your data stays on your device. Nothing is sent to a server",
+    description: "Your data stays on your device. Nothing is sent to a server",
     icon: Lock,
     span: "sm:col-span-1",
     accentColor: "brand",
   },
   {
     title: "Always Free",
-    description:
-      "No signup required. No hidden costs. Free for everyone",
+    description: "No signup required. No hidden costs. Free for everyone",
     icon: Heart,
     span: "sm:col-span-1",
     accentColor: "accent",
@@ -106,13 +104,9 @@ export function BentoGrid() {
           {features.map((feature, i) => {
             const Icon = feature.icon;
             const iconBg =
-              feature.accentColor === "brand"
-                ? "bg-brand/10"
-                : "bg-accent/10";
+              feature.accentColor === "brand" ? "bg-brand/10" : "bg-accent/10";
             const iconText =
-              feature.accentColor === "brand"
-                ? "text-brand"
-                : "text-accent";
+              feature.accentColor === "brand" ? "text-brand" : "text-accent";
 
             return (
               <motion.div

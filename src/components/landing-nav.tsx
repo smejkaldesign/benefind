@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { LanguageSelector } from '@/components/language-selector';
-import { useI18n } from '@/lib/i18n/context';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { LanguageSelector } from "@/components/language-selector";
+import { useI18n } from "@/lib/i18n/context";
 
 export function LandingNav() {
   const { t } = useI18n();
@@ -12,16 +12,16 @@ export function LandingNav() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <header
       className={`fixed top-0 right-0 left-0 z-50 px-4 py-3 transition-all duration-300 ${
         scrolled
-          ? 'bg-surface/80 shadow-[0_0_16px_rgba(18,18,18,0.4)] backdrop-blur-[30px]'
-          : ''
+          ? "bg-surface/80 shadow-[0_0_16px_rgba(18,18,18,0.4)] backdrop-blur-[30px]"
+          : ""
       }`}
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between">

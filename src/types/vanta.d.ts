@@ -1,11 +1,11 @@
-declare module 'vanta/dist/vanta.clouds.min' {
+declare module "vanta/dist/vanta.clouds.min" {
   interface VantaEffect {
     destroy: () => void;
   }
 
   interface VantaOptions {
     el: HTMLElement;
-    THREE: typeof import('three');
+    THREE: typeof import("three");
     skyColor?: number;
     cloudColor?: number;
     cloudShadowColor?: number;

@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ChevronDown, Sparkles } from 'lucide-react';
-import { LandingNav } from '@/components/landing-nav';
-import { VantaClouds } from '@/components/vanta-clouds';
-import { SuccessChips } from '@/components/landing/success-chips';
-import { StatsStrip } from '@/components/landing/stats-strip';
-import { BentoGrid } from '@/components/landing/bento-grid';
-import { VideoSection } from '@/components/landing/video-section';
-import { TrustSection } from '@/components/landing/trust-section';
-import { GetStartedCTA } from '@/components/landing/get-started-cta';
-import { useI18n } from '@/lib/i18n/context';
+import { useState } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, ChevronDown, Sparkles } from "lucide-react";
+import { LandingNav } from "@/components/landing-nav";
+import { VantaClouds } from "@/components/vanta-clouds";
+import { SuccessChips } from "@/components/landing/success-chips";
+import { StatsStrip } from "@/components/landing/stats-strip";
+import { BentoGrid } from "@/components/landing/bento-grid";
+import { VideoSection } from "@/components/landing/video-section";
+import { TrustSection } from "@/components/landing/trust-section";
+import { GetStartedCTA } from "@/components/landing/get-started-cta";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function Home() {
   const { t } = useI18n();
@@ -52,7 +52,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              {t.landing.heroTitle1}{' '}
+              {t.landing.heroTitle1}{" "}
               <span className="bg-gradient-to-b from-accent to-accent-end bg-clip-text text-transparent">
                 {t.landing.heroTitle2}
               </span>
@@ -120,7 +120,7 @@ export default function Home() {
             className="text-center"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5 }}
           >
             <h2 className="font-display text-3xl font-medium tracking-tight text-text sm:text-4xl">
@@ -133,7 +133,7 @@ export default function Home() {
             className="mt-12"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             {faqs.map((faq, i) => (
@@ -147,7 +147,7 @@ export default function Home() {
                 >
                   <span className="pr-4 font-medium text-text">{faq.q}</span>
                   <ChevronDown
-                    className={`h-5 w-5 shrink-0 text-text-subtle transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`}
+                    className={`h-5 w-5 shrink-0 text-text-subtle transition-transform duration-200 ${openFaq === i ? "rotate-180" : ""}`}
                   />
                 </button>
                 <AnimatePresence initial={false}>
@@ -155,12 +155,14 @@ export default function Home() {
                     <motion.div
                       id={`faq-answer-${i}`}
                       initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
+                      animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2, ease: 'easeOut' }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
                       className="overflow-hidden"
                     >
-                      <p className="pb-5 text-sm leading-relaxed text-text-muted">{faq.a}</p>
+                      <p className="pb-5 text-sm leading-relaxed text-text-muted">
+                        {faq.a}
+                      </p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -178,8 +180,12 @@ export default function Home() {
         <div className="mx-auto max-w-[1400px]">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <span className="text-lg font-bold text-brand">{t.common.appName}</span>
-              <p className="mt-2 text-sm text-text-muted">{t.landing.footerTagline}</p>
+              <span className="text-lg font-bold text-brand">
+                {t.common.appName}
+              </span>
+              <p className="mt-2 text-sm text-text-muted">
+                {t.landing.footerTagline}
+              </p>
             </div>
             <div>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-text-subtle">
@@ -187,17 +193,26 @@ export default function Home() {
               </h4>
               <ul className="mt-3 space-y-2">
                 <li>
-                  <Link href="/screening" className="text-sm text-text-muted transition-colors hover:text-brand">
+                  <Link
+                    href="/screening"
+                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                  >
                     {t.landing.footerScreening}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/screening/company" className="text-sm text-text-muted transition-colors hover:text-brand">
+                  <Link
+                    href="/screening/company"
+                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                  >
                     {t.landing.footerCompanyGrants}
                   </Link>
                 </li>
                 <li>
-                  <Link href="#how-it-works" className="text-sm text-text-muted transition-colors hover:text-brand">
+                  <Link
+                    href="#how-it-works"
+                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                  >
                     {t.landing.footerHowItWorks}
                   </Link>
                 </li>
@@ -209,12 +224,18 @@ export default function Home() {
               </h4>
               <ul className="mt-3 space-y-2">
                 <li>
-                  <Link href="/privacy" className="text-sm text-text-muted transition-colors hover:text-brand">
+                  <Link
+                    href="/privacy"
+                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                  >
                     {t.landing.footerPrivacy}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/terms" className="text-sm text-text-muted transition-colors hover:text-brand">
+                  <Link
+                    href="/terms"
+                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                  >
                     {t.landing.footerTerms}
                   </Link>
                 </li>
@@ -234,7 +255,10 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-10 border-t border-border pt-6 text-center text-sm text-text-subtle">
-            <p>&copy; {new Date().getFullYear()} {t.common.appName}. {t.common.free}</p>
+            <p>
+              &copy; {new Date().getFullYear()} {t.common.appName}.{" "}
+              {t.common.free}
+            </p>
             <p className="mt-1 text-text-subtle/60">Built by Smejkal Design</p>
           </div>
         </div>
