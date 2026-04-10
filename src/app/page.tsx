@@ -32,7 +32,7 @@ export default function Home() {
       <LandingNav />
 
       {/* ── Hero with Vanta.js Clouds (Oz-style container) ──── */}
-      <section className="relative pt-20 sm:pt-24">
+      <section className="relative pt-[76px]">
         {/* Dark edge gradients — fixed 200px each, hidden at viewport >= 2000px */}
         <div
           className="pointer-events-none absolute inset-y-0 left-0 z-30 w-[200px] min-[2000px]:hidden"
