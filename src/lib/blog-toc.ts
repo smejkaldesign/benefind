@@ -72,13 +72,16 @@ export function extractFAQ(slug: string): FAQItem[] {
   if (!content) return [];
   const stripped = stripCodeBlocks(content);
 
-  // Find the FAQ section: "## Frequently asked questions" up to the next "## "
-  const faqMatch = stripped.match(
-    /^##\s+Frequently asked questions\s*\n([\s\S]*?)(?=^##\s|\n*$)/m,
-  );
-  if (!faqMatch) return [];
+  // Find the FAQ section by locating the h2 header and slicing to the next h2.
+  const faqHeaderRegex = /^##\s+Frequently asked questions\s*$/m;
+  const headerMatch = faqHeaderRegex.exec(stripped);
+  if (!headerMatch) return [];
 
-  const section = faqMatch[1];
+  const sectionStart = headerMatch.index + headerMatch[0].length;
+  const afterHeader = stripped.slice(sectionStart);
+  // Find the next top-level (##) heading to bound the section.
+  const nextH2 = afterHeader.search(/^##\s+/m);
+  const section = nextH2 === -1 ? afterHeader : afterHeader.slice(0, nextH2);
   const items: FAQItem[] = [];
 
   // Split on h3 boundaries
