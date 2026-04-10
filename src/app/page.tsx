@@ -82,7 +82,7 @@ export default function Home() {
               </Link>
               <Link
                 href="#how-it-works"
-                className="inline-flex h-12 items-center gap-2 rounded-[50px] border border-white/20 px-6 text-base font-medium text-text/80 backdrop-blur-sm transition-colors hover:bg-white/10"
+                className="inline-flex h-12 items-center gap-2 rounded-[50px] border border-white/30 px-6 text-base font-medium text-text backdrop-blur-sm transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
               >
                 {t.landing.heroSecondaryCta}
               </Link>
@@ -90,10 +90,7 @@ export default function Home() {
           </div>
 
           {/* Dither fade to blend hero into page background */}
-          <div
-            className="pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-40"
-            style={{ background: 'linear-gradient(to bottom, transparent, #121212)' }}
-          />
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-40 bg-gradient-to-b from-transparent to-surface" />
         </VantaClouds>
       </section>
 

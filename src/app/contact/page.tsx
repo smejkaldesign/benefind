@@ -7,7 +7,10 @@ import { ArrowLeft } from 'lucide-react'
 export default function ContactPage() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    alert("Message sent! We'll get back to you soon.")
+    const form = e.currentTarget
+    form.reset()
+    const msg = document.getElementById('success-msg')
+    if (msg) msg.classList.remove('hidden')
   }
 
   return (
@@ -119,6 +122,10 @@ export default function ContactPage() {
             >
               Send Message
             </button>
+          </div>
+
+          <div id="success-msg" className="hidden mt-4 rounded-[10px] bg-brand/10 border border-brand/30 px-4 py-3 text-sm text-brand">
+            Message sent! We&apos;ll get back to you soon.
           </div>
         </form>
 

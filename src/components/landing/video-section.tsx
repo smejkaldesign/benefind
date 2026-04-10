@@ -86,7 +86,7 @@ export function VideoSection() {
         </div>
 
         {/* Mobile: horizontal scrollable pills */}
-        <div className="mb-6 flex gap-2 overflow-x-auto pb-2 sm:hidden">
+        <div className="mb-6 flex gap-2 overflow-x-auto pb-2 sm:hidden" role="tablist">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = tab.id === activeTab;
@@ -94,6 +94,9 @@ export function VideoSection() {
               <button
                 key={tab.id}
                 type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`panel-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm transition ${
                   isActive

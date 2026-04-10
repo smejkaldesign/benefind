@@ -125,7 +125,7 @@ export function BentoGrid() {
               >
                 {/* Gradient accent edge for large cards */}
                 {feature.gradient && (
-                  <div className="pointer-events-none absolute inset-y-0 left-0 w-[2px] bg-gradient-to-b from-accent to-[#DEB0F7] opacity-60" />
+                  <div className="pointer-events-none absolute inset-y-0 left-0 w-[2px] bg-gradient-to-b from-accent to-accent-end opacity-60" />
                 )}
 
                 {/* Icon */}

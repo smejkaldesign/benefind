@@ -38,13 +38,13 @@ export function LandingNav() {
           <LanguageSelector />
           <Link
             href="/auth/login"
-            className="rounded-[50px] border border-border px-4 py-1.5 text-sm font-medium text-text-muted transition-colors hover:border-brand hover:text-brand"
+            className="rounded-[50px] border border-border px-4 py-1.5 text-sm font-medium text-text-muted transition-colors hover:border-brand hover:text-brand focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
           >
             {t.common.signIn}
           </Link>
           <Link
             href="/get-started"
-            className="hidden rounded-[50px] bg-brand px-5 py-1.5 text-sm font-medium text-white transition-colors hover:bg-brand-dark sm:inline-flex"
+            className="hidden rounded-[50px] bg-brand px-5 py-1.5 text-sm font-medium text-white transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus-visible:outline-none sm:inline-flex"
           >
             {t.landing.heroCta}
           </Link>
