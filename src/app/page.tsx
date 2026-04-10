@@ -51,7 +51,7 @@ export default function Home() {
           }}
         />
         <div
-          className="relative mx-auto max-w-[1448px] overflow-hidden rounded-t-[20px]"
+          className="relative mx-auto max-w-[1480px] overflow-hidden rounded-t-[20px]"
           style={{
             height: "clamp(805px, 80vh, 1035px)",
             backgroundColor: "#5227FF",
