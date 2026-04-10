@@ -248,10 +248,10 @@ const en: Dictionary = {
   },
   landing: {
     badge: "Free to Check Your Eligibility",
-    heroTitle1: "Billions in benefits go unclaimed.",
-    heroTitle2: "Yours might be next.",
+    heroTitle1: "You Deserve Your Benefits.",
+    heroTitle2: "",
     heroSubtitle:
-      "Answer a few simple questions and we'll match you with government programs you qualify for. Step-by-step guidance, in your language.",
+      "$80 billion in unclaimed benefits, grants, and credits go unclaimed every year in America. We match people & companies with government programs you qualify for.",
     heroCta: "Check My Eligibility",
     heroSecondaryCta: "See How It Works",
     statPrograms: "Programs",
