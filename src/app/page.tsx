@@ -32,7 +32,7 @@ export default function Home() {
       <LandingNav />
 
       {/* ── Hero with Vanta.js Clouds (Oz-style container) ──── */}
-      <section className="relative">
+      <section className="relative pt-20 sm:pt-24">
         {/* Dark edge gradients — full height, on top of everything (z-30) */}
         <div
           className="pointer-events-none absolute inset-y-0 left-0 z-30"
@@ -51,7 +51,7 @@ export default function Home() {
           }}
         />
         <div
-          className="relative mx-auto max-w-[1400px] overflow-hidden"
+          className="relative mx-auto max-w-[1448px] overflow-hidden rounded-t-[20px]"
           style={{
             height: "clamp(805px, 80vh, 1035px)",
             backgroundColor: "#5227FF",
