@@ -41,8 +41,8 @@ export function VantaClouds({ className, style, children }: VantaCloudsProps) {
           touchControls: true,
           minHeight: 200,
           minWidth: 200,
-          scale: 3,
-          scaleMobile: 12,
+          scale: 1.0,
+          scaleMobile: 1.0,
         });
         setLoaded(true);
       } catch {

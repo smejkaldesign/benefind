@@ -55,10 +55,10 @@ export default function Home() {
           className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[20px]"
           style={{ height: "clamp(700px, 70vh, 900px)" }}
         >
-          {/* Vanta container is 150% parent height — extra extends below clip boundary, pushing cloud horizon to ~50% of visible area */}
+          {/* Vanta at 200% height — clouds pushed to bottom half, sky fills top */}
           <VantaClouds
             className="absolute inset-x-0 top-0"
-            style={{ height: "150%" }}
+            style={{ height: "200%" }}
           >
             {/* Hero text — top portion */}
             <div className="relative z-10 flex flex-col items-center px-4 pt-20 sm:pt-28">
@@ -101,11 +101,10 @@ export default function Home() {
                 </Link>
               </motion.div>
             </div>
-
           </VantaClouds>
 
-          {/* Animated dither fade — positioned in the clipped container, bottom 35% */}
-          <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[12] h-[35%]">
+          {/* Animated dither fade — bottom 50%, large square pixels */}
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[12] h-[50%]">
             <DitherFade color="#121212" />
           </div>
         </div>
