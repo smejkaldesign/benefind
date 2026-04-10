@@ -37,8 +37,8 @@ export function StatsStrip() {
           return (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: i * 0.12 }}
               className="relative rounded-[16px] border border-border bg-surface-bright p-8 transition hover:border-accent/30"

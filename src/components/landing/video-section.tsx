@@ -66,8 +66,8 @@ export function VideoSection() {
         {/* Header */}
         <div className="mb-12 text-center sm:mb-16">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5 }}
             className="font-display text-4xl font-semibold text-text sm:text-5xl"
@@ -75,8 +75,8 @@ export function VideoSection() {
             See It In Action
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mt-4 text-lg text-text-muted"
@@ -133,8 +133,8 @@ export function VideoSection() {
 
         {/* Desktop: side-by-side layout */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5, delay: 0.15 }}
           className="hidden gap-8 sm:flex lg:gap-12"

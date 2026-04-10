@@ -55,8 +55,8 @@ export function BentoGrid() {
         {/* Section header */}
         <div className="mb-12 text-center sm:mb-16">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5 }}
             className="font-display text-3xl font-semibold text-text sm:text-4xl lg:text-5xl"
@@ -64,8 +64,8 @@ export function BentoGrid() {
             How Benefind Works
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mx-auto mt-4 max-w-xl text-base text-text-muted sm:text-lg"
@@ -86,8 +86,8 @@ export function BentoGrid() {
             return (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
                 className={`relative overflow-hidden rounded-[16px] border border-border bg-surface-bright p-6 transition hover:border-accent/20 sm:p-8 ${feature.span}`}

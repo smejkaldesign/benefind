@@ -81,8 +81,8 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center px-4 pt-32 sm:pt-40">
               <motion.h1
                 className="max-w-[900px] text-center font-display text-4xl leading-[1.05] font-semibold tracking-tight text-white sm:text-6xl lg:text-[64px]"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
               >
                 {t.landing.heroTitle1}
@@ -90,8 +90,8 @@ export default function Home() {
 
               <motion.p
                 className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-white/80 sm:text-base"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
                 {t.landing.heroSubtitle}
@@ -99,8 +99,8 @@ export default function Home() {
 
               <motion.div
                 className="mt-7 flex flex-col items-center gap-3 sm:flex-row"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
                 <Link
@@ -158,8 +158,8 @@ export default function Home() {
         <div className="mx-auto max-w-2xl">
           <motion.div
             className="text-center"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5 }}
           >
@@ -171,8 +171,8 @@ export default function Home() {
 
           <motion.div
             className="mt-12"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >

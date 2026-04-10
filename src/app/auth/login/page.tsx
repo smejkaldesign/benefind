@@ -143,10 +143,10 @@ export default function LoginPage() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <label
                     htmlFor="email"
-                    className="text-sm font-semibold text-text-muted"
+                    className="text-sm font-semibold leading-none text-text-muted"
                   >
                     Email address
                   </label>
