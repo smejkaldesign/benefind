@@ -93,9 +93,9 @@ export default function LoginPage() {
   return (
     <>
       <LandingNav />
-      <main className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-surface px-4 pt-20">
-        {/* GradientBlinds background — full bleed */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.33]">
+      <main className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-4 pt-20">
+        {/* GradientBlinds background — full bleed, full vibrance */}
+        <div className="pointer-events-none absolute inset-0">
           <GradientBlinds />
         </div>
 
