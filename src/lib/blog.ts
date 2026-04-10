@@ -18,7 +18,7 @@ export interface BlogPost {
   author: string;
   tags: string[];
   published: boolean;
-  /** Path relative to /public, e.g. /blog/covers/my-post.svg */
+  /** Path relative to /public, e.g. /blog/covers/my-post.jpg */
   heroImage?: string;
   /** Primary SEO keyword cluster for the post. */
   keyword?: string;
@@ -43,7 +43,7 @@ export const posts: BlogPost[] = [
     author: "Benefind Team",
     tags: ["Government Benefits", "Eligibility", "Guide"],
     published: true,
-    heroImage: "/blog/covers/what-government-benefits-do-i-qualify-for.svg",
+    heroImage: "/blog/covers/what-government-benefits-do-i-qualify-for.jpg",
     keyword: "government benefits I qualify for",
   },
   {
@@ -55,7 +55,7 @@ export const posts: BlogPost[] = [
     author: "Benefind Team",
     tags: ["SNAP", "Food Assistance", "Eligibility", "Government Benefits"],
     published: true,
-    heroImage: "/blog/covers/snap-eligibility-2026.svg",
+    heroImage: "/blog/covers/snap-eligibility-2026.jpg",
     keyword: "snap eligibility 2026",
   },
   {
@@ -72,7 +72,7 @@ export const posts: BlogPost[] = [
       "Startup",
     ],
     published: true,
-    heroImage: "/blog/covers/rd-tax-credit-small-business-2026.svg",
+    heroImage: "/blog/covers/rd-tax-credit-small-business-2026.jpg",
     keyword: "R&D tax credit small business",
   },
   {
@@ -84,7 +84,7 @@ export const posts: BlogPost[] = [
     author: "Benefind Team",
     tags: ["LIHEAP", "Energy Assistance", "Government Benefits", "How To"],
     published: true,
-    heroImage: "/blog/covers/how-to-apply-for-liheap-heating-assistance.svg",
+    heroImage: "/blog/covers/how-to-apply-for-liheap-heating-assistance.jpg",
     keyword: "how to apply for LIHEAP",
   },
   {
@@ -96,7 +96,7 @@ export const posts: BlogPost[] = [
     author: "Benefind Team",
     tags: ["Single Mothers", "Government Benefits", "Grants", "Family"],
     published: true,
-    heroImage: "/blog/covers/free-government-grants-single-mothers.svg",
+    heroImage: "/blog/covers/free-government-grants-single-mothers.jpg",
     keyword: "free government grants for single mothers",
   },
 ];
