@@ -16,7 +16,8 @@ import {
   InlineOptions,
   hasInlineOptions,
 } from "@/components/screening/inline-options";
-import { AsciiWaves } from "@/components/ascii-waves";
+import { Grainient } from "@/components/grainient";
+import Image from "next/image";
 import { STORAGE_KEYS } from "@/lib/constants";
 import {
   ArrowLeft,
@@ -225,27 +226,27 @@ export default function CompanyScreeningPage() {
   );
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-white">
-      {/* Left panel: conversation */}
+    <div className="flex h-dvh overflow-hidden bg-surface text-text">
+      {/* ── Left panel: conversation ──────────────────────────── */}
       <div className="flex flex-1 flex-col overflow-hidden lg:max-w-[55%]">
         {/* Header */}
-        <header className="shrink-0 border-b border-gray-200 bg-white/95 backdrop-blur-sm">
-          <div className="flex h-14 items-center gap-3 px-4">
+        <header className="shrink-0 border-b border-border bg-surface/80 backdrop-blur-[30px]">
+          <div className="flex h-16 items-center gap-3 px-6">
             <Link
               href="/get-started"
-              className="text-gray-400 hover:text-gray-700 transition-colors"
+              className="text-text-subtle hover:text-text transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-semibold text-gray-900">
+                <h1 className="text-sm font-semibold text-text">
                   Company Eligibility Check
                 </h1>
                 {result && (
                   <button
                     onClick={handleRestart}
-                    className="flex items-center gap-1 text-xs text-gray-400 hover:text-emerald-600 transition-colors"
+                    className="flex items-center gap-1 text-xs text-text-subtle hover:text-brand transition-colors"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
                     Restart
@@ -253,7 +254,7 @@ export default function CompanyScreeningPage() {
                 )}
               </div>
               <div
-                className="mt-1 h-1 w-full rounded-full bg-gray-100"
+                className="mt-1.5 h-1 w-full rounded-full bg-surface-bright"
                 role="progressbar"
                 aria-valuenow={result ? 100 : progress}
                 aria-valuemin={0}
@@ -261,7 +262,7 @@ export default function CompanyScreeningPage() {
                 aria-label="Screening progress"
               >
                 <div
-                  className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                  className="h-full rounded-full bg-brand transition-all duration-500"
                   style={{ width: `${result ? 100 : progress}%` }}
                 />
               </div>
@@ -275,7 +276,7 @@ export default function CompanyScreeningPage() {
           className="flex-1 overflow-y-scroll"
           style={{ scrollbarGutter: "stable" }}
         >
-          <div className="flex min-h-full flex-col justify-end px-4 py-6">
+          <div className="flex min-h-full flex-col justify-end px-6 py-6">
             <div className="mx-auto w-full max-w-xl">
               <div
                 className="space-y-3"
@@ -309,7 +310,7 @@ export default function CompanyScreeningPage() {
 
         {/* Bottom input */}
         {!result && currentStepData && (
-          <div className="sticky bottom-0 border-t border-gray-200 bg-white/95 px-4 py-3 backdrop-blur-sm">
+          <div className="sticky bottom-0 border-t border-border bg-surface/80 px-6 py-4 backdrop-blur-[30px]">
             <div className="mx-auto max-w-xl">
               <StepInput
                 step={currentStepData}
@@ -323,14 +324,14 @@ export default function CompanyScreeningPage() {
 
         {/* Results summary */}
         {result && (
-          <div className="border-t border-gray-200 bg-gray-50 px-4 py-6">
+          <div className="border-t border-border bg-surface-dim px-6 py-6">
             <div className="mx-auto max-w-xl space-y-4">
-              <div className="rounded-xl bg-emerald-500/5 border border-emerald-500/20 p-5 text-center space-y-2">
-                <p className="text-2xl font-bold text-emerald-600">
+              <div className="rounded-[16px] border border-brand/30 bg-brand/5 p-5 text-center space-y-2">
+                <p className="font-display text-3xl font-semibold text-brand">
                   {result.totalMatched} Program
                   {result.totalMatched !== 1 ? "s" : ""} Found
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-text-muted">
                   Matched across grants, tax credits, incentives, and
                   contracting preferences
                 </p>
@@ -341,18 +342,18 @@ export default function CompanyScreeningPage() {
                     .map(({ program }) => (
                       <span
                         key={program.id}
-                        className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-700"
+                        className="rounded-full bg-brand/15 px-2.5 py-0.5 text-xs font-medium text-brand"
                       >
                         {program.shortName}
                       </span>
                     ))}
                   {result.totalMatched > 5 && (
-                    <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-500">
+                    <span className="rounded-full bg-surface-bright px-2.5 py-0.5 text-xs font-medium text-text-muted">
                       +{result.totalMatched - 5} more
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-gray-400 pt-1">
+                <p className="text-xs text-text-subtle pt-1">
                   These are preliminary matches. Verify eligibility with program
                   administrators.
                 </p>
@@ -360,13 +361,13 @@ export default function CompanyScreeningPage() {
               <div className="flex justify-center gap-3 pt-2">
                 <button
                   onClick={() => router.push("/results/company")}
-                  className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-600 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+                  className="rounded-lg bg-brand px-6 py-3 text-sm font-semibold text-surface transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
                 >
                   View Full Results
                 </button>
                 <button
                   onClick={handleRestart}
-                  className="rounded-xl border border-gray-200 px-5 py-2.5 text-sm font-medium text-gray-500 hover:border-emerald-500 hover:text-emerald-600 transition-colors"
+                  className="rounded-lg border border-border px-6 py-3 text-sm font-semibold text-text-muted transition-colors hover:border-brand hover:text-brand"
                 >
                   Start Over
                 </button>
@@ -376,31 +377,45 @@ export default function CompanyScreeningPage() {
         )}
       </div>
 
-      {/* Right panel: ASCII + value prop */}
-      <div className="hidden lg:flex lg:flex-1 relative border-l border-gray-100 bg-gray-50 overflow-hidden h-full">
-        <div className="pointer-events-none absolute inset-0 opacity-[0.18]">
-          <AsciiWaves
-            color="#10B981"
-            speed={0.25}
-            intensity={0.7}
-            elementSize={13}
-            waveTension={0.28}
-            waveTwist={0.06}
+      {/* ── Right panel: Grainient + value prop ─────────────── */}
+      <div className="hidden lg:flex lg:flex-1 relative border-l border-border overflow-hidden h-full">
+        <div className="absolute inset-0">
+          <Grainient
+            color1="#FF9FFC"
+            color2="#5227FF"
+            color3="#B19EEF"
+            timeSpeed={0.25}
+            rotationAmount={120}
+            centerY={-0.25}
+            colorBalance={0.15}
           />
         </div>
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(20,10,40,0.55) 0%, rgba(20,10,40,0.25) 50%, rgba(20,10,40,0.55) 100%)",
+          }}
+        />
 
         <div className="relative z-10 flex flex-col justify-center px-12 py-16 xl:px-16">
           <div className="mb-10">
-            <span className="text-xl font-bold text-emerald-500">Benefind</span>
-            <p className="mt-1 text-sm text-gray-400">
+            <Image
+              src="/images/brand/logo-light.svg"
+              alt="Benefind"
+              width={120}
+              height={22}
+              priority
+            />
+            <p className="mt-2 text-sm text-white/70">
               Grant navigator, built for your business
             </p>
           </div>
 
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900 xl:text-3xl">
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-white xl:text-4xl">
             Here&apos;s what&apos;s about to happen
           </h2>
-          <p className="mt-3 text-sm leading-relaxed text-gray-500 max-w-xs">
+          <p className="mt-3 text-sm leading-relaxed text-white/70 max-w-xs">
             A short conversation about your business. We scan 20+ federal and
             state programs to find your matches.
           </p>
@@ -408,17 +423,15 @@ export default function CompanyScreeningPage() {
           <div className="mt-10 space-y-7">
             {STEPS_PREVIEW.map(({ icon: Icon, label, desc }, i) => (
               <div key={label} className="flex gap-4">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 mt-0.5">
-                  <Icon className="h-4 w-4 text-emerald-600" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-white/15 backdrop-blur-sm mt-0.5">
+                  <Icon className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-500/60">
-                      Step {i + 1}
-                    </span>
-                  </div>
-                  <p className="text-sm font-semibold text-gray-800">{label}</p>
-                  <p className="mt-0.5 text-sm text-gray-400 leading-relaxed">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-white/60">
+                    Step {i + 1}
+                  </span>
+                  <p className="text-sm font-semibold text-white">{label}</p>
+                  <p className="mt-0.5 text-sm text-white/70 leading-relaxed">
                     {desc}
                   </p>
                 </div>
@@ -426,18 +439,18 @@ export default function CompanyScreeningPage() {
             ))}
           </div>
 
-          <div className="mt-12 flex items-start gap-3 rounded-xl border border-gray-200 bg-white/70 px-4 py-3.5 backdrop-blur-sm">
-            <Lock className="h-4 w-4 text-gray-400 mt-0.5 shrink-0" />
-            <p className="text-xs leading-relaxed text-gray-500">
+          <div className="mt-12 flex items-start gap-3 rounded-[16px] border border-white/20 bg-white/10 px-4 py-3.5 backdrop-blur-md">
+            <Lock className="h-4 w-4 text-white/80 mt-0.5 shrink-0" />
+            <p className="text-xs leading-relaxed text-white/80">
               Your business information is stored locally on your device and
               never sent to a server. This is a screening tool, not a formal
               application.
             </p>
           </div>
 
-          <p className="mt-6 text-xs text-gray-400">
+          <p className="mt-6 text-xs text-white/60">
             Scans{" "}
-            <span className="font-semibold text-gray-600">
+            <span className="font-semibold text-white/90">
               20+ federal and state programs
             </span>{" "}
             including R&D Tax Credit, SBIR, WOTC, Workforce Training, and more.
