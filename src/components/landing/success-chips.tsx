@@ -115,7 +115,7 @@ export function SuccessChips() {
         width: "100vw",
         marginLeft: "-50vw",
         bottom: "8%",
-        top: "50%",
+        top: "60%",
         /*
          * Opacity mask: 20% at edges → 100% in the center (hero container area).
          * The hero container is ~1400px centered, so roughly the middle 70% of viewport.
