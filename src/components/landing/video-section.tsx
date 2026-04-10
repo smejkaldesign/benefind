@@ -70,7 +70,7 @@ export function VideoSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5 }}
-            className="font-display text-4xl font-medium text-text sm:text-5xl"
+            className="font-display text-4xl font-semibold text-text sm:text-5xl"
           >
             See It In Action
           </motion.h2>

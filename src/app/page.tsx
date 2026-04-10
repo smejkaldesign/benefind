@@ -33,18 +33,18 @@ export default function Home() {
 
       {/* ── Hero with Vanta.js Clouds (Oz-style container) ──── */}
       <section className="relative px-4 pt-20 sm:px-6 sm:pt-24">
+        {/* Rounded cloud container */}
         <div className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[20px]">
           <VantaClouds className="min-h-[650px] sm:min-h-[780px]">
-            {/* Hero content */}
-            <div className="relative z-10 flex min-h-[650px] flex-col items-center justify-center px-4 pt-16 pb-40 sm:min-h-[780px] sm:pt-24 sm:pb-48">
+            {/* Hero content — positioned in upper portion */}
+            <div className="relative z-10 flex min-h-[400px] flex-col items-center justify-center px-4 pt-16 sm:min-h-[420px] sm:pt-24">
               <motion.h1
-                className="max-w-4xl text-center font-display text-4xl leading-[1.05] font-medium tracking-tight text-surface sm:text-6xl lg:text-7xl"
+                className="max-w-4xl text-center font-display text-4xl leading-[1.05] font-semibold tracking-tight text-surface sm:text-6xl lg:text-7xl"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
               >
-                {t.landing.heroTitle1}{" "}
-                <span className="text-surface/80">{t.landing.heroTitle2}</span>
+                {t.landing.heroTitle1}
               </motion.h1>
 
               <motion.p
@@ -78,13 +78,13 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* Scrolling success chips overlaid on clouds */}
-            <SuccessChips />
-
             {/* Dither fade at bottom (Oz-style pixelated transition) */}
             <div className="dither-fade z-20" />
           </VantaClouds>
         </div>
+
+        {/* Scrolling success chips — overflow container edges */}
+        <SuccessChips />
       </section>
 
       {/* ── Stats Strip ──────────────────────────────────────── */}
@@ -113,7 +113,7 @@ export default function Home() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="font-display text-3xl font-medium tracking-tight text-text sm:text-4xl">
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-text sm:text-4xl">
               {t.landing.faqTitle}
             </h2>
             <p className="mt-3 text-text-muted">{t.landing.faqSubtitle}</p>

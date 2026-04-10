@@ -45,7 +45,7 @@ export default function GetStartedPage() {
             height={18}
             className="mb-4"
           />
-          <h1 className="mt-3 font-display text-3xl font-medium tracking-tight text-text sm:text-4xl">
+          <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-text sm:text-4xl">
             What are you looking for?
           </h1>
           <p className="mt-2 text-base text-text-muted">

@@ -44,7 +44,7 @@ export function StatsStrip() {
               className="relative rounded-[16px] border border-border bg-surface-bright p-8 transition hover:border-accent/30"
             >
               <Icon className="absolute right-6 top-6 h-5 w-5 text-accent opacity-50" />
-              <p className="font-display text-5xl font-medium text-text">
+              <p className="font-display text-5xl font-semibold text-text">
                 {stat.value}
               </p>
               <p className="mt-2 text-sm text-text-muted">{stat.label}</p>

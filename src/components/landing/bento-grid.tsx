@@ -59,7 +59,7 @@ export function BentoGrid() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5 }}
-            className="font-display text-3xl font-medium text-text sm:text-4xl lg:text-5xl"
+            className="font-display text-3xl font-semibold text-text sm:text-4xl lg:text-5xl"
           >
             How Benefind Works
           </motion.h2>
