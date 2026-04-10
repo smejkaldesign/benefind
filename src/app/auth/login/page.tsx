@@ -100,7 +100,7 @@ export default function LoginPage() {
         </div>
 
         {/* Sign-in container — Celune style */}
-        <div className="relative z-10 flex w-full max-w-[534px] flex-col items-center rounded-xl border border-white/[0.05] bg-black/90 px-8 py-16 shadow-2xl shadow-black/50 backdrop-blur-sm sm:px-12 sm:py-20">
+        <div className="relative z-10 flex w-full max-w-[534px] flex-col items-center rounded-xl border border-white/[0.05] bg-black/75 px-8 py-16 shadow-2xl shadow-black/50 backdrop-blur-sm sm:px-12 sm:py-20">
           {sent ? (
             <div className="w-full space-y-6 text-center">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand/15">
