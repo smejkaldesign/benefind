@@ -95,7 +95,7 @@ export default function LoginPage() {
       <LandingNav />
       <main className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-surface px-4 pt-20">
         {/* GradientBlinds background — full bleed */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.55]">
+        <div className="pointer-events-none absolute inset-0 opacity-[0.33]">
           <GradientBlinds />
         </div>
 
