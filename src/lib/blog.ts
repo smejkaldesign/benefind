@@ -113,7 +113,7 @@ export const posts: BlogPost[] = [
       "Eligibility",
     ],
     published: true,
-    heroImage: "/blog/covers/medicaid-expansion-state-by-state-2026.svg",
+    heroImage: "/blog/covers/medicaid-expansion-state-by-state-2026.jpg",
     keyword: "medicaid expansion state by state 2026",
   },
   {
@@ -125,7 +125,7 @@ export const posts: BlogPost[] = [
     author: "Benefind Team",
     tags: ["SBIR", "STTR", "Startup", "Government Benefits", "Small Business"],
     published: true,
-    heroImage: "/blog/covers/sbir-vs-sttr-which-grant-fits-your-startup.svg",
+    heroImage: "/blog/covers/sbir-vs-sttr-which-grant-fits-your-startup.jpg",
     keyword: "SBIR vs STTR",
   },
   {
@@ -138,7 +138,7 @@ export const posts: BlogPost[] = [
     tags: ["Childcare", "Family", "Government Benefits", "Tax Credit"],
     published: true,
     heroImage:
-      "/blog/covers/childcare-assistance-programs-you-havent-heard-of.svg",
+      "/blog/covers/childcare-assistance-programs-you-havent-heard-of.jpg",
     keyword: "childcare assistance programs",
   },
   {
@@ -150,7 +150,7 @@ export const posts: BlogPost[] = [
     author: "Benefind Team",
     tags: ["WIC", "Family", "Government Benefits", "Nutrition"],
     published: true,
-    heroImage: "/blog/covers/wic-eligibility-myths-debunked.svg",
+    heroImage: "/blog/covers/wic-eligibility-myths-debunked.jpg",
     keyword: "wic eligibility",
   },
   {
@@ -162,7 +162,7 @@ export const posts: BlogPost[] = [
     author: "Benefind Team",
     tags: ["How To", "Government Benefits", "Guide"],
     published: true,
-    heroImage: "/blog/covers/how-to-read-your-benefits-award-letter.svg",
+    heroImage: "/blog/covers/how-to-read-your-benefits-award-letter.jpg",
     keyword: "how to read benefits award letter",
   },
 ];
