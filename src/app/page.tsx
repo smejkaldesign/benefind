@@ -53,7 +53,7 @@ export default function Home() {
         />
         <div
           className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[20px]"
-          style={{ height: "clamp(910px, 91vh, 1170px)" }}
+          style={{ height: "clamp(805px, 80vh, 1035px)" }}
         >
           {/* Vanta at 200% height — clouds pushed to bottom half, sky fills top */}
           <VantaClouds
