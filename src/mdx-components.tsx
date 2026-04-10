@@ -1,6 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
+import { slugify } from "@/lib/slugify";
 
 /**
  * Global MDX component mapping.
@@ -128,13 +129,4 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     hr: () => <hr className="my-10 border-border" />,
     ...components,
   };
-}
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .trim();
 }

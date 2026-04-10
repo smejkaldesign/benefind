@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 export const metadata: Metadata = {
-  title: "Design System — Benefind Docs",
+  title: "Design System | Benefind Docs",
   description:
     "Benefind brand tokens, typography scale, color palette, button variants, spacing, and badges. For designers and contributors.",
   alternates: { canonical: "https://benefind.app/docs/design-system" },
@@ -61,7 +61,7 @@ const SURFACE_COLORS: ColorToken[] = [
     name: "surface-dim",
     cssVar: "--color-surface-dim",
     hex: "#1a1a1a",
-    description: "Elevated surface — cards, panels, sections.",
+    description: "Elevated surface, cards, panels, sections.",
     textOn: "light",
   },
   {
@@ -240,7 +240,7 @@ export default function DesignSystemPage() {
         <div className="space-y-8 rounded-xl border border-border bg-surface-dim p-8">
           <div>
             <p className="mb-1 font-mono text-[11px] uppercase tracking-widest text-text-subtle">
-              Display / 5xl — font-display (Aguzzo)
+              Display / 5xl, font-display (Aguzzo)
             </p>
             <p className="font-display text-5xl font-semibold tracking-tight text-text">
               Find every benefit you deserve.
@@ -265,7 +265,7 @@ export default function DesignSystemPage() {
           </div>
           <div>
             <p className="mb-1 font-mono text-[11px] uppercase tracking-widest text-text-subtle">
-              Sans / base — body copy (text-muted)
+              Sans / base, body copy (text-muted)
             </p>
             <p className="text-base leading-relaxed text-text-muted">
               Body paragraphs use the muted text color and relaxed line height
@@ -328,13 +328,13 @@ export default function DesignSystemPage() {
         <div className="rounded-xl border border-border bg-surface-dim p-8">
           <div className="space-y-4">
             {[
-              { size: "h-1", label: "4px — tight" },
-              { size: "h-2", label: "8px — xs" },
-              { size: "h-3", label: "12px — sm" },
-              { size: "h-4", label: "16px — base" },
-              { size: "h-6", label: "24px — md" },
-              { size: "h-8", label: "32px — lg" },
-              { size: "h-12", label: "48px — xl" },
+              { size: "h-1", label: "4px / tight" },
+              { size: "h-2", label: "8px / xs" },
+              { size: "h-3", label: "12px / sm" },
+              { size: "h-4", label: "16px / base" },
+              { size: "h-6", label: "24px / md" },
+              { size: "h-8", label: "32px / lg" },
+              { size: "h-12", label: "48px / xl" },
             ].map(({ size, label }) => (
               <div key={label} className="flex items-center gap-4">
                 <div className={`w-16 ${size} rounded bg-brand`} />
@@ -375,7 +375,7 @@ export default function DesignSystemPage() {
           </p>
           <p className="mt-3 text-sm leading-relaxed text-text-muted">
             Before adding a new color, check if an existing one works. The
-            palette is intentionally small — that&apos;s how it stays cohesive.
+            palette is intentionally small, that&apos;s how it stays cohesive.
           </p>
         </div>
       </Section>

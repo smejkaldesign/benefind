@@ -5,7 +5,7 @@ import type { LucideIcon } from "lucide-react";
 import { Breadcrumbs } from "@/components/docs/breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "How Benefind Works — Documentation",
+  title: "How Benefind Works | Documentation",
   description:
     "The deep version of how Benefind screens you against 80+ federal and state benefit programs, in plain language, with privacy by default.",
   alternates: { canonical: "https://benefind.app/docs/how-it-works" },
@@ -25,8 +25,8 @@ const PILLARS: Pillar[] = [
     title: "AI-Powered Screening",
     tagline: "2 minutes of questions, 80+ programs checked.",
     body: [
-      "Traditional eligibility portals ask you the same questions 80 different times — once per program. Benefind asks each question once and reuses your answers across every program we check. A typical intake is about 20 questions, and most people finish in under 3 minutes.",
-      "Under the hood, we use structured rule sets for every program — the same eligibility rules the agencies use — plus an LLM layer that handles the ambiguous cases (like what counts as a household member when you have roommates, or whether self-employed income counts differently for SNAP vs Medicaid).",
+      "Traditional eligibility portals ask you the same questions 80 different times, once per program. Benefind asks each question once and reuses your answers across every program we check. A typical intake is about 20 questions, and most people finish in under 3 minutes.",
+      "Under the hood, we use structured rule sets for every program, the same eligibility rules the agencies use, plus an LLM layer that handles the ambiguous cases (like what counts as a household member when you have roommates, or whether self-employed income counts differently for SNAP vs Medicaid).",
       "You only answer a question if the answer could actually change your eligibility. If you've already told us you're not a veteran, we don't ask you about VA benefits again.",
     ],
     example: {
@@ -39,7 +39,7 @@ const PILLARS: Pillar[] = [
     title: "Plain Language",
     tagline: "No jargon. No policy-speak. Clear next steps.",
     body: [
-      "Government eligibility language is notoriously bad — often still written at college reading level and sprinkled with acronyms. Benefind translates every rule into clear, action-oriented language. We tell you exactly what the rule means, why it matters, and what document you'll need to prove it.",
+      "Government eligibility language is notoriously bad, often still written at college reading level and sprinkled with acronyms. Benefind translates every rule into clear, action-oriented language. We tell you exactly what the rule means, why it matters, and what document you'll need to prove it.",
       "When you see a result, you don't just get 'You may be eligible for SNAP.' You get: 'You probably qualify for about $520/month of SNAP benefits. To apply, you'll need your last 4 paystubs and a utility bill. It takes about 30 minutes and approval usually comes in 10 days.'",
       "We also explain what happens if you get denied, what your appeal rights are, and how long benefits typically last. The whole system is built to answer the questions a good benefits navigator would answer.",
     ],
@@ -53,7 +53,7 @@ const PILLARS: Pillar[] = [
     title: "People and Companies",
     tagline: "One platform for both consumer benefits and business incentives.",
     body: [
-      "Most benefits tools focus on either the consumer side (SNAP, Medicaid, housing) or the business side (R&D tax credits, SBIR grants). Benefind does both. Individuals run the consumer screener. Small-business owners run the company screener. If you're both — like a solo founder who also qualifies for SNAP — you can use both.",
+      "Most benefits tools focus on either the consumer side (SNAP, Medicaid, housing) or the business side (R&D tax credits, SBIR grants). Benefind does both. Individuals run the consumer screener. Small-business owners run the company screener. If you're both, like a solo founder who also qualifies for SNAP, you can use both.",
       "On the consumer side we cover SNAP, WIC, Medicaid, CHIP, LIHEAP, Section 8, TANF, SSI, SSDI, EITC, Child Tax Credit, Pell Grants, Head Start, and dozens of state-specific programs. On the business side we cover R&D tax credits, SBIR/STTR grants, WOTC, state-level small business incentives, and industry-specific programs.",
       "Both sides share the same underlying rule engine, so adding new programs is structured, and updates when rules change propagate everywhere.",
     ],
@@ -67,13 +67,13 @@ const PILLARS: Pillar[] = [
     title: "Privacy by Design",
     tagline: "Your data stays on your device. No signup. No tracking.",
     body: [
-      "Benefind doesn't require an account, an email, or a phone number to run the screener. All of your answers live in your browser's local storage and are never uploaded to a server by default. If you want to save your results across devices, you can opt in to creating an account — but it's always optional.",
+      "Benefind doesn't require an account, an email, or a phone number to run the screener. All of your answers live in your browser's local storage and are never uploaded to a server by default. If you want to save your results across devices, you can opt in to creating an account, but it's always optional.",
       "We also don't sell data. We don't show ads. We don't share your info with third-party marketers. The business model is: free for individuals, paid tiers for companies and enterprise integrations.",
       "For users who are undocumented, between immigration statuses, or otherwise cautious about government systems, privacy by default is non-negotiable. Benefind is built for you too.",
     ],
     example: {
       label: "What we DO and DO NOT store",
-      text: "We DO NOT store: your name, SSN, address, income, household details, or results — unless you create an account. We DO store (anonymously): aggregate metrics about which programs people qualify for, to improve our rule coverage.",
+      text: "We DO NOT store: your name, SSN, address, income, household details, or results, unless you create an account. We DO store (anonymously): aggregate metrics about which programs people qualify for, to improve our rule coverage.",
     },
   },
 ];
@@ -139,7 +139,7 @@ export default function HowItWorksPage() {
           Ready to try it?
         </h2>
         <p className="mb-4 text-sm leading-relaxed text-text-muted">
-          Run the consumer screener or the company screener — both take about 3
+          Run the consumer screener or the company screener, both take about 3
           minutes and neither requires an account.
         </p>
         <div className="flex flex-wrap gap-3">

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/docs/breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "Application Guides — Benefind Docs",
+  title: "Application Guides | Benefind Docs",
   description:
     "Step-by-step guides for applying to SNAP, LIHEAP, Medicaid, R&D tax credits, and every other program Benefind screens for.",
   alternates: { canonical: "https://benefind.app/docs/guides" },

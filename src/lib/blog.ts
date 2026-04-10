@@ -36,9 +36,9 @@ export function estimateReadingTime(wordCount: number): number {
 export const posts: BlogPost[] = [
   {
     slug: "what-government-benefits-do-i-qualify-for",
-    title: "What Government Benefits Do I Qualify For? A 2026 Guide",
+    title: "Government Benefits You Qualify For in 2026",
     description:
-      "The fastest way to find out which federal and state benefit programs you qualify for in 2026 — without filling out 80 separate applications.",
+      "Find out in minutes which federal and state benefit programs you qualify for in 2026, without filling out 80 separate applications.",
     date: "2026-04-09",
     author: "Benefind Team",
     tags: ["Government Benefits", "Eligibility", "Guide"],
@@ -48,10 +48,9 @@ export const posts: BlogPost[] = [
   },
   {
     slug: "snap-eligibility-2026",
-    title:
-      "SNAP Eligibility 2026: Income Limits, Work Requirements, How to Apply",
+    title: "SNAP Eligibility 2026: Rules and How to Apply",
     description:
-      "Everything you need to know about SNAP (food stamps) eligibility in 2026 — income limits, household rules, work requirements, and the exact application steps by state.",
+      "SNAP eligibility in 2026: income limits, household rules, work requirements, and the exact state-by-state application steps for food stamps.",
     date: "2026-04-09",
     author: "Benefind Team",
     tags: ["SNAP", "Food Assistance", "Eligibility", "Government Benefits"],
@@ -61,9 +60,9 @@ export const posts: BlogPost[] = [
   },
   {
     slug: "rd-tax-credit-small-business-2026",
-    title: "R&D Tax Credit for Small Businesses: A Complete 2026 Guide",
+    title: "R&D Tax Credit for Small Business: 2026 Guide",
     description:
-      "The R&D Tax Credit can cut your federal tax bill by tens of thousands — even if you're a pre-revenue startup. Here's how to qualify and claim it in 2026.",
+      "The R&D Tax Credit can cut your federal tax bill by tens of thousands, even for pre-revenue startups. How to qualify and claim it in 2026.",
     date: "2026-04-09",
     author: "Benefind Team",
     tags: [
@@ -78,9 +77,9 @@ export const posts: BlogPost[] = [
   },
   {
     slug: "how-to-apply-for-liheap-heating-assistance",
-    title: "How to Apply for LIHEAP Heating Assistance (Step-by-Step)",
+    title: "How to Apply for LIHEAP Heating Assistance",
     description:
-      "LIHEAP helps millions of households pay their heating bills every winter. Here is exactly how to apply, what documents you need, and how long it takes.",
+      "LIHEAP helps millions of households pay heating bills every winter. Exactly how to apply, what documents you need, and how long it takes.",
     date: "2026-04-09",
     author: "Benefind Team",
     tags: ["LIHEAP", "Energy Assistance", "Government Benefits", "How To"],
@@ -90,9 +89,9 @@ export const posts: BlogPost[] = [
   },
   {
     slug: "free-government-grants-single-mothers",
-    title: "Free Government Grants for Single Mothers: What's Real, What's Not",
+    title: "Government Grants for Single Mothers in 2026",
     description:
-      "Cash 'grants' for single moms are mostly a scam. But real federal and state programs can cover rent, food, child care, and college. Here's what actually exists.",
+      "Most 'free cash grants' for single moms are scams. The real federal and state programs that cover rent, food, child care, and college.",
     date: "2026-04-09",
     author: "Benefind Team",
     tags: ["Single Mothers", "Government Benefits", "Grants", "Family"],
@@ -102,31 +101,7 @@ export const posts: BlogPost[] = [
   },
 ];
 
-/** Read MDX file and count words to estimate reading time. */
-function getWordCount(slug: string): number {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const fs = require("fs");
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const path = require("path");
-    const filePath = path.join(
-      process.cwd(),
-      "src",
-      "content",
-      "blog",
-      `${slug}.mdx`,
-    );
-    const content = fs.readFileSync(filePath, "utf-8") as string;
-    const stripped = content
-      .replace(/```[\s\S]*?```/g, "")
-      .replace(/^import\s.*$/gm, "")
-      .replace(/<[^>]+>/g, "")
-      .replace(/[#*`\-_>|]/g, "");
-    return stripped.split(/\s+/).filter(Boolean).length;
-  } catch {
-    return 0;
-  }
-}
+import { getPostWordCount } from "./blog-toc";
 
 export function getAllPosts(): BlogPostWithMeta[] {
   return posts
@@ -134,7 +109,7 @@ export function getAllPosts(): BlogPostWithMeta[] {
     .sort((a, b) => (a.date < b.date ? 1 : -1))
     .map((p) => ({
       ...p,
-      readingTime: estimateReadingTime(getWordCount(p.slug)),
+      readingTime: estimateReadingTime(getPostWordCount(p.slug)),
     }));
 }
 
@@ -143,7 +118,7 @@ export function getPost(slug: string): BlogPostWithMeta | undefined {
   if (!post) return undefined;
   return {
     ...post,
-    readingTime: estimateReadingTime(getWordCount(post.slug)),
+    readingTime: estimateReadingTime(getPostWordCount(post.slug)),
   };
 }
 

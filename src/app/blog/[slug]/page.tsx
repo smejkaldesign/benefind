@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getPost, getAllPosts, getRelatedPosts, formatDate } from "@/lib/blog";
-import { extractTOC } from "@/lib/blog-toc";
+import { extractTOC, extractFAQ } from "@/lib/blog-toc";
 import { LandingNav } from "@/components/landing-nav";
 import { AuthorCard } from "@/components/blog/author-card";
 import { HeroImage } from "@/components/blog/hero-image";
@@ -22,13 +22,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPost(slug);
   if (!post) return {};
   const url = `https://benefind.app/blog/${slug}`;
-  const cover = post.heroImage ?? "/blog/covers/default.svg";
+  // Note: placeholder SVG covers are referenced for now. Before launch we
+  // should generate raster covers (see deferred task) and swap here.
+  const cover = post.heroImage ?? "/images/brand/logo-dark.png";
+  const titleWithBrand = `${post.title} | Benefind`;
   return {
-    title: `${post.title} — Benefind`,
+    title: titleWithBrand,
     description: post.description,
     alternates: { canonical: url },
     openGraph: {
-      title: `${post.title} — Benefind`,
+      title: titleWithBrand,
       description: post.description,
       url,
       siteName: "Benefind",
@@ -41,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${post.title} — Benefind`,
+      title: titleWithBrand,
       description: post.description,
       images: [cover],
     },
@@ -66,9 +69,14 @@ export default async function BlogPostPage({ params }: Props) {
   if (!PostContent) notFound();
 
   const tocItems = extractTOC(slug);
+  const faqItems = extractFAQ(slug);
   const related = getRelatedPosts(slug, 3);
 
-  const jsonLd = {
+  const schemaImage = post.heroImage
+    ? `https://benefind.app${post.heroImage}`
+    : "https://benefind.app/images/brand/logo-dark.png";
+
+  const blogPostingLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
@@ -89,11 +97,25 @@ export default async function BlogPostPage({ params }: Props) {
       "@type": "WebPage",
       "@id": `https://benefind.app/blog/${slug}`,
     },
-    image: post.heroImage
-      ? `https://benefind.app${post.heroImage}`
-      : "https://benefind.app/og-image.png",
+    image: schemaImage,
     keywords: post.tags.join(", "),
   };
+
+  const faqLd =
+    faqItems.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqItems.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        }
+      : null;
 
   return (
     <>
@@ -101,10 +123,20 @@ export default async function BlogPostPage({ params }: Props) {
       <main className="min-h-screen bg-surface pt-[4.5rem] text-text">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(blogPostingLd).replace(/</g, "\\u003c"),
+          }}
         />
+        {faqLd && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(faqLd).replace(/</g, "\\u003c"),
+            }}
+          />
+        )}
 
-        {/* Post header — full width */}
+        {/* Post header, full width */}
         <div className="border-b border-dashed border-border">
           <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
             <Link

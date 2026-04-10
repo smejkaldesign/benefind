@@ -6,12 +6,12 @@ import type { BlogPostWithMeta } from "@/lib/blog";
 import { LandingNav } from "@/components/landing-nav";
 
 export const metadata: Metadata = {
-  title: "Government Programs Blog — Benefind",
+  title: "Government Programs Blog | Benefind",
   description:
     "Plain-language guides on SNAP, Medicaid, LIHEAP, R&D tax credits, and every other government benefit program we screen for on Benefind.",
   alternates: { canonical: "https://benefind.app/blog" },
   openGraph: {
-    title: "Government Programs Blog — Benefind",
+    title: "Government Programs Blog | Benefind",
     description:
       "Plain-language guides on SNAP, Medicaid, LIHEAP, R&D tax credits, and every other government benefit program we screen for on Benefind.",
     url: "https://benefind.app/blog",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Government Programs Blog — Benefind",
+    title: "Government Programs Blog | Benefind",
     description:
       "Plain-language guides on every government benefit program we screen for.",
   },
@@ -159,7 +159,9 @@ export default function BlogIndexPage() {
       <main className="min-h-screen bg-surface pt-[4.5rem] text-text">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          }}
         />
 
         {/* Hero section */}

@@ -248,3 +248,14 @@
 .benefind-prose > :last-child {
   margin-bottom: 0;
 }
+
+/* ── Global accessible focus ring ───────────────────────── */
+/* WCAG 2.4.7 — every keyboard-focusable element needs a visible indicator. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

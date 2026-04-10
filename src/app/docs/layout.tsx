@@ -56,10 +56,13 @@ export default function DocsLayout({
               <nav aria-label="Docs navigation" className="flex flex-col gap-8">
                 {DOCS_NAV.map((section) => (
                   <div key={section.title}>
-                    <h3 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-text-subtle">
+                    <p className="mb-3 font-mono text-[11px] uppercase tracking-widest text-text-subtle">
                       {section.title}
-                    </h3>
-                    <ul className="flex flex-col gap-1">
+                    </p>
+                    <ul
+                      aria-label={section.title}
+                      className="flex flex-col gap-1"
+                    >
                       {section.links.map((link) => (
                         <li key={link.href}>
                           <Link
