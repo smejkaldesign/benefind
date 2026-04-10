@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { LandingNav } from "@/components/landing-nav";
 import { VantaClouds } from "@/components/vanta-clouds";
+import { DitherFade } from "@/components/dither-fade";
 import { SuccessChips } from "@/components/landing/success-chips";
 import { StatsStrip } from "@/components/landing/stats-strip";
 import { BentoGrid } from "@/components/landing/bento-grid";
@@ -36,7 +37,7 @@ export default function Home() {
         <div className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[20px]">
           <VantaClouds className="min-h-[700px] sm:min-h-[900px]">
             {/* Hero text — top portion */}
-            <div className="relative z-20 flex flex-col items-center px-4 pt-20 sm:pt-28">
+            <div className="relative z-10 flex flex-col items-center px-4 pt-20 sm:pt-28">
               <motion.h1
                 className="max-w-[900px] text-center font-display text-4xl leading-[1.05] font-semibold tracking-tight text-surface sm:text-6xl lg:text-[64px]"
                 initial={{ opacity: 0, y: 20 }}
@@ -77,42 +78,13 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* Scrolling success chips — z-5, below cloud overlays */}
+            {/* Scrolling success chips */}
             <SuccessChips />
 
-            {/* Static cloud overlays — sit ON TOP of chips (z-10) */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/clouds-overlay.png"
-              alt=""
-              aria-hidden="true"
-              className="pointer-events-none absolute bottom-0 left-1/2 z-10 w-[140%] max-w-none -translate-x-1/2"
-              style={{ mixBlendMode: "normal" }}
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/clouds-detail.png"
-              alt=""
-              aria-hidden="true"
-              className="pointer-events-none absolute bottom-[-5%] left-1/2 z-10 w-[120%] max-w-none -translate-x-1/2 opacity-70"
-            />
-
-            {/* Dither fade — real Oz dither image, fading to full dark */}
-            <div
-              className="pointer-events-none absolute bottom-0 left-0 right-0 z-[15] h-[280px]"
-              style={{
-                backgroundImage: "url(/images/dither-pattern.png)",
-                backgroundRepeat: "repeat-x",
-                backgroundPosition: "bottom center",
-                backgroundSize: "auto 100%",
-                maskImage:
-                  "linear-gradient(to bottom, transparent 0%, black 40%)",
-                WebkitMaskImage:
-                  "linear-gradient(to bottom, transparent 0%, black 40%)",
-              }}
-            />
-            {/* Solid dark at very bottom to ensure full fade */}
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[16] h-16 bg-surface" />
+            {/* Animated dither fade — bottom 25%, fully dark at bottom */}
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[15] h-[25%]">
+              <DitherFade color="#121212" pixelSize={3} speed={0.4} />
+            </div>
           </VantaClouds>
         </div>
       </section>

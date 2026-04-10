@@ -40,8 +40,9 @@ export function VantaClouds({ className, children }: VantaCloudsProps) {
           touchControls: false,
           minHeight: 600,
           minWidth: 200,
-          scale: 1.0,
-          scaleMobile: 1.0,
+          // Scale up to push cloud horizon lower (center of container)
+          scale: 1.5,
+          scaleMobile: 1.5,
         });
         setLoaded(true);
       } catch {
