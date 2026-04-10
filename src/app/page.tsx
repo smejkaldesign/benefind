@@ -33,19 +33,17 @@ export default function Home() {
 
       {/* ── Hero with Vanta.js Clouds (Oz-style container) ──── */}
       <section className="relative pt-20 sm:pt-24">
-        {/* Dark edge gradients — full height, on top of everything (z-30) */}
+        {/* Dark edge gradients — fixed 200px each, hidden at viewport >= 2000px */}
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-30"
+          className="pointer-events-none absolute inset-y-0 left-0 z-30 w-[200px] min-[2000px]:hidden"
           style={{
-            width: "10vw",
             background:
               "linear-gradient(to right, #121212 0%, transparent 100%)",
           }}
         />
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 z-30"
+          className="pointer-events-none absolute inset-y-0 right-0 z-30 w-[200px] min-[2000px]:hidden"
           style={{
-            width: "10vw",
             background:
               "linear-gradient(to left, #121212 0%, transparent 100%)",
           }}
