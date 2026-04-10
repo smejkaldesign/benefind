@@ -102,9 +102,9 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* Animated dither fade — bottom 25%, fully dark at bottom */}
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[15] h-[25%]">
-              <DitherFade color="#121212" pixelSize={3} speed={0.4} />
+            {/* Animated dither fade — bottom 35%, behind callouts (z-12) */}
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[12] h-[35%]">
+              <DitherFade color="#121212" />
             </div>
           </VantaClouds>
         </div>
