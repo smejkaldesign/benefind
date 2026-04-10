@@ -1,20 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 import { LanguageSelector } from "@/components/language-selector";
 import { useI18n } from "@/lib/i18n/context";
 
 export function LandingNav() {
   const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [dropdownOpen]);
 
   return (
     <header
@@ -25,29 +40,68 @@ export function LandingNav() {
       }`}
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/images/brand/logo-light.svg"
-            alt={t.common.appName}
-            width={120}
-            height={22}
-            priority
-          />
-        </Link>
-        <div className="flex items-center gap-1 sm:gap-3">
+        <div className="flex items-center gap-4">
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/images/brand/logo-light.svg"
+              alt={t.common.appName}
+              width={120}
+              height={22}
+              priority
+            />
+          </Link>
           <LanguageSelector />
+        </div>
+        <div className="flex items-center gap-3">
           <Link
             href="/auth/login"
             className="rounded-lg border border-border px-4 py-1.5 text-sm font-semibold text-text-muted transition-colors hover:border-brand hover:text-brand focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
           >
             {t.common.signIn}
           </Link>
-          <Link
-            href="/get-started"
-            className="hidden rounded-lg bg-brand px-5 py-1.5 text-sm font-semibold text-surface transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface focus-visible:outline-none sm:inline-flex"
-          >
-            {t.landing.heroCta}
-          </Link>
+
+          {/* Eligibility dropdown — same white style as hero buttons */}
+          <div className="relative" ref={dropdownRef}>
+            <button
+              type="button"
+              onClick={() => setDropdownOpen((v) => !v)}
+              aria-expanded={dropdownOpen}
+              aria-haspopup="menu"
+              className="inline-flex h-[44px] items-center gap-2 rounded-lg border border-surface/20 bg-white px-5 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            >
+              {t.landing.heroCta}
+              <ChevronDown
+                className={`h-4 w-4 transition-transform duration-200 ${
+                  dropdownOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {dropdownOpen && (
+              <div
+                role="menu"
+                className="absolute right-0 top-[calc(100%+8px)] min-w-[220px] overflow-hidden rounded-lg border border-surface/20 bg-white shadow-lg"
+              >
+                <Link
+                  href="/screening"
+                  role="menuitem"
+                  onClick={() => setDropdownOpen(false)}
+                  className="flex items-center px-4 py-3 text-sm font-semibold text-surface transition-colors hover:bg-surface/5"
+                >
+                  Personal Benefits
+                </Link>
+                <div className="h-px bg-surface/10" />
+                <Link
+                  href="/screening/company"
+                  role="menuitem"
+                  onClick={() => setDropdownOpen(false)}
+                  className="flex items-center px-4 py-3 text-sm font-semibold text-surface transition-colors hover:bg-surface/5"
+                >
+                  Business Benefits
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>
