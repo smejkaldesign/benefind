@@ -120,16 +120,6 @@ export function SuccessChips() {
         top: "50%",
       }}
     >
-      {/* Left edge fade — chips dissolve into nothing on the left */}
-      <div
-        className="pointer-events-none absolute inset-y-0 left-0 z-10"
-        style={{
-          width: "15vw",
-          background: "linear-gradient(to right, #121212 0%, transparent 100%)",
-        }}
-      />
-      {/* Right edge — no fade, chips come in from the right cleanly */}
-
       <div className="relative flex h-full flex-col justify-around overflow-hidden">
         <ChipRow chips={ROW_1} duration={80} offsetY="-10px" />
         <ChipRow chips={ROW_2} duration={95} offsetY="20px" />

@@ -34,6 +34,23 @@ export default function Home() {
 
       {/* ── Hero with Vanta.js Clouds (Oz-style container) ──── */}
       <section className="relative px-4 pt-20 sm:px-6 sm:pt-24">
+        {/* Dark edge gradients — full height, on top of everything (z-30) */}
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 z-30"
+          style={{
+            width: "10vw",
+            background:
+              "linear-gradient(to right, #121212 0%, transparent 100%)",
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-30"
+          style={{
+            width: "10vw",
+            background:
+              "linear-gradient(to left, #121212 0%, transparent 100%)",
+          }}
+        />
         <div className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[20px]">
           <VantaClouds className="min-h-[700px] sm:min-h-[900px]">
             {/* Hero text — top portion */}
