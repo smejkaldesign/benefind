@@ -29,14 +29,14 @@ export function InlineOptions({
   if (step.type === "select") {
     return (
       <div className="flex flex-wrap gap-2 pt-1 pl-1">
-        {step.options?.map((opt) => (
+        {step.options?.map((opt, i) => (
           <button
-            key={opt.value}
+            key={`${opt.value}-${i}`}
             onClick={() => {
               if (!disabled) onSubmit(opt.value);
             }}
             disabled={disabled}
-            className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 active:scale-95 disabled:opacity-40"
+            className="rounded-lg border border-border bg-surface-bright px-4 py-2 text-sm font-semibold text-text-muted transition-all hover:border-brand hover:bg-brand/10 hover:text-brand active:scale-95 disabled:opacity-40"
           >
             {opt.label}
           </button>
@@ -49,12 +49,12 @@ export function InlineOptions({
     return (
       <div className="space-y-3 pt-1 pl-1">
         <div className="flex flex-wrap gap-2">
-          {step.options?.map((opt) => {
+          {step.options?.map((opt, i) => {
             const isSelected = selected.includes(opt.value);
             const isNone = opt.value === "none";
             return (
               <button
-                key={opt.value}
+                key={`${opt.value}-${i}`}
                 onClick={() => {
                   if (disabled) return;
                   if (isNone) {
@@ -69,10 +69,10 @@ export function InlineOptions({
                   }
                 }}
                 disabled={disabled}
-                className={`rounded-full border px-4 py-2 text-sm font-medium transition-all active:scale-95 disabled:opacity-40 ${
+                className={`rounded-lg border px-4 py-2 text-sm font-semibold transition-all active:scale-95 disabled:opacity-40 ${
                   isSelected
-                    ? "border-emerald-400 bg-emerald-50 text-emerald-700"
-                    : "border-gray-200 bg-white text-gray-700 shadow-sm hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700"
+                    ? "border-brand bg-brand/15 text-brand"
+                    : "border-border bg-surface-bright text-text-muted hover:border-brand hover:bg-brand/10 hover:text-brand"
                 }`}
               >
                 {opt.label}
@@ -86,7 +86,7 @@ export function InlineOptions({
               if (!disabled) onSubmit(selected.join(","));
             }}
             disabled={disabled}
-            className="rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-emerald-600 active:scale-95 disabled:opacity-40"
+            className="rounded-lg bg-brand px-5 py-2 text-sm font-semibold text-surface transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
           >
             Continue &rarr;
           </button>
@@ -102,7 +102,7 @@ export function InlineOptions({
           value={stateValue}
           onChange={(e) => setStateValue(e.target.value)}
           disabled={disabled}
-          className="h-10 rounded-full border border-gray-200 bg-white px-4 text-sm text-gray-700 shadow-sm focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 focus:outline-none disabled:opacity-40"
+          className="h-10 rounded-lg border border-border bg-surface-bright px-4 text-sm font-semibold text-text focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-40"
         >
           <option value="">Select your state...</option>
           {US_STATES.map((s) => (
@@ -117,7 +117,7 @@ export function InlineOptions({
               if (!disabled) onSubmit(stateValue);
             }}
             disabled={disabled}
-            className="rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-emerald-600 active:scale-95 disabled:opacity-40"
+            className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-surface transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
           >
             Continue &rarr;
           </button>
