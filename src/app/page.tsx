@@ -212,7 +212,7 @@ export default function Home() {
       {/* ── Footer ───────────────────────────────────────────── */}
       <footer className="border-t border-border px-6 py-12">
         <div className="mx-auto max-w-[1520px]">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
             <div>
               <span className="text-lg font-bold text-brand">
                 {t.common.appName}
@@ -248,6 +248,45 @@ export default function Home() {
                     className="text-sm text-text-muted transition-colors hover:text-brand"
                   >
                     {t.landing.footerHowItWorks}
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-text-subtle">
+                {t.landing.footerResources}
+              </h4>
+              <ul className="mt-3 space-y-2">
+                <li>
+                  <Link
+                    href="/docs"
+                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                  >
+                    {t.landing.footerDocs}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/blog"
+                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                  >
+                    {t.landing.footerBlog}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/docs/guides"
+                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                  >
+                    {t.landing.footerGuides}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/docs/design-system"
+                    className="text-sm text-text-muted transition-colors hover:text-brand"
+                  >
+                    {t.landing.footerDesignSystem}
                   </Link>
                 </li>
               </ul>

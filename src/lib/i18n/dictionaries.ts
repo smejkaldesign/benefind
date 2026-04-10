@@ -135,6 +135,11 @@ export interface Dictionary {
     footerScreening: string;
     footerCompanyGrants: string;
     footerHowItWorks: string;
+    footerResources: string;
+    footerBlog: string;
+    footerDocs: string;
+    footerGuides: string;
+    footerDesignSystem: string;
     // Problem section
     problemTitle: string;
     problemSubtitle: string;
@@ -336,6 +341,11 @@ const en: Dictionary = {
     footerScreening: "Eligibility Screening",
     footerCompanyGrants: "Company Grants",
     footerHowItWorks: "How It Works",
+    footerResources: "Resources",
+    footerBlog: "Blog",
+    footerDocs: "Docs",
+    footerGuides: "Guides",
+    footerDesignSystem: "Design System",
     // Problem section
     problemTitle: "Billions in Benefits Go Unclaimed Every Year",
     problemSubtitle: "The system is confusing. We made it simple.",
@@ -585,6 +595,11 @@ const es: Dictionary = {
     footerScreening: "Evaluación de Elegibilidad",
     footerCompanyGrants: "Subvenciones Empresariales",
     footerHowItWorks: "Cómo Funciona",
+    footerResources: "Recursos",
+    footerBlog: "Blog",
+    footerDocs: "Documentación",
+    footerGuides: "Guías",
+    footerDesignSystem: "Sistema de Diseño",
     // Problem section
     problemTitle: "Miles de Millones en Beneficios No Se Reclaman Cada Año",
     problemSubtitle: "El sistema es confuso. Lo hicimos simple.",
@@ -819,6 +834,11 @@ const zh: Dictionary = {
     footerScreening: "资格筛查",
     footerCompanyGrants: "企业补助",
     footerHowItWorks: "如何运作",
+    footerResources: "资源",
+    footerBlog: "博客",
+    footerDocs: "文档",
+    footerGuides: "指南",
+    footerDesignSystem: "设计系统",
     problemTitle: "每年数十亿福利无人认领",
     problemSubtitle: "系统太复杂了。我们让它变得简单。",
     pain1Stat: "$800亿+",
@@ -1013,6 +1033,11 @@ const vi: Dictionary = {
     footerScreening: "Kiểm tra điều kiện",
     footerCompanyGrants: "Trợ cấp doanh nghiệp",
     footerHowItWorks: "Cách hoạt động",
+    footerResources: "Tài nguyên",
+    footerBlog: "Blog",
+    footerDocs: "Tài liệu",
+    footerGuides: "Hướng dẫn",
+    footerDesignSystem: "Hệ thống thiết kế",
     problemTitle: "Hàng tỷ đô la trợ cấp không được nhận mỗi năm",
     problemSubtitle: "Hệ thống quá phức tạp. Chúng tôi đã đơn giản hóa nó.",
     pain1Stat: "$80T+",
@@ -1205,6 +1230,11 @@ const ar: Dictionary = {
     footerScreening: "فحص الأهلية",
     footerCompanyGrants: "منح الشركات",
     footerHowItWorks: "كيف يعمل",
+    footerResources: "الموارد",
+    footerBlog: "المدونة",
+    footerDocs: "التوثيق",
+    footerGuides: "أدلة",
+    footerDesignSystem: "نظام التصميم",
     problemTitle: "مليارات من المزايا لا يتم المطالبة بها كل عام",
     problemSubtitle: "النظام معقد. جعلناه بسيطاً.",
     pain1Stat: "+$80 مليار",
