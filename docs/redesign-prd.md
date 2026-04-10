@@ -24,6 +24,7 @@ Benefind's MVP landing page is functional but looks like an MVP. It has the righ
 ## Current State
 
 The landing page already has:
+
 - Hero with CTA buttons
 - Marquee scrolling for program names (SNAP, Medicaid, WIC, etc.)
 - "How It Works" 3-step section
@@ -40,18 +41,18 @@ Reference: https://mobbin.com
 
 ### Section Mapping (Mobbin -> Benefind)
 
-| # | Mobbin Section | Benefind Equivalent | Redesign Notes |
-|---|---------------|---------------------|----------------|
-| 1 | Hero: "Discover real-world design inspiration" + dual CTAs | Hero: "Find Every Benefit You Deserve" | Match Mobbin's headline weight, generous padding (80-120px), dual CTA (primary: "Start Screening", secondary: "See How It Works") |
-| 2 | Animated logo marquee ("Trusted by") | Program icon marquee (already exists) | Upgrade: add program icons/logos, not just text. Animate smoothly like Mobbin's brand carousel |
-| 3 | Large product preview screenshots | Chat UI + Results dashboard preview | Side-by-side mobile (chat) + desktop (results) screenshots, large with rounded corners and subtle shadow |
-| 4 | Tabbed interactive demo | Interactive feature demo | Tabbed interface: "Chat Flow" / "Results" / "Documents" / "Languages" with live preview switching |
-| 5 | Stats bar (1,150 apps, 611K screens) | Impact stats (families helped, benefits found, programs, states) | Animated counter, bold numbers, clean layout |
-| 6 | Feature sections with rich visuals | "How It Works" + Features grid | Upgrade to Mobbin's alternating left/right layout with large visuals per feature |
-| 7 | Testimonial carousel with avatars | User stories / social proof | Card-based testimonials with avatars, location badges (not company logos) |
-| 8 | Trust section | Privacy + encryption | "Your Data Stays Yours": zero-knowledge encryption, no data sold, client-side only, with shield icons |
-| 9 | Final CTA with brand logos | "Don't Leave Money on the Table" | Repeat program icons, strong CTA, estimated average benefit value |
-| 10 | Footer | Multi-language footer | Clean footer with language selector, privacy policy, "Built by Smejkal Design" |
+| #   | Mobbin Section                                             | Benefind Equivalent                                              | Redesign Notes                                                                                                                    |
+| --- | ---------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Hero: "Discover real-world design inspiration" + dual CTAs | Hero: "Find Every Benefit You Deserve"                           | Match Mobbin's headline weight, generous padding (80-120px), dual CTA (primary: "Start Screening", secondary: "See How It Works") |
+| 2   | Animated logo marquee ("Trusted by")                       | Program icon marquee (already exists)                            | Upgrade: add program icons/logos, not just text. Animate smoothly like Mobbin's brand carousel                                    |
+| 3   | Large product preview screenshots                          | Chat UI + Results dashboard preview                              | Side-by-side mobile (chat) + desktop (results) screenshots, large with rounded corners and subtle shadow                          |
+| 4   | Tabbed interactive demo                                    | Interactive feature demo                                         | Tabbed interface: "Chat Flow" / "Results" / "Documents" / "Languages" with live preview switching                                 |
+| 5   | Stats bar (1,150 apps, 611K screens)                       | Impact stats (families helped, benefits found, programs, states) | Animated counter, bold numbers, clean layout                                                                                      |
+| 6   | Feature sections with rich visuals                         | "How It Works" + Features grid                                   | Upgrade to Mobbin's alternating left/right layout with large visuals per feature                                                  |
+| 7   | Testimonial carousel with avatars                          | User stories / social proof                                      | Card-based testimonials with avatars, location badges (not company logos)                                                         |
+| 8   | Trust section                                              | Privacy + encryption                                             | "Your Data Stays Yours": zero-knowledge encryption, no data sold, client-side only, with shield icons                             |
+| 9   | Final CTA with brand logos                                 | "Don't Leave Money on the Table"                                 | Repeat program icons, strong CTA, estimated average benefit value                                                                 |
+| 10  | Footer                                                     | Multi-language footer                                            | Clean footer with language selector, privacy policy, "Built by Smejkal Design"                                                    |
 
 ### Design Tokens (Mobbin-Derived)
 

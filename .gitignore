@@ -31,6 +31,11 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
+# editor/tooling
+node-compile-cache/
+.turbo/
+.mcp.json
+
 # misc
 *.tsbuildinfo
 next-env.d.ts

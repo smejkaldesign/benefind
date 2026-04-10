@@ -159,10 +159,7 @@ const Testimonial7 = ({ className }: Testimonial7Props) => {
     >
       <CarouselContent className="-ml-4">
         {[...rows, ...rows].map((testimonial, index) => (
-          <CarouselItem
-            key={index}
-            className="flex basis-auto py-px pl-4"
-          >
+          <CarouselItem key={index} className="flex basis-auto py-px pl-4">
             <Card
               padding={false}
               className="flex h-full w-[360px] flex-col justify-between border-border bg-surface-bright p-6 select-none transition hover:border-accent/30"
