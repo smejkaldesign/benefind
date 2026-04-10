@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { LandingNav } from "@/components/landing-nav";
-import { VantaClouds } from "@/components/vanta-clouds";
+import { Grainient } from "@/components/grainient";
 import { SuccessChips } from "@/components/landing/success-chips";
 import { StatsStrip } from "@/components/landing/stats-strip";
 import { BentoGrid } from "@/components/landing/bento-grid";
@@ -54,14 +54,20 @@ export default function Home() {
           className="relative mx-auto max-w-[1400px] overflow-hidden rounded-t-[20px]"
           style={{
             height: "clamp(805px, 80vh, 1035px)",
-            backgroundColor: "#68b8d7",
+            backgroundColor: "#5227FF",
           }}
         >
-          {/* Vanta at 200% height, shifted down 100px so clouds appear lower */}
-          <VantaClouds
-            className="absolute inset-x-0"
-            style={{ height: "200%", top: "100px" }}
-          >
+          {/* Grainient gradient background */}
+          <div className="absolute inset-0">
+            <Grainient
+              color1="#FF9FFC"
+              color2="#5227FF"
+              color3="#B19EEF"
+              timeSpeed={0.25}
+            />
+          </div>
+          {/* Inner wrapper to keep children rendering above grainient */}
+          <div className="absolute inset-0">
             {/* Hero text — top portion */}
             <div className="relative z-10 flex flex-col items-center px-4 pt-20 sm:pt-28">
               <motion.h1
@@ -103,7 +109,7 @@ export default function Home() {
                 </Link>
               </motion.div>
             </div>
-          </VantaClouds>
+          </div>
 
           {/* Simple gradient fade to dark at bottom */}
           <div
