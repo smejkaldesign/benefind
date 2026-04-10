@@ -1,15 +1,15 @@
 import type { Metadata, Viewport } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
-import { ThemeProvider } from '@/lib/theme';
+import { Inter } from 'next/font/google';
 import { I18nProvider } from '@/lib/i18n/context';
 import { ServiceWorkerRegister } from '@/components/service-worker-register';
 import { OfflineBanner } from '@/components/offline-banner';
 import { AuthErrorRedirect } from '@/components/auth-error-redirect';
 import './globals.css';
 
-const font = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
     title: 'Benefind',
   },
 };
@@ -29,28 +29,19 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#10B981',
+  themeColor: '#121212',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('benefind-theme');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}})()`,
-          }}
-        />
-      </head>
-      <body className={`${font.className} min-h-dvh`}>
-        <ThemeProvider>
-          <I18nProvider>
-            {children}
-            <AuthErrorRedirect />
-            <ServiceWorkerRegister />
-            <OfflineBanner />
-          </I18nProvider>
-        </ThemeProvider>
+    <html lang="en" className="dark">
+      <body className={`${inter.variable} ${inter.className} min-h-dvh`}>
+        <I18nProvider>
+          {children}
+          <AuthErrorRedirect />
+          <ServiceWorkerRegister />
+          <OfflineBanner />
+        </I18nProvider>
       </body>
     </html>
   );
