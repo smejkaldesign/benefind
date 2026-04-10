@@ -3,25 +3,16 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  ArrowRight,
-  Lock,
-  ChevronDown,
-  Sparkles,
-  Shield,
-  Quote,
-  Code,
-} from 'lucide-react';
+import { ArrowRight, ChevronDown, Sparkles } from 'lucide-react';
 import { LandingNav } from '@/components/landing-nav';
 import { VantaClouds } from '@/components/vanta-clouds';
 import { SuccessChips } from '@/components/landing/success-chips';
 import { StatsStrip } from '@/components/landing/stats-strip';
 import { BentoGrid } from '@/components/landing/bento-grid';
 import { VideoSection } from '@/components/landing/video-section';
+import { TrustSection } from '@/components/landing/trust-section';
+import { GetStartedCTA } from '@/components/landing/get-started-cta';
 import { useI18n } from '@/lib/i18n/context';
-
-const TRUST_ICONS = [Lock, Shield, Code];
-const TESTIMONIAL_COLORS = ['bg-emerald-500', 'bg-sky-500', 'bg-purple-500', 'bg-amber-500', 'bg-rose-500', 'bg-violet-500'];
 
 export default function Home() {
   const { t } = useI18n();
@@ -122,100 +113,8 @@ export default function Home() {
         <VideoSection />
       </div>
 
-      {/* ── Trust Section ──────────────────────────────────────── */}
-      <section className="px-4 py-24 sm:py-32">
-        <div className="mx-auto max-w-[1400px]">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="font-display text-3xl font-medium tracking-tight text-text sm:text-4xl">
-              {t.landing.trustTitle}
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-text-muted">{t.landing.trustSubtitle}</p>
-          </motion.div>
-
-          <motion.div
-            className="mt-16 grid gap-6 sm:grid-cols-3"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
-          >
-            {([
-              { title: t.landing.trust1Title, desc: t.landing.trust1Desc },
-              { title: t.landing.trust2Title, desc: t.landing.trust2Desc },
-              { title: t.landing.trust3Title, desc: t.landing.trust3Desc },
-            ] as const).map(({ title, desc }, i) => {
-              const Icon = TRUST_ICONS[i]!;
-              return (
-                <motion.div
-                  key={title}
-                  className="rounded-[16px] border border-border bg-surface-bright p-8 transition-all duration-300 hover:border-border-light/20 hover:-translate-y-0.5"
-                  variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-brand/10">
-                    <Icon className="h-6 w-6 text-brand" />
-                  </div>
-                  <h3 className="mt-6 text-lg font-semibold text-text">{title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-text-muted">{desc}</p>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── Testimonials ───────────────────────────────────────── */}
-      <section className="bg-surface-dim px-4 py-24 sm:py-32">
-        <div className="mx-auto max-w-[1400px]">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="font-display text-3xl font-medium tracking-tight text-text sm:text-4xl">
-              {t.landing.testimonialsTitle}
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-text-muted">{t.landing.testimonialsSubtitle}</p>
-          </motion.div>
-
-          <motion.div
-            className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
-          >
-            {t.landing.testimonials.map(({ quote, name, location, initials }, i) => (
-              <motion.div
-                key={name}
-                className="rounded-[16px] border border-border bg-surface-bright p-8 transition-all duration-300 hover:border-border-light/20 hover:-translate-y-0.5"
-                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-              >
-                <Quote className="h-8 w-8 text-accent/30" />
-                <p className="mt-4 text-base leading-relaxed text-text-muted">&ldquo;{quote}&rdquo;</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white ${TESTIMONIAL_COLORS[i % TESTIMONIAL_COLORS.length]}`}
-                  >
-                    {initials}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-text">{name}</p>
-                    <p className="text-xs text-text-subtle">{location}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+      {/* ── Trust + Testimonials ────────────────────────────── */}
+      <TrustSection />
 
       {/* ── FAQ ──────────────────────────────────────────────── */}
       <section className="px-4 py-24 sm:py-32">
@@ -274,29 +173,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Final CTA ──────────────────────────────────────────── */}
-      <section className="px-4 py-24 sm:py-32">
-        <motion.div
-          className="mx-auto max-w-3xl rounded-[20px] border border-border bg-surface-bright px-6 py-12 text-center sm:px-16 sm:py-16"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.5 }}
-        >
-          <h2 className="font-display text-3xl font-medium text-text sm:text-4xl">
-            {t.landing.ctaHeadline}
-          </h2>
-          <p className="mt-4 text-text-muted">{t.landing.ctaDesc}</p>
-          <Link
-            href="/get-started"
-            className="mt-8 inline-flex h-12 items-center gap-2 rounded-[50px] bg-brand px-8 text-base font-semibold text-white shadow-lg shadow-brand/25 transition-all hover:bg-brand-dark hover:shadow-xl hover:shadow-brand/30"
-          >
-            {t.landing.ctaButton}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <p className="mt-4 text-sm text-text-subtle">{t.landing.ctaFree}</p>
-        </motion.div>
-      </section>
+      {/* ── Get Started CTA ─────────────────────────────────── */}
+      <GetStartedCTA />
 
       {/* ── Footer ───────────────────────────────────────────── */}
       <footer className="border-t border-border px-4 py-12">
