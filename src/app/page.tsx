@@ -71,7 +71,7 @@ export default function Home() {
             {/* Hero text — top portion */}
             <div className="relative z-10 flex flex-col items-center px-4 pt-20 sm:pt-28">
               <motion.h1
-                className="max-w-[900px] text-center font-display text-4xl leading-[1.05] font-semibold tracking-tight text-surface sm:text-6xl lg:text-[64px]"
+                className="max-w-[900px] text-center font-display text-4xl leading-[1.05] font-semibold tracking-tight text-white sm:text-6xl lg:text-[64px]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
@@ -80,7 +80,7 @@ export default function Home() {
               </motion.h1>
 
               <motion.p
-                className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-surface/70 sm:text-base"
+                className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-white/80 sm:text-base"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
