@@ -9,7 +9,7 @@ import { Grainient } from "@/components/grainient";
 import { SuccessChips } from "@/components/landing/success-chips";
 import { StatsStrip } from "@/components/landing/stats-strip";
 import { BentoGrid } from "@/components/landing/bento-grid";
-import { TrustSection } from "@/components/landing/trust-section";
+import { Testimonial7 } from "@/components/testimonial7";
 import { GetStartedCTA } from "@/components/landing/get-started-cta";
 import { useI18n } from "@/lib/i18n/context";
 
@@ -144,8 +144,8 @@ export default function Home() {
         <BentoGrid />
       </div>
 
-      {/* ── Trust + Testimonials ────────────────────────────── */}
-      <TrustSection />
+      {/* ── Testimonials (full-bleed auto-scrolling carousels) ── */}
+      <Testimonial7 />
 
       {/* ── FAQ ──────────────────────────────────────────────── */}
       <section className="px-6 py-24 sm:py-32">
