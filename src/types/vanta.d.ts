@@ -6,6 +6,7 @@ declare module "vanta/dist/vanta.clouds.min" {
   interface VantaOptions {
     el: HTMLElement;
     THREE: typeof import("three");
+    backgroundColor?: number;
     skyColor?: number;
     cloudColor?: number;
     cloudShadowColor?: number;

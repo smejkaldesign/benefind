@@ -29,7 +29,7 @@ export function VantaClouds({ className, style, children }: VantaCloudsProps) {
         effectRef.current = CLOUDS({
           el: containerRef.current,
           THREE,
-          // Vanta.js default colors
+          backgroundColor: 0xffffff,
           skyColor: 0x68b8d7,
           cloudColor: 0xadc1de,
           cloudShadowColor: 0x183550,
@@ -41,7 +41,6 @@ export function VantaClouds({ className, style, children }: VantaCloudsProps) {
           touchControls: true,
           minHeight: 200,
           minWidth: 200,
-          // Scale 3 pushes cloud horizon much lower, sky fills upper half
           scale: 3,
           scaleMobile: 12,
         });
@@ -67,7 +66,7 @@ export function VantaClouds({ className, style, children }: VantaCloudsProps) {
       className={className}
       style={{
         position: "relative",
-        backgroundColor: "#68b8d7",
+        backgroundColor: "#ffffff",
         ...style,
       }}
     >
@@ -76,7 +75,7 @@ export function VantaClouds({ className, style, children }: VantaCloudsProps) {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, #7ec8e0 0%, #adc1de 50%, #68b8d7 100%)",
+              "linear-gradient(180deg, #e8f4f8 0%, #adc1de 50%, #68b8d7 100%)",
           }}
         />
       )}
