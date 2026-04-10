@@ -51,8 +51,15 @@ export default function Home() {
               "linear-gradient(to left, #121212 0%, transparent 100%)",
           }}
         />
-        <div className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[20px]">
-          <VantaClouds className="min-h-[700px] sm:min-h-[900px]">
+        <div
+          className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[20px]"
+          style={{ height: "clamp(700px, 70vh, 900px)" }}
+        >
+          {/* Vanta container is 150% parent height — extra extends below clip boundary, pushing cloud horizon to ~50% of visible area */}
+          <VantaClouds
+            className="absolute inset-x-0 top-0"
+            style={{ height: "150%" }}
+          >
             {/* Hero text — top portion */}
             <div className="relative z-10 flex flex-col items-center px-4 pt-20 sm:pt-28">
               <motion.h1

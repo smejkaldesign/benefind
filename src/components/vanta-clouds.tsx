@@ -7,10 +7,11 @@ type VantaEffect = ReturnType<typeof CLOUDS_FN>;
 
 interface VantaCloudsProps {
   className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
 }
 
-export function VantaClouds({ className, children }: VantaCloudsProps) {
+export function VantaClouds({ className, style, children }: VantaCloudsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const effectRef = useRef<VantaEffect | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -67,6 +68,7 @@ export function VantaClouds({ className, children }: VantaCloudsProps) {
       style={{
         position: "relative",
         backgroundColor: "#68b8d7",
+        ...style,
       }}
     >
       {!loaded && (
