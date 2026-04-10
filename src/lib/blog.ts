@@ -99,6 +99,72 @@ export const posts: BlogPost[] = [
     heroImage: "/blog/covers/free-government-grants-single-mothers.jpg",
     keyword: "free government grants for single mothers",
   },
+  {
+    slug: "medicaid-expansion-state-by-state-2026",
+    title: "Medicaid Expansion State-by-State 2026",
+    description:
+      "41 states expanded Medicaid, 9 did not. Exactly who qualifies where, the 138% FPL income limits, the coverage gap, and how to apply.",
+    date: "2026-04-09",
+    author: "Benefind Team",
+    tags: [
+      "Medicaid",
+      "Health Insurance",
+      "Government Benefits",
+      "Eligibility",
+    ],
+    published: true,
+    heroImage: "/blog/covers/medicaid-expansion-state-by-state-2026.svg",
+    keyword: "medicaid expansion state by state 2026",
+  },
+  {
+    slug: "sbir-vs-sttr-which-grant-fits-your-startup",
+    title: "SBIR vs STTR: Which Grant Fits Your Startup",
+    description:
+      "SBIR vs STTR explained: the key differences, funding amounts, agency-by-agency rules, eligibility, and how to choose the right one for your startup.",
+    date: "2026-04-09",
+    author: "Benefind Team",
+    tags: ["SBIR", "STTR", "Startup", "Government Benefits", "Small Business"],
+    published: true,
+    heroImage: "/blog/covers/sbir-vs-sttr-which-grant-fits-your-startup.svg",
+    keyword: "SBIR vs STTR",
+  },
+  {
+    slug: "childcare-assistance-programs-you-havent-heard-of",
+    title: "Childcare Assistance Programs You Haven't Heard Of",
+    description:
+      "CCDBG, Head Start, DCFSA, state pre-K, refundable state credits, military childcare. The stackable programs that can cut your childcare costs 40-70%.",
+    date: "2026-04-09",
+    author: "Benefind Team",
+    tags: ["Childcare", "Family", "Government Benefits", "Tax Credit"],
+    published: true,
+    heroImage:
+      "/blog/covers/childcare-assistance-programs-you-havent-heard-of.svg",
+    keyword: "childcare assistance programs",
+  },
+  {
+    slug: "wic-eligibility-myths-debunked",
+    title: "WIC Eligibility Myths Debunked",
+    description:
+      "10 of the biggest WIC myths, debunked. No work requirement, no asset test, no citizenship requirement, and most kids under 5 qualify.",
+    date: "2026-04-09",
+    author: "Benefind Team",
+    tags: ["WIC", "Family", "Government Benefits", "Nutrition"],
+    published: true,
+    heroImage: "/blog/covers/wic-eligibility-myths-debunked.svg",
+    keyword: "wic eligibility",
+  },
+  {
+    slug: "how-to-read-your-benefits-award-letter",
+    title: "How to Read Your Benefits Award Letter",
+    description:
+      "SNAP, Medicaid, LIHEAP, WIC, SSI — what every section of your benefits award letter means, what you must do with it, and how to appeal.",
+    date: "2026-04-09",
+    author: "Benefind Team",
+    tags: ["How To", "Government Benefits", "Guide"],
+    published: true,
+    heroImage: "/blog/covers/how-to-read-your-benefits-award-letter.svg",
+    keyword: "how to read benefits award letter",
+  },
 ];
 
 import { getPostWordCount } from "./blog-toc";
