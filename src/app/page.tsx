@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { LandingNav } from "@/components/landing-nav";
 import { VantaClouds } from "@/components/vanta-clouds";
-import { DitherFade } from "@/components/dither-fade";
 import { SuccessChips } from "@/components/landing/success-chips";
 import { StatsStrip } from "@/components/landing/stats-strip";
 import { BentoGrid } from "@/components/landing/bento-grid";
@@ -52,7 +51,7 @@ export default function Home() {
           }}
         />
         <div
-          className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[20px]"
+          className="relative mx-auto max-w-[1400px] overflow-hidden rounded-t-[20px]"
           style={{ height: "clamp(805px, 80vh, 1035px)" }}
         >
           {/* Vanta at 200% height — clouds pushed to bottom half, sky fills top */}
@@ -103,10 +102,14 @@ export default function Home() {
             </div>
           </VantaClouds>
 
-          {/* Animated dither fade — bottom 50%, large square pixels */}
-          <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[12] h-[50%]">
-            <DitherFade color="#121212" />
-          </div>
+          {/* Simple gradient fade to dark at bottom */}
+          <div
+            className="pointer-events-none absolute bottom-0 left-0 right-0 z-[12] h-[45%]"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent 0%, rgba(18,18,18,0.3) 40%, rgba(18,18,18,0.7) 70%, #121212 100%)",
+            }}
+          />
         </div>
 
         {/* Scrolling chips — full viewport width, on top of everything */}
