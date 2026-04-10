@@ -7,6 +7,7 @@ import {
 } from "@/lib/screening/company-steps";
 import { runCompanyScreening } from "@/lib/benefits/company-engine";
 import type { CompanyScreeningResult } from "@/lib/benefits/company-types";
+import { totalEstimatedAnnualValue } from "@/lib/benefits/company-types";
 import {
   ChatMessage,
   TypingIndicator,
@@ -327,13 +328,16 @@ export default function CompanyScreeningPage() {
           <div className="border-t border-border bg-surface-dim px-6 py-6">
             <div className="mx-auto max-w-xl space-y-4">
               <div className="rounded-[16px] border border-brand/30 bg-brand/5 p-5 text-center space-y-2">
-                <p className="font-display text-3xl font-semibold text-brand">
-                  {result.totalMatched} Program
-                  {result.totalMatched !== 1 ? "s" : ""} Found
+                <p className="font-display text-4xl font-semibold text-brand">
+                  ${totalEstimatedAnnualValue(result.programs).toLocaleString()}
+                  <span className="text-base font-normal text-text-muted">
+                    {" "}
+                    / year
+                  </span>
                 </p>
                 <p className="text-sm text-text-muted">
-                  Matched across grants, tax credits, incentives, and
-                  contracting preferences
+                  Estimated value across {result.totalMatched} program
+                  {result.totalMatched !== 1 ? "s" : ""}
                 </p>
                 <div className="flex flex-wrap justify-center gap-1.5 pt-1">
                   {result.programs

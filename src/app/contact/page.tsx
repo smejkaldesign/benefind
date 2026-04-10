@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { LandingNav } from "@/components/landing-nav";
 
 export default function ContactPage() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -14,7 +15,9 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface py-16 px-4">
+    <>
+      <LandingNav />
+      <div className="min-h-screen bg-surface px-4 pb-16 pt-32">
       <div className="max-w-2xl mx-auto">
         {/* Back link */}
         <Link
@@ -166,6 +169,7 @@ export default function ContactPage() {
           share your data.
         </p>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

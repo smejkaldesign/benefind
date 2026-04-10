@@ -39,14 +39,14 @@ const CATEGORY_ICONS: Record<
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  food: "bg-orange-500/10 text-orange-600",
-  healthcare: "bg-red-500/10 text-red-600",
-  housing: "bg-emerald-500/10 text-emerald-600",
-  income: "bg-green-500/10 text-green-600",
-  energy: "bg-yellow-500/10 text-yellow-600",
-  education: "bg-purple-500/10 text-purple-600",
-  childcare: "bg-pink-500/10 text-pink-600",
-  "tax-credit": "bg-emerald-500/10 text-emerald-600",
+  food: "bg-brand/15 text-brand",
+  healthcare: "bg-brand/15 text-brand",
+  housing: "bg-brand/15 text-brand",
+  income: "bg-brand/15 text-brand",
+  energy: "bg-brand/15 text-brand",
+  education: "bg-brand/15 text-brand",
+  childcare: "bg-brand/15 text-brand",
+  "tax-credit": "bg-brand/15 text-brand",
 };
 
 export default function ResultsPage() {
@@ -176,7 +176,7 @@ export default function ResultsPage() {
               const Icon = CATEGORY_ICONS[program.category] ?? ShieldCheck;
               const colorClass =
                 CATEGORY_COLORS[program.category] ??
-                "bg-gray-500/10 text-gray-600";
+                "bg-surface-bright text-text-muted";
 
               return (
                 <Card key={program.id} className="space-y-3">

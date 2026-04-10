@@ -90,7 +90,7 @@ export function DocumentChecklist({ programIds }: DocumentChecklistProps) {
                   aria-pressed={isChecked}
                   className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
                     isChecked
-                      ? "border-success bg-success text-white"
+                      ? "border-success bg-success text-surface"
                       : "border-border hover:border-brand"
                   }`}
                 >

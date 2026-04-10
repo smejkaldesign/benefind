@@ -2,10 +2,10 @@ type BadgeVariant = "default" | "success" | "warning" | "error" | "brand";
 
 const variantStyles: Record<BadgeVariant, string> = {
   default: "bg-surface-bright text-text-muted",
-  success: "bg-success/10 text-success",
+  success: "bg-brand/15 text-brand",
   warning: "bg-warning/10 text-warning",
   error: "bg-error/10 text-error",
-  brand: "bg-brand/10 text-brand",
+  brand: "bg-brand/15 text-brand",
 };
 
 interface BadgeProps {

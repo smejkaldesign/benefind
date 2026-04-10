@@ -58,8 +58,8 @@
   --color-accent-end: #deb0f7;
   --color-navy: #1e2b4d;
 
-  /* Status */
-  --color-success: #10b981;
+  /* Status (success aliased to brand for visual consistency) */
+  --color-success: #cab1f7;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
 }

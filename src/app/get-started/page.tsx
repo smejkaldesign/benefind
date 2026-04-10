@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { User, Building2, ArrowLeft } from "lucide-react";
+import { LandingNav } from "@/components/landing-nav";
 
 const tracks = [
   {
@@ -25,7 +26,9 @@ const tracks = [
 
 export default function GetStartedPage() {
   return (
-    <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-surface px-4 py-16">
+    <>
+      <LandingNav />
+      <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-surface px-4 pt-32 pb-16">
       <div className="relative z-10 mx-auto w-full max-w-2xl">
         {/* Back link */}
         <Link
@@ -90,6 +93,7 @@ export default function GetStartedPage() {
           server. No account required.
         </p>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

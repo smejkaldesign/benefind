@@ -37,10 +37,10 @@ const CATEGORY_ICONS: Record<
 };
 
 const CATEGORY_COLORS: Record<CompanyProgramCategory, string> = {
-  "tax-credit": "bg-emerald-500/10 text-emerald-600",
-  grant: "bg-blue-500/10 text-blue-600",
-  incentive: "bg-purple-500/10 text-purple-600",
-  contracting: "bg-amber-500/10 text-amber-600",
+  "tax-credit": "bg-brand/15 text-brand",
+  grant: "bg-brand/15 text-brand",
+  incentive: "bg-brand/15 text-brand",
+  contracting: "bg-brand/15 text-brand",
 };
 
 const CATEGORY_LABELS: Record<CompanyProgramCategory, string> = {
@@ -231,14 +231,14 @@ export default function CompanyResultsPage() {
 
                       {/* Match score bar */}
                       <div className="flex items-center gap-3">
-                        <div className="flex-1 h-2 rounded-full bg-gray-100">
+                        <div className="flex-1 h-2 rounded-full bg-surface-bright">
                           <div
                             className={`h-full rounded-full transition-all ${
                               r.matchScore >= 80
-                                ? "bg-emerald-500"
+                                ? "bg-brand"
                                 : r.matchScore >= 50
-                                  ? "bg-yellow-400"
-                                  : "bg-gray-300"
+                                  ? "bg-brand/60"
+                                  : "bg-border"
                             }`}
                             style={{ width: `${r.matchScore}%` }}
                           />
@@ -250,8 +250,8 @@ export default function CompanyResultsPage() {
 
                       {/* Why you qualify */}
                       {r.whyYouQualify && r.whyYouQualify.length > 0 && (
-                        <div className="rounded-lg bg-emerald-500/5 px-3 py-2 space-y-1">
-                          <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">
+                        <div className="rounded-lg bg-brand/10 px-3 py-2 space-y-1">
+                          <p className="text-xs font-semibold text-brand uppercase tracking-wide">
                             Why you qualify
                           </p>
                           {r.whyYouQualify.map((reason, i) => (
@@ -259,7 +259,7 @@ export default function CompanyResultsPage() {
                               key={i}
                               className="flex items-start gap-1.5 text-sm text-text-muted"
                             >
-                              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                              <CheckCircle2 className="h-3.5 w-3.5 text-brand mt-0.5 shrink-0" />
                               {reason}
                             </div>
                           ))}
