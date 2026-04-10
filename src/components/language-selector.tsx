@@ -36,7 +36,7 @@ export function LanguageSelector({ compact = false }: { compact?: boolean }) {
       </button>
 
       {open && (
-        <div className="absolute end-0 top-full z-50 mt-1 w-44 rounded-xl border border-border bg-surface py-1 shadow-lg">
+        <div className="absolute start-0 top-full z-50 mt-1 w-44 rounded-xl border border-border bg-surface py-1 shadow-lg">
           {LOCALES.map((l) => (
             <button
               key={l.code}

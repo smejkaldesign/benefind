@@ -61,13 +61,13 @@ export function LandingNav() {
           </Link>
 
           {/* Eligibility dropdown — same white style as hero buttons */}
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative w-[200px]" ref={dropdownRef}>
             <button
               type="button"
               onClick={() => setDropdownOpen((v) => !v)}
               aria-expanded={dropdownOpen}
               aria-haspopup="menu"
-              className="inline-flex h-[44px] items-center gap-2 rounded-lg border border-surface/20 bg-white px-5 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+              className="inline-flex h-[44px] w-full items-center justify-between gap-2 rounded-lg border border-surface/20 bg-white px-5 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
             >
               {t.landing.heroCta}
               <ChevronDown
@@ -80,13 +80,13 @@ export function LandingNav() {
             {dropdownOpen && (
               <div
                 role="menu"
-                className="absolute right-0 top-[calc(100%+8px)] min-w-[220px] overflow-hidden rounded-lg border border-surface/20 bg-white shadow-lg"
+                className="absolute left-0 right-0 top-[calc(100%+8px)] overflow-hidden rounded-lg border border-surface/20 bg-white shadow-lg"
               >
                 <Link
                   href="/screening"
                   role="menuitem"
                   onClick={() => setDropdownOpen(false)}
-                  className="flex items-center px-4 py-3 text-sm font-semibold text-surface transition-colors hover:bg-surface/5"
+                  className="flex items-center px-5 py-3 text-sm font-semibold text-surface transition-colors hover:bg-surface/5"
                 >
                   Personal Benefits
                 </Link>
@@ -95,7 +95,7 @@ export function LandingNav() {
                   href="/screening/company"
                   role="menuitem"
                   onClick={() => setDropdownOpen(false)}
-                  className="flex items-center px-4 py-3 text-sm font-semibold text-surface transition-colors hover:bg-surface/5"
+                  className="flex items-center px-5 py-3 text-sm font-semibold text-surface transition-colors hover:bg-surface/5"
                 >
                   Business Benefits
                 </Link>
