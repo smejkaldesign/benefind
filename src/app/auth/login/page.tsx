@@ -151,7 +151,7 @@ export default function LoginPage() {
                       autoFocus
                       disabled={loading}
                       placeholder="you@example.com"
-                      className="block h-11 w-full rounded-lg border border-white/10 bg-white/5 pl-10 pr-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:bg-white/[0.07] focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
+                      className="block h-11 w-full rounded-lg border border-white/10 bg-black pl-10 pr-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
                     />
                   </div>
                 </div>
