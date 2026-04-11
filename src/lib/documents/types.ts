@@ -40,7 +40,9 @@ export interface CreateDocumentInput {
  * Whether a document is safe to download/display in the UI.
  * Anything other than `clean` should be blocked or show a status indicator.
  */
-export function isDocumentDownloadable(doc: Pick<Document, "scan_status" | "deleted_at">): boolean {
+export function isDocumentDownloadable(
+  doc: Pick<Document, "scan_status" | "deleted_at">,
+): boolean {
   return doc.scan_status === "clean" && doc.deleted_at === null;
 }
 
