@@ -119,16 +119,40 @@ create policy "member_select_own_clean_documents"
     and scan_status != 'infected'
   );
 
--- Members can insert rows for workspaces they belong to, always with
--- scan_status='pending' (the Edge Function updates it after the scan).
+-- Members can insert rows for workspaces they belong to. The
+-- scan_status='pending' invariant is enforced by the BEFORE INSERT trigger
+-- below (force_pending_scan_status), not by the RLS with_check — because
+-- RLS is bypassed by the service_role and we want defense-in-depth.
 create policy "member_insert_own_documents"
   on public.documents
   for insert
   with check (
     public.is_workspace_member(workspace_id)
     and uploaded_by_user_id = auth.uid()
-    and scan_status = 'pending'
   );
+
+-- SECURITY: force scan_status to 'pending' on every insert, regardless of
+-- the caller role. This runs inside the database engine so it applies
+-- even when the caller is using a service_role key (which bypasses RLS).
+-- The Edge Function transitions the row to 'clean' / 'infected' / 'error'
+-- after the scan via an UPDATE.
+create or replace function public.force_pending_scan_status()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.scan_status := 'pending'::document_scan_status;
+  new.scanned_at := null;
+  new.scan_error := null;
+  return new;
+end;
+$$;
+
+drop trigger if exists trg_documents_force_pending_on_insert on public.documents;
+create trigger trg_documents_force_pending_on_insert
+  before insert on public.documents
+  for each row
+  execute function public.force_pending_scan_status();
 
 -- Members can update metadata (tags, filename) on their own documents but
 -- NOT scan_status, scanned_at, scan_error, or storage fields — those are

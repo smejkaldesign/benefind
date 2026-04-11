@@ -113,14 +113,28 @@ export interface FileValidationResult {
 }
 
 export const MAX_UPLOAD_BYTES = 25 * 1024 * 1024; // 25 MB
-export const ALLOWED_MIME_PREFIXES = [
+
+// SECURITY: exact-match whitelist. Do NOT use startsWith / prefix matching —
+// that allows forged types like "image/x-malicious-executable" to slip past
+// an "image/" prefix check. Every allowed content type is listed explicitly.
+export const ALLOWED_MIME_TYPES: ReadonlySet<string> = new Set([
+  // Documents
   "application/pdf",
-  "image/",
   "text/plain",
-  "application/vnd.openxmlformats-officedocument",
+  // Microsoft Office (legacy + modern)
   "application/msword",
   "application/vnd.ms-excel",
-];
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  // Images (exact types only)
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+]);
 
 export function validateUploadFile(file: {
   size: number;
@@ -139,10 +153,9 @@ export function validateUploadFile(file: {
   if (file.name.length === 0 || file.name.length > 255) {
     return { ok: false, error: "Invalid filename" };
   }
-  const mimeOk = ALLOWED_MIME_PREFIXES.some((prefix) =>
-    file.type.startsWith(prefix),
-  );
-  if (!mimeOk) {
+  // Exact-match whitelist; no prefix / partial matching.
+  const normalizedType = file.type.toLowerCase().split(";")[0].trim();
+  if (!ALLOWED_MIME_TYPES.has(normalizedType)) {
     return {
       ok: false,
       error: `Unsupported file type (${file.type || "unknown"})`,

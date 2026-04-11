@@ -111,13 +111,12 @@ Deno.serve(async (req: Request) => {
     return jsonResponse({ skipped: true, reason: "wrong_bucket" }, 200);
   }
 
-  // Reject oversized files immediately (should be blocked by bucket policy
-  // too, but defense in depth)
-  const reportedSize = event.record.metadata?.size ?? 0;
-  if (reportedSize > MAX_FILE_SIZE_BYTES) {
-    console.error(`File too large: ${reportedSize} bytes`);
-    return jsonResponse({ error: "file_too_large" }, 400);
-  }
+  // SECURITY: we do NOT trust event.record.metadata.size for enforcement
+  // — it's optional in the webhook payload and can be omitted by a
+  // malicious client to bypass any pre-download size check. Real file-size
+  // enforcement happens after download, against fileBlob.size (see below).
+  // Bucket-level file size limits in Supabase Storage config should also
+  // be set as a first line of defense.
 
   const storagePath = event.record.name;
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -150,12 +149,36 @@ Deno.serve(async (req: Request) => {
     .download(storagePath);
 
   if (downloadError || !fileBlob) {
-    console.error(`Failed to download ${storagePath}: ${downloadError?.message}`);
+    const sanitizedErr = truncateErrorMessage(
+      downloadError?.message ?? "unknown",
+    );
+    console.error(`Failed to download ${storagePath}: ${sanitizedErr}`);
     await markScanResult(supabase, docRow.id, {
       status: "error",
-      error: `download_failed: ${downloadError?.message ?? "unknown"}`,
+      error: `download_failed: ${sanitizedErr}`,
     });
     return jsonResponse({ error: "download_failed" }, 500);
+  }
+
+  // SECURITY: real file size enforcement against the downloaded blob.
+  // This is the authoritative check — metadata.size from the webhook
+  // payload is not trusted.
+  if (fileBlob.size > MAX_FILE_SIZE_BYTES) {
+    console.error(
+      `File too large: ${fileBlob.size} bytes for ${storagePath} (max ${MAX_FILE_SIZE_BYTES})`,
+    );
+    await markScanResult(supabase, docRow.id, {
+      status: "error",
+      error: `file_too_large: ${fileBlob.size} bytes`,
+    });
+    // Clean up the oversized object — we don't want it sitting in storage.
+    const { error: removeError } = await supabase.storage
+      .from(BUCKET_ID)
+      .remove([storagePath]);
+    if (removeError) {
+      console.error(`Oversized cleanup failed: ${removeError.message}`);
+    }
+    return jsonResponse({ error: "file_too_large" }, 413);
   }
 
   // Scan via ClamAV sidecar
@@ -174,9 +197,30 @@ Deno.serve(async (req: Request) => {
   // Update the documents row with the verdict
   await markScanResult(supabase, docRow.id, scanResult);
 
-  // Quarantine infected files: soft-delete the row AND delete the storage object
+  // Quarantine infected files. If either the soft-delete or storage
+  // removal fails, we MUST NOT return a success response — the infected
+  // bytes might still be readable. Mark as error and return 500 so the
+  // webhook retries and an operator is alerted.
   if (scanResult.status === "infected") {
-    await quarantineFile(supabase, docRow.id, storagePath, scanResult.threats ?? []);
+    const quarantineResult = await quarantineFile(
+      supabase,
+      docRow.id,
+      storagePath,
+      scanResult.threats ?? [],
+    );
+    if (!quarantineResult.ok) {
+      console.error(
+        `Quarantine failed for ${docRow.id}: ${quarantineResult.error}`,
+      );
+      await markScanResult(supabase, docRow.id, {
+        status: "error",
+        error: `quarantine_failed: ${quarantineResult.error ?? "unknown"}`,
+      });
+      return jsonResponse(
+        { error: "quarantine_failed", detail: quarantineResult.error },
+        500,
+      );
+    }
 
     // Notify the user that their upload was blocked
     await notifyUserOfInfection(supabase, docRow, scanResult.threats ?? []);
@@ -261,28 +305,47 @@ async function markScanResult(
   }
 }
 
+interface QuarantineResult {
+  ok: boolean;
+  error?: string;
+}
+
 async function quarantineFile(
   supabase: any,
   documentId: string,
   storagePath: string,
   _threats: string[],
-): Promise<void> {
-  // Soft-delete the row
+): Promise<QuarantineResult> {
+  // Soft-delete the row so the member RLS policy hides it.
   const { error: softDeleteError } = await supabase
     .from("documents")
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", documentId);
   if (softDeleteError) {
-    console.error(`Soft delete failed: ${softDeleteError.message}`);
+    console.error(
+      `Soft delete failed for ${documentId}: ${softDeleteError.message}`,
+    );
+    return {
+      ok: false,
+      error: `soft_delete_failed: ${truncateErrorMessage(softDeleteError.message)}`,
+    };
   }
 
-  // Delete the storage object so the infected bytes are gone
+  // Delete the storage object so the infected bytes are gone from disk.
   const { error: storageError } = await supabase.storage
     .from(BUCKET_ID)
     .remove([storagePath]);
   if (storageError) {
-    console.error(`Storage removal failed: ${storageError.message}`);
+    console.error(
+      `Storage removal failed for ${storagePath}: ${storageError.message}`,
+    );
+    return {
+      ok: false,
+      error: `storage_remove_failed: ${truncateErrorMessage(storageError.message)}`,
+    };
   }
+
+  return { ok: true };
 }
 
 async function notifyUserOfInfection(
@@ -290,24 +353,67 @@ async function notifyUserOfInfection(
   docRow: { id: string; workspace_id: string; uploaded_by_user_id: string; filename: string },
   threats: string[],
 ): Promise<void> {
-  const threatList = threats.length > 0 ? threats.join(", ") : "unknown threat";
+  // SECURITY: threat names come from ClamAV output which can include
+  // control characters, extreme length, or malformed text. Sanitize every
+  // value before rendering it in a user-facing notification body or
+  // storing it in the notification payload.
+  const sanitizedThreats = threats
+    .map(sanitizeThreatName)
+    .filter((t) => t.length > 0)
+    .slice(0, 3);
+  const threatList =
+    sanitizedThreats.length > 0 ? sanitizedThreats.join(", ") : "unknown threat";
+  // Also sanitize the filename for display (defense-in-depth; the
+  // upload-time sanitizer should have already caught most of this).
+  const safeFilename = sanitizeForDisplay(docRow.filename).slice(0, 120);
+
   const { error } = await supabase.from("notifications").insert({
     user_id: docRow.uploaded_by_user_id,
     workspace_id: docRow.workspace_id,
     type: "document_infected",
     title: "Upload blocked",
     body:
-      `We couldn't accept "${docRow.filename}" because our virus scanner detected a problem (${threatList}). ` +
+      `We couldn't accept "${safeFilename}" because our virus scanner detected a problem (${threatList}). ` +
       `Please try uploading a different file. If you believe this is a mistake, contact support.`,
     payload: {
       document_id: docRow.id,
-      threats,
-      filename: docRow.filename,
+      threats: sanitizedThreats,
+      filename: safeFilename,
     },
   });
   if (error) {
     console.error(`Failed to insert infection notification: ${error.message}`);
   }
+}
+
+/**
+ * Strip control characters and length-cap a value that came from external
+ * input (ClamAV output, filenames). Keeps the result safe to render in a
+ * notification body and to store in JSON payloads.
+ */
+function sanitizeThreatName(name: unknown): string {
+  if (typeof name !== "string") return "";
+  return name
+    .replace(/[\x00-\x1f\x7f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 80);
+}
+
+function sanitizeForDisplay(value: unknown): string {
+  if (typeof value !== "string") return "";
+  return value
+    .replace(/[\x00-\x1f\x7f]/g, "")
+    .replace(/[\r\n]/g, " ")
+    .trim();
+}
+
+/**
+ * Cap error messages so we never leak unbounded internal error text into
+ * database rows or log lines.
+ */
+function truncateErrorMessage(msg: string): string {
+  return msg.replace(/[\x00-\x1f\x7f]/g, "").slice(0, 200);
 }
 
 async function logAdminAction(

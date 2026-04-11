@@ -25,8 +25,8 @@ WORKDIR /app
 COPY server.ts /app/server.ts
 
 # Compile-check the server at build time so a typo breaks the build,
-# not production
-RUN deno check /app/server.ts || true
+# not production. FAIL the build on type errors — do not mask them.
+RUN deno check /app/server.ts
 
 # ClamAV daemon on 3310 (internal), HTTP server on the Railway PORT
 EXPOSE 8080
