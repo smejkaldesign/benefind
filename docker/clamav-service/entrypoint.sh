@@ -8,19 +8,32 @@ echo "[entrypoint] starting clamd..."
 clamd &
 CLAMD_PID=$!
 
-# Wait for clamd to be ready (it takes ~10-30 seconds to load signatures)
+# Wait for clamd to be ready. --ping alone can succeed before signatures
+# finish loading, so after ping passes we also run an actual test scan
+# against a known-clean file to confirm clamd can handle real scan requests.
 echo "[entrypoint] waiting for clamd to be ready..."
-TIMEOUT=120
+TIMEOUT=180
 ELAPSED=0
-while ! clamdscan --ping 1 2>/dev/null; do
+TEST_FILE=/tmp/clamd-readiness-check.txt
+echo "readiness probe" > "$TEST_FILE"
+
+while true; do
+  if clamdscan --ping 1 2>/dev/null; then
+    # --ping passed; now verify a real scan completes
+    if clamdscan --no-summary --fdpass "$TEST_FILE" >/dev/null 2>&1; then
+      break
+    fi
+  fi
   if [ $ELAPSED -ge $TIMEOUT ]; then
-    echo "[entrypoint] ERROR: clamd did not become ready within ${TIMEOUT}s"
+    echo "[entrypoint] ERROR: clamd did not become fully ready within ${TIMEOUT}s"
+    rm -f "$TEST_FILE"
     exit 1
   fi
   sleep 2
   ELAPSED=$((ELAPSED + 2))
 done
-echo "[entrypoint] clamd is ready after ${ELAPSED}s"
+rm -f "$TEST_FILE"
+echo "[entrypoint] clamd is ready (ping + test-scan) after ${ELAPSED}s"
 
 echo "[entrypoint] starting HTTP server on port ${PORT:-8080}"
 exec deno run \

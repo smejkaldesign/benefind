@@ -56,14 +56,14 @@ async function handleHealth(): Promise<Response> {
     });
     const { code } = await cmd.output();
     if (code !== 0) {
-      return jsonResponse({ status: "unhealthy", clamd: "not_responding" }, 503);
+      return jsonResponse(
+        { status: "unhealthy", clamd: "not_responding" },
+        503,
+      );
     }
     return jsonResponse({ status: "ok", clamd: "responding" }, 200);
   } catch (err) {
-    return jsonResponse(
-      { status: "unhealthy", error: String(err) },
-      503,
-    );
+    return jsonResponse({ status: "unhealthy", error: String(err) }, 503);
   }
 }
 
@@ -89,10 +89,7 @@ async function handleScan(req: Request): Promise<Response> {
 
   const file = formData.get("file");
   if (!(file instanceof File)) {
-    return jsonResponse(
-      { status: "error", error: "no_file_in_request" },
-      400,
-    );
+    return jsonResponse({ status: "error", error: "no_file_in_request" }, 400);
   }
 
   if (file.size > MAX_FILE_SIZE) {
@@ -105,8 +102,24 @@ async function handleScan(req: Request): Promise<Response> {
     );
   }
 
-  // Write to a temp file for clamdscan to read
+  // Write to a temp file for clamdscan to read.
+  //
+  // Path construction is defense-in-depth safe:
+  //   - crypto.randomUUID() is [0-9a-f-] only, no shell metacharacters
+  //   - sanitizeFilename() replaces everything outside [a-zA-Z0-9._-] with "_"
+  //   - Deno.Command uses execve, NOT a shell, so args are literal strings
+  //     even if they contained shell metacharacters
+  //
+  // We still assert the result matches a strict allowlist regex before use,
+  // so any future change that introduces unsanitized input into the path
+  // fails loud instead of silently passing untrusted data to clamdscan.
   const tmpPath = `${TMP_DIR}/${crypto.randomUUID()}-${sanitizeFilename(file.name)}`;
+  if (!/^\/tmp\/[a-zA-Z0-9._-]+$/.test(tmpPath)) {
+    return jsonResponse(
+      { status: "error", error: "internal_path_validation_failed" },
+      500,
+    );
+  }
   try {
     const bytes = new Uint8Array(await file.arrayBuffer());
     await Deno.writeFile(tmpPath, bytes);
@@ -162,13 +175,30 @@ async function runClamdScan(path: string): Promise<ScanResponse> {
 
   if (code === 1) {
     // Parse threat names from stdout: "<path>: <threat> FOUND"
-    const threats = stdoutText
-      .split("\n")
-      .map((line) => {
-        const match = line.match(/:\s*(.+?)\s+FOUND$/);
-        return match?.[1]?.trim();
-      })
-      .filter((t): t is string => Boolean(t));
+    //
+    // If clamdscan's output format drifts (e.g. on a major version bump), we
+    // still return status="infected" since exit code is authoritative. Lines
+    // that don't match are logged so format drift is detectable in Railway
+    // logs, and the fallback is ["unknown"] so the caller knows something
+    // was found even if we couldn't parse the threat name.
+    const lines = stdoutText.split("\n").filter((l) => l.includes("FOUND"));
+    const threats: string[] = [];
+    const unparsed: string[] = [];
+    for (const line of lines) {
+      const match = line.match(/:\s*(.+?)\s+FOUND$/);
+      const name = match?.[1]?.trim();
+      if (name) {
+        threats.push(name);
+      } else {
+        unparsed.push(line.slice(0, 200)); // cap for log safety
+      }
+    }
+    if (unparsed.length > 0) {
+      console.warn(
+        `[clamdscan] ${unparsed.length} FOUND line(s) did not match threat regex (format drift?):`,
+        unparsed,
+      );
+    }
     return {
       status: "infected",
       threats: threats.length > 0 ? threats : ["unknown"],

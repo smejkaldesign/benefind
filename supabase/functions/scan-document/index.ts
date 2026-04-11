@@ -104,8 +104,15 @@ Deno.serve(async (req: Request) => {
   }
 
   // Only process INSERT events on our bucket
-  if (event.type !== "INSERT" || event.schema !== "storage" || event.table !== "objects") {
-    return jsonResponse({ skipped: true, reason: "not_an_insert_on_storage" }, 200);
+  if (
+    event.type !== "INSERT" ||
+    event.schema !== "storage" ||
+    event.table !== "objects"
+  ) {
+    return jsonResponse(
+      { skipped: true, reason: "not_an_insert_on_storage" },
+      200,
+    );
   }
   if (event.record.bucket_id !== BUCKET_ID) {
     return jsonResponse({ skipped: true, reason: "wrong_bucket" }, 200);
@@ -253,9 +260,24 @@ Deno.serve(async (req: Request) => {
 // Helpers
 // ----------------------------------------------------------------------------
 
-async function scanWithClamAV(file: Blob, filename: string): Promise<ScanResult> {
+async function scanWithClamAV(
+  file: Blob,
+  filename: string,
+): Promise<ScanResult> {
   const formData = new FormData();
-  formData.append("file", file, filename);
+  // Do NOT send the real filename to the ClamAV service.
+  //
+  // Defense-in-depth: ClamAV only needs bytes to scan — it does not need to
+  // know the user's original filename. Sending a UUID means that if
+  // CLAMAV_SERVICE_URL is ever compromised or misconfigured to point at a
+  // hostile endpoint, we leak zero metadata about the document. The real
+  // filename stays in the `documents` table.
+  //
+  // (filename param is retained in the function signature for logging /
+  // future diagnostics inside this process only.)
+  const opaqueName = crypto.randomUUID();
+  formData.append("file", file, opaqueName);
+  void filename; // retained for future local logging
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), SCAN_TIMEOUT_MS);
@@ -264,7 +286,7 @@ async function scanWithClamAV(file: Blob, filename: string): Promise<ScanResult>
     const response = await fetch(`${CLAMAV_SERVICE_URL}/scan`, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${CLAMAV_SERVICE_TOKEN}`,
+        Authorization: `Bearer ${CLAMAV_SERVICE_TOKEN}`,
       },
       body: formData,
       signal: controller.signal,
@@ -272,7 +294,9 @@ async function scanWithClamAV(file: Blob, filename: string): Promise<ScanResult>
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`ClamAV service returned ${response.status}: ${errorText}`);
+      throw new Error(
+        `ClamAV service returned ${response.status}: ${errorText}`,
+      );
     }
 
     const result = await response.json();
@@ -301,7 +325,9 @@ async function markScanResult(
     .eq("id", documentId);
 
   if (error) {
-    console.error(`Failed to update scan result for ${documentId}: ${error.message}`);
+    console.error(
+      `Failed to update scan result for ${documentId}: ${error.message}`,
+    );
   }
 }
 
@@ -350,7 +376,12 @@ async function quarantineFile(
 
 async function notifyUserOfInfection(
   supabase: any,
-  docRow: { id: string; workspace_id: string; uploaded_by_user_id: string; filename: string },
+  docRow: {
+    id: string;
+    workspace_id: string;
+    uploaded_by_user_id: string;
+    filename: string;
+  },
   threats: string[],
 ): Promise<void> {
   // SECURITY: threat names come from ClamAV output which can include
@@ -362,7 +393,9 @@ async function notifyUserOfInfection(
     .filter((t) => t.length > 0)
     .slice(0, 3);
   const threatList =
-    sanitizedThreats.length > 0 ? sanitizedThreats.join(", ") : "unknown threat";
+    sanitizedThreats.length > 0
+      ? sanitizedThreats.join(", ")
+      : "unknown threat";
   // Also sanitize the filename for display (defense-in-depth; the
   // upload-time sanitizer should have already caught most of this).
   const safeFilename = sanitizeForDisplay(docRow.filename).slice(0, 120);
