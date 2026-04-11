@@ -386,28 +386,29 @@ async function notifyUserOfInfection(
 ): Promise<void> {
   // SECURITY: threat names come from ClamAV output which can include
   // control characters, extreme length, or malformed text. Sanitize every
-  // value before rendering it in a user-facing notification body or
-  // storing it in the notification payload.
+  // value before storing it in the notification payload.
   const sanitizedThreats = threats
     .map(sanitizeThreatName)
     .filter((t) => t.length > 0)
     .slice(0, 3);
-  const threatList =
-    sanitizedThreats.length > 0
-      ? sanitizedThreats.join(", ")
-      : "unknown threat";
   // Also sanitize the filename for display (defense-in-depth; the
   // upload-time sanitizer should have already caught most of this).
-  const safeFilename = sanitizeForDisplay(docRow.filename).slice(0, 120);
+  const safeFilename =
+    sanitizeForDisplay(docRow.filename).slice(0, 120) || "your file";
 
+  // NOIR review: raw ClamAV threat names (e.g. "Win.Trojan.Agent-12345") are
+  // meaningless and alarming to benefind users, who are non-technical
+  // benefits applicants. Threats stay in `payload` for admin/audit use,
+  // but the user-facing body uses the softer "security check" framing
+  // with no raw threat names and no jargon.
   const { error } = await supabase.from("notifications").insert({
     user_id: docRow.uploaded_by_user_id,
     workspace_id: docRow.workspace_id,
     type: "document_infected",
     title: "Upload blocked",
     body:
-      `We couldn't accept "${safeFilename}" because our virus scanner detected a problem (${threatList}). ` +
-      `Please try uploading a different file. If you believe this is a mistake, contact support.`,
+      `We couldn't accept "${safeFilename}" — our security check flagged an issue with this file. ` +
+      `Please try a different file, or contact support if you think this is a mistake.`,
     payload: {
       document_id: docRow.id,
       threats: sanitizedThreats,

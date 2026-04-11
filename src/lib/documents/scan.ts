@@ -188,18 +188,37 @@ export function buildCreateDocumentInput(args: {
  * Format the scan status as a user-facing message suitable for a toast
  * or inline banner. Differs from `scanStatusLabel` (which is a short badge)
  * by giving the user guidance on what to do next.
+ *
+ * Copy guidelines (per NOIR review on PR #11):
+ *   - Use "security check" not "virus scanner" (friendlier tone)
+ *   - Never surface raw `scan_error` technical detail — log separately
+ *   - Always provide a filename fallback in case `doc.filename` is empty
+ *   - Exhaustiveness check via `default` so new statuses fail loud
+ *
+ * TODO(i18n): when we wire localization, move these strings to
+ * src/lib/i18n/messages.ts. benefind's users span multiple languages and
+ * every user-facing message needs a t() seam.
  */
 export function scanStatusMessage(
   doc: Pick<Document, "scan_status" | "filename" | "scan_error">,
 ): string {
+  const name = doc.filename?.trim() || "your file";
   switch (doc.scan_status) {
     case "pending":
-      return `Scanning "${doc.filename}" for viruses…`;
+      return `Checking "${name}" — this usually takes just a few seconds.`;
     case "clean":
-      return `"${doc.filename}" is safe to use.`;
+      return `"${name}" is safe to use.`;
     case "infected":
-      return `We couldn't accept "${doc.filename}" — our virus scanner detected a problem. Please try a different file.`;
+      return `We couldn't accept "${name}" — our security check flagged an issue with this file. Please try a different file, or contact support if you think this is a mistake.`;
     case "error":
-      return `Scan failed for "${doc.filename}". ${doc.scan_error ?? "Please try uploading again."}`;
+      return `Something went wrong while checking "${name}". Please try uploading again, or contact support if it keeps failing.`;
+    default: {
+      // Exhaustiveness: if a new scan_status is added to the schema without
+      // a case here, TypeScript should fail at compile time. At runtime,
+      // return a neutral fallback so the toast doesn't crash.
+      const _exhaustive: never = doc.scan_status;
+      void _exhaustive;
+      return `We're still processing "${name}".`;
+    }
   }
 }

@@ -299,10 +299,10 @@ describe("scanStatusMessage", () => {
     scan_error: null,
   };
 
-  it("shows scanning message for pending", () => {
-    expect(scanStatusMessage({ ...base, scan_status: "pending" })).toContain(
-      "Scanning",
-    );
+  it("shows a 'checking' message with time expectation for pending", () => {
+    const msg = scanStatusMessage({ ...base, scan_status: "pending" });
+    expect(msg).toContain("Checking");
+    expect(msg).toContain("few seconds");
   });
 
   it("shows safe message for clean", () => {
@@ -311,25 +311,40 @@ describe("scanStatusMessage", () => {
     );
   });
 
-  it("shows block message for infected", () => {
+  it("uses the softer 'security check' framing for infected (no 'virus scanner' jargon)", () => {
     const msg = scanStatusMessage({ ...base, scan_status: "infected" });
     expect(msg).toContain("couldn't accept");
-    expect(msg).toContain("virus scanner");
+    expect(msg).toContain("security check");
+    expect(msg).not.toContain("virus scanner");
   });
 
-  it("includes scan_error in error message when available", () => {
-    expect(
-      scanStatusMessage({
-        ...base,
-        scan_status: "error",
-        scan_error: "network timeout",
-      }),
-    ).toContain("network timeout");
+  it("hides raw scan_error from the user-facing error message (defense in depth)", () => {
+    // Per NOIR review on PR #11: raw scan_error may contain stack traces,
+    // timeouts, or Docker errors that should never reach users. The generic
+    // friendly message is always shown; technical detail stays in logs.
+    const msg = scanStatusMessage({
+      ...base,
+      scan_status: "error",
+      scan_error: "network timeout",
+    });
+    expect(msg).not.toContain("network timeout");
+    expect(msg).toContain("Something went wrong");
+    expect(msg).toContain("contact support");
   });
 
   it("provides generic fallback when scan_error is null", () => {
     const msg = scanStatusMessage({ ...base, scan_status: "error" });
-    expect(msg).toContain("Please try uploading again");
+    expect(msg).toContain("Something went wrong");
+  });
+
+  it("falls back to 'your file' when filename is empty", () => {
+    const msg = scanStatusMessage({
+      ...base,
+      filename: "",
+      scan_status: "pending",
+    });
+    expect(msg).toContain("your file");
+    expect(msg).not.toContain('""');
   });
 });
 
