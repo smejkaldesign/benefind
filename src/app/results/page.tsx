@@ -324,10 +324,7 @@ export default function ResultsPage() {
   }
 
   // Group programs by tier for clean rendering
-  const byTier: Record<
-    EligibilityTier,
-    typeof result.programs
-  > = {
+  const byTier: Record<EligibilityTier, typeof result.programs> = {
     eligible_with_requirements: [],
     probably_eligible: [],
     maybe_eligible: [],
@@ -464,7 +461,10 @@ export default function ResultsPage() {
                       </span>
                     </div>
                     <p className="mt-2 text-sm text-text">{r.reason}</p>
-                    <WhyPanel reasons={r.reasons} panelId={`pursuable-${program.id}`} />
+                    <WhyPanel
+                      reasons={r.reasons}
+                      panelId={`pursuable-${program.id}`}
+                    />
                   </div>
 
                   {r.nextSteps && r.nextSteps.length > 0 && (
@@ -526,7 +526,10 @@ export default function ResultsPage() {
                           </span>
                         </div>
                         <p className="text-xs text-text-muted">{r.reason}</p>
-                        <WhyPanel reasons={r.reasons} panelId={`maybe-${program.id}`} />
+                        <WhyPanel
+                          reasons={r.reasons}
+                          panelId={`maybe-${program.id}`}
+                        />
                       </div>
                     );
                   })}
@@ -546,7 +549,10 @@ export default function ResultsPage() {
                     const tier = TIER_META[r.eligibilityTier];
                     const TierIcon = tier.icon;
                     return (
-                      <div key={program.id} className="py-3 first:pt-0 last:pb-0">
+                      <div
+                        key={program.id}
+                        className="py-3 first:pt-0 last:pb-0"
+                      >
                         <div className="flex items-center gap-2">
                           <TierIcon className={`h-4 w-4 ${tier.iconClass}`} />
                           <p className="text-sm font-medium text-text">

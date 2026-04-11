@@ -51,8 +51,7 @@ export const snap: BenefitProgram = {
       (input.monthlyExpenses?.childcare ?? 0) * 0.5 +
       Math.min(input.monthlyExpenses?.medical ?? 0, 200);
     const standardDeduction = 184; // 2025 standard deduction (approx)
-    const netMonthly =
-      input.monthlyIncome - deductions - standardDeduction;
+    const netMonthly = input.monthlyIncome - deductions - standardDeduction;
     const netAnnual = netMonthly * 12;
     const netIncomePercent = Math.round((netAnnual / fpl) * 100);
 
@@ -67,7 +66,8 @@ export const snap: BenefitProgram = {
     const rules: RuleResult[] = [
       {
         name: "has_citizen_or_eligible_immigrant",
-        label: "At least one household member is a US citizen or eligible immigrant",
+        label:
+          "At least one household member is a US citizen or eligible immigrant",
         passed: hasCitizenMember,
         weight: 40,
         veto: true,
@@ -111,7 +111,8 @@ export const snap: BenefitProgram = {
       },
       {
         name: "low_assets",
-        label: "Liquid assets below $2,750 (or $4,250 for elderly/disabled households)",
+        label:
+          "Liquid assets below $2,750 (or $4,250 for elderly/disabled households)",
         matched: (input.assets ?? 0) <= (hasElderlyOrDisabled ? 4250 : 2750),
         weight: 5,
       },
@@ -129,7 +130,8 @@ export const snap: BenefitProgram = {
     if (!input.monthlyExpenses) {
       missing.push({
         field: "monthly_expenses",
-        label: "Monthly expenses (rent, childcare, medical) for accurate deductions",
+        label:
+          "Monthly expenses (rent, childcare, medical) for accurate deductions",
         penalty: 5,
       });
     }
@@ -189,6 +191,8 @@ export const snap: BenefitProgram = {
   estimateMonthly(input: ScreeningInput) {
     const raw = this.checkEligibility(input);
     // Both shapes have estimatedMonthlyValue in the same place
-    return (raw as { estimatedMonthlyValue?: number }).estimatedMonthlyValue ?? null;
+    return (
+      (raw as { estimatedMonthlyValue?: number }).estimatedMonthlyValue ?? null
+    );
   },
 };

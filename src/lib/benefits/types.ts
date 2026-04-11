@@ -54,7 +54,9 @@ export interface BenefitProgram {
    * New programs should return EligibilityEvaluation. Legacy programs
    * are bridged automatically via `bridgeLegacyResult()`.
    */
-  checkEligibility: (input: ScreeningInput) => EligibilityResult | EligibilityEvaluation;
+  checkEligibility: (
+    input: ScreeningInput,
+  ) => EligibilityResult | EligibilityEvaluation;
 }
 
 /**
@@ -64,10 +66,8 @@ export interface BenefitProgram {
  * definition. Mutating the set would accidentally widen every filter
  * at once, so it's exported as ReadonlySet.
  */
-export const PURSUABLE_TIERS: ReadonlySet<EligibilityTier> = new Set<EligibilityTier>([
-  "eligible_with_requirements",
-  "probably_eligible",
-]);
+export const PURSUABLE_TIERS: ReadonlySet<EligibilityTier> =
+  new Set<EligibilityTier>(["eligible_with_requirements", "probably_eligible"]);
 
 export type ProgramCategory =
   | "food"

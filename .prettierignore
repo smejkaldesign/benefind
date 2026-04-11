@@ -22,9 +22,6 @@ DESIGN.md
 src/content/**/*.mdx
 src/content/**/*.md
 
-# README files in infrastructure dirs
-docker/**/README.md
-
 # Env files
 .env*
 

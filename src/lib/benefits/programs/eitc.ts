@@ -15,11 +15,42 @@ const EITC_LIMITS = {
   3: { maxIncome: 59899, maxCredit: 7430 },
 };
 
-// States with a matching state EITC (subset, as of 2025)
+// States with a matching state EITC program.
+// Source: CBPP "Policy Basics: State Earned Income Tax Credits" + IRS publications.
+// Last verified: 2026-04-11 for 2025 tax year.
+// Note: North Carolina is deliberately NOT on this list — NC eliminated its state
+// EITC in 2014 (the only state ever to do so). SB 211 (2025) would reenact it but
+// is a proposed bill, not enacted law. Re-check annually — see umbrella task
+// "Annual state benefits data refresh" for the audit schedule.
 const STATE_EITC_STATES = new Set([
-  "CA", "CO", "CT", "DC", "DE", "IL", "IA", "KS", "LA", "ME",
-  "MD", "MA", "MI", "MN", "MT", "NE", "NJ", "NM", "NY", "OH",
-  "OK", "OR", "RI", "SC", "VT", "VA", "WA", "WI",
+  "CA",
+  "CO",
+  "CT",
+  "DC",
+  "DE",
+  "IL",
+  "IA",
+  "KS",
+  "LA",
+  "ME",
+  "MD",
+  "MA",
+  "MI",
+  "MN",
+  "MT",
+  "NE",
+  "NJ",
+  "NM",
+  "NY",
+  "OH",
+  "OK",
+  "OR",
+  "RI",
+  "SC",
+  "VT",
+  "VA",
+  "WA",
+  "WI",
 ]);
 
 export const eitc: BenefitProgram = {
@@ -40,7 +71,8 @@ export const eitc: BenefitProgram = {
   ],
   checkEligibility(input: ScreeningInput): EligibilityEvaluation {
     const annualIncome = input.monthlyIncome * 12;
-    const hasEarnedIncome = (input.isEmployed ?? false) || input.monthlyIncome > 0;
+    const hasEarnedIncome =
+      (input.isEmployed ?? false) || input.monthlyIncome > 0;
 
     const qualifyingChildren = input.householdMembers.filter(
       (m) => m.relationship === "child" && m.age < 19 && m.isCitizen !== false,
@@ -49,7 +81,9 @@ export const eitc: BenefitProgram = {
     const limits = EITC_LIMITS[tierIndex];
     const underLimit = annualIncome <= limits.maxIncome;
 
-    const selfMember = input.householdMembers.find((m) => m.relationship === "self");
+    const selfMember = input.householdMembers.find(
+      (m) => m.relationship === "self",
+    );
     const filerAge = selfMember?.age ?? 25;
     const ageOk = qualifyingChildren > 0 || (filerAge >= 25 && filerAge <= 64);
 
@@ -60,7 +94,9 @@ export const eitc: BenefitProgram = {
         passed: hasEarnedIncome,
         weight: 40,
         veto: true,
-        actual: hasEarnedIncome ? `$${annualIncome.toLocaleString()}/yr` : "$0/yr",
+        actual: hasEarnedIncome
+          ? `$${annualIncome.toLocaleString()}/yr`
+          : "$0/yr",
         threshold: "Must be > $0",
       },
       {
@@ -130,7 +166,9 @@ export const eitc: BenefitProgram = {
       if (incomeRatio < 0.5) {
         estimated = Math.round(limits.maxCredit * incomeRatio * 1.5);
       } else {
-        estimated = Math.round(limits.maxCredit * (1 - (incomeRatio - 0.5) * 1.2));
+        estimated = Math.round(
+          limits.maxCredit * (1 - (incomeRatio - 0.5) * 1.2),
+        );
       }
       estimated = Math.max(estimated, 100);
       estimated = Math.min(estimated, limits.maxCredit);

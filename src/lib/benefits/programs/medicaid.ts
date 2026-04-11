@@ -8,9 +8,23 @@ import type {
 } from "../types";
 import { getFPL, isBelowFPLPercent } from "../types";
 
-// States that have NOT expanded Medicaid under the ACA (as of 2025)
+// States that have NOT expanded Medicaid under the ACA.
+// Source: KFF "Status of State Medicaid Expansion Decisions" + CBPP tracker.
+// Last verified: 2026-04-11 for 2025 coverage year.
+// Re-check annually — see umbrella task "Annual state benefits data refresh"
+// for the audit schedule. (Note: these are the 10 current non-expansion states
+// as of 2025; NC adopted expansion in Dec 2023 and is correctly excluded.)
 const NON_EXPANSION_STATES = new Set([
-  "AL", "FL", "GA", "KS", "MS", "SC", "TN", "TX", "WI", "WY",
+  "AL",
+  "FL",
+  "GA",
+  "KS",
+  "MS",
+  "SC",
+  "TN",
+  "TX",
+  "WI",
+  "WY",
 ]);
 
 export const medicaid: BenefitProgram = {
@@ -80,7 +94,8 @@ export const medicaid: BenefitProgram = {
     const rules: RuleResult[] = [
       {
         name: "has_citizen_or_eligible_immigrant",
-        label: "At least one household member is a US citizen or qualified immigrant",
+        label:
+          "At least one household member is a US citizen or qualified immigrant",
         passed: hasCitizenMember,
         weight: 40,
         veto: true,
@@ -197,18 +212,21 @@ export const medicaid: BenefitProgram = {
       missing,
       reason,
       estimatedMonthlyValue: estimatedMonthly,
-      estimatedAnnualValue: estimatedMonthly ? estimatedMonthly * 12 : undefined,
-      nextSteps: incomePass && citizenPass && gapPass
-        ? [
-            "Apply through Healthcare.gov or your state Medicaid office",
-            hasPregnant
-              ? "Coverage can begin the same month you apply"
-              : "Expect a 30-45 day enrollment window",
-            !isExpansionState
-              ? `Check ${input.state}-specific eligibility rules (non-expansion state)`
-              : "Check your state's managed care plan options",
-          ]
+      estimatedAnnualValue: estimatedMonthly
+        ? estimatedMonthly * 12
         : undefined,
+      nextSteps:
+        incomePass && citizenPass && gapPass
+          ? [
+              "Apply through Healthcare.gov or your state Medicaid office",
+              hasPregnant
+                ? "Coverage can begin the same month you apply"
+                : "Expect a 30-45 day enrollment window",
+              !isExpansionState
+                ? `Check ${input.state}-specific eligibility rules (non-expansion state)`
+                : "Check your state's managed care plan options",
+            ]
+          : undefined,
     };
   },
 };
