@@ -1,5 +1,5 @@
 import type { BenefitProgram, ScreeningInput, ScreeningResult } from "./types";
-import { ENGINE_VERSION } from "./types";
+import { ENGINE_VERSION, PURSUABLE_TIERS } from "./types";
 import { normalizeProgramResult } from "./scoring";
 import { snap } from "./programs/snap";
 import { medicaid } from "./programs/medicaid";
@@ -60,13 +60,10 @@ export function runScreening(input: ScreeningInput): ScreeningResult {
     );
   });
 
-  // Sum monetary values only for tiers the user can meaningfully pursue
-  const pursuableTiers = new Set([
-    "eligible_with_requirements",
-    "probably_eligible",
-  ]);
+  // Sum monetary values only for tiers the user can meaningfully pursue.
+  // PURSUABLE_TIERS is the single source of truth — see types.ts.
   const pursuable = results.filter((r) =>
-    pursuableTiers.has(r.result.eligibilityTier),
+    PURSUABLE_TIERS.has(r.result.eligibilityTier),
   );
 
   const totalMonthly = pursuable.reduce(

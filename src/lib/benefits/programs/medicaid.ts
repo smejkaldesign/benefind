@@ -64,6 +64,19 @@ export const medicaid: BenefitProgram = {
       pathway = "adult_non_expansion";
     }
 
+    // Determines whether the user is in the non-expansion-state childless
+    // adult coverage gap. We ALWAYS push the coverage_gap rule (instead of
+    // conditionally pushing), so rules[2] exists in every evaluation and
+    // the veto logic is deterministic. If the gap doesn't apply (because
+    // the user has another pathway — pregnancy, children, disability, or
+    // lives in an expansion state), the rule auto-passes with weight 0.
+    const inCoverageGap =
+      !isExpansionState &&
+      !hasChildren &&
+      !hasPregnant &&
+      !hasDisabled &&
+      !hasElderly;
+
     const rules: RuleResult[] = [
       {
         name: "has_citizen_or_eligible_immigrant",
@@ -82,26 +95,28 @@ export const medicaid: BenefitProgram = {
         actual: `${incomePercent}% FPL`,
         threshold: `≤${threshold}% FPL`,
       },
-    ];
-
-    // Non-expansion state adults without children are often in the coverage gap
-    if (
-      !isExpansionState &&
-      !hasChildren &&
-      !hasPregnant &&
-      !hasDisabled &&
-      !hasElderly
-    ) {
-      rules.push({
+      {
         name: "state_has_pathway_for_adults",
-        label: `${input.state} has a Medicaid pathway for childless adults`,
-        passed: false,
-        weight: 20,
-        veto: true,
-        actual: `${input.state} has not expanded Medicaid`,
+        label: inCoverageGap
+          ? `${input.state} has a Medicaid pathway for childless adults`
+          : "Not applicable (user qualifies via another pathway)",
+        // Rule passes if the gap doesn't apply OR the user has a
+        // non-gap pathway available. Only fails when the user is
+        // actively in the coverage gap.
+        passed: !inCoverageGap,
+        // Weight 0 when not in the gap so it doesn't affect scoring;
+        // full weight 20 when it IS the determinative factor so the
+        // explainability panel can show it prominently.
+        weight: inCoverageGap ? 20 : 0,
+        // Veto only when we're actually in the gap — otherwise this
+        // auto-passing rule would never trigger the veto.
+        veto: inCoverageGap,
+        actual: inCoverageGap
+          ? `${input.state} has not expanded Medicaid`
+          : "Has alternate pathway",
         threshold: "Required for childless adult eligibility",
-      });
-    }
+      },
+    ];
 
     const signals: Signal[] = [
       {

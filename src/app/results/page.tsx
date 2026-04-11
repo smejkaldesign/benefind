@@ -64,93 +64,133 @@ type TierMeta = {
   sortGroup: number; // lower = shown first
 };
 
+// NOTE on tier palette: benefind is a dark-first theme (color-scheme: dark
+// in globals.css). The previous palette used `-600` / `-100` shades which
+// are designed for light backgrounds and rendered illegible on the dark
+// surface. These values now reference the design-system CSS variables
+// (--color-success, --color-warning, --color-text-muted, --color-border)
+// via Tailwind v4's @theme binding, so swapping themes automatically
+// updates every tier consistently.
+//
+// Tier 1 vs Tier 2 distinction: both use the success (brand) color; Tier 1
+// is the solid variant (stronger accent + opaque background), Tier 2 is
+// the muted variant (lower-alpha background + thinner border). Relying on
+// luminance differences rather than hue because the palette only has one
+// "success" token.
 const TIER_META: Record<EligibilityTier, TierMeta> = {
   eligible_with_requirements: {
     label: "Eligible (gather these docs)",
     shortLabel: "Eligible",
     icon: CheckCircle2,
-    iconClass: "text-emerald-600",
-    badgeClass: "bg-emerald-100 text-emerald-900 border-emerald-200",
-    accentClass: "border-l-4 border-emerald-500",
+    iconClass: "text-success",
+    badgeClass: "bg-success/15 text-success border-success/40",
+    accentClass: "border-l-4 border-success",
     sortGroup: 1,
   },
   probably_eligible: {
     label: "Probably eligible",
     shortLabel: "Probably",
     icon: CircleDot,
-    iconClass: "text-lime-600",
-    badgeClass: "bg-lime-100 text-lime-900 border-lime-200",
-    accentClass: "border-l-4 border-lime-500",
+    iconClass: "text-success",
+    badgeClass: "bg-success/8 text-success border-success/25",
+    accentClass: "border-l-4 border-success/60",
     sortGroup: 2,
   },
   maybe_eligible: {
     label: "Maybe eligible",
     shortLabel: "Maybe",
     icon: QuestionMark,
-    iconClass: "text-amber-600",
-    badgeClass: "bg-amber-100 text-amber-900 border-amber-200",
-    accentClass: "border-l-4 border-amber-500",
+    iconClass: "text-warning",
+    badgeClass: "bg-warning/10 text-warning border-warning/40",
+    accentClass: "border-l-4 border-warning",
     sortGroup: 3,
   },
   not_likely: {
     label: "Not likely",
     shortLabel: "Unlikely",
     icon: CircleSlash,
-    iconClass: "text-slate-500",
-    badgeClass: "bg-slate-100 text-slate-700 border-slate-200",
-    accentClass: "border-l-4 border-slate-400",
+    iconClass: "text-text-muted",
+    badgeClass: "bg-surface-dim text-text-muted border-border",
+    accentClass: "border-l-4 border-border",
     sortGroup: 4,
   },
   ineligible: {
     label: "Not eligible",
     shortLabel: "No",
     icon: XCircle,
-    iconClass: "text-slate-400",
-    badgeClass: "bg-slate-100 text-slate-500 border-slate-200",
-    accentClass: "border-l-4 border-slate-300",
+    iconClass: "text-text-subtle",
+    badgeClass: "bg-surface-dim text-text-subtle border-border-dark",
+    accentClass: "border-l-4 border-border-dark",
     sortGroup: 5,
   },
 };
 
 function WhyPanel({
   reasons,
+  panelId,
 }: {
   reasons: ScreeningResult["programs"][number]["result"]["reasons"];
+  panelId: string;
 }) {
   const [expanded, setExpanded] = useState(false);
+
+  // Defensive defaults. The ReasonsPayload type declares these as required
+  // arrays, but data loaded from external sources (Supabase rows, legacy
+  // cached results, test fixtures) may have them missing or null. Default
+  // to empty arrays so rendering never throws on `.length` or `.map()`.
+  const rules = reasons?.rules ?? [];
+  const signals = reasons?.signals ?? [];
+  const missing = reasons?.missing ?? [];
+  const computedScore = reasons?.computed_score ?? 0;
+  const engineVersion = reasons?.engine_version ?? "unknown";
+  const contentId = `why-panel-content-${panelId}`;
 
   return (
     <div className="mt-2">
       <button
         type="button"
+        aria-expanded={expanded}
+        aria-controls={contentId}
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-1.5 text-xs font-medium text-text-muted hover:text-text transition-colors"
+        className="flex items-center gap-1.5 text-xs font-medium text-text-muted hover:text-text transition-colors motion-safe:transition-transform"
       >
         <ChevronDown
-          className={`h-3.5 w-3.5 transition-transform ${
+          className={`h-3.5 w-3.5 motion-safe:transition-transform ${
             expanded ? "rotate-180" : ""
           }`}
+          aria-hidden="true"
         />
         Why this result?
       </button>
 
       {expanded && (
-        <div className="mt-3 space-y-3 rounded-lg border border-border bg-surface-dim p-3 text-xs">
-          {reasons.rules.length > 0 && (
+        <div
+          id={contentId}
+          role="region"
+          aria-live="polite"
+          className="mt-3 space-y-3 rounded-lg border border-border bg-surface-dim p-3 sm:p-4 text-xs"
+        >
+          {rules.length > 0 && (
             <div>
               <p className="font-semibold text-text-muted uppercase tracking-wide mb-1.5">
                 Rules
               </p>
               <ul className="space-y-1.5">
-                {reasons.rules.map((rule, i) => (
+                {rules.map((rule, i) => (
                   <li
                     key={`${rule.name}-${i}`}
                     className="flex items-start gap-2"
                   >
                     {rule.passed ? (
-                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                      <CheckCircle2
+                        className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success"
+                        aria-hidden="true"
+                      />
                     ) : (
-                      <XCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-rose-500" />
+                      <XCircle
+                        className="mt-0.5 h-3.5 w-3.5 shrink-0 text-error"
+                        aria-hidden="true"
+                      />
                     )}
                     <div className="min-w-0">
                       <p className="text-text">{rule.label}</p>
@@ -164,7 +204,7 @@ function WhyPanel({
                         </p>
                       )}
                       {rule.veto && !rule.passed && (
-                        <p className="mt-0.5 text-rose-600 font-medium">
+                        <p className="mt-0.5 text-error font-medium">
                           Critical requirement
                         </p>
                       )}
@@ -175,21 +215,22 @@ function WhyPanel({
             </div>
           )}
 
-          {reasons.signals.length > 0 && (
+          {signals.length > 0 && (
             <div>
               <p className="font-semibold text-text-muted uppercase tracking-wide mb-1.5">
                 Contributing factors
               </p>
               <ul className="space-y-1">
-                {reasons.signals.map((signal, i) => (
+                {signals.map((signal, i) => (
                   <li
                     key={`${signal.name}-${i}`}
                     className="flex items-start gap-2"
                   >
                     <CircleDot
                       className={`mt-0.5 h-3 w-3 shrink-0 ${
-                        signal.matched ? "text-lime-600" : "text-slate-400"
+                        signal.matched ? "text-success" : "text-text-subtle"
                       }`}
+                      aria-hidden="true"
                     />
                     <span
                       className={
@@ -204,13 +245,13 @@ function WhyPanel({
             </div>
           )}
 
-          {reasons.missing.length > 0 && (
+          {missing.length > 0 && (
             <div>
               <p className="font-semibold text-text-muted uppercase tracking-wide mb-1.5">
                 Missing information
               </p>
               <ul className="space-y-1 text-text-muted">
-                {reasons.missing.map((m, i) => (
+                {missing.map((m, i) => (
                   <li key={`${m.field}-${i}`}>• {m.label}</li>
                 ))}
               </ul>
@@ -218,8 +259,8 @@ function WhyPanel({
           )}
 
           <div className="flex items-center justify-between border-t border-border pt-2 text-[11px] text-text-muted">
-            <span>Confidence score: {reasons.computed_score}/100</span>
-            <span>Engine v{reasons.engine_version}</span>
+            <span>Confidence score: {computedScore}/100</span>
+            <span>Engine v{engineVersion}</span>
           </div>
         </div>
       )}
@@ -423,7 +464,7 @@ export default function ResultsPage() {
                       </span>
                     </div>
                     <p className="mt-2 text-sm text-text">{r.reason}</p>
-                    <WhyPanel reasons={r.reasons} />
+                    <WhyPanel reasons={r.reasons} panelId={`pursuable-${program.id}`} />
                   </div>
 
                   {r.nextSteps && r.nextSteps.length > 0 && (
@@ -485,7 +526,7 @@ export default function ResultsPage() {
                           </span>
                         </div>
                         <p className="text-xs text-text-muted">{r.reason}</p>
-                        <WhyPanel reasons={r.reasons} />
+                        <WhyPanel reasons={r.reasons} panelId={`maybe-${program.id}`} />
                       </div>
                     );
                   })}

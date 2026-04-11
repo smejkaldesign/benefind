@@ -39,13 +39,35 @@ export interface BenefitProgram {
   /**
    * Returns either the legacy EligibilityResult shape or the new rich
    * EligibilityEvaluation shape. The engine normalizes both into the
-   * canonical scored form via `scoreEvaluation()`.
+   * canonical ScoredEligibilityResult via `normalizeProgramResult()`
+   * in scoring.ts.
+   *
+   * IMPORTANT: Callers of `checkEligibility` MUST route the result
+   * through `normalizeProgramResult()` before reading any scored fields
+   * (confidenceScore, eligibilityTier, reasons). Neither shape in this
+   * union exposes those fields directly — they are computed at
+   * normalization time. TypeScript's structural typing enforces this:
+   * accessing `.reasons`, `.confidenceScore`, or `.eligibilityTier` on
+   * the raw union type will fail to compile, because neither variant
+   * declares them.
    *
    * New programs should return EligibilityEvaluation. Legacy programs
-   * are bridged automatically.
+   * are bridged automatically via `bridgeLegacyResult()`.
    */
   checkEligibility: (input: ScreeningInput) => EligibilityResult | EligibilityEvaluation;
 }
+
+/**
+ * Tiers considered actionable for the user — at or above "probably
+ * eligible". Exported as a single source of truth so results/page,
+ * screening/page, engine.ts, and any future consumer use the same
+ * definition. Mutating the set would accidentally widen every filter
+ * at once, so it's exported as ReadonlySet.
+ */
+export const PURSUABLE_TIERS: ReadonlySet<EligibilityTier> = new Set<EligibilityTier>([
+  "eligible_with_requirements",
+  "probably_eligible",
+]);
 
 export type ProgramCategory =
   | "food"

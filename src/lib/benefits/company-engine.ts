@@ -55,13 +55,26 @@ export function runCompanyScreening(
 ): CompanyScreeningResult {
   const results = ALL_COMPANY_PROGRAMS.map((program) => {
     const raw = program.checkEligibility(input);
+    // Validate matchScore is a finite number before deriving a tier.
+    // A program that forgot to return matchScore (or returned NaN/string)
+    // would otherwise silently produce `tierFromScore(undefined)` which
+    // clamps to 0 but hides the root-cause configuration error.
+    const rawScore = (raw as { matchScore?: unknown }).matchScore;
+    const safeScore =
+      typeof rawScore === "number" && Number.isFinite(rawScore) ? rawScore : 0;
+    if (safeScore !== rawScore) {
+      console.warn(
+        `[company-engine] Program "${program.id}" returned invalid matchScore (${String(rawScore)}); defaulting to 0`,
+      );
+    }
     return {
       program,
       result: {
         ...raw,
+        matchScore: safeScore,
         // Derive canonical tier from the matchScore so dashboards render
         // the same 5-bucket UI as the individual screening results.
-        eligibilityTier: tierFromScore(raw.matchScore),
+        eligibilityTier: tierFromScore(safeScore),
       },
     };
   });

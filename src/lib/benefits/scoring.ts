@@ -38,6 +38,16 @@ export function tierFromScore(score: number): EligibilityTier {
 export function scoreEvaluation(evaluation: EligibilityEvaluation): number {
   const { rules, signals = [], missing = [] } = evaluation;
 
+  // Guard: a rules array with every weight at 0 (or empty) is almost
+  // certainly a misconfiguration. We fall back to 0 instead of silently
+  // dividing by zero, but warn loudly so the bug surfaces in dev.
+  if (rules.length === 0) {
+    console.warn(
+      "[scoring] scoreEvaluation called with empty rules array — returning 0",
+    );
+    return 0;
+  }
+
   // Step 1: veto check
   const vetoFailed = rules.some((r) => r.veto === true && !r.passed);
   if (vetoFailed) return 0;
@@ -58,11 +68,15 @@ export function scoreEvaluation(evaluation: EligibilityEvaluation): number {
 
   // Step 4: compute base ratio and scale to 0-100
   // Rules dominate; signals add up to a 20% bonus on top of the rule score.
+  // NOTE: Clamp baseScore to [0, 100] BEFORE adding the signal bonus, so
+  // the intermediate never exceeds the documented 100% rule-weight ceiling.
+  // Previously the algorithm relied on the final clamp alone, which is
+  // fragile if weights grow.
   const ruleRatio = totalRuleWeight > 0 ? passedRuleWeight / totalRuleWeight : 0;
   const signalRatio =
     totalSignalWeight > 0 ? matchedSignalWeight / totalSignalWeight : 0;
 
-  const baseScore = ruleRatio * 100;
+  const baseScore = Math.max(0, Math.min(100, ruleRatio * 100));
   const signalBonus = signalRatio * 20;
 
   // Step 5: apply missing-field penalties

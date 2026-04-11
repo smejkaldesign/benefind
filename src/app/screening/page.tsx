@@ -6,6 +6,7 @@ import {
   answersToScreeningInput,
 } from "@/lib/screening/steps";
 import { runScreening } from "@/lib/benefits/engine";
+import { PURSUABLE_TIERS } from "@/lib/benefits/types";
 import type { ScreeningResult } from "@/lib/benefits/types";
 import {
   ChatMessage,
@@ -179,10 +180,8 @@ export default function ScreeningPage() {
             );
           } catch {}
 
-          const eligible = screeningResult.programs.filter(
-            (p) =>
-              p.result.eligibilityTier === "eligible_with_requirements" ||
-              p.result.eligibilityTier === "probably_eligible",
+          const eligible = screeningResult.programs.filter((p) =>
+            PURSUABLE_TIERS.has(p.result.eligibilityTier),
           );
           if (eligible.length > 0) {
             addMessage(
