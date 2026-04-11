@@ -15,7 +15,13 @@ const EITC_LIMITS = {
   3: { maxIncome: 59899, maxCredit: 7430 },
 };
 
-// States with a matching state EITC (subset, as of 2025)
+// States with a matching state EITC program.
+// Source: CBPP "Policy Basics: State Earned Income Tax Credits" + IRS publications.
+// Last verified: 2026-04-11 for 2025 tax year.
+// Note: North Carolina is deliberately NOT on this list — NC eliminated its state
+// EITC in 2014 (the only state ever to do so). SB 211 (2025) would reenact it but
+// is a proposed bill, not enacted law. Re-check annually — see umbrella task
+// "Annual state benefits data refresh" for the audit schedule.
 const STATE_EITC_STATES = new Set([
   "CA",
   "CO",

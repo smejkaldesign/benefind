@@ -8,7 +8,12 @@ import type {
 } from "../types";
 import { getFPL, isBelowFPLPercent } from "../types";
 
-// States that have NOT expanded Medicaid under the ACA (as of 2025)
+// States that have NOT expanded Medicaid under the ACA.
+// Source: KFF "Status of State Medicaid Expansion Decisions" + CBPP tracker.
+// Last verified: 2026-04-11 for 2025 coverage year.
+// Re-check annually — see umbrella task "Annual state benefits data refresh"
+// for the audit schedule. (Note: these are the 10 current non-expansion states
+// as of 2025; NC adopted expansion in Dec 2023 and is correctly excluded.)
 const NON_EXPANSION_STATES = new Set([
   "AL",
   "FL",
