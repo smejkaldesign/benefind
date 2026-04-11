@@ -72,7 +72,8 @@ export function scoreEvaluation(evaluation: EligibilityEvaluation): number {
   // the intermediate never exceeds the documented 100% rule-weight ceiling.
   // Previously the algorithm relied on the final clamp alone, which is
   // fragile if weights grow.
-  const ruleRatio = totalRuleWeight > 0 ? passedRuleWeight / totalRuleWeight : 0;
+  const ruleRatio =
+    totalRuleWeight > 0 ? passedRuleWeight / totalRuleWeight : 0;
   const signalRatio =
     totalSignalWeight > 0 ? matchedSignalWeight / totalSignalWeight : 0;
 
@@ -149,7 +150,9 @@ export function bridgeLegacyResult(
   // for that program and the rules array will be the real thing.
   const syntheticRule: RuleResult = {
     name: "legacy_eligibility_check",
-    label: legacy.eligible ? "Passed eligibility check" : "Failed eligibility check",
+    label: legacy.eligible
+      ? "Passed eligibility check"
+      : "Failed eligibility check",
     passed: legacy.eligible,
     weight: 100,
     actual: legacy.reason,

@@ -134,9 +134,7 @@ describe("scoreEvaluation — basic weighting", () => {
         { name: "a", label: "A", passed: true, weight: 50 },
         { name: "b", label: "B", passed: false, weight: 50 },
       ],
-      signals: [
-        { name: "s1", label: "S1", matched: true, weight: 100 },
-      ],
+      signals: [{ name: "s1", label: "S1", matched: true, weight: 100 }],
       reason: "test",
     };
     // rules: 50/100 = 50% = base 50
@@ -187,9 +185,7 @@ describe("scoreEvaluation — basic weighting", () => {
     expect(scoreEvaluation(overflowing)).toBeLessThanOrEqual(100);
 
     const underflowing: EligibilityEvaluation = {
-      rules: [
-        { name: "a", label: "A", passed: false, weight: 10 },
-      ],
+      rules: [{ name: "a", label: "A", passed: false, weight: 10 }],
       missing: [{ field: "f", label: "F", penalty: 100 }],
       reason: "test",
     };

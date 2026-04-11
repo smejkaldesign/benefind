@@ -77,10 +77,9 @@ describe("SNAP — refactored to EligibilityEvaluation", () => {
     const snapResult = result.programs.find((p) => p.program.id === "snap");
     expect(snapResult).toBeDefined();
     expect(snapResult!.result.confidenceScore).toBeGreaterThanOrEqual(50);
-    expect([
-      "eligible_with_requirements",
-      "probably_eligible",
-    ]).toContain(snapResult!.result.eligibilityTier);
+    expect(["eligible_with_requirements", "probably_eligible"]).toContain(
+      snapResult!.result.eligibilityTier,
+    );
     expect(snapResult!.result.estimatedMonthlyValue).toBeGreaterThan(0);
   });
 
@@ -212,9 +211,9 @@ describe("runScreening — integration", () => {
   it("returns programs sorted by confidence score descending", () => {
     const result = runScreening(lowIncomeFamily);
     for (let i = 1; i < result.programs.length; i++) {
-      expect(result.programs[i - 1]!.result.confidenceScore).toBeGreaterThanOrEqual(
-        result.programs[i]!.result.confidenceScore,
-      );
+      expect(
+        result.programs[i - 1]!.result.confidenceScore,
+      ).toBeGreaterThanOrEqual(result.programs[i]!.result.confidenceScore);
     }
   });
 
