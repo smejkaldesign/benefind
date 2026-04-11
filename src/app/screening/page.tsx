@@ -6,6 +6,7 @@ import {
   answersToScreeningInput,
 } from "@/lib/screening/steps";
 import { runScreening } from "@/lib/benefits/engine";
+import { PURSUABLE_TIERS } from "@/lib/benefits/types";
 import type { ScreeningResult } from "@/lib/benefits/types";
 import {
   ChatMessage,
@@ -179,8 +180,8 @@ export default function ScreeningPage() {
             );
           } catch {}
 
-          const eligible = screeningResult.programs.filter(
-            (p) => p.result.eligible,
+          const eligible = screeningResult.programs.filter((p) =>
+            PURSUABLE_TIERS.has(p.result.eligibilityTier),
           );
           if (eligible.length > 0) {
             addMessage(
@@ -328,15 +329,32 @@ export default function ScreeningPage() {
                 <p className="text-sm text-text-muted">
                   Estimated ${result.totalEstimatedAnnual.toLocaleString()}/year
                   across{" "}
-                  {result.programs.filter((p) => p.result.eligible).length}{" "}
+                  {
+                    result.programs.filter(
+                      (p) =>
+                        p.result.eligibilityTier ===
+                          "eligible_with_requirements" ||
+                        p.result.eligibilityTier === "probably_eligible",
+                    ).length
+                  }{" "}
                   program
-                  {result.programs.filter((p) => p.result.eligible).length !== 1
+                  {result.programs.filter(
+                    (p) =>
+                      p.result.eligibilityTier ===
+                        "eligible_with_requirements" ||
+                      p.result.eligibilityTier === "probably_eligible",
+                  ).length !== 1
                     ? "s"
                     : ""}
                 </p>
                 <div className="flex flex-wrap justify-center gap-1.5 pt-1">
                   {result.programs
-                    .filter((p) => p.result.eligible)
+                    .filter(
+                      (p) =>
+                        p.result.eligibilityTier ===
+                          "eligible_with_requirements" ||
+                        p.result.eligibilityTier === "probably_eligible",
+                    )
                     .map(({ program }) => (
                       <span
                         key={program.id}

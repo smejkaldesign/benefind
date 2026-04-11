@@ -1,4 +1,6 @@
 import type { BenefitProgram, ScreeningInput, ScreeningResult } from "./types";
+import { ENGINE_VERSION, PURSUABLE_TIERS } from "./types";
+import { normalizeProgramResult } from "./scoring";
 import { snap } from "./programs/snap";
 import { medicaid } from "./programs/medicaid";
 import { eitc } from "./programs/eitc";
@@ -25,22 +27,32 @@ export const ALL_PROGRAMS: BenefitProgram[] = [
 
 /**
  * Run eligibility screening across all registered programs.
- * Returns results sorted by estimated value (highest first).
+ *
+ * Every program is evaluated and its result is normalized into a
+ * ScoredEligibilityResult regardless of whether it returns the legacy
+ * boolean shape or the new EligibilityEvaluation shape.
+ *
+ * Results are sorted by confidence score descending so the dashboard
+ * shows highest-confidence programs first. Ties are broken by estimated
+ * annual value (bigger awards first).
  */
 export function runScreening(input: ScreeningInput): ScreeningResult {
   // Combine federal programs with state-specific ones
   const statePrograms = getStatePrograms(input.state);
   const allPrograms = [...ALL_PROGRAMS, ...statePrograms];
 
-  const results = allPrograms.map((program) => ({
-    program,
-    result: program.checkEligibility(input),
-  }));
+  const results = allPrograms.map((program) => {
+    const raw = program.checkEligibility(input);
+    return {
+      program,
+      result: normalizeProgramResult(raw),
+    };
+  });
 
-  // Sort: eligible first, then by estimated value descending
+  // Sort by confidence score descending, then by estimated annual value
   results.sort((a, b) => {
-    if (a.result.eligible !== b.result.eligible) {
-      return a.result.eligible ? -1 : 1;
+    if (a.result.confidenceScore !== b.result.confidenceScore) {
+      return b.result.confidenceScore - a.result.confidenceScore;
     }
     return (
       (b.result.estimatedAnnualValue ?? 0) -
@@ -48,12 +60,17 @@ export function runScreening(input: ScreeningInput): ScreeningResult {
     );
   });
 
-  const eligible = results.filter((r) => r.result.eligible);
-  const totalMonthly = eligible.reduce(
+  // Sum monetary values only for tiers the user can meaningfully pursue.
+  // PURSUABLE_TIERS is the single source of truth — see types.ts.
+  const pursuable = results.filter((r) =>
+    PURSUABLE_TIERS.has(r.result.eligibilityTier),
+  );
+
+  const totalMonthly = pursuable.reduce(
     (sum, r) => sum + (r.result.estimatedMonthlyValue ?? 0),
     0,
   );
-  const totalAnnual = eligible.reduce(
+  const totalAnnual = pursuable.reduce(
     (sum, r) => sum + (r.result.estimatedAnnualValue ?? 0),
     0,
   );
@@ -61,6 +78,7 @@ export function runScreening(input: ScreeningInput): ScreeningResult {
   return {
     input,
     timestamp: new Date().toISOString(),
+    engineVersion: ENGINE_VERSION,
     programs: results,
     totalEstimatedMonthly: totalMonthly,
     totalEstimatedAnnual: totalAnnual,

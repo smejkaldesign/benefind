@@ -65,13 +65,27 @@ export interface CompanyEligibilityResult {
   whyYouQualify: string[];
 }
 
+/**
+ * The shape returned by the company engine after tier derivation.
+ * Adds the canonical `eligibilityTier` to the raw program result.
+ */
+export interface CompanyScoredResult extends CompanyEligibilityResult {
+  eligibilityTier:
+    | "eligible_with_requirements"
+    | "probably_eligible"
+    | "maybe_eligible"
+    | "not_likely"
+    | "ineligible";
+}
+
 /** Full company screening result */
 export interface CompanyScreeningResult {
   input: CompanyScreeningInput;
   timestamp: string;
+  engineVersion: string;
   programs: {
     program: CompanyProgram;
-    result: CompanyEligibilityResult;
+    result: CompanyScoredResult;
   }[];
   totalMatched: number;
 }
