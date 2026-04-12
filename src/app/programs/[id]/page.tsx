@@ -17,12 +17,11 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+// Return empty array: pages are generated on-demand via ISR.
+// We can't call createServerSupabase() here because generateStaticParams
+// runs at build time outside a request scope (no cookies).
 export async function generateStaticParams() {
-  const supabase = await createServerSupabase();
-  const { data: programs } = await listActivePrograms(supabase, {
-    pageSize: 200,
-  });
-  return (programs ?? []).map((p) => ({ id: p.id }));
+  return [];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
