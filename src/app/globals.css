@@ -249,6 +249,44 @@
   margin-bottom: 0;
 }
 
+/* Code blocks: line numbers, scrollable, syntax-aware */
+.benefind-prose pre {
+  position: relative;
+  tab-size: 2;
+}
+.benefind-prose pre code {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: inherit;
+  color: var(--color-text-muted);
+}
+
+/* Blockquote callout strip */
+.benefind-prose blockquote p:first-child {
+  margin-top: 0;
+}
+.benefind-prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Tables: zebra stripe */
+.benefind-prose table tbody tr:nth-child(even) td {
+  background-color: rgba(42, 43, 37, 0.4);
+}
+
+/* Images with captions */
+.benefind-prose figure {
+  margin-block: 2rem;
+}
+.benefind-prose figcaption {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--color-text-subtle);
+}
+
 /* ── Global accessible focus ring ───────────────────────── */
 /* WCAG 2.4.7 — every keyboard-focusable element needs a visible indicator. */
 a:focus-visible,

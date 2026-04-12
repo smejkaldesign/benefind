@@ -1,5 +1,6 @@
 import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
+import Image from "next/image";
 import type { ComponentPropsWithoutRef } from "react";
 import { slugify } from "@/lib/slugify";
 
@@ -127,6 +128,28 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       />
     ),
     hr: () => <hr className="my-10 border-border" />,
+    img: ({ src, alt, ...props }: ComponentPropsWithoutRef<"img">) => {
+      if (!src || typeof src !== "string") return null;
+      // Use next/image for optimized loading; wrap in figure with caption from alt
+      return (
+        <figure className="my-8">
+          <Image
+            src={src as string}
+            alt={alt ?? ""}
+            width={800}
+            height={450}
+            className="w-full rounded-lg border border-border"
+            sizes="(max-width: 768px) 100vw, 800px"
+            {...(props as Record<string, unknown>)}
+          />
+          {alt && (
+            <figcaption className="mt-2 text-center text-sm italic text-text-subtle">
+              {alt}
+            </figcaption>
+          )}
+        </figure>
+      );
+    },
     ...components,
   };
 }
