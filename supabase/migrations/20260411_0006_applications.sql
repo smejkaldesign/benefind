@@ -110,6 +110,11 @@ create policy "application_events_member_insert"
 -- Virus scanning runs via an Edge Function + ClamAV on storage object-create.
 -- Rows are inserted with scan_status='pending'; the Edge Function updates
 -- them to 'clean' / 'infected' / 'error'.
+--
+-- HISTORY: table, indexes, RLS policies, and force_pending_scan_status trigger
+-- absorbed from supabase/migrations/20260410_0001_documents_table.sql (PR #11,
+-- commit 86872bd) during Sprint F.1. That file has been deleted; git log of
+-- this file and the deleted one preserves the full lineage.
 
 create table if not exists public.documents (
   id uuid primary key default gen_random_uuid(),
