@@ -177,6 +177,7 @@ export default function Home() {
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   aria-expanded={openFaq === i}
                   aria-controls={`faq-answer-${i}`}
+                  aria-label={`${faq.q} — ${openFaq === i ? "collapse" : "expand"} answer`}
                   className="flex w-full items-center justify-between py-5 text-start active:opacity-70"
                 >
                   <span className="pr-4 font-medium text-text">{faq.q}</span>

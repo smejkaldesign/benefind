@@ -154,13 +154,21 @@ export default async function AdminSupportPage() {
   );
 }
 
-function TicketStatusBadge({
-  status,
-}: {
-  status: "open" | "pending" | "resolved" | "closed";
-}) {
+const VALID_TICKET_STATUSES = [
+  "open",
+  "pending",
+  "resolved",
+  "closed",
+] as const;
+type TicketStatus = (typeof VALID_TICKET_STATUSES)[number];
+
+function isValidTicketStatus(value: string): value is TicketStatus {
+  return (VALID_TICKET_STATUSES as readonly string[]).includes(value);
+}
+
+function TicketStatusBadge({ status }: { status: string }) {
   const variantMap: Record<
-    typeof status,
+    TicketStatus,
     "error" | "warning" | "success" | "default"
   > = {
     open: "error",
@@ -168,5 +176,10 @@ function TicketStatusBadge({
     resolved: "success",
     closed: "default",
   };
+
+  if (!isValidTicketStatus(status)) {
+    return <Badge variant="default">{status}</Badge>;
+  }
+
   return <Badge variant={variantMap[status]}>{status}</Badge>;
 }

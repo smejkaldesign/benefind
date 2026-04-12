@@ -32,14 +32,14 @@ export function ProgramEditForm({ program }: ProgramEditFormProps) {
       const result = await updateProgram({
         id: program.id,
         name: (form.get("name") as string) || program.name,
-        description: (form.get("description") as string) || null,
+        description: (form.get("description") as string) ?? null,
         plain_language_summary:
-          (form.get("plain_language_summary") as string) || null,
+          (form.get("plain_language_summary") as string) ?? null,
         category: (form.get("category") as string) || program.category,
         status: (form.get("status") as string) || program.status,
         eligibility_criteria:
-          (form.get("eligibility_criteria") as string) || "{}",
-        application_url: (form.get("application_url") as string) || null,
+          (form.get("eligibility_criteria") as string) ?? "{}",
+        application_url: (form.get("application_url") as string) ?? null,
       });
 
       if (result.error) {

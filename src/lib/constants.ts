@@ -3,3 +3,6 @@ export const STORAGE_KEYS = {
   SCREENING_RESULT: "screening_result",
   COMPANY_SCREENING_RESULT: "company_screening_result",
 } as const;
+
+/** Contact / support email displayed on public pages */
+export const SUPPORT_EMAIL = "hello@benefind.ai";

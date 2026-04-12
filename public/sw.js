@@ -6,8 +6,13 @@
  * Next.js static chunks (/_next/static/): cache on first fetch.
  * API routes (/api/*): NEVER cached — always hit the server.
  * Non-GET requests: bypassed entirely.
+ *
+ * Cache versioning: bump CACHE_VERSION when deploying new assets.
+ * The activate handler purges every cache whose name does not match
+ * the current CACHE_NAME, so stale entries are cleaned up automatically.
  */
-const CACHE_NAME = "benefind-v1";
+const CACHE_VERSION = 1;
+const CACHE_NAME = `benefind-v${CACHE_VERSION}`;
 const STATIC_ASSETS = ["/", "/screening", "/results", "/auth/login"];
 
 self.addEventListener("install", (event) => {
@@ -23,7 +28,9 @@ self.addEventListener("activate", (event) => {
       .keys()
       .then((keys) =>
         Promise.all(
-          keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)),
+          keys
+            .filter((k) => k.startsWith("benefind-") && k !== CACHE_NAME)
+            .map((k) => caches.delete(k)),
         ),
       ),
   );

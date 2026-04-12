@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { getProgram, listActivePrograms } from "@/lib/db/programs";
+import { getProgram } from "@/lib/db/programs";
 import { LandingNav } from "@/components/landing-nav";
 import {
   ArrowLeft,

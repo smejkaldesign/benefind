@@ -1,10 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database, Tables } from "@/types/database";
+import type { Database } from "@/types/database";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Client = SupabaseClient<Database, any>;
-type Program = Tables<"programs">;
-type ProgramTranslation = Tables<"program_translations">;
 
 interface ProgramFilters {
   category?: string;

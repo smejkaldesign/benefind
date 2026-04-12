@@ -1,10 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database, Tables, TablesInsert } from "@/types/database";
+import type { Database, TablesInsert } from "@/types/database";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Client = SupabaseClient<Database, any>;
-type Workspace = Tables<"workspaces">;
-type WorkspaceMember = Tables<"workspace_members">;
 
 /**
  * Returns all workspaces where the given user is a member.

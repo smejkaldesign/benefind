@@ -3,9 +3,6 @@ import type { Database, Tables } from "@/types/database";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Client = SupabaseClient<Database, any>;
-type _AdminUser = Tables<"admin_users">;
-type _AdminAction = Tables<"admin_actions">;
-type _SupportTicket = Tables<"support_tickets">;
 
 /**
  * Checks whether a user exists in the admin_users table and is not disabled.

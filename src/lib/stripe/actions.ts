@@ -1,6 +1,6 @@
 "use server";
 
-import { stripe } from "./client";
+import { getStripe } from "./client";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getSubscription } from "@/lib/db/billing";
 import { listWorkspacesForUser } from "@/lib/db/workspaces";
@@ -62,7 +62,7 @@ export async function createCheckoutSession(
   let customerId = existingSub?.stripe_customer_id;
 
   if (!customerId) {
-    const customer = await stripe.customers.create({
+    const customer = await getStripe().customers.create({
       email: user.email,
       metadata: {
         supabase_user_id: user.id,
@@ -72,7 +72,7 @@ export async function createCheckoutSession(
     customerId = customer.id;
   }
 
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     customer: customerId,
     mode: "subscription",
     line_items: [{ price: priceId, quantity: 1 }],
@@ -109,7 +109,7 @@ export async function createPortalSession() {
     throw new Error("No subscription found");
   }
 
-  const session = await stripe.billingPortal.sessions.create({
+  const session = await getStripe().billingPortal.sessions.create({
     customer: portalCustomerId,
     return_url: `${APP_URL}/dashboard/billing`,
   });
