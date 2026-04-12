@@ -24,20 +24,20 @@ interface CreateScreeningInput {
 }
 
 /**
- * Creates a screening and its associated results in sequence.
- * Marks the new screening as is_latest and unmarks any previous latest.
+ * Creates a screening and its associated results.
+ *
+ * The DB trigger `trg_screenings_mark_prior_not_latest` (0005_screening.sql)
+ * atomically clears is_latest on prior rows when a new screening is inserted,
+ * so the DAL does NOT need to manually unmark previous screenings. Doing so
+ * would create a race condition between the manual update and the insert.
+ *
+ * If results insertion fails, the screening row is cleaned up to prevent
+ * orphaned screenings with no results.
  */
 export async function createScreening(
   client: Client,
   input: CreateScreeningInput,
 ) {
-  // Unmark previous latest screening for this workspace
-  await client
-    .from("screenings")
-    .update({ is_latest: false })
-    .eq("workspace_id", input.workspaceId)
-    .eq("is_latest", true);
-
   const { data: screening, error: screeningError } = await client
     .from("screenings")
     .insert({
@@ -75,7 +75,9 @@ export async function createScreening(
       .insert(resultRows);
 
     if (resultsError) {
-      return { data: screening, error: resultsError };
+      // Clean up the orphaned screening to avoid partial state
+      await client.from("screenings").delete().eq("id", screening.id);
+      return { data: null, error: resultsError };
     }
   }
 

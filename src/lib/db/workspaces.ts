@@ -62,7 +62,9 @@ export async function createWorkspace(
   } satisfies TablesInsert<"workspace_members">);
 
   if (memberError) {
-    return { data: workspace, error: memberError };
+    // Clean up the orphaned workspace to avoid partial state
+    await client.from("workspaces").delete().eq("id", workspace.id);
+    return { data: null, error: memberError };
   }
 
   return { data: workspace, error: null };
