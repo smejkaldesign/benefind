@@ -34,8 +34,20 @@ export async function updateProgram(input: UpdateProgramInput) {
   let parsedCriteria: Json;
   try {
     parsedCriteria = JSON.parse(input.eligibility_criteria) as Json;
-  } catch {
-    return { error: "Invalid JSON in eligibility criteria" };
+  } catch (err) {
+    const detail = err instanceof SyntaxError ? err.message : "unknown error";
+    return { error: `Invalid JSON in eligibility criteria: ${detail}` };
+  }
+
+  if (
+    parsedCriteria === null ||
+    typeof parsedCriteria !== "object" ||
+    Array.isArray(parsedCriteria)
+  ) {
+    return {
+      error:
+        "Eligibility criteria must be a JSON object (not an array or primitive)",
+    };
   }
 
   const { error } = await updateProgramById(supabase, input.id, {
