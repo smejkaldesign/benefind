@@ -5,12 +5,12 @@ import Image from "next/image";
 import { useI18n } from "@/lib/i18n/context";
 import type { Locale } from "@/lib/i18n/types";
 
-const LANGUAGES: { label: string; locale: Locale }[] = [
-  { label: "English", locale: "en" },
-  { label: "Español", locale: "es" },
-  { label: "中文", locale: "zh" },
-  { label: "Tiếng Việt", locale: "vi" },
-  { label: "العربية", locale: "ar" },
+const LANGUAGES: { label: string; locale: Locale; available: boolean }[] = [
+  { label: "English", locale: "en", available: true },
+  { label: "Español", locale: "es", available: true },
+  { label: "中文", locale: "zh", available: false },
+  { label: "Tiếng Việt", locale: "vi", available: false },
+  { label: "العربية", locale: "ar", available: false },
 ];
 
 export function Footer() {
@@ -124,17 +124,23 @@ export function Footer() {
             <ul className="mt-3 space-y-2">
               {LANGUAGES.map((lang) => (
                 <li key={lang.locale}>
-                  <button
-                    type="button"
-                    onClick={() => setLocale(lang.locale)}
-                    className={`text-sm cursor-pointer transition-colors ${
-                      locale === lang.locale
-                        ? "text-brand"
-                        : "text-text-muted hover:text-brand"
-                    }`}
-                  >
-                    {lang.label}
-                  </button>
+                  {lang.available ? (
+                    <button
+                      type="button"
+                      onClick={() => setLocale(lang.locale)}
+                      className={`text-sm cursor-pointer transition-colors ${
+                        locale === lang.locale
+                          ? "text-brand"
+                          : "text-text-muted hover:text-brand"
+                      }`}
+                    >
+                      {lang.label}
+                    </button>
+                  ) : (
+                    <span className="text-sm text-text-subtle/40 cursor-default">
+                      {lang.label}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
