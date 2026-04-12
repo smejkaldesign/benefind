@@ -257,9 +257,9 @@ describe("runScreening — integration", () => {
     expect(result.totalEstimatedMonthly).toBe(totalFromPursuable);
   });
 
-  it("legacy programs still work via the bridge (non-refactored programs)", () => {
-    // WIC, LIHEAP, CHIP, etc. have not been refactored yet. They should
-    // still return valid scored results via the legacy bridge.
+  it("all programs return native EligibilityEvaluation (no legacy bridge)", () => {
+    // All programs have been refactored to return EligibilityEvaluation.
+    // They should produce valid scored results without the legacy bridge.
     const result = runScreening(lowIncomeFamily);
     const wic = result.programs.find((p) => p.program.id === "wic");
     const liheap = result.programs.find((p) => p.program.id === "liheap");
@@ -267,7 +267,8 @@ describe("runScreening — integration", () => {
     expect(liheap).toBeDefined();
     expect(wic!.result.confidenceScore).toBeGreaterThanOrEqual(0);
     expect(liheap!.result.confidenceScore).toBeGreaterThanOrEqual(0);
-    // Legacy-bridged results have a suffix in engine_version
-    expect(wic!.result.reasons.engine_version).toContain("legacy");
+    // Native evaluations use the standard engine version (no legacy suffix)
+    expect(wic!.result.reasons.engine_version).toBe("1.0.0");
+    expect(liheap!.result.reasons.engine_version).toBe("1.0.0");
   });
 });
