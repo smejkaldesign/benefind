@@ -28,26 +28,39 @@ const TIER_LABELS: Record<
   ineligible: { label: "No", variant: "default" },
 };
 
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export default async function DashboardPage() {
   const user = await requireAuth();
   const supabase = await createServerSupabase();
 
   // Read workspace from cookie and verify membership (defense-in-depth)
   const cookieStore = await cookies();
-  const workspaceId = cookieStore.get("bf-workspace")?.value;
+  const rawWorkspaceId = cookieStore.get("bf-workspace")?.value;
+
+  // Validate UUID format before using in any query
+  const workspaceId =
+    rawWorkspaceId && UUID_RE.test(rawWorkspaceId) ? rawWorkspaceId : undefined;
 
   if (workspaceId) {
-    const { data: memberships } = await listWorkspacesForUser(
-      supabase,
-      user.id,
-    );
-    const isMember = memberships?.some((m) => m.workspace_id === workspaceId);
+    let isMember = false;
+    try {
+      const { data: memberships } = await listWorkspacesForUser(
+        supabase,
+        user.id,
+      );
+      isMember =
+        memberships?.some((m) => m.workspace_id === workspaceId) ?? false;
+    } catch {
+      // DB failure should not crash the page; treat as non-member
+    }
     if (!isMember) {
       return (
         <div className="space-y-6">
           <PageHeader
             title="Welcome back"
-            description={user.email ?? undefined}
+            description="You don't have access to this workspace."
           />
           <EmptyState />
         </div>
