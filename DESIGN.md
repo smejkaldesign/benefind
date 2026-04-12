@@ -104,7 +104,7 @@ Registry URL: `https://shadcnblocks.com/r/{name}` (configured in `components.jso
 
 ---
 
-## Available Components (39 in `src/components/ui/`)
+## Available Components (40 in `src/components/ui/`)
 
 ### Primitives (inputs, forms)
 `button`, `input`, `input-group`, `textarea`, `label`, `checkbox`, `radio-group`, `select`, `switch`, `toggle`, `toggle-group`, `slider`
@@ -113,7 +113,7 @@ Registry URL: `https://shadcnblocks.com/r/{name}` (configured in `components.jso
 `card`, `separator`, `scroll-area`, `resizable`, `carousel`
 
 ### Navigation
-`tabs`, `navigation-menu`, `menubar`, `pagination`, `context-menu`, `dropdown-menu`
+`breadcrumb`, `tabs`, `navigation-menu`, `menubar`, `pagination`, `context-menu`, `dropdown-menu`
 
 ### Overlays
 `dialog`, `drawer`, `sheet`, `popover`, `tooltip`, `hover-card`
