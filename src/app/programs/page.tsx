@@ -127,6 +127,7 @@ export default async function ProgramsPage({ searchParams }: Props) {
           <ProgramFilters
             activeCategory={params.category}
             searchQuery={params.q}
+            resultCount={filtered.length}
             categories={Object.entries(CATEGORY_LABELS).map(([k, v]) => ({
               value: k,
               label: v,
@@ -136,7 +137,10 @@ export default async function ProgramsPage({ searchParams }: Props) {
           {/* Program Cards */}
           {filtered.length === 0 ? (
             <div className="py-16 text-center">
-              <ShieldCheck className="mx-auto mb-4 h-10 w-10 text-text-subtle" />
+              <ShieldCheck
+                className="mx-auto mb-4 h-10 w-10 text-text-subtle"
+                aria-hidden="true"
+              />
               <p className="text-sm text-text-muted">
                 No programs match your filters. Try broadening your search.
               </p>
@@ -162,7 +166,7 @@ export default async function ProgramsPage({ searchParams }: Props) {
                             aria-hidden="true"
                           />
                         </div>
-                        <span className="rounded bg-surface-bright px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide text-text-subtle">
+                        <span className="rounded bg-surface-bright px-2 py-0.5 font-mono text-xs uppercase tracking-wide text-text-muted">
                           {categoryLabel}
                         </span>
                       </div>
@@ -176,7 +180,7 @@ export default async function ProgramsPage({ searchParams }: Props) {
                       </p>
 
                       {program.agency && (
-                        <p className="mb-3 text-xs text-text-subtle">
+                        <p className="mb-3 text-xs text-text-muted">
                           {program.agency}
                         </p>
                       )}

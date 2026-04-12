@@ -93,7 +93,7 @@ export default function PrivacyPage() {
         </h1>
         <p className="max-w-2xl text-base leading-relaxed text-text-muted md:text-lg">
           How Benefind handles your data, in plain language. Last updated{" "}
-          <time className="text-text">{LAST_UPDATED}</time>.
+          <time dateTime="2026-04-11" className="text-text">{LAST_UPDATED}</time>.
         </p>
       </header>
 

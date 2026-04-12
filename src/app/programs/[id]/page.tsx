@@ -206,21 +206,22 @@ export default async function ProgramDetailPage({ params }: Props) {
               >
                 Start Screening
               </Link>
-              {program.application_url && (
-                <a
-                  href={program.application_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Apply for ${program.name} (opens in new tab)`}
-                  className="rounded-lg border border-border px-6 py-3 text-sm font-semibold text-text-muted transition-colors hover:border-brand hover:text-brand focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
-                >
-                  Apply Now{" "}
-                  <ExternalLink
-                    className="ml-1 inline h-3.5 w-3.5"
-                    aria-hidden="true"
-                  />
-                </a>
-              )}
+              {program.application_url &&
+                program.application_url.startsWith("https://") && (
+                  <a
+                    href={program.application_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Apply for ${program.name} (opens in new tab)`}
+                    className="rounded-lg border border-border px-6 py-3 text-sm font-semibold text-text-muted transition-colors hover:border-brand hover:text-brand focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
+                  >
+                    Apply Now{" "}
+                    <ExternalLink
+                      className="ml-1 inline h-3.5 w-3.5"
+                      aria-hidden="true"
+                    />
+                  </a>
+                )}
             </div>
           </div>
 

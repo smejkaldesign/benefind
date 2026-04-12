@@ -7,12 +7,14 @@ import { Search, X } from "lucide-react";
 interface ProgramFiltersProps {
   activeCategory?: string;
   searchQuery?: string;
+  resultCount: number;
   categories: Array<{ value: string; label: string }>;
 }
 
 export function ProgramFilters({
   activeCategory,
   searchQuery,
+  resultCount,
   categories,
 }: ProgramFiltersProps) {
   const router = useRouter();
@@ -83,6 +85,7 @@ export function ProgramFilters({
         aria-label="Filter by category"
       >
         <button
+          aria-pressed={!activeCategory}
           onClick={() => updateParams({ category: undefined })}
           className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
             !activeCategory
@@ -95,6 +98,7 @@ export function ProgramFilters({
         {categories.map(({ value, label }) => (
           <button
             key={value}
+            aria-pressed={activeCategory === value}
             onClick={() =>
               updateParams({
                 category: activeCategory === value ? undefined : value,
@@ -111,8 +115,17 @@ export function ProgramFilters({
         ))}
       </div>
 
+      {/* Live region for result count */}
+      <p className="sr-only" aria-live="polite" role="status">
+        {isPending
+          ? "Loading programs..."
+          : `Showing ${resultCount} program${resultCount !== 1 ? "s" : ""}`}
+      </p>
+
       {isPending && (
-        <p className="text-xs text-text-subtle animate-pulse">Loading...</p>
+        <p className="text-xs text-text-muted animate-pulse" aria-hidden="true">
+          Loading...
+        </p>
       )}
     </div>
   );

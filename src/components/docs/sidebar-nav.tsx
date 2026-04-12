@@ -53,7 +53,7 @@ export function SidebarNav() {
     <nav aria-label="Docs navigation" className="flex flex-col gap-8">
       {DOCS_NAV.map((section) => (
         <div key={section.title}>
-          <p className="mb-3 font-mono text-[11px] uppercase tracking-widest text-text-subtle">
+          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-text-muted">
             {section.title}
           </p>
           <ul aria-label={section.title} className="flex flex-col gap-1">
@@ -63,6 +63,7 @@ export function SidebarNav() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
+                    aria-current={isActive ? "page" : undefined}
                     className={`block rounded px-2 py-1 text-sm transition-colors ${
                       isActive
                         ? "bg-brand/10 font-medium text-brand"
