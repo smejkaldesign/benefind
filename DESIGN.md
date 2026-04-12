@@ -1,287 +1,267 @@
-# Benefind Design System
+# DESIGN.md -- Benefind Design System
 
-> The single source of truth for visual & interaction patterns across Benefind.
-> Every page must inherit these tokens and patterns. If you need to deviate, update this doc first.
-
----
-
-## 1. Brand & Voice
-
-**Mission:** Help people and businesses claim every government benefit they deserve.
-
-**Voice:** Direct, confident, accessible. No jargon. No fluff. Plain language that respects the user's intelligence.
-
-**Visual identity:** Dark, premium, modern. Animated lilac gradients on a near-black surface. Serif headlines for authority, sans-serif body for clarity.
+Authoritative frontend reference. All tokens live in `src/app/globals.css` under the `@theme` block. Visual examples at `/docs/design-system`.
 
 ---
 
-## 2. Design Tokens
+## Component Library Stack
 
-All tokens live in `src/app/globals.css` under `@theme`. Reference them via Tailwind utility classes (`bg-surface`, `text-text`, `border-border`, etc.) — never hardcode hex values in components.
-
-### 2.1 Color Tokens
-
-| Token | Value | Usage |
+| Layer | Library | Purpose |
 |---|---|---|
-| `--color-surface` | `#121212` | Page background, dark text on lilac |
-| `--color-surface-dim` | `#1A1A1A` | Subtle alternate backgrounds (FAQ section, video bg) |
-| `--color-surface-bright` | `#2A2B25` | Cards, elevated surfaces |
-| `--color-surface-dark` | `#0E0E0E` | Deepest dark (rare) |
-| `--color-text` | `#FAF9F6` | Primary text on dark surface |
-| `--color-text-muted` | `#AFAEAC` | Secondary text, descriptions |
-| `--color-text-subtle` | `#868584` | Tertiary text, captions, footer copy |
-| `--color-border` | `#353534` | Card borders, dividers |
-| `--color-border-light` | `#E3E2E0` | Light borders (rare; on white surfaces) |
-| `--color-brand` | `#CAB1F7` | Primary CTA backgrounds, accent (lilac) |
-| `--color-brand-light` | `#DEB0F7` | Brand gradient end |
-| `--color-brand-dark` | `#B19EEF` | CTA hover state |
-| `--color-accent` | `#CAB1F7` | Same as brand — gradient start |
-| `--color-accent-end` | `#DEB0F7` | Gradient end |
-| `--color-success` | `#10B981` | Genuine success states only (NOT brand) |
-| `--color-warning` | `#F59E0B` | Warning toasts, badges |
-| `--color-error` | `#EF4444` | Error states |
-
-**Critical rule:** Lilac brand backgrounds ALWAYS use `text-surface` (dark text), never `text-white`. Lilac is too light for white text.
-
-### 2.2 Typography
-
-Two type families, both loaded in `globals.css`:
-
-| Family | Variable | Usage | Weights |
-|---|---|---|---|
-| **Aguzzo-TRIAL** | `font-display` | Headlines, hero titles, section H2s | 400, 500-600, 700 |
-| **Inter** | `font-inter` (default) | Body, UI, buttons, labels | 100-900 |
-
-**Hierarchy:**
-- **Hero headline:** `font-display text-4xl sm:text-6xl lg:text-[64px] font-semibold leading-[1.05] tracking-tight`
-- **Section H2:** `font-display text-3xl sm:text-4xl font-semibold tracking-tight`
-- **Stats values:** `font-display text-5xl font-semibold`
-- **Body:** `text-sm sm:text-base text-text-muted leading-relaxed`
-- **Labels:** `text-xs uppercase tracking-wider font-semibold text-text-subtle`
-
-### 2.3 Spacing & Layout
-
-**Page container widths:**
-- **Hero outer container:** `max-w-[1600px]` — visually 80px wider than content
-- **All other content sections:** `max-w-[1520px]` inside `px-6` (24px) — effective 1472px content area
-- The 40px-each-side offset is intentional and gives the hero a "wider canvas" feel.
-
-**Section padding (horizontal):**
-- All sections except hero: `px-6` (24px)
-- Hero: no padding (full bleed inside the 1600px outer)
-
-**Section padding (vertical):**
-- Standard sections: `py-20 sm:py-28` or `py-24 sm:py-32`
-- Footer: `py-12`
-- Hero top: `pt-20 sm:pt-24` (clears the fixed nav)
-
-**Border radius:**
-| Token | Value | Usage |
-|---|---|---|
-| `rounded-lg` | 8px | Buttons, inputs, dropdowns |
-| `rounded-[10px]` | 10px | Small icon containers |
-| `rounded-[16px]` | 16px | Cards, callout chips |
-| `rounded-[20px]` | 20px | Hero container top corners, large feature cards |
-| `rounded-full` | 50% | Avatars, circular icons |
-
-**Card pattern (universal):**
-```jsx
-<div className="rounded-[16px] border border-border bg-surface-bright p-6 sm:p-8 transition-all hover:border-accent/20">
-```
+| Base primitives | shadcn/ui (`base-nova` style) | Button, Card, Dialog, Input, etc. |
+| Marketing blocks | shadcnblocks (`@shadcnblocks` registry) | Navbar, Footer, Hero, CTA sections |
+| Visual effects | reactbits (custom wrappers) | DitherFade, Grainient, GradientBlinds, etc. |
+| App-specific | Custom components | AuthGuard, WorkspacePicker, ScreeningFlow |
 
 ---
 
-## 3. Components
+## How to Add Components
 
-### 3.1 Buttons
+### From shadcn/ui (base primitives)
 
-Three variants. ALL buttons use `rounded-lg` (8px) and `font-semibold`.
-
-**Primary (lilac, dark text):**
-```jsx
-<button className="inline-flex h-[52px] items-center gap-2 rounded-lg bg-brand px-6 text-sm font-semibold text-surface transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none">
+```bash
+npx shadcn@latest add {component-name}
+# Example: npx shadcn@latest add dialog
 ```
 
-**White (hero CTAs, dropdown triggers):**
-```jsx
-<button className="inline-flex h-[52px] items-center gap-2 rounded-lg border border-surface/20 bg-white px-6 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/95">
+Components land in `src/components/ui/`. Config uses `base-nova` style, `neutral` base color, Lucide icons, and CSS variables. See `components.json`.
+
+### From shadcnblocks (marketing blocks)
+
+```bash
+npx shadcn@latest add @shadcnblocks/{block-name}
+# Requires SHADCNBLOCKS_API_KEY in .env
 ```
 
-**Outline (secondary, on dark backgrounds):**
-```jsx
-<button className="rounded-lg border border-border px-4 py-1.5 text-sm font-semibold text-text-muted transition-colors hover:border-brand hover:text-brand">
+Registry URL: `https://shadcnblocks.com/r/{name}` (configured in `components.json`).
+
+---
+
+## Theme System
+
+**Dark-first design.** The HTML root sets `color-scheme: dark`. Light mode tokens exist in `:root` but dark is the primary experience.
+
+**Brand color:** `#cab1f7` (lilac), used for CTAs, links, focus rings, and accent gradients.
+
+**Font stack:**
+- **Display:** `Aguzzo-TRIAL` (serif, `font-display`, loaded via `@font-face` from `/fonts/`) -- headings, hero text
+- **Body:** `Geist` (Google Fonts, `--font-sans`) -- paragraphs, UI labels
+- **UI fallback:** `Inter` (Google Fonts, `--font-inter`) -- form elements, smaller UI text
+- **Mono:** system monospace -- code, eyebrows, meta labels
+
+**Border radius:** `--radius: 0.625rem` base, scaled via `--radius-sm` through `--radius-4xl`.
+
+---
+
+## Design Tokens
+
+### Brand
+
+| Token | Value | Use |
+|---|---|---|
+| `--color-brand` | `#cab1f7` | Primary CTAs, links, focus rings |
+| `--color-brand-light` | `#deb0f7` | Hover states, gradient endpoints |
+| `--color-brand-dark` | `#b19eef` | Pressed states, deeper accent |
+| `--color-brand-50` | `rgba(202,177,247,0.12)` | Soft background fills, badge tints |
+
+### Surfaces
+
+| Token | Value | Use |
+|---|---|---|
+| `--color-surface` | `#121212` | Default page background |
+| `--color-surface-dim` | `#1a1a1a` | Cards, panels, elevated sections |
+| `--color-surface-bright` | `#2a2b25` | Hover/emphasis highlights |
+| `--color-surface-dark` | `#0e0e0e` | Deep recessed areas |
+| `--color-surface-dark-dim` | `#0a0a0a` | Deepest background layer |
+
+### Text
+
+| Token | Value | Use |
+|---|---|---|
+| `--color-text` | `#faf9f6` | Primary text (warm off-white) |
+| `--color-text-muted` | `#afaeac` | Body copy, captions |
+| `--color-text-subtle` | `#868584` | Meta, timestamps, helper text |
+
+### Borders
+
+| Token | Value | Use |
+|---|---|---|
+| `--color-border` | `#353534` | Default borders, dividers |
+| `--color-border-dark` | `#2a2b25` | Quieter divisions |
+| `--color-border-light` | `#e3e2e0` | Light-mode borders (rare) |
+
+### Status
+
+| Token | Value | Use |
+|---|---|---|
+| `--color-success` | `#cab1f7` | Aliased to brand for consistency |
+| `--color-warning` | `#f59e0b` | Amber warnings |
+| `--color-error` | `#ef4444` | Red errors, destructive actions |
+
+### Spacing
+
+4px base unit. Tailwind scale: `h-1` (4px), `h-2` (8px), `h-3` (12px), `h-4` (16px), `h-6` (24px), `h-8` (32px), `h-12` (48px).
+
+---
+
+## Available Components (39 in `src/components/ui/`)
+
+### Primitives (inputs, forms)
+`button`, `input`, `input-group`, `textarea`, `label`, `checkbox`, `radio-group`, `select`, `switch`, `toggle`, `toggle-group`, `slider`
+
+### Layout
+`card`, `separator`, `scroll-area`, `resizable`, `carousel`
+
+### Navigation
+`tabs`, `navigation-menu`, `menubar`, `pagination`, `context-menu`, `dropdown-menu`
+
+### Overlays
+`dialog`, `drawer`, `sheet`, `popover`, `tooltip`, `hover-card`
+
+### Feedback
+`alert`, `sonner` (toast), `progress`, `skeleton`, `badge`
+
+### Data Display
+`table`, `accordion`, `collapsible`, `avatar`, `command`
+
+---
+
+## Reactbits Components (DO NOT REPLACE)
+
+Custom visual effect components in `src/components/`. Hand-tuned, not from a registry.
+
+| Component | File | Purpose |
+|---|---|---|
+| `DitherFade` | `dither-fade.tsx` | Dithered fade-in transition for sections |
+| `Grainient` | `grainient.tsx` | WebGL2 grainy gradient backgrounds (hero signature) |
+| `GradientBlinds` | `gradient-blinds.tsx` | Venetian-blind gradient reveal |
+| `AsciiWaves` | `ascii-waves.tsx` | ASCII art wave animation |
+| `BorderGlow` | `border-glow.tsx` | Animated glowing border effect |
+| `MagicBento` | `magic-bento.tsx` | Interactive bento grid with cursor tracking |
+| `SmoothScroll` | `smooth-scroll.tsx` | Lenis-based smooth scroll wrapper (loaded in layout) |
+
+**These are NOT shadcn primitives. Never swap them for registry alternatives.**
+
+### Grainient Standard Config (homepage hero)
+
+```tsx
+<Grainient color1="#FF9FFC" color2="#5227FF" color3="#B19EEF"
+  timeSpeed={0.25} rotationAmount={120} centerY={-0.25} colorBalance={0.15} />
 ```
 
-**Hover arrow dissolve (hero CTAs):**
-Wrap in `group`, append:
-```jsx
-<ArrowRight className="h-4 w-4 max-w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-200 group-hover:max-w-[16px] group-hover:translate-x-0 group-hover:opacity-100" />
+Always layer a dark vignette gradient on top for text legibility.
+
+---
+
+## Patterns
+
+### Page Shell
+
+```tsx
+<main className="bg-surface text-text min-h-dvh">
+  <div className="mx-auto max-w-[1520px] px-6">
+    <header className="mb-12">
+      <p className="mb-3 font-mono text-xs uppercase tracking-widest text-brand">[Eyebrow]</p>
+      <h1 className="font-display text-3xl font-semibold tracking-tight text-text md:text-4xl">Title</h1>
+      <p className="max-w-2xl text-base leading-relaxed text-text-muted">Subtitle</p>
+    </header>
+  </div>
+</main>
 ```
 
-### 3.2 Dropdowns (Nav menus)
+### Form Layout
 
-Pattern from `landing-nav.tsx`:
-- Trigger: same white button styling, `ChevronDown` indicator that `rotate-180` on open
-- Wrapper: `relative w-[200px]` (fixed width so menu matches)
-- Menu: `absolute left-0 right-0 top-[calc(100%+8px)] overflow-hidden rounded-lg border border-surface/20 bg-white shadow-lg`
-- Items: `flex items-center px-5 py-3 text-sm font-semibold text-surface hover:bg-surface/5`
-- Divider between items: `<div className="h-px bg-surface/10" />`
-- Close on outside click and on item click
-
-### 3.3 Hero Background — Grainient
-
-The signature animated gradient lives in `src/components/grainient.tsx` (WebGL2 shader).
-
-**Standard usage (matches homepage hero):**
-```jsx
-<Grainient
-  color1="#FF9FFC"
-  color2="#5227FF"
-  color3="#B19EEF"
-  timeSpeed={0.25}
-  rotationAmount={120}
-  centerY={-0.25}
-  colorBalance={0.15}
-/>
+```tsx
+<div className="space-y-4">
+  <div className="space-y-2">
+    <Label htmlFor="field">Field</Label>
+    <Input id="field" className="rounded-lg border-border bg-surface-dim" />
+  </div>
+</div>
 ```
 
-Always layer a dark vignette gradient at the top for headline legibility:
-```jsx
-<div className="pointer-events-none absolute inset-x-0 top-0 h-[55%]"
-     style={{ background: "linear-gradient(to bottom, rgba(20,10,40,0.55) 0%, rgba(20,10,40,0.35) 40%, transparent 100%)" }} />
+### Card Grid
+
+```tsx
+<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  <Card className="rounded-[16px] border-border bg-surface-bright p-6 sm:p-8 transition-all hover:border-accent/20">
+    ...
+  </Card>
+</div>
 ```
 
-And a fade-to-dark gradient at the bottom (45% height) for content transition.
+### Two-Column Page (Screening)
 
-### 3.4 Cards
+Left panel: `flex-1 lg:max-w-[55%] bg-surface` for interactive content.
+Right panel: `lg:flex-1` with Grainient + value prop overlay, white text with dark vignette.
 
-| Use case | Pattern |
+### Dark Theme Rules
+
+- `color-scheme: dark` on `<html>` by default
+- Use `bg-surface` / `bg-surface-dim` for backgrounds, never `bg-black` or `bg-gray-*`
+- Use `text-text` / `text-text-muted` / `text-text-subtle` for text hierarchy
+- Use `border-border` for all borders
+- Brand lilac (`text-brand`, `bg-brand`) for interactive elements and emphasis
+- On `bg-brand` surfaces, use `text-surface` (dark text), never `text-white`
+
+---
+
+## Typography Hierarchy
+
+| Role | Classes |
 |---|---|
-| Standard feature card | `rounded-[16px] border border-border bg-surface-bright p-6 sm:p-8` |
-| Stats card | Same + `font-display text-5xl font-semibold text-text` for the value |
-| Bento card with accent | Add left divider: `<div className="absolute inset-y-0 left-0 w-[2px] bg-brand opacity-60" />` |
-| Hero callout chip (lilac) | `bg: rgb(236, 222, 255)`, `rounded-[16px]`, `border 0.6px solid rgba(255,255,255,0.5)`, dark text, layered shadow |
-
-### 3.5 Forms / Inputs
-
-Used in `/contact` and screening:
-```jsx
-<input className="rounded-lg border border-border bg-surface-dim px-4 py-3 text-text placeholder:text-text-subtle focus:border-accent focus:outline-none transition-colors" />
-```
-
-Labels: `text-sm font-medium text-text-muted mb-1.5`
+| Hero headline | `font-display text-4xl sm:text-6xl lg:text-[64px] font-semibold leading-[1.05] tracking-tight` |
+| Section H2 | `font-display text-3xl sm:text-4xl font-semibold tracking-tight` |
+| Stats value | `font-display text-5xl font-semibold` |
+| Body | `text-sm sm:text-base text-text-muted leading-relaxed` |
+| Eyebrow/label | `font-mono text-xs uppercase tracking-widest text-brand` |
 
 ---
 
-## 4. Motion & Animation
+## Motion
 
-All page-level entrance animations use **framer-motion** with these defaults:
+All page-level entrance animations use **framer-motion**.
 
-**Entrance (hero, on mount):**
-```jsx
-initial={{ opacity: 0, y: 20 }}
-animate={{ opacity: 1, y: 0 }}
-transition={{ duration: 0.5, delay: 0.1 }}
-```
-
-**Scroll reveal (sections):**
-```jsx
-initial={{ opacity: 0, y: 24 }}
-whileInView={{ opacity: 1, y: 0 }}
-viewport={{ once: true, margin: "-80px" }}
-transition={{ duration: 0.5 }}
-```
-
-**Stagger child reveals:**
-```jsx
-variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
-```
-
-**Smooth scroll:** Site uses **Lenis** (`src/components/smooth-scroll.tsx`). Don't add per-section scroll handlers.
-
-**Performance rules:**
-- Always use `will-change: transform` + `translate3d(0,0,0)` on infinite-scroll animations (chip rows)
-- Avoid `backdrop-filter: blur` on multiple elements — it tanks frame rate
-- Animations should run on the compositor thread (transforms + opacity only)
+- **Entrance:** `initial={{ opacity: 0, y: 20 }}` / `animate={{ opacity: 1, y: 0 }}` / `duration: 0.5`
+- **Scroll reveal:** `whileInView` with `viewport={{ once: true, margin: "-80px" }}`
+- **Stagger:** `staggerChildren: 0.1`
+- **Smooth scroll:** Lenis via `SmoothScroll` component (don't add per-section scroll handlers)
+- **Performance:** transforms + opacity only on the compositor thread. Avoid `backdrop-filter: blur` on more than 2 elements per page.
 
 ---
 
-## 5. Page Layout Pattern
+## Button Variants and Sizes
 
-Every authenticated/screening page follows this structure when paired with hero-style content:
-
-```
-┌─────────────────────────────────────────┐
-│ Fixed Nav (max-w-[1520px], px-6, py-4)  │
-├──────────────────┬──────────────────────┤
-│                  │                      │
-│  Conversation    │   Grainient + value  │
-│  / Form panel    │   prop panel         │
-│  bg-surface      │   (right column)     │
-│  text-text       │                      │
-│                  │   Same Grainient as  │
-│                  │   homepage hero      │
-│                  │                      │
-└──────────────────┴──────────────────────┘
-```
-
-**Two-column page rules:**
-- Left: `flex-1 lg:max-w-[55%]` — interactive content (chat, form)
-- Right: `lg:flex-1` — visual context (Grainient + value prop)
-- Background of left: `bg-surface` (dark)
-- Background of right: Grainient component
-- Text on Grainient: white/text-white with dark vignette overlay for legibility
+**Variants:** `default`, `outline`, `secondary`, `ghost`, `destructive`, `link`
+**Sizes:** `xs`, `sm`, `default`, `lg`
+**Badge variants:** `default`, `brand`, `success`, `warning`, `error`
 
 ---
 
-## 6. Navigation
-
-Fixed top nav, transparent until `scrollY > 20`, then `bg-surface/80 backdrop-blur-[30px]`.
-
-**Structure:**
-- Left: Logo + LanguageSelector (left-aligned dropdown)
-- Right: Sign In (outline button) + Eligibility dropdown (white button, opens menu)
-- Inner container: `max-w-[1520px] mx-auto`
-- Padding: `px-6 py-4`
-
----
-
-## 7. Edge Treatments
-
-**Hero edge gradients:** 200px dark fade on left and right of the section, hidden at viewport >= 2000px (`min-[2000px]:hidden`). These create the cinematic letterbox effect at narrow viewports.
-
-**Dither/dissolve transitions:** Use a simple linear gradient for the bottom of the hero (transparent → `#121212`), NOT canvas-based dither (too expensive).
-
----
-
-## 8. Iconography
+## Iconography
 
 - **Library:** `lucide-react` exclusively
-- **Default size:** `h-4 w-4` (16px) for inline, `h-6 w-6` for card icons, `h-5 w-5` for nav
-- **Icon containers:** `h-10 w-10 rounded-[10px] bg-brand/10` with `text-brand` icon inside
+- **Sizes:** `h-4 w-4` (inline), `h-5 w-5` (nav), `h-6 w-6` (card icons)
+- **Icon containers:** `h-10 w-10 rounded-[10px] bg-brand/10` with `text-brand` icon
 
 ---
 
-## 9. Don'ts
+## Do's and Don'ts
 
-- ❌ No emerald/green colors (the brand is lilac)
-- ❌ No `text-white` on `bg-brand` — always `text-surface`
-- ❌ No hardcoded hex values in components — use tokens
-- ❌ No `pt-20` style padding on screening/full-screen pages — they're flush
-- ❌ No `backdrop-filter: blur` on more than 2 elements per page
-- ❌ No `font-medium` on display headings — always `font-semibold`
-- ❌ No `rounded-xl` (use `rounded-lg` 8px or `rounded-[16px]`)
-- ❌ No `text-emerald-*` anywhere — replace with `text-brand`
+**DO:**
+- Use shadcn/ui components before building custom ones
+- Use CSS variables from `globals.css`, never hardcode hex colors
+- Test in dark mode (primary theme)
+- Use `font-display` for headings, `font-sans` for body
+- Use the `cn()` utility from `@/lib/utils` for conditional classes
+- Run `pnpm type-check` before committing
 
----
-
-## 10. Adding a New Page
-
-Checklist:
-1. Wrap in `<main className="bg-surface text-text min-h-dvh">`
-2. If it has a hero, use `Grainient` with the standard color set
-3. If it has a nav, use `<LandingNav />`
-4. Use `max-w-[1520px]` for content width + `px-6` for section padding
-5. All buttons: `rounded-lg`, `font-semibold`, lilac primary or white CTA
-6. Run `pnpm type-check` before committing
-7. Update this DESIGN.md if you introduce a new pattern
+**DON'T:**
+- Replace reactbits visual effects with registry alternatives
+- Add new fonts without updating `globals.css` and `layout.tsx`
+- Use inline styles for colors or spacing (use tokens)
+- Use `bg-black`, `bg-white`, `text-gray-*` -- use semantic tokens
+- Use `text-white` on `bg-brand` -- always `text-surface` (lilac is too light for white text)
+- Use `backdrop-filter: blur` on more than 2 elements per page
+- Skip the `base-nova` style when adding shadcn components
+- Use `rounded-xl` -- use `rounded-lg` (8px) or `rounded-[16px]`
