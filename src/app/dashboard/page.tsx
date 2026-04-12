@@ -1,5 +1,6 @@
 import { requireAuth } from "@/components/auth-guard";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { listWorkspacesForUser } from "@/lib/db/workspaces";
 import { getLatestScreening, listScreenings } from "@/lib/db/screenings";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
@@ -31,8 +32,28 @@ export default async function DashboardPage() {
   const user = await requireAuth();
   const supabase = await createServerSupabase();
 
+  // Read workspace from cookie and verify membership (defense-in-depth)
   const cookieStore = await cookies();
   const workspaceId = cookieStore.get("bf-workspace")?.value;
+
+  if (workspaceId) {
+    const { data: memberships } = await listWorkspacesForUser(
+      supabase,
+      user.id,
+    );
+    const isMember = memberships?.some((m) => m.workspace_id === workspaceId);
+    if (!isMember) {
+      return (
+        <div className="space-y-6">
+          <PageHeader
+            title="Welcome back"
+            description={user.email ?? undefined}
+          />
+          <EmptyState />
+        </div>
+      );
+    }
+  }
 
   if (!workspaceId) {
     return (
