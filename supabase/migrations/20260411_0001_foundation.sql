@@ -80,35 +80,43 @@ $$;
 -- References public.workspace_members (created in 0003).
 -- ----------------------------------------------------------------------------
 
+-- NOTE: must be language plpgsql, NOT language sql. SQL-language functions
+-- have their bodies validated at CREATE time, which fails when the referenced
+-- table doesn't exist yet. plpgsql bodies are parsed lazily at call time.
 create or replace function public.is_workspace_member(ws_id uuid)
 returns boolean
-language sql
+language plpgsql
 stable
 security definer
 set search_path = public
 as $$
-  select exists (
+begin
+  return exists (
     select 1 from public.workspace_members
     where workspace_id = ws_id
       and user_id = auth.uid()
   );
+end;
 $$;
 
 -- ----------------------------------------------------------------------------
 -- RLS helper: is_admin()
 -- References public.admin_users (created in 0008).
+-- Same plpgsql rationale as is_workspace_member above.
 -- ----------------------------------------------------------------------------
 
 create or replace function public.is_admin()
 returns boolean
-language sql
+language plpgsql
 stable
 security definer
 set search_path = public
 as $$
-  select exists (
+begin
+  return exists (
     select 1 from public.admin_users
     where user_id = auth.uid()
       and disabled_at is null
   );
+end;
 $$;
