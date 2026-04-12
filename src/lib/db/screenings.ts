@@ -1,0 +1,123 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database, Tables, TablesInsert } from "@/types/database";
+import type { Json } from "@/types/database";
+
+type Client = SupabaseClient<Database>;
+type Screening = Tables<"screenings">;
+type ScreeningResult = Tables<"screening_results">;
+
+interface CreateScreeningInput {
+  workspaceId: string;
+  answers: Json;
+  engineVersion: string;
+  state?: string | null;
+  zip?: string | null;
+  householdSize?: number | null;
+  language?: string;
+  results: Array<{
+    programId: string;
+    confidenceScore: number;
+    eligibilityTier?: string;
+    estimatedValue?: string | null;
+    reasons: Json;
+  }>;
+}
+
+/**
+ * Creates a screening and its associated results in sequence.
+ * Marks the new screening as is_latest and unmarks any previous latest.
+ */
+export async function createScreening(
+  client: Client,
+  input: CreateScreeningInput,
+) {
+  // Unmark previous latest screening for this workspace
+  await client
+    .from("screenings")
+    .update({ is_latest: false })
+    .eq("workspace_id", input.workspaceId)
+    .eq("is_latest", true);
+
+  const { data: screening, error: screeningError } = await client
+    .from("screenings")
+    .insert({
+      workspace_id: input.workspaceId,
+      answers: input.answers,
+      engine_version: input.engineVersion,
+      state: input.state ?? null,
+      zip: input.zip ?? null,
+      household_size: input.householdSize ?? null,
+      language: input.language ?? "en",
+      is_latest: true,
+    } satisfies TablesInsert<"screenings">)
+    .select("*")
+    .single();
+
+  if (screeningError || !screening) {
+    return { data: null, error: screeningError };
+  }
+
+  if (input.results.length > 0) {
+    const resultRows: TablesInsert<"screening_results">[] = input.results.map(
+      (r) => ({
+        screening_id: screening.id,
+        workspace_id: input.workspaceId,
+        program_id: r.programId,
+        confidence_score: r.confidenceScore,
+        eligibility_tier: r.eligibilityTier ?? "unknown",
+        estimated_value: r.estimatedValue ?? null,
+        reasons: r.reasons,
+      }),
+    );
+
+    const { error: resultsError } = await client
+      .from("screening_results")
+      .insert(resultRows);
+
+    if (resultsError) {
+      return { data: screening, error: resultsError };
+    }
+  }
+
+  return { data: screening, error: null };
+}
+
+/**
+ * Returns the most recent screening for a workspace, with its results.
+ */
+export async function getLatestScreening(client: Client, workspaceId: string) {
+  return client
+    .from("screenings")
+    .select("*, screening_results(*)")
+    .eq("workspace_id", workspaceId)
+    .eq("is_latest", true)
+    .is("deleted_at", null)
+    .single();
+}
+
+/**
+ * Lists all screenings for a workspace, newest first.
+ */
+export async function listScreenings(client: Client, workspaceId: string) {
+  return client
+    .from("screenings")
+    .select("*")
+    .eq("workspace_id", workspaceId)
+    .is("deleted_at", null)
+    .order("created_at", { ascending: false });
+}
+
+/**
+ * Returns a single screening with all of its results.
+ */
+export async function getScreeningWithResults(
+  client: Client,
+  screeningId: string,
+) {
+  return client
+    .from("screenings")
+    .select("*, screening_results(*)")
+    .eq("id", screeningId)
+    .is("deleted_at", null)
+    .single();
+}
