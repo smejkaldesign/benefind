@@ -1,9 +1,11 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
+import { createServerSupabase } from "@/lib/supabase/server";
+import { listActivePrograms } from "@/lib/db/programs";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://benefind.app";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -70,5 +72,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...blogRoutes];
+  // Programs catalog routes
+  const supabase = await createServerSupabase();
+  const { data: programs } = await listActivePrograms(supabase, {
+    pageSize: 200,
+  });
+
+  const programRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${BASE_URL}/programs`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    ...(programs ?? []).map((p) => ({
+      url: `${BASE_URL}/programs/${p.id}`,
+      lastModified: p.updated_at ? new Date(p.updated_at) : now,
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+  ];
+
+  return [...staticRoutes, ...blogRoutes, ...programRoutes];
 }
