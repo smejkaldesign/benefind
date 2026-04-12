@@ -1,6 +1,7 @@
 import { requireAuth } from "@/components/auth-guard";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getScreeningWithResults } from "@/lib/db/screenings";
+import { listWorkspacesForUser } from "@/lib/db/workspaces";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -74,7 +75,7 @@ export default async function ScreeningDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireAuth();
+  const user = await requireAuth();
   const { id } = await params;
   const supabase = await createServerSupabase();
 
@@ -82,6 +83,15 @@ export default async function ScreeningDetailPage({
   const workspaceId = cookieStore.get("bf-workspace")?.value;
 
   if (!workspaceId) {
+    notFound();
+  }
+
+  // SECURITY: verify the user is actually a member of this workspace.
+  // The cookie is set client-side and could be forged.
+  const { data: memberships } = await listWorkspacesForUser(supabase, user.id);
+  const isMember =
+    memberships?.some((m) => m.workspace_id === workspaceId) ?? false;
+  if (!isMember) {
     notFound();
   }
 
