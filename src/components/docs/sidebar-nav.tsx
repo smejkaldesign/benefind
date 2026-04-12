@@ -37,10 +37,6 @@ const DOCS_NAV: DocsSection[] = [
     ],
   },
   {
-    title: "For designers and developers",
-    links: [{ href: "/docs/design-system", label: "Design system" }],
-  },
-  {
     title: "Legal",
     links: [{ href: "/docs/privacy", label: "Privacy policy" }],
   },

@@ -157,16 +157,18 @@ function Swatch({ token }: { token: ColorToken }) {
 }
 
 function Section({
+  id,
   title,
   eyebrow,
   children,
 }: {
+  id?: string;
   title: string;
   eyebrow?: string;
   children: React.ReactNode;
 }) {
   return (
-    <section className="mb-16">
+    <section id={id} className="mb-16 scroll-mt-24">
       {eyebrow && (
         <p className="mb-2 font-mono text-[11px] uppercase tracking-widest text-brand">
           [{eyebrow}]
@@ -204,7 +206,7 @@ export default function DesignSystemPage() {
         </p>
       </header>
 
-      <Section title="Brand colors" eyebrow="Colors">
+      <Section id="colors" title="Brand colors" eyebrow="Colors">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {BRAND_COLORS.map((t) => (
             <Swatch key={t.name} token={t} />
@@ -236,7 +238,7 @@ export default function DesignSystemPage() {
         </div>
       </Section>
 
-      <Section title="Typography" eyebrow="Type">
+      <Section id="typography" title="Typography" eyebrow="Type">
         <div className="space-y-8 rounded-xl border border-border bg-surface-dim p-8">
           <div>
             <p className="mb-1 font-mono text-[11px] uppercase tracking-widest text-text-subtle">
@@ -284,7 +286,7 @@ export default function DesignSystemPage() {
         </div>
       </Section>
 
-      <Section title="Buttons" eyebrow="Components">
+      <Section id="components" title="Buttons" eyebrow="Components">
         <div className="mb-6 rounded-xl border border-border bg-surface-dim p-8">
           <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-text-subtle">
             Variants
@@ -324,7 +326,7 @@ export default function DesignSystemPage() {
         </div>
       </Section>
 
-      <Section title="Spacing" eyebrow="Layout">
+      <Section id="spacing" title="Spacing" eyebrow="Layout">
         <div className="rounded-xl border border-border bg-surface-dim p-8">
           <div className="space-y-4">
             {[
@@ -347,7 +349,7 @@ export default function DesignSystemPage() {
         </div>
       </Section>
 
-      <Section title="Contributing" eyebrow="Meta">
+      <Section id="contributing" title="Contributing" eyebrow="Meta">
         <div className="rounded-xl border border-dashed border-border bg-surface-dim p-6">
           <p className="text-sm leading-relaxed text-text-muted">
             All tokens live in{" "}

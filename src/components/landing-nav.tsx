@@ -3,15 +3,19 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { LanguageSelector } from "@/components/language-selector";
 import { useI18n } from "@/lib/i18n/context";
 
 export function LandingNav() {
   const { t } = useI18n();
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const isDocsRoute = pathname.startsWith("/docs");
+  const isDesignSystem = pathname.startsWith("/docs/design-system");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -54,6 +58,28 @@ export function LandingNav() {
             />
           </Link>
           <LanguageSelector />
+          {isDocsRoute && (
+            <nav className="flex items-center gap-4" aria-label="Docs tabs">
+              <Link
+                href="/docs"
+                className={`text-sm transition-colors hover:text-brand ${
+                  isDocsRoute && !isDesignSystem
+                    ? "font-medium text-brand"
+                    : "text-text-muted"
+                }`}
+              >
+                Docs
+              </Link>
+              <Link
+                href="/docs/design-system"
+                className={`text-sm transition-colors hover:text-brand ${
+                  isDesignSystem ? "font-medium text-brand" : "text-text-muted"
+                }`}
+              >
+                Design
+              </Link>
+            </nav>
+          )}
         </div>
         <div className="flex items-center gap-3">
           <Link
