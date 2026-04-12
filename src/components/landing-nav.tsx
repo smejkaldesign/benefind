@@ -83,7 +83,7 @@ export function LandingNav() {
           <ThemeToggle />
           <Button
             variant="outline"
-            size="sm"
+            className="h-[44px] px-5"
             render={<Link href="/auth/login" />}
           >
             {t.common.signIn}

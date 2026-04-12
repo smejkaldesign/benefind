@@ -158,7 +158,7 @@ export default function Home() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="font-display text-3xl font-semibold tracking-tight text-text sm:text-4xl">
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-text sm:text-4xl lg:text-5xl">
               {t.landing.faqTitle}
             </h2>
             <p className="mt-3 text-text-muted">{t.landing.faqSubtitle}</p>
