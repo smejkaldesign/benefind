@@ -344,6 +344,101 @@ export const posts: BlogPost[] = [
     keyword: "medicaid vs medicare",
     lastModified: "2026-04-12",
   },
+
+  // ── Guías en español (2026-04-12) ─────────────────────────────────
+  {
+    slug: "es/snap-eligibility-2026",
+    title: "Elegibilidad para SNAP 2026: Reglas y Cómo Solicitar",
+    description:
+      "Elegibilidad para SNAP en 2026: límites de ingresos, reglas del hogar, requisitos de trabajo y pasos exactos para solicitar beneficios de alimentos en cada estado.",
+    date: "2026-04-12",
+    author: "Equipo de Benefind",
+    tags: [
+      "SNAP",
+      "Asistencia Alimentaria",
+      "Elegibilidad",
+      "Beneficios Gubernamentales",
+      "Español",
+    ],
+    published: true,
+    keyword: "elegibilidad snap 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "es/medicaid-eligibility-2026",
+    title:
+      "Elegibilidad para Medicaid 2026: Límites de Ingresos, Cobertura y Cómo Solicitar",
+    description:
+      "Límites de ingresos de Medicaid 2026 por estado, quién califica bajo la expansión, qué está cubierto y cómo solicitar en línea o en persona.",
+    date: "2026-04-12",
+    author: "Equipo de Benefind",
+    tags: [
+      "Medicaid",
+      "Salud",
+      "Elegibilidad",
+      "Beneficios Gubernamentales",
+      "Español",
+    ],
+    published: true,
+    keyword: "elegibilidad medicaid 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "es/section-8-eligibility-2026",
+    title:
+      "Elegibilidad para la Sección 8 2026: Límites de Ingresos, Listas de Espera y Cómo Solicitar",
+    description:
+      "Límites de ingresos de la Sección 8, cómo funcionan las listas de espera, consejos para inscribirse en varias listas y qué pasa después de ser aprobado.",
+    date: "2026-04-12",
+    author: "Equipo de Benefind",
+    tags: [
+      "Sección 8",
+      "Vivienda",
+      "Elegibilidad",
+      "Beneficios Gubernamentales",
+      "Español",
+    ],
+    published: true,
+    keyword: "elegibilidad sección 8 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "es/ssi-eligibility-2026",
+    title: "Beneficios SSI 2026: Elegibilidad, Montos de Pago y Cómo Solicitar",
+    description:
+      "Montos de pago del SSI, límites de ingresos y activos, quién califica para el Ingreso de Seguridad Suplementario y cómo presentar tu solicitud.",
+    date: "2026-04-12",
+    author: "Equipo de Benefind",
+    tags: [
+      "SSI",
+      "Discapacidad",
+      "Elegibilidad",
+      "Beneficios Gubernamentales",
+      "Español",
+    ],
+    published: true,
+    keyword: "elegibilidad ssi 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "es/eitc-eligibility-2026",
+    title:
+      "Crédito Tributario por Ingreso del Trabajo 2026: Montos, Elegibilidad y Cómo Reclamarlo",
+    description:
+      "Umbrales de ingresos del EITC, montos del crédito por estado civil e instrucciones paso a paso para reclamar el Crédito Tributario por Ingreso del Trabajo.",
+    date: "2026-04-12",
+    author: "Equipo de Benefind",
+    tags: [
+      "EITC",
+      "Crédito Tributario",
+      "Elegibilidad",
+      "Beneficios Gubernamentales",
+      "Español",
+    ],
+    published: true,
+    keyword: "crédito tributario ingreso del trabajo 2026",
+    lastModified: "2026-04-12",
+  },
 ];
 
 /**
