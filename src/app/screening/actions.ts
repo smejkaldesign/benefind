@@ -2,6 +2,7 @@
 
 import { createServerSupabase } from "@/lib/supabase/server";
 import { createScreening } from "@/lib/db/screenings";
+import { listWorkspacesForUser } from "@/lib/db/workspaces";
 import { cookies } from "next/headers";
 import type { Json } from "@/types/database";
 
@@ -39,11 +40,19 @@ export async function persistScreening(input: PersistScreeningInput) {
     return { screeningId: null };
   }
 
-  // Read active workspace from cookie
+  // Read active workspace from cookie and verify membership
   const cookieStore = await cookies();
   const workspaceId = cookieStore.get("bf-workspace")?.value;
 
   if (!workspaceId) {
+    return { screeningId: null };
+  }
+
+  // SECURITY: verify the user is actually a member of this workspace.
+  // The cookie is set client-side and could be forged.
+  const { data: memberships } = await listWorkspacesForUser(supabase, user.id);
+  const isMember = memberships?.some((m) => m.workspace_id === workspaceId);
+  if (!isMember) {
     return { screeningId: null };
   }
 

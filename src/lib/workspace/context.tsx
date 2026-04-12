@@ -67,7 +67,8 @@ export function WorkspaceProvider({
       if (ws) {
         setActiveWorkspace(ws);
         // Persist the selection in a cookie so the server can read it
-        document.cookie = `bf-workspace=${workspaceId};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+        const secure = window.location.protocol === "https:" ? ";secure" : "";
+        document.cookie = `bf-workspace=${workspaceId};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax${secure}`;
       }
     },
     [workspaces],

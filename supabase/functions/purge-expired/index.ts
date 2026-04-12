@@ -35,16 +35,19 @@ Deno.serve(async (req: Request) => {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-  // Parse optional overrides from request body
+  // Parse optional overrides from request body with safety floors.
+  // Minimum 30 days retention, 1 day grace — prevents accidental mass deletion.
+  const MIN_RETENTION = 30;
+  const MIN_GRACE = 1;
   let retentionDays = 365;
   let graceDays = 30;
   try {
     const body = await req.json();
     if (typeof body.retention_days === "number") {
-      retentionDays = body.retention_days;
+      retentionDays = Math.max(body.retention_days, MIN_RETENTION);
     }
     if (typeof body.grace_days === "number") {
-      graceDays = body.grace_days;
+      graceDays = Math.max(body.grace_days, MIN_GRACE);
     }
   } catch {
     // No body or invalid JSON — use defaults

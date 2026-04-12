@@ -26,22 +26,29 @@ export async function ensureWorkspace(client: Client, userId: string) {
     return { data: memberships, error: null };
   }
 
-  // First login: create a default personal workspace
-  const { data: workspace, error: createError } = await createWorkspace(
-    client,
-    {
-      name: "Personal",
-      slug: `personal-${userId.slice(0, 8)}`,
-      type: "individual",
-      ownerUserId: userId,
-    },
-  );
+  // First login: create a default personal workspace.
+  // Race condition guard: if two concurrent requests (auth callback + dashboard
+  // layout) both reach this point, the slug uniqueness constraint will cause
+  // one to fail. We catch that and re-fetch instead of erroring out.
+  const { error: createError } = await createWorkspace(client, {
+    name: "Personal",
+    slug: `personal-${userId.slice(0, 8)}`,
+    type: "individual",
+    ownerUserId: userId,
+  });
 
-  if (createError || !workspace) {
-    return { data: null, error: createError };
+  if (createError) {
+    // If the error is a uniqueness violation, the other request won the race.
+    // Re-fetch and return the workspace it created.
+    const isConflict =
+      createError.code === "23505" ||
+      createError.message?.includes("duplicate");
+    if (!isConflict) {
+      return { data: null, error: createError };
+    }
   }
 
-  // Re-fetch to get the full membership shape
+  // Re-fetch to get the full membership shape (works for both success and race-loser)
   const { data: newMemberships, error: refetchError } =
     await listWorkspacesForUser(client, userId);
 
