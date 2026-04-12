@@ -231,8 +231,9 @@ export default function ScreeningPage() {
             <Link
               href="/"
               className="text-text-subtle hover:text-text transition-colors"
+              aria-label="Back to home"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-5 w-5" aria-hidden="true" />
             </Link>
             <div className="flex-1">
               <div className="flex items-center justify-between">
@@ -242,9 +243,10 @@ export default function ScreeningPage() {
                 {result && (
                   <button
                     onClick={handleRestart}
+                    aria-label="Restart screening"
                     className="flex items-center gap-1 text-xs text-text-subtle hover:text-brand transition-colors"
                   >
-                    <RotateCcw className="h-3.5 w-3.5" />
+                    <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                     Restart
                   </button>
                 )}
@@ -378,7 +380,7 @@ export default function ScreeningPage() {
                 </button>
                 <button
                   onClick={handleRestart}
-                  className="rounded-lg border border-border px-6 py-3 text-sm font-semibold text-text-muted transition-colors hover:border-brand hover:text-brand"
+                  className="rounded-lg border border-border px-6 py-3 text-sm font-semibold text-text-muted transition-colors hover:border-brand hover:text-brand focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
                 >
                   Start Over
                 </button>
