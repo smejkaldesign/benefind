@@ -88,7 +88,7 @@ curl http://localhost:8080/health
 ┌─────────────┐         ┌──────────────────┐         ┌───────────────┐
 │  Benefind   │ upload  │   Supabase       │ webhook │  Edge Function │
 │  Client UI  │────────▶│   Storage        │────────▶│  scan-document │
-└─────────────┘         │  (user-docs)     │         └───────┬───────┘
+└─────────────┘         │   (documents)    │         └───────┬───────┘
                         └──────────────────┘                 │
                                                              │ POST /scan
                                                              ▼

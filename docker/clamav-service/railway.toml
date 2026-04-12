@@ -1,0 +1,16 @@
+[build]
+dockerfilePath = "docker/clamav-service/Dockerfile"
+watchPatterns = ["docker/clamav-service/**"]
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 120
+startCommand = "/app/entrypoint.sh"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+# ClamAV needs 1-2 GB for signature database + scanning.
+# The base image downloads ~400 MB of signatures on build.
+[deploy.resources]
+memoryMB = 2048
+cpuMillis = 1000

@@ -1,7 +1,7 @@
 // supabase/functions/scan-document/index.ts
 //
 // Supabase Edge Function triggered when a new object is uploaded to the
-// `user-documents` Storage bucket. Downloads the file, forwards it to the
+// `documents` Storage bucket. Downloads the file, forwards it to the
 // ClamAV sidecar service running on Railway, updates the matching
 // `documents` row with the scan verdict, and quarantines infected files.
 //
@@ -12,7 +12,7 @@
 //     "table": "objects",
 //     "schema": "storage",
 //     "record": {
-//       "bucket_id": "user-documents",
+//       "bucket_id": "documents",
 //       "name": "<workspace_id>/<document_id>/<filename>",
 //       "owner": "<user_id>",
 //       ...
@@ -31,7 +31,7 @@
 // Configure trigger (Supabase Dashboard -> Database -> Webhooks):
 //   Table: storage.objects
 //   Events: INSERT
-//   Filter: bucket_id = user-documents
+//   Filter: bucket_id = documents
 //   Target: Edge Function -> scan-document
 
 // deno-lint-ignore-file no-explicit-any
@@ -47,7 +47,7 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const CLAMAV_SERVICE_URL = Deno.env.get("CLAMAV_SERVICE_URL");
 const CLAMAV_SERVICE_TOKEN = Deno.env.get("CLAMAV_SERVICE_TOKEN");
 
-const BUCKET_ID = "user-documents";
+const BUCKET_ID = "documents";
 const SCAN_TIMEOUT_MS = 30_000;
 const MAX_FILE_SIZE_BYTES = 25 * 1024 * 1024; // 25 MB
 
