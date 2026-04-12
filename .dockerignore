@@ -8,4 +8,6 @@ docs
 !README.md
 .DS_Store
 tsconfig.tsbuildinfo
+# Duplicate dirs with spaces (macOS Finder creates these)
 public/blog/covers 2
+public/images/brand 2

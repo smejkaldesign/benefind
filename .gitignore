@@ -39,4 +39,6 @@ node-compile-cache/
 # misc
 *.tsbuildinfo
 next-env.d.ts
+# Duplicate dirs with spaces (macOS Finder creates these)
 public/blog/covers 2
+public/images/brand 2
