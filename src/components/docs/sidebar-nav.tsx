@@ -27,6 +27,17 @@ const DOCS_NAV: DocsSection[] = [
       { href: "/docs/guides", label: "All guides" },
       { href: "/blog/snap-eligibility-2026", label: "Apply for SNAP" },
       {
+        href: "/blog/medicaid-eligibility-2026",
+        label: "Apply for Medicaid",
+      },
+      {
+        href: "/blog/section-8-eligibility-2026",
+        label: "Apply for Section 8",
+      },
+      { href: "/blog/ssi-eligibility-2026", label: "Apply for SSI" },
+      { href: "/blog/eitc-eligibility-2026", label: "Claim the EITC" },
+      { href: "/blog/wic-eligibility-2026", label: "Apply for WIC" },
+      {
         href: "/blog/how-to-apply-for-liheap-heating-assistance",
         label: "Apply for LIHEAP",
       },
