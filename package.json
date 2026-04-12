@@ -13,6 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:types": "npx supabase gen types --lang=typescript --project-id ttbjntphwogjdzqxftas > src/types/database.ts",
+    "freshness": "tsx scripts/check-freshness.ts",
     "prepare": "husky"
   },
   "dependencies": {
