@@ -400,30 +400,21 @@ function ScreeningPageInner() {
                   Estimated ${result.totalEstimatedAnnual.toLocaleString()}/year
                   across{" "}
                   {
-                    result.programs.filter(
-                      (p) =>
-                        p.result.eligibilityTier ===
-                          "eligible_with_requirements" ||
-                        p.result.eligibilityTier === "probably_eligible",
+                    result.programs.filter((p) =>
+                      PURSUABLE_TIERS.has(p.result.eligibilityTier),
                     ).length
                   }{" "}
                   program
-                  {result.programs.filter(
-                    (p) =>
-                      p.result.eligibilityTier ===
-                        "eligible_with_requirements" ||
-                      p.result.eligibilityTier === "probably_eligible",
+                  {result.programs.filter((p) =>
+                    PURSUABLE_TIERS.has(p.result.eligibilityTier),
                   ).length !== 1
                     ? "s"
                     : ""}
                 </p>
                 <div className="flex flex-wrap justify-center gap-1.5 pt-1">
                   {result.programs
-                    .filter(
-                      (p) =>
-                        p.result.eligibilityTier ===
-                          "eligible_with_requirements" ||
-                        p.result.eligibilityTier === "probably_eligible",
+                    .filter((p) =>
+                      PURSUABLE_TIERS.has(p.result.eligibilityTier),
                     )
                     .map(({ program }) => (
                       <span
