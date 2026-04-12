@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { Suspense, useState, useRef, useEffect, useCallback } from "react";
 import {
   SCREENING_STEPS,
   answersToScreeningInput,
@@ -8,7 +8,7 @@ import {
 import { runScreening } from "@/lib/benefits/engine";
 import { PURSUABLE_TIERS, ENGINE_VERSION } from "@/lib/benefits/types";
 import type { ScreeningResult } from "@/lib/benefits/types";
-import { persistScreening } from "./actions";
+import { persistScreening, getLatestAnswers } from "./actions";
 import {
   ChatMessage,
   TypingIndicator,
@@ -29,7 +29,7 @@ import {
   Lock,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { US_STATES } from "@/lib/screening/us-states";
 
 interface Message {
@@ -57,14 +57,24 @@ const STEPS_PREVIEW = [
 ];
 
 export default function ScreeningPage() {
+  return (
+    <Suspense fallback={null}>
+      <ScreeningPageInner />
+    </Suspense>
+  );
+}
+
+function ScreeningPageInner() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isTyping, setIsTyping] = useState(false);
   const [result, setResult] = useState<ScreeningResult | null>(null);
+  const [prefillLoaded, setPrefillLoaded] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const scrollToBottom = useCallback(() => {
     setTimeout(() => {
@@ -86,6 +96,24 @@ export default function ScreeningPage() {
     [scrollToBottom],
   );
 
+  // Load previous answers when ?prefill=latest is set
+  useEffect(() => {
+    if (searchParams.get("prefill") !== "latest") {
+      setPrefillLoaded(true);
+      return;
+    }
+    getLatestAnswers()
+      .then(({ answers: prev }) => {
+        if (prev && Object.keys(prev).length > 0) {
+          setAnswers(prev);
+        }
+        setPrefillLoaded(true);
+      })
+      .catch(() => {
+        setPrefillLoaded(true);
+      });
+  }, [searchParams]);
+
   const showStep = useCallback(
     (stepIndex: number) => {
       const step = SCREENING_STEPS[stepIndex];
@@ -106,21 +134,39 @@ export default function ScreeningPage() {
   );
 
   useEffect(() => {
-    if (initialized.current) return;
+    if (initialized.current || !prefillLoaded) return;
     initialized.current = true;
 
-    addMessage(
-      "assistant",
-      "Hi! I'm here to help you find government benefits you may qualify for. This takes about 3 minutes.",
-    );
-    setTimeout(() => {
+    const isPrefill =
+      searchParams.get("prefill") === "latest" &&
+      Object.keys(answers).length > 0;
+
+    if (isPrefill) {
       addMessage(
         "assistant",
-        "Your answers are private and won't be shared with anyone. Let's get started.",
+        "Welcome back! I've loaded your previous answers. You can update anything that's changed, or just re-submit to get fresh results.",
       );
-      setTimeout(() => showStep(0), 400);
-    }, 800);
-  }, [addMessage, showStep]);
+      setTimeout(() => {
+        addMessage(
+          "assistant",
+          "Let's go through the questions. Your previous answers are pre-filled.",
+        );
+        setTimeout(() => showStep(0), 400);
+      }, 800);
+    } else {
+      addMessage(
+        "assistant",
+        "Hi! I'm here to help you find government benefits you may qualify for. This takes about 3 minutes.",
+      );
+      setTimeout(() => {
+        addMessage(
+          "assistant",
+          "Your answers are private and won't be shared with anyone. Let's get started.",
+        );
+        setTimeout(() => showStep(0), 400);
+      }, 800);
+    }
+  }, [addMessage, showStep, prefillLoaded, searchParams, answers]);
 
   function handleAnswer(value: string) {
     const step = SCREENING_STEPS[currentStep];
@@ -319,6 +365,7 @@ export default function ScreeningPage() {
                     <InlineOptions
                       step={currentStepData}
                       onSubmit={handleAnswer}
+                      defaultValue={answers[currentStepData.id]}
                     />
                   )}
               </div>
@@ -335,6 +382,7 @@ export default function ScreeningPage() {
                 onSubmit={handleAnswer}
                 isSecondary={hasInlineOptions(currentStepData)}
                 disabled={isTyping}
+                defaultValue={answers[currentStepData.id]}
               />
             </div>
           </div>

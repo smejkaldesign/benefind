@@ -10,6 +10,8 @@ interface StepInputProps {
   disabled?: boolean;
   /** When true, shows "Or type your answer..." placeholder (inline options are primary) */
   isSecondary?: boolean;
+  /** Pre-filled value from a previous screening */
+  defaultValue?: string;
 }
 
 export function StepInput({
@@ -17,8 +19,9 @@ export function StepInput({
   onSubmit,
   disabled,
   isSecondary,
+  defaultValue,
 }: StepInputProps) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(defaultValue ?? "");
   const [error, setError] = useState<string | null>(null);
 
   const isNumber = step.type === "number";
