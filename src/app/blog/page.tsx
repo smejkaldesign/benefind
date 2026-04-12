@@ -132,9 +132,26 @@ function PostCard({ post }: { post: BlogPostWithMeta }) {
   );
 }
 
-export default function BlogIndexPage() {
-  const posts = getAllPosts();
-  const [featured, ...rest] = posts;
+/** Posts per page: 1 featured + 8 grid = 9 total on page 1, 9 grid on subsequent pages. */
+const PAGE_SIZE = 9;
+
+export default async function BlogIndexPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const allPosts = getAllPosts();
+  const params = await searchParams;
+  const pageFromParams = params.page ? parseInt(params.page, 10) : 1;
+  const totalPages = Math.max(1, Math.ceil(allPosts.length / PAGE_SIZE));
+  const currentPage = Math.min(Math.max(1, pageFromParams), totalPages);
+
+  const startIdx = (currentPage - 1) * PAGE_SIZE;
+  const pagePosts = allPosts.slice(startIdx, startIdx + PAGE_SIZE);
+
+  // First page: first post is featured, rest are grid
+  const featured = currentPage === 1 ? pagePosts[0] : undefined;
+  const gridPosts = currentPage === 1 ? pagePosts.slice(1) : pagePosts;
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -143,7 +160,7 @@ export default function BlogIndexPage() {
     url: "https://benefind.app/blog",
     description:
       "Plain-language guides on SNAP, Medicaid, LIHEAP, R&D tax credits, and every other government benefit program.",
-    blogPost: posts.map((p) => ({
+    blogPost: allPosts.map((p) => ({
       "@type": "BlogPosting",
       headline: p.title,
       description: p.description,
@@ -183,19 +200,63 @@ export default function BlogIndexPage() {
 
         {/* Posts */}
         <div className="mx-auto max-w-[1520px] px-6 py-12 md:py-16">
-          {posts.length === 0 ? (
+          {allPosts.length === 0 ? (
             <p className="text-sm text-text-subtle">
               No posts yet. Check back soon.
             </p>
           ) : (
             <div className="flex flex-col gap-8">
               {featured && <FeaturedCard post={featured} />}
-              {rest.length > 0 && (
+              {gridPosts.length > 0 && (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {rest.map((post) => (
+                  {gridPosts.map((post) => (
                     <PostCard key={post.slug} post={post} />
                   ))}
                 </div>
+              )}
+
+              {/* Pagination controls (shown when >1 page) */}
+              {totalPages > 1 && (
+                <nav
+                  aria-label="Blog pagination"
+                  className="flex items-center justify-center gap-2 pt-8"
+                >
+                  {currentPage > 1 && (
+                    <Link
+                      href={
+                        currentPage === 2
+                          ? "/blog"
+                          : `/blog?page=${currentPage - 1}`
+                      }
+                      className="rounded-md border border-border px-4 py-2 text-sm text-text-muted transition-colors hover:border-brand/40 hover:text-text"
+                    >
+                      Previous
+                    </Link>
+                  )}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (page) => (
+                      <Link
+                        key={page}
+                        href={page === 1 ? "/blog" : `/blog?page=${page}`}
+                        className={`rounded-md border px-3 py-2 text-sm transition-colors ${
+                          page === currentPage
+                            ? "border-brand bg-brand/10 font-medium text-brand"
+                            : "border-border text-text-muted hover:border-brand/40 hover:text-text"
+                        }`}
+                      >
+                        {page}
+                      </Link>
+                    ),
+                  )}
+                  {currentPage < totalPages && (
+                    <Link
+                      href={`/blog?page=${currentPage + 1}`}
+                      className="rounded-md border border-border px-4 py-2 text-sm text-text-muted transition-colors hover:border-brand/40 hover:text-text"
+                    >
+                      Next
+                    </Link>
+                  )}
+                </nav>
               )}
             </div>
           )}
