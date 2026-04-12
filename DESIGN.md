@@ -265,3 +265,17 @@ All page-level entrance animations use **framer-motion**.
 - Use `backdrop-filter: blur` on more than 2 elements per page
 - Skip the `base-nova` style when adding shadcn components
 - Use `rounded-xl` -- use `rounded-lg` (8px) or `rounded-[16px]`
+- Add a UI component without updating BOTH `DESIGN.md` AND `/docs/design-system/components`
+
+---
+
+## Keeping Docs in Sync
+
+When adding or removing a shadcn/ui component, **always update in the same commit:**
+
+1. `src/components/ui/{name}.tsx` (the component itself)
+2. `DESIGN.md` (component count + category listing)
+3. `src/app/docs/design-system/components/page.tsx` (docs page entry)
+
+Run `pnpm design-sync` to verify DESIGN.md matches the actual component count.
+This check validates that every `.tsx` file in `src/components/ui/` is mentioned in DESIGN.md.
