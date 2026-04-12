@@ -93,7 +93,7 @@ const TIER_META: Record<EligibilityTier, TierMeta> = {
     icon: CircleDot,
     iconClass: "text-success",
     badgeClass: "bg-success/8 text-success border-success/25",
-    accentClass: "border-l-4 border-success/60",
+    accentClass: "border-l-4 border-dashed border-success",
     sortGroup: 2,
   },
   maybe_eligible: {
@@ -347,12 +347,20 @@ export default function ResultsPage() {
   return (
     <main className="min-h-dvh bg-surface">
       {/* Header with total */}
-      <div ref={heroRef} className="bg-brand px-4 py-8 text-white">
+      <div
+        ref={heroRef}
+        className="bg-brand px-4 py-8 text-white"
+        role="region"
+        aria-label="Screening results summary"
+      >
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-medium text-white/70">
             You may qualify for
           </p>
-          <p className="mt-1 text-4xl font-bold">
+          <p
+            className="mt-1 text-4xl font-bold"
+            aria-label={`Estimated ${result.totalEstimatedMonthly.toLocaleString()} dollars per month`}
+          >
             ${result.totalEstimatedMonthly.toLocaleString()}
             <span className="text-lg font-normal text-white/70">/month</span>
           </p>
@@ -380,8 +388,16 @@ export default function ResultsPage() {
             </p>
           </div>
         )}
-        <div className="mx-auto flex max-w-2xl">
+        <div
+          className="mx-auto flex max-w-2xl"
+          role="tablist"
+          aria-label="Results view"
+        >
           <button
+            id="tab-programs"
+            role="tab"
+            aria-selected={activeTab === "programs"}
+            aria-controls="tabpanel-results"
             onClick={() => setActiveTab("programs")}
             className={`flex-1 py-3 text-center text-sm font-medium transition-colors ${
               activeTab === "programs"
@@ -392,6 +408,10 @@ export default function ResultsPage() {
             Programs ({pursuable.length})
           </button>
           <button
+            id="tab-documents"
+            role="tab"
+            aria-selected={activeTab === "documents"}
+            aria-controls="tabpanel-results"
             onClick={() => setActiveTab("documents")}
             className={`flex-1 py-3 text-center text-sm font-medium transition-colors ${
               activeTab === "documents"
@@ -404,7 +424,14 @@ export default function ResultsPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-2xl px-4 py-6">
+      <div
+        id="tabpanel-results"
+        className="mx-auto max-w-2xl px-4 py-6"
+        role="tabpanel"
+        aria-labelledby={
+          activeTab === "programs" ? "tab-programs" : "tab-documents"
+        }
+      >
         {activeTab === "programs" ? (
           <div className="space-y-4">
             {/* Pursuable programs (tiers 1+2) */}
@@ -424,6 +451,7 @@ export default function ResultsPage() {
                   <div className="flex items-start gap-3">
                     <div
                       className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${colorClass}`}
+                      aria-hidden="true"
                     >
                       <Icon className="h-5 w-5" />
                     </div>
@@ -456,7 +484,10 @@ export default function ResultsPage() {
                       >
                         {tier.label}
                       </Badge>
-                      <span className="text-xs text-text-muted ml-auto">
+                      <span
+                        className="text-xs text-text-muted ml-auto"
+                        aria-label={`Confidence score: ${r.confidenceScore} out of 100`}
+                      >
                         {r.confidenceScore}/100
                       </span>
                     </div>
@@ -491,9 +522,14 @@ export default function ResultsPage() {
                       href={program.applicationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`Apply now for ${program.shortName} (opens in new tab)`}
                       className="inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-brand-dark"
                     >
-                      Apply now <ExternalLink className="h-3.5 w-3.5" />
+                      Apply now{" "}
+                      <ExternalLink
+                        className="h-3.5 w-3.5"
+                        aria-hidden="true"
+                      />
                     </a>
                   )}
                 </Card>
@@ -521,7 +557,10 @@ export default function ResultsPage() {
                           <p className="text-sm font-medium text-text">
                             {program.shortName}
                           </p>
-                          <span className="text-xs text-text-muted ml-auto">
+                          <span
+                            className="text-xs text-text-muted ml-auto"
+                            aria-label={`Confidence score: ${r.confidenceScore} out of 100`}
+                          >
                             {r.confidenceScore}/100
                           </span>
                         </div>
@@ -558,7 +597,10 @@ export default function ResultsPage() {
                           <p className="text-sm font-medium text-text">
                             {program.shortName}
                           </p>
-                          <span className="text-xs text-text-muted ml-auto">
+                          <span
+                            className="text-xs text-text-muted ml-auto"
+                            aria-label={`Confidence score: ${r.confidenceScore} out of 100`}
+                          >
                             {r.confidenceScore}/100
                           </span>
                         </div>
@@ -576,7 +618,7 @@ export default function ResultsPage() {
             <div className="flex flex-col items-center gap-3 pt-4">
               <Link href="/screening">
                 <Button variant="secondary" size="default">
-                  <RotateCcw className="h-4 w-4" />
+                  <RotateCcw className="h-4 w-4" aria-hidden="true" />
                   Update My Information
                 </Button>
               </Link>

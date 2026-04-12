@@ -66,7 +66,7 @@ curl http://localhost:8080/health
 
 3. **Set the health check** in Railway service settings:
    - Path: `/health`
-   - Timeout: 30s (signatures take time to load on cold start)
+   - Timeout: 120s (signatures take time to load on cold start)
 
 4. **Resource limits:**
    - Memory: 1 GB minimum, 2 GB recommended
@@ -88,7 +88,7 @@ curl http://localhost:8080/health
 ┌─────────────┐         ┌──────────────────┐         ┌───────────────┐
 │  Benefind   │ upload  │   Supabase       │ webhook │  Edge Function │
 │  Client UI  │────────▶│   Storage        │────────▶│  scan-document │
-└─────────────┘         │  (user-docs)     │         └───────┬───────┘
+└─────────────┘         │   (documents)    │         └───────┬───────┘
                         └──────────────────┘                 │
                                                              │ POST /scan
                                                              ▼
