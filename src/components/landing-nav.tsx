@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
+import { useTheme } from "next-themes";
 import { LanguageSelector } from "@/components/language-selector";
 import { useI18n } from "@/lib/i18n/context";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 export function LandingNav() {
   const { t } = useI18n();
   const pathname = usePathname();
+  const { resolvedTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const isDocsRoute = pathname.startsWith("/docs");
   const isDesignSystem = pathname.startsWith("/docs/design-system");
@@ -42,7 +44,11 @@ export function LandingNav() {
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/images/brand/logo-light.svg"
+              src={
+                resolvedTheme === "dark"
+                  ? "/images/brand/logo-light.svg"
+                  : "/images/brand/logo-dark.svg"
+              }
               alt={t.common.appName}
               width={120}
               height={22}
@@ -85,24 +91,24 @@ export function LandingNav() {
 
           {/* Eligibility dropdown using shadcn/ui DropdownMenu */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex h-[44px] w-[200px] items-center justify-between gap-2 rounded-lg border border-surface/20 bg-white px-5 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+            <DropdownMenuTrigger className="inline-flex h-[44px] w-[200px] items-center justify-between gap-2 rounded-lg border border-border bg-brand px-5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
               {t.landing.heroCta}
               <ChevronDown className="h-4 w-4 transition-transform duration-200 data-[popup-open]:rotate-180" />
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
               sideOffset={8}
-              className="w-[200px] bg-white shadow-lg"
+              className="w-[200px] bg-surface shadow-lg border border-border"
             >
               <DropdownMenuItem
-                className="px-5 py-3 text-sm font-semibold text-surface hover:bg-surface/5"
+                className="px-5 py-3 text-sm font-semibold text-text hover:bg-surface-dim"
                 render={<Link href="/screening" />}
               >
                 Personal Benefits
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-surface/10" />
+              <DropdownMenuSeparator className="bg-border" />
               <DropdownMenuItem
-                className="px-5 py-3 text-sm font-semibold text-surface hover:bg-surface/5"
+                className="px-5 py-3 text-sm font-semibold text-text hover:bg-surface-dim"
                 render={<Link href="/screening/company" />}
               >
                 Business Benefits

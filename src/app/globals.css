@@ -299,7 +299,7 @@
 
 /* Tables: zebra stripe */
 .benefind-prose table tbody tr:nth-child(even) td {
-  background-color: rgba(42, 43, 37, 0.4);
+  background-color: var(--surface-dim);
 }
 
 /* Images with captions */
