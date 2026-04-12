@@ -14,7 +14,8 @@ type Workspace = Tables<"workspaces">;
 interface WorkspaceMembership {
   workspace_id: string;
   role: string;
-  workspaces: Workspace;
+  // Supabase join shape: workspaces(*) returns the relation object
+  workspaces: Workspace | Workspace[] | null;
 }
 
 interface WorkspaceContextValue {
@@ -43,7 +44,13 @@ export function WorkspaceProvider({
   memberships,
   initialWorkspaceId,
 }: WorkspaceProviderProps) {
-  const workspaces = memberships.map((m) => m.workspaces);
+  const workspaces = memberships
+    .map((m) => {
+      const ws = m.workspaces;
+      if (Array.isArray(ws)) return ws[0] ?? null;
+      return ws;
+    })
+    .filter((ws): ws is Workspace => ws !== null);
 
   const initial =
     workspaces.find((w) => w.id === initialWorkspaceId) ??
