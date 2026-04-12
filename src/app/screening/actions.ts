@@ -1,7 +1,7 @@
 "use server";
 
 import { createServerSupabase } from "@/lib/supabase/server";
-import { createScreening } from "@/lib/db/screenings";
+import { createScreening, getLatestScreening } from "@/lib/db/screenings";
 import { listWorkspacesForUser } from "@/lib/db/workspaces";
 import { cookies } from "next/headers";
 import type { Json } from "@/types/database";
@@ -79,4 +79,37 @@ export async function persistScreening(input: PersistScreeningInput) {
   }
 
   return { screeningId: data?.id ?? null };
+}
+
+/**
+ * Server action to fetch the latest screening's answers for re-screening.
+ * Returns the answers record so the screening page can pre-populate fields.
+ */
+export async function getLatestAnswers(): Promise<{
+  answers: Record<string, string> | null;
+}> {
+  const supabase = await createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { answers: null };
+  }
+
+  const cookieStore = await cookies();
+  const workspaceId = cookieStore.get("bf-workspace")?.value;
+
+  if (!workspaceId) {
+    return { answers: null };
+  }
+
+  const { data: screening } = await getLatestScreening(supabase, workspaceId);
+
+  if (!screening?.answers) {
+    return { answers: null };
+  }
+
+  // The answers column is typed as Json; cast to the expected shape
+  return { answers: screening.answers as Record<string, string> };
 }

@@ -8,6 +8,8 @@ interface InlineOptionsProps {
   step: ScreeningStep;
   onSubmit: (value: string) => void;
   disabled?: boolean;
+  /** Pre-filled value from a previous screening */
+  defaultValue?: string;
 }
 
 export function hasInlineOptions(step: ScreeningStep): boolean {
@@ -22,9 +24,16 @@ export function InlineOptions({
   step,
   onSubmit,
   disabled,
+  defaultValue,
 }: InlineOptionsProps) {
-  const [selected, setSelected] = useState<string[]>([]);
-  const [stateValue, setStateValue] = useState("");
+  const [selected, setSelected] = useState<string[]>(
+    defaultValue && step.type === "multi-select"
+      ? defaultValue.split(",").filter(Boolean)
+      : [],
+  );
+  const [stateValue, setStateValue] = useState(
+    defaultValue && step.type === "state" ? defaultValue : "",
+  );
 
   if (step.type === "select") {
     return (
