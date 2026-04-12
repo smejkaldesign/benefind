@@ -5,22 +5,31 @@ import { createScreening, getLatestScreening } from "@/lib/db/screenings";
 import { listWorkspacesForUser } from "@/lib/db/workspaces";
 import { cookies } from "next/headers";
 import type { Json } from "@/types/database";
+import { z } from "zod";
 
-interface PersistScreeningInput {
-  answers: Record<string, string>;
-  engineVersion: string;
-  state?: string;
-  zip?: string;
-  householdSize?: number;
-  language?: string;
-  results: Array<{
-    programId: string;
-    confidenceScore: number;
-    eligibilityTier?: string;
-    estimatedValue?: string | null;
-    reasons: Record<string, unknown>;
-  }>;
-}
+const PersistScreeningSchema = z.object({
+  answers: z
+    .record(z.string(), z.string())
+    .refine((obj) => Object.keys(obj).length <= 100, {
+      message: "Too many answer entries (max 100)",
+    }),
+  engineVersion: z.string().min(1),
+  state: z.string().optional(),
+  zip: z.string().optional(),
+  householdSize: z.number().int().positive().optional(),
+  language: z.string().optional(),
+  results: z.array(
+    z.object({
+      programId: z.string().min(1),
+      confidenceScore: z.number().min(0).max(100),
+      eligibilityTier: z.string().optional(),
+      estimatedValue: z.string().nullable().optional(),
+      reasons: z.record(z.string(), z.unknown()),
+    }),
+  ),
+});
+
+type PersistScreeningInput = z.infer<typeof PersistScreeningSchema>;
 
 /**
  * Server action to persist a screening result. Called after the client-side
@@ -29,7 +38,14 @@ interface PersistScreeningInput {
  * Returns the screening ID on success, or null if the user is not
  * authenticated (screening still works client-only in that case).
  */
-export async function persistScreening(input: PersistScreeningInput) {
+export async function persistScreening(rawInput: unknown) {
+  const parsed = PersistScreeningSchema.safeParse(rawInput);
+  if (!parsed.success) {
+    console.error("Invalid screening input:", parsed.error.message);
+    return { screeningId: null };
+  }
+  const input: PersistScreeningInput = parsed.data;
+
   const supabase = await createServerSupabase();
   const {
     data: { user },
@@ -101,6 +117,14 @@ export async function getLatestAnswers(): Promise<{
   const workspaceId = cookieStore.get("bf-workspace")?.value;
 
   if (!workspaceId) {
+    return { answers: null };
+  }
+
+  // SECURITY: verify the user is actually a member of this workspace.
+  // The cookie is set client-side and could be forged.
+  const { data: memberships } = await listWorkspacesForUser(supabase, user.id);
+  const isMember = memberships?.some((m) => m.workspace_id === workspaceId);
+  if (!isMember) {
     return { answers: null };
   }
 
