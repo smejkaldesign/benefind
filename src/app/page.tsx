@@ -4,8 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, User, Building2, ArrowRight } from "lucide-react";
+import dynamic from "next/dynamic";
 import { LandingNav } from "@/components/landing-nav";
-import { Grainient } from "@/components/grainient";
+
+const Grainient = dynamic(
+  () => import("@/components/grainient").then((mod) => mod.Grainient),
+  { ssr: false },
+);
 import { SuccessChips } from "@/components/landing/success-chips";
 import { StatsStrip } from "@/components/landing/stats-strip";
 import { BentoGrid } from "@/components/landing/bento-grid";

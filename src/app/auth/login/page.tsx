@@ -5,8 +5,14 @@ import { createClient } from "@/lib/supabase/client";
 import { ArrowLeft, Mail, Loader2, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { LandingNav } from "@/components/landing-nav";
-import { GradientBlinds } from "@/components/gradient-blinds";
+
+const GradientBlinds = dynamic(
+  () =>
+    import("@/components/gradient-blinds").then((mod) => mod.GradientBlinds),
+  { ssr: false },
+);
 
 const RATE_LIMIT_SECONDS = 60;
 

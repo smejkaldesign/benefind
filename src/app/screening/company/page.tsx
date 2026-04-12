@@ -17,7 +17,12 @@ import {
   InlineOptions,
   hasInlineOptions,
 } from "@/components/screening/inline-options";
-import { Grainient } from "@/components/grainient";
+import dynamic from "next/dynamic";
+
+const Grainient = dynamic(
+  () => import("@/components/grainient").then((mod) => mod.Grainient),
+  { ssr: false },
+);
 import Image from "next/image";
 import { STORAGE_KEYS } from "@/lib/constants";
 import {
