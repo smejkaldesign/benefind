@@ -8,7 +8,6 @@ import {
   Heart,
   DollarSign,
   Home,
-  Zap,
   GraduationCap,
   Receipt,
   ShieldCheck,

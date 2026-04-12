@@ -1,10 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database, Tables } from "@/types/database";
+import type { Database } from "@/types/database";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Client = SupabaseClient<Database, any>;
-type Subscription = Tables<"subscriptions">;
-type Invoice = Tables<"invoices">;
 
 /**
  * Returns the current subscription for a user.

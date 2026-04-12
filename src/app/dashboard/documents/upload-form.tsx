@@ -10,7 +10,6 @@ import {
   scanStatusMessage,
 } from "@/lib/documents/scan";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Upload, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 

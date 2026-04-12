@@ -7,7 +7,6 @@ import { listDocuments, softDeleteDocument } from "@/lib/db/documents";
 import {
   scanStatusLabel,
   isScanPending,
-  isScanFailed,
   isDocumentDownloadable,
 } from "@/lib/documents/types";
 import {
@@ -148,8 +147,6 @@ function DocumentRow({
   onDownload: () => void;
 }) {
   const downloadable = isDocumentDownloadable(doc);
-  const pending = isScanPending(doc.scan_status);
-  const failed = isScanFailed(doc.scan_status);
 
   return (
     <div className="flex items-center gap-3 px-4 py-3 sm:px-6">

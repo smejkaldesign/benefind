@@ -5,7 +5,6 @@ import type {
   ReasonsPayload,
   RuleResult,
   ScoredEligibilityResult,
-  Signal,
   MissingField,
 } from "./types";
 import { ENGINE_VERSION } from "./types";

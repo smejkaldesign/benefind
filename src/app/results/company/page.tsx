@@ -11,10 +11,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { STORAGE_KEYS } from "@/lib/constants";
 import {
-  ArrowRight,
   ExternalLink,
   TrendingUp,
-  ShieldCheck,
   Receipt,
   Landmark,
   Award,
