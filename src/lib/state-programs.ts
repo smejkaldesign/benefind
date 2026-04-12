@@ -42,6 +42,26 @@ export const PROGRAM_GUIDES: Record<string, { label: string; href: string }> = {
     label: "Section 8 Eligibility Guide 2026",
     href: "/blog/section-8-eligibility-2026",
   },
+  ssi: {
+    label: "SSI Benefits Guide 2026",
+    href: "/blog/ssi-eligibility-2026",
+  },
+  eitc: {
+    label: "EITC Guide 2026",
+    href: "/blog/eitc-eligibility-2026",
+  },
+  chip: {
+    label: "CHIP Guide 2026",
+    href: "/blog/chip-eligibility-2026",
+  },
+  wic: {
+    label: "WIC Guide 2026",
+    href: "/blog/wic-eligibility-2026",
+  },
+  "pell-grant": {
+    label: "Pell Grant Guide 2026",
+    href: "/blog/pell-grant-eligibility-2026",
+  },
 };
 
 export const STATE_OVERLAYS: StateOverlay[] = [
