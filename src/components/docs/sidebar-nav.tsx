@@ -53,6 +53,15 @@ const DOCS_NAV: DocsSection[] = [
   },
 ];
 
+/**
+ * Docs sidebar with flat section/link structure.
+ * The shadcn/ui Sidebar was evaluated but not adopted because:
+ * 1. This sidebar has no collapsible groups, sub-menus, or icon-only mode.
+ * 2. All links are simple anchor elements; no actions, badges, or tooltips.
+ * 3. The current implementation is ~30 lines and fully accessible (aria-label,
+ *    aria-current). Wrapping in shadcn Sidebar primitives would add abstraction
+ *    without improving functionality.
+ */
 export function SidebarNav() {
   const pathname = usePathname();
 
