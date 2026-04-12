@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
   alternates: {
@@ -13,5 +14,10 @@ export default function BlogLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <Footer />
+    </>
+  );
 }

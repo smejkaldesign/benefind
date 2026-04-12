@@ -22,6 +22,8 @@ export interface BlogPost {
   heroImage?: string;
   /** Primary SEO keyword cluster for the post. */
   keyword?: string;
+  /** ISO date string for last modification. Defaults to `date` if omitted. */
+  lastModified?: string;
 }
 
 export interface BlogPostWithMeta extends BlogPost {
@@ -43,8 +45,8 @@ export const posts: BlogPost[] = [
     author: "Benefind Team",
     tags: ["Government Benefits", "Eligibility", "Guide"],
     published: true,
-    heroImage: "/blog/covers/what-government-benefits-do-i-qualify-for.jpg",
     keyword: "government benefits I qualify for",
+    lastModified: "2026-04-09",
   },
   {
     slug: "snap-eligibility-2026",
@@ -55,8 +57,8 @@ export const posts: BlogPost[] = [
     author: "Benefind Team",
     tags: ["SNAP", "Food Assistance", "Eligibility", "Government Benefits"],
     published: true,
-    heroImage: "/blog/covers/snap-eligibility-2026.jpg",
     keyword: "snap eligibility 2026",
+    lastModified: "2026-04-09",
   },
   {
     slug: "rd-tax-credit-small-business-2026",
@@ -72,8 +74,8 @@ export const posts: BlogPost[] = [
       "Startup",
     ],
     published: true,
-    heroImage: "/blog/covers/rd-tax-credit-small-business-2026.jpg",
     keyword: "R&D tax credit small business",
+    lastModified: "2026-04-09",
   },
   {
     slug: "how-to-apply-for-liheap-heating-assistance",
@@ -84,8 +86,8 @@ export const posts: BlogPost[] = [
     author: "Benefind Team",
     tags: ["LIHEAP", "Energy Assistance", "Government Benefits", "How To"],
     published: true,
-    heroImage: "/blog/covers/how-to-apply-for-liheap-heating-assistance.jpg",
     keyword: "how to apply for LIHEAP",
+    lastModified: "2026-04-09",
   },
   {
     slug: "free-government-grants-single-mothers",
@@ -96,12 +98,266 @@ export const posts: BlogPost[] = [
     author: "Benefind Team",
     tags: ["Single Mothers", "Government Benefits", "Grants", "Family"],
     published: true,
-    heroImage: "/blog/covers/free-government-grants-single-mothers.jpg",
     keyword: "free government grants for single mothers",
+    lastModified: "2026-04-09",
+  },
+
+  // ── Consumer program guides (2026-04-12) ──────────────────────────
+  {
+    slug: "medicaid-eligibility-2026",
+    title: "Medicaid Eligibility 2026: Income Limits, Coverage & How to Apply",
+    description:
+      "2026 Medicaid income limits by state, who qualifies under expansion, what's covered, and how to apply online or in person.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Medicaid", "Healthcare", "Eligibility", "Government Benefits"],
+    published: true,
+    keyword: "medicaid eligibility 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "section-8-eligibility-2026",
+    title:
+      "Section 8 Housing Eligibility 2026: Income Limits, Waitlists & How to Apply",
+    description:
+      "Section 8 income limits, how waitlists work, tips for getting on multiple lists, and what happens after you're approved.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Section 8", "Housing", "Eligibility", "Government Benefits"],
+    published: true,
+    keyword: "section 8 eligibility 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "ssi-eligibility-2026",
+    title: "SSI Benefits 2026: Eligibility, Payment Amounts & How to Apply",
+    description:
+      "SSI payment amounts, income and asset limits, who qualifies for Supplemental Security Income, and how to file your application.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["SSI", "Disability", "Eligibility", "Government Benefits"],
+    published: true,
+    keyword: "ssi eligibility 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "eitc-eligibility-2026",
+    title: "Earned Income Tax Credit 2026: Amounts, Eligibility & How to Claim",
+    description:
+      "EITC income thresholds, credit amounts by filing status, and step-by-step instructions to claim the Earned Income Tax Credit.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["EITC", "Tax Credit", "Eligibility", "Government Benefits"],
+    published: true,
+    keyword: "earned income credit 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "pell-grant-eligibility-2026",
+    title: "Pell Grant 2026-2027: Eligibility, Amounts & FAFSA Guide",
+    description:
+      "Maximum Pell Grant amounts, EFC cutoffs, FAFSA deadlines, and how to maximize your award for the 2026-2027 school year.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Pell Grant", "Education", "FAFSA", "Government Benefits"],
+    published: true,
+    keyword: "pell grant eligibility 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "chip-eligibility-2026",
+    title: "CHIP 2026: Free & Low-Cost Health Insurance for Children",
+    description:
+      "CHIP income limits, what's covered for kids, how it differs from Medicaid, and how to enroll your child in every state.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["CHIP", "Healthcare", "Children", "Government Benefits"],
+    published: true,
+    keyword: "chip insurance eligibility",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "wic-eligibility-2026",
+    title: "WIC Eligibility 2026: Income Limits, Benefits & How to Enroll",
+    description:
+      "WIC income guidelines, food packages, how to find your local WIC office, and same-day enrollment tips for pregnant women and families.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["WIC", "Food Assistance", "Family", "Government Benefits"],
+    published: true,
+    keyword: "wic eligibility 2026",
+    lastModified: "2026-04-12",
+  },
+
+  // ── Business program guides (2026-04-12) ──────────────────────────
+  {
+    slug: "wotc-tax-credit-2026",
+    title:
+      "Work Opportunity Tax Credit (WOTC) 2026: Hiring Credits for Employers",
+    description:
+      "WOTC target groups, credit amounts per hire, certification steps, and how to claim the Work Opportunity Tax Credit on your return.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["WOTC", "Tax Credit", "Small Business", "Hiring"],
+    published: true,
+    keyword: "wotc tax credit 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "sbir-sttr-grants-2026",
+    title:
+      "SBIR/STTR Grants 2026: How to Win Small Business Innovation Funding",
+    description:
+      "Phase I/II/III structure, agency budgets, proposal tips, and timelines for winning SBIR and STTR innovation grants.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["SBIR", "STTR", "Grants", "Small Business"],
+    published: true,
+    keyword: "sbir grants 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "sba-8a-program-2026",
+    title: "SBA 8(a) Business Development Program: Eligibility & How to Apply",
+    description:
+      "SBA 8(a) eligibility criteria, application process, sole-source contract benefits, and how to maximize the nine-year program term.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["SBA", "8(a)", "Small Business", "Government Benefits"],
+    published: true,
+    keyword: "sba 8(a) program eligibility",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "clean-energy-itc-2026",
+    title:
+      "Clean Energy Investment Tax Credit 2026: Section 48 Guide for Businesses",
+    description:
+      "Section 48 ITC rates, bonus adders for domestic content and energy communities, eligible technologies, and how to claim the credit.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Clean Energy", "ITC", "Tax Credit", "Small Business"],
+    published: true,
+    keyword: "clean energy tax credit 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "opportunity-zones-2026",
+    title:
+      "Opportunity Zone Tax Benefits 2026: Capital Gains Deferral & Investment Guide",
+    description:
+      "How Opportunity Zones defer and reduce capital gains taxes, qualified fund requirements, and key deadlines investors need to know.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Opportunity Zones", "Tax Benefits", "Investment", "Small Business"],
+    published: true,
+    keyword: "opportunity zone tax benefits",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "step-export-grants-2026",
+    title:
+      "STEP Export Grants for Small Business: Fund Your International Expansion",
+    description:
+      "How to apply for STEP grants, eligible export activities, award amounts by state, and tips for first-time exporters.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["STEP", "Export", "Grants", "Small Business"],
+    published: true,
+    keyword: "step export grants",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "usda-rural-business-grants-2026",
+    title:
+      "USDA Rural Business Development Grants 2026: Eligibility & How to Apply",
+    description:
+      "USDA RBDG eligibility, grant amounts, rural area definitions, and application steps for small businesses and nonprofits.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["USDA", "Rural", "Grants", "Small Business"],
+    published: true,
+    keyword: "usda rural business grants",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "state-workforce-training-grants-2026",
+    title:
+      "State Workforce Training Grants 2026: Employee Training Incentives by State",
+    description:
+      "State-by-state workforce training grants, reimbursement rates, eligible training types, and how to apply for employee development funds.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Workforce Training", "State Programs", "Small Business", "Grants"],
+    published: true,
+    keyword: "state workforce training grants",
+    lastModified: "2026-04-12",
+  },
+
+  // ── Supporting posts (2026-04-12) ─────────────────────────────────
+  {
+    slug: "small-business-grants-2026",
+    title:
+      "Small Business Grants 2026: Federal and State Programs You Can Actually Get",
+    description:
+      "Curated list of federal and state small business grants with real eligibility requirements, award sizes, and application links.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Small Business", "Grants", "Government Benefits", "Guide"],
+    published: true,
+    keyword: "small business grants 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "government-benefits-for-veterans-2026",
+    title: "Government Benefits for Veterans in 2026",
+    description:
+      "VA healthcare, disability compensation, education benefits, home loans, and other federal programs available to veterans in 2026.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Veterans", "Government Benefits", "Guide"],
+    published: true,
+    keyword: "government benefits for veterans",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "snap-benefits-college-students-2026",
+    title: "SNAP Benefits for College Students 2026: Do You Qualify?",
+    description:
+      "SNAP exemptions for college students, work-study rules, state waivers, and how to apply if you're enrolled in higher education.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["SNAP", "College Students", "Food Assistance", "Eligibility"],
+    published: true,
+    keyword: "snap benefits college students",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "medicaid-vs-medicare-2026",
+    title: "Medicaid vs Medicare: What's the Difference in 2026?",
+    description:
+      "Side-by-side comparison of Medicaid and Medicare eligibility, coverage, costs, and how to know which program is right for you.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Medicaid", "Medicare", "Healthcare", "Comparison"],
+    published: true,
+    keyword: "medicaid vs medicare",
+    lastModified: "2026-04-12",
   },
 ];
 
-import { getPostWordCount } from "./blog-toc";
+/**
+ * getPostWordCount is loaded lazily to avoid pulling node:fs into
+ * edge-runtime bundles (e.g. opengraph-image.tsx imports `posts`).
+ */
+let _getPostWordCount: ((slug: string) => number) | null = null;
+function wordCount(slug: string): number {
+  if (!_getPostWordCount) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    _getPostWordCount = require("./blog-toc").getPostWordCount;
+  }
+  return _getPostWordCount!(slug);
+}
 
 export function getAllPosts(): BlogPostWithMeta[] {
   return posts
@@ -109,7 +365,7 @@ export function getAllPosts(): BlogPostWithMeta[] {
     .sort((a, b) => (a.date < b.date ? 1 : -1))
     .map((p) => ({
       ...p,
-      readingTime: estimateReadingTime(getPostWordCount(p.slug)),
+      readingTime: estimateReadingTime(wordCount(p.slug)),
     }));
 }
 
@@ -118,7 +374,7 @@ export function getPost(slug: string): BlogPostWithMeta | undefined {
   if (!post) return undefined;
   return {
     ...post,
-    readingTime: estimateReadingTime(getPostWordCount(post.slug)),
+    readingTime: estimateReadingTime(wordCount(post.slug)),
   };
 }
 

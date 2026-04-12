@@ -18,6 +18,7 @@ interface Guide {
 }
 
 const GUIDES: Guide[] = [
+  // ── Existing guides ───────────────────────────────────────────────
   {
     href: "/blog/snap-eligibility-2026",
     title: "Apply for SNAP (food stamps)",
@@ -58,37 +59,165 @@ const GUIDES: Guide[] = [
     audience: "Consumer",
     status: "Published",
   },
+
+  // ── Consumer program guides ───────────────────────────────────────
   {
-    href: "#",
+    href: "/blog/medicaid-eligibility-2026",
     title: "Apply for Medicaid in every state",
     summary:
       "State-by-state Medicaid expansion rules, income limits, and application links for all 50 states and DC.",
     audience: "Consumer",
-    status: "Coming soon",
+    status: "Published",
   },
   {
-    href: "#",
-    title: "Apply for WIC (food support for pregnancy and young children)",
-    summary:
-      "How WIC is different from SNAP, what it pays for, and how to enroll same-day at your county WIC office.",
-    audience: "Family",
-    status: "Coming soon",
-  },
-  {
-    href: "#",
-    title: "Apply for SBIR/STTR small business innovation grants",
-    summary:
-      "The Phase I/Phase II/Phase III structure, which agencies fund which kinds of work, and how to win your first award.",
-    audience: "Business",
-    status: "Coming soon",
-  },
-  {
-    href: "#",
+    href: "/blog/section-8-eligibility-2026",
     title: "Apply for Section 8 housing choice vouchers",
     summary:
       "How the waitlist works, how to get on multiple lists at once, and what to do while you wait.",
     audience: "Consumer",
-    status: "Coming soon",
+    status: "Published",
+  },
+  {
+    href: "/blog/ssi-eligibility-2026",
+    title: "Apply for SSI (Supplemental Security Income)",
+    summary:
+      "Payment amounts, income and asset limits, who qualifies, and step-by-step application instructions.",
+    audience: "Consumer",
+    status: "Published",
+  },
+  {
+    href: "/blog/eitc-eligibility-2026",
+    title: "Claim the Earned Income Tax Credit",
+    summary:
+      "EITC income thresholds, credit amounts by filing status, and how to claim whether you file yourself or use free tax prep.",
+    audience: "Consumer",
+    status: "Published",
+  },
+  {
+    href: "/blog/chip-eligibility-2026",
+    title: "Enroll your child in CHIP",
+    summary:
+      "Income limits, what CHIP covers for kids, how it differs from Medicaid, and how to enroll in every state.",
+    audience: "Consumer",
+    status: "Published",
+  },
+
+  // ── Family guides ─────────────────────────────────────────────────
+  {
+    href: "/blog/wic-eligibility-2026",
+    title: "Apply for WIC (food support for pregnancy and young children)",
+    summary:
+      "How WIC is different from SNAP, what it pays for, and how to enroll same-day at your county WIC office.",
+    audience: "Family",
+    status: "Published",
+  },
+  {
+    href: "/blog/pell-grant-eligibility-2026",
+    title: "Apply for the Pell Grant (2026-2027)",
+    summary:
+      "Maximum award amounts, EFC cutoffs, FAFSA deadlines, and tips to maximize your Pell Grant for college.",
+    audience: "Family",
+    status: "Published",
+  },
+
+  // ── Business program guides ───────────────────────────────────────
+  {
+    href: "/blog/wotc-tax-credit-2026",
+    title: "Claim the Work Opportunity Tax Credit (WOTC)",
+    summary:
+      "Target groups, credit amounts per hire, certification steps, and how to claim WOTC on your tax return.",
+    audience: "Business",
+    status: "Published",
+  },
+  {
+    href: "/blog/sbir-sttr-grants-2026",
+    title: "Apply for SBIR/STTR small business innovation grants",
+    summary:
+      "The Phase I/Phase II/Phase III structure, which agencies fund which kinds of work, and how to win your first award.",
+    audience: "Business",
+    status: "Published",
+  },
+  {
+    href: "/blog/sba-8a-program-2026",
+    title: "Apply for the SBA 8(a) Business Development Program",
+    summary:
+      "Eligibility criteria, application process, sole-source contract benefits, and how to maximize the nine-year program term.",
+    audience: "Business",
+    status: "Published",
+  },
+  {
+    href: "/blog/clean-energy-itc-2026",
+    title: "Claim the Clean Energy Investment Tax Credit (Section 48)",
+    summary:
+      "ITC rates, bonus adders for domestic content and energy communities, eligible technologies, and how to claim the credit.",
+    audience: "Business",
+    status: "Published",
+  },
+  {
+    href: "/blog/opportunity-zones-2026",
+    title: "Invest in Opportunity Zones for tax benefits",
+    summary:
+      "How Opportunity Zones defer and reduce capital gains taxes, qualified fund requirements, and key deadlines.",
+    audience: "Business",
+    status: "Published",
+  },
+  {
+    href: "/blog/step-export-grants-2026",
+    title: "Get STEP export grants for international expansion",
+    summary:
+      "Eligible export activities, award amounts by state, and application tips for first-time exporters.",
+    audience: "Business",
+    status: "Published",
+  },
+  {
+    href: "/blog/usda-rural-business-grants-2026",
+    title: "Apply for USDA Rural Business Development Grants",
+    summary:
+      "RBDG eligibility, grant amounts, rural area definitions, and application steps for small businesses and nonprofits.",
+    audience: "Business",
+    status: "Published",
+  },
+  {
+    href: "/blog/state-workforce-training-grants-2026",
+    title: "Find state workforce training grants",
+    summary:
+      "State-by-state workforce training grants, reimbursement rates, eligible training types, and how to apply.",
+    audience: "Business",
+    status: "Published",
+  },
+  {
+    href: "/blog/small-business-grants-2026",
+    title: "Small business grants you can actually get",
+    summary:
+      "Curated list of federal and state small business grants with real eligibility requirements and application links.",
+    audience: "Business",
+    status: "Published",
+  },
+
+  // ── Supporting / cross-cutting guides ─────────────────────────────
+  {
+    href: "/blog/government-benefits-for-veterans-2026",
+    title: "Government benefits for veterans",
+    summary:
+      "VA healthcare, disability compensation, education benefits, home loans, and other federal programs for veterans.",
+    audience: "Consumer",
+    status: "Published",
+  },
+  {
+    href: "/blog/snap-benefits-college-students-2026",
+    title: "SNAP benefits for college students",
+    summary:
+      "Student exemptions, work-study rules, state waivers, and how to apply if you're enrolled in higher education.",
+    audience: "Consumer",
+    status: "Published",
+  },
+  {
+    href: "/blog/medicaid-vs-medicare-2026",
+    title: "Medicaid vs Medicare: what's the difference?",
+    summary:
+      "Side-by-side comparison of eligibility, coverage, costs, and how to know which program is right for you.",
+    audience: "Consumer",
+    status: "Published",
   },
 ];
 

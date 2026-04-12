@@ -1,0 +1,13 @@
+# Benefind -- Find Every Benefit You Deserve
+# https://benefind.app
+
+> Benefind is a free AI-powered eligibility screener for US government benefit programs.
+> It covers 25+ federal and state programs across consumer and business tracks.
+
+## Key Pages
+
+- https://benefind.app/screening -- Free eligibility screener for individuals
+- https://benefind.app/screening/company -- Free eligibility screener for businesses
+- https://benefind.app/blog -- Guides and articles on government benefits
+- https://benefind.app/docs/guides -- Step-by-step application guides
+- https://benefind.app/programs -- Full program catalog

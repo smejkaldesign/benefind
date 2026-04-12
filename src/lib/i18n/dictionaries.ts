@@ -193,7 +193,7 @@ const en: Dictionary = {
     loading: "Loading...",
     learnMore: "Learn more",
     applyNow: "Apply now",
-    free: "Free for everyone.",
+    free: "Find every benefit you deserve.",
   },
   hero: {
     title1: "Find Every Benefit",
@@ -446,7 +446,7 @@ const es: Dictionary = {
     loading: "Cargando...",
     learnMore: "Más información",
     applyNow: "Solicitar ahora",
-    free: "Gratis para todos.",
+    free: "Encuentra todos los beneficios que mereces.",
   },
   hero: {
     title1: "Encuentra Todos los Beneficios",
@@ -700,7 +700,7 @@ const zh: Dictionary = {
     loading: "加载中...",
     learnMore: "了解更多",
     applyNow: "立即申请",
-    free: "对所有人免费。",
+    free: "找到您应得的每一项福利。",
   },
   hero: {
     title1: "找到您应得的",
@@ -888,7 +888,7 @@ const vi: Dictionary = {
     loading: "Đang tải...",
     learnMore: "Tìm hiểu thêm",
     applyNow: "Đăng ký ngay",
-    free: "Miễn phí cho tất cả mọi người.",
+    free: "Tìm mọi quyền lợi bạn xứng đáng.",
   },
   hero: {
     title1: "Tìm Mọi Quyền Lợi",
@@ -1091,7 +1091,7 @@ const ar: Dictionary = {
     loading: "جاري التحميل...",
     learnMore: "اعرف المزيد",
     applyNow: "قدّم الآن",
-    free: "مجاني للجميع.",
+    free: "اكتشف كل المزايا التي تستحقها.",
   },
   hero: {
     title1: "اكتشف كل المزايا",

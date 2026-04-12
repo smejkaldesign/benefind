@@ -29,6 +29,12 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Benefind",
   },
+  robots: {
+    index: true,
+    follow: true,
+    "max-snippet": -1,
+    "max-image-preview": "large",
+  },
 };
 
 export const viewport: Viewport = {
@@ -46,6 +52,21 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("dark", "font-sans", geist.variable)}>
       <body className={`${inter.variable} ${inter.className} min-h-dvh`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Benefind",
+              url: "https://benefind.app",
+              logo: "https://benefind.app/images/brand/logo-dark.png",
+              description:
+                "Free benefits eligibility screener for government programs.",
+              foundingDate: "2026",
+            }).replace(/</g, "\\u003c"),
+          }}
+        />
         <I18nProvider>
           <SmoothScroll />
           {children}
