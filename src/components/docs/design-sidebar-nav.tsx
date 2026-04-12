@@ -13,9 +13,10 @@ const DESIGN_NAV: DesignLink[] = [
   { href: "/docs/design-system", label: "Overview" },
   { href: "/docs/design-system#colors", label: "Colors" },
   { href: "/docs/design-system#typography", label: "Typography" },
-  { href: "/docs/design-system#components", label: "Components" },
+  { href: "/docs/design-system#components", label: "Buttons & Badges" },
   { href: "/docs/design-system#spacing", label: "Spacing" },
   { href: "/docs/design-system#contributing", label: "Contributing" },
+  { href: "/docs/design-system/components", label: "Components" },
 ];
 
 export function DesignSidebarNav() {
@@ -44,9 +45,12 @@ export function DesignSidebarNav() {
             const hash = link.href.includes("#")
               ? `#${link.href.split("#")[1]}`
               : "";
-            const isActive =
-              pathname === "/docs/design-system" &&
-              (hash ? activeHash === hash : !activeHash);
+            const isSubPage =
+              !hash && link.href !== "/docs/design-system";
+            const isActive = isSubPage
+              ? pathname === link.href
+              : pathname === "/docs/design-system" &&
+                (hash ? activeHash === hash : !activeHash);
             return (
               <li key={link.href}>
                 <Link
