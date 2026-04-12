@@ -56,15 +56,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+/** Validate URL is safe for href attributes (http/https only). */
+function isSafeUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export default async function StateOverlayPage({ params }: Props) {
   const { id, state } = await params;
+
+  if (!id || !state) notFound();
+
   const overlay = getStateOverlay(id, state);
   if (!overlay) notFound();
+
+  const safePortalUrl = isSafeUrl(overlay.portalUrl) ? overlay.portalUrl : "#";
 
   const neighbors = getNeighboringStates(id, state);
   const guide = PROGRAM_GUIDES[id];
 
-  const structuredData = {
+  const structuredData = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "GovernmentService",
     name: overlay.stateProgramName,
@@ -73,18 +88,20 @@ export default async function StateOverlayPage({ params }: Props) {
       "@type": "GovernmentOrganization",
       name: `${overlay.state} Department of Human Services`,
     },
-    url: `https://benefind.app/programs/${id}/${state.toLowerCase()}`,
+    url: `https://benefind.app/programs/${encodeURIComponent(id)}/${encodeURIComponent(state.toLowerCase())}`,
     serviceType: overlay.programName,
     areaServed: {
       "@type": "State",
       name: overlay.state,
     },
-    availableChannel: {
-      "@type": "ServiceChannel",
-      serviceUrl: overlay.portalUrl,
-      name: overlay.applicationPortal,
-    },
-  };
+    ...(isSafeUrl(overlay.portalUrl) && {
+      availableChannel: {
+        "@type": "ServiceChannel",
+        serviceUrl: overlay.portalUrl,
+        name: overlay.applicationPortal,
+      },
+    }),
+  });
 
   return (
     <>
@@ -93,7 +110,10 @@ export default async function StateOverlayPage({ params }: Props) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+            __html: structuredData
+              .replace(/</g, "\\u003c")
+              .replace(/>/g, "\\u003e")
+              .replace(/&/g, "\\u0026"),
           }}
         />
         <BreadcrumbJsonLd
@@ -150,7 +170,7 @@ export default async function StateOverlayPage({ params }: Props) {
               <li>
                 <strong className="text-text">Apply at:</strong>{" "}
                 <a
-                  href={overlay.portalUrl}
+                  href={safePortalUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-brand hover:text-brand-dark transition-colors"
@@ -203,7 +223,7 @@ export default async function StateOverlayPage({ params }: Props) {
                   Application Portal
                 </p>
                 <a
-                  href={overlay.portalUrl}
+                  href={safePortalUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-brand hover:text-brand-dark transition-colors"
