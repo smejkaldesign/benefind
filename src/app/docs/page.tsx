@@ -35,6 +35,12 @@ const CARDS: DocCard[] = [
       "Benefind brand tokens, typography, colors, spacing, and button variants. For designers and contributors.",
   },
   {
+    href: "/docs/privacy",
+    title: "Privacy policy",
+    description:
+      "How Benefind handles your data, what we collect, what we don't, and your rights.",
+  },
+  {
     href: "/blog",
     title: "Blog",
     description:
