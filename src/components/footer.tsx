@@ -3,9 +3,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n/context";
+import type { Locale } from "@/lib/i18n/types";
+
+const LANGUAGES: { label: string; locale: Locale }[] = [
+  { label: "English", locale: "en" },
+  { label: "Español", locale: "es" },
+  { label: "中文", locale: "zh" },
+  { label: "Tiếng Việt", locale: "vi" },
+  { label: "العربية", locale: "ar" },
+];
 
 export function Footer() {
-  const { t } = useI18n();
+  const { t, locale, setLocale } = useI18n();
 
   return (
     <footer className="border-t border-border px-6 py-12">
@@ -113,11 +122,21 @@ export function Footer() {
               {t.landing.footerLanguages}
             </h4>
             <ul className="mt-3 space-y-2">
-              <li className="text-sm text-text-muted">English</li>
-              <li className="text-sm text-text-muted">Español</li>
-              <li className="text-sm text-text-muted">中文</li>
-              <li className="text-sm text-text-muted">Tiếng Việt</li>
-              <li className="text-sm text-text-muted">العربية</li>
+              {LANGUAGES.map((lang) => (
+                <li key={lang.locale}>
+                  <button
+                    type="button"
+                    onClick={() => setLocale(lang.locale)}
+                    className={`text-sm cursor-pointer transition-colors ${
+                      locale === lang.locale
+                        ? "text-brand"
+                        : "text-text-muted hover:text-brand"
+                    }`}
+                  >
+                    {lang.label}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

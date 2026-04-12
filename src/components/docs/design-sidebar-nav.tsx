@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,6 +20,18 @@ const DESIGN_NAV: DesignLink[] = [
 
 export function DesignSidebarNav() {
   const pathname = usePathname();
+  const [activeHash, setActiveHash] = useState("");
+
+  useEffect(() => {
+    setActiveHash(window.location.hash);
+
+    function onHashChange() {
+      setActiveHash(window.location.hash);
+    }
+
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
 
   return (
     <nav aria-label="Design system navigation" className="flex flex-col gap-8">
@@ -28,12 +41,12 @@ export function DesignSidebarNav() {
         </p>
         <ul aria-label="Design system" className="flex flex-col gap-1">
           {DESIGN_NAV.map((link) => {
+            const hash = link.href.includes("#")
+              ? `#${link.href.split("#")[1]}`
+              : "";
             const isActive =
-              link.href === "/docs/design-system"
-                ? pathname === "/docs/design-system" &&
-                  typeof window !== "undefined" &&
-                  !window.location.hash
-                : false;
+              pathname === "/docs/design-system" &&
+              (hash ? activeHash === hash : !activeHash);
             return (
               <li key={link.href}>
                 <Link
