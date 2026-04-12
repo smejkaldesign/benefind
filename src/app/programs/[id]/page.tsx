@@ -74,6 +74,19 @@ export default async function ProgramDetailPage({ params }: Props) {
     },
     url: `https://benefind.app/programs/${program.id}`,
     serviceType: program.category,
+    audience: {
+      "@type": "Audience",
+      audienceType: program.category.replace(/_/g, " "),
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+    availableChannel: {
+      "@type": "ServiceChannel",
+      serviceUrl: "https://benefind.app/screening",
+      name: "Benefind Eligibility Screener",
+    },
   };
 
   return (

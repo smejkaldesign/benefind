@@ -8,6 +8,7 @@ import { LandingNav } from "@/components/landing-nav";
 import { AuthorCard } from "@/components/blog/author-card";
 import { HeroImage } from "@/components/blog/hero-image";
 import { StickyTOC } from "@/components/blog/sticky-toc";
+import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-jsonld";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -82,7 +83,7 @@ export default async function BlogPostPage({ params }: Props) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.lastModified ?? post.date,
     author: {
       "@type": "Organization",
       name: post.author,
@@ -135,6 +136,13 @@ export default async function BlogPostPage({ params }: Props) {
             }}
           />
         )}
+        <BreadcrumbJsonLd
+          items={[
+            { name: "Home", href: "/" },
+            { name: "Blog", href: "/blog" },
+            { name: post.title },
+          ]}
+        />
 
         {/* Post header, full width */}
         <div className="border-b border-dashed border-border">
@@ -174,6 +182,9 @@ export default async function BlogPostPage({ params }: Props) {
             </h1>
             <p className="max-w-2xl text-base leading-relaxed text-text-muted md:text-lg">
               {post.description}
+            </p>
+            <p className="mt-3 text-sm text-text-muted">
+              Last updated {formatDate(post.lastModified ?? post.date)}
             </p>
           </div>
         </div>

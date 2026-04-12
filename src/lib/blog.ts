@@ -22,6 +22,8 @@ export interface BlogPost {
   heroImage?: string;
   /** Primary SEO keyword cluster for the post. */
   keyword?: string;
+  /** ISO date string for last modification. Defaults to `date` if omitted. */
+  lastModified?: string;
 }
 
 export interface BlogPostWithMeta extends BlogPost {
@@ -45,6 +47,7 @@ export const posts: BlogPost[] = [
     published: true,
     heroImage: "/blog/covers/what-government-benefits-do-i-qualify-for.jpg",
     keyword: "government benefits I qualify for",
+    lastModified: "2026-04-09",
   },
   {
     slug: "snap-eligibility-2026",
@@ -57,6 +60,7 @@ export const posts: BlogPost[] = [
     published: true,
     heroImage: "/blog/covers/snap-eligibility-2026.jpg",
     keyword: "snap eligibility 2026",
+    lastModified: "2026-04-09",
   },
   {
     slug: "rd-tax-credit-small-business-2026",
@@ -74,6 +78,7 @@ export const posts: BlogPost[] = [
     published: true,
     heroImage: "/blog/covers/rd-tax-credit-small-business-2026.jpg",
     keyword: "R&D tax credit small business",
+    lastModified: "2026-04-09",
   },
   {
     slug: "how-to-apply-for-liheap-heating-assistance",
@@ -86,6 +91,7 @@ export const posts: BlogPost[] = [
     published: true,
     heroImage: "/blog/covers/how-to-apply-for-liheap-heating-assistance.jpg",
     keyword: "how to apply for LIHEAP",
+    lastModified: "2026-04-09",
   },
   {
     slug: "free-government-grants-single-mothers",
@@ -98,6 +104,7 @@ export const posts: BlogPost[] = [
     published: true,
     heroImage: "/blog/covers/free-government-grants-single-mothers.jpg",
     keyword: "free government grants for single mothers",
+    lastModified: "2026-04-09",
   },
 ];
 
