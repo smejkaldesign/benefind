@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Tables } from "@/types/database";
+import { setWorkspaceCookie } from "./actions";
 
 type Workspace = Tables<"workspaces">;
 
@@ -66,9 +67,8 @@ export function WorkspaceProvider({
       const ws = workspaces.find((w) => w.id === workspaceId);
       if (ws) {
         setActiveWorkspace(ws);
-        // Persist the selection in a cookie so the server can read it
-        const secure = window.location.protocol === "https:" ? ";secure" : "";
-        document.cookie = `bf-workspace=${workspaceId};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax${secure}`;
+        // Persist the selection via server action so the cookie is HttpOnly
+        void setWorkspaceCookie(workspaceId);
       }
     },
     [workspaces],
