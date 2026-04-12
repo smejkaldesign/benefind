@@ -60,3 +60,45 @@ When spawning subagents (Agent/Task tool), the routing block is automatically in
 | `ctx stats` | Call the `ctx_stats` MCP tool and display the full output verbatim |
 | `ctx doctor` | Call the `ctx_doctor` MCP tool, run the returned shell command, display as checklist |
 | `ctx upgrade` | Call the `ctx_upgrade` MCP tool, run the returned shell command, display as checklist |
+
+---
+
+# benefind — repo conventions
+
+## Format conventions (CI-enforced)
+
+- **Prettier is the only source of truth** for JS/TS/TSX/JSON/MD (where unignored) formatting. Run `pnpm format` to fix, `pnpm format:check` to verify.
+- **`.prettierignore` is load-bearing**, do not shrink it carelessly. It excludes `pnpm-lock.yaml`, `docs/**`, `CLAUDE.md`, `DESIGN.md`, `.claude/**`, `src/content/**/*.{md,mdx}`, and `docker/**/README.md`. Without these, `pnpm format` rewrites lockfiles and reflows hand-maintained specs. Sprint Z retro captured the incident.
+- **CI enforces format on every PR** via `.github/workflows/ci.yml` (the `Prettier` job). Merges are blocked on format drift.
+- **Pre-commit hook** (`.husky/pre-commit`) runs `prettier --check` on staged files only. Catches drift locally before it becomes a CI failure.
+
+## Factual data conventions
+
+Any factual `Set` or constant that touches benefits eligibility (state EITC lists, Medicaid expansion status, FPL tables, income thresholds, deadlines, etc.) MUST carry:
+
+1. A **source citation** in a comment above the declaration — primary sources only (CBPP, KFF, IRS, gov sites, legislative text)
+2. A **`Last verified: YYYY-MM-DD`** comment
+3. A **pointer to the annual data-refresh task** so drift gets caught on a known schedule
+
+Example (see `src/lib/benefits/programs/eitc.ts`):
+
+```ts
+// States with a matching state EITC program.
+// Source: CBPP "Policy Basics: State Earned Income Tax Credits" + IRS publications.
+// Last verified: 2026-04-11 for 2025 tax year.
+// Note: North Carolina is deliberately NOT on this list — NC eliminated its
+// state EITC in 2014 (the only state ever to do so) and has not reenacted.
+// Re-check annually — see umbrella task "Annual state benefits data refresh".
+const STATE_EITC_STATES = new Set([...]);
+```
+
+**Why:** LLM code reviewers (SCAN) can confidently hallucinate policy facts. On Sprint Z, SCAN claimed NC had state EITC since 2024 — factually wrong. Primary-source citations are the cheapest defense and let future reviewers resolve disputes in seconds instead of an hour of research.
+
+## Database migrations
+
+- All migrations live in `supabase/migrations/` with timestamp prefix `YYYYMMDD_NNNN_<domain>.sql`
+- `docs/data-model.md` is the source of truth for schema; migrations must stay in sync with the spec
+- Never alter an already-applied migration — write a new one that transforms the schema
+- Helper functions (`is_workspace_member`, `is_admin`) live in the earliest foundation migration
+- Every table gets `deleted_at timestamptz` for the D6 30-day soft-delete retention policy
+
