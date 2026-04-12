@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { LandingNav } from "@/components/landing-nav";
+import { SUPPORT_EMAIL } from "@/lib/constants";
 
 export default function ContactPage() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -152,10 +153,10 @@ export default function ContactPage() {
             <p className="text-text-muted mb-1">
               Or email us directly at{" "}
               <a
-                href="mailto:hello@benefind.ai"
+                href={`mailto:${SUPPORT_EMAIL}`}
                 className="text-accent hover:underline"
               >
-                hello@benefind.ai
+                {SUPPORT_EMAIL}
               </a>
             </p>
             <p className="text-text-subtle text-sm">
