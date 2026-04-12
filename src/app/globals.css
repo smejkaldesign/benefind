@@ -27,43 +27,39 @@
   font-display: swap;
 }
 
-/* ── Design tokens (Warp-inspired dark palette) ──────────── */
+/* ── Design tokens (theme-switchable via CSS custom properties) ── */
 @theme {
   /* Typography */
   --font-display: "Aguzzo-TRIAL", "Instrument Serif", serif;
 
   /* Brand (lilac for CTAs and actions) */
-  --color-brand: #cab1f7;
-  --color-brand-light: #deb0f7;
-  --color-brand-dark: #b19eef;
-  --color-brand-50: rgba(202, 177, 247, 0.12);
+  --color-brand: var(--brand);
+  --color-brand-light: var(--brand-light);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-50: var(--brand-50);
 
   /* Surfaces */
-  --color-surface: #121212;
-  --color-surface-dim: #1a1a1a;
-  --color-surface-bright: #2a2b25;
-  --color-surface-dark: #0e0e0e;
-  --color-surface-dark-dim: #0a0a0a;
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-deep: var(--surface-deep);
+  --color-surface-deepest: var(--surface-deepest);
 
   /* Text */
-  --color-text: #faf9f6;
-  --color-text-muted: #afaeac;
-  --color-text-subtle: #868584;
-  --color-text-on-dark: #faf9f6;
-  --color-text-on-dark-muted: #afaeac;
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
 
   /* Borders */
-  --color-border: #353534;
-  --color-border-dark: #2a2b25;
-  --color-border-light: #e3e2e0;
+  --color-border: var(--border);
 
   /* Accent gradient (lavender) */
-  --color-accent: #cab1f7;
-  --color-accent-end: #deb0f7;
+  --color-accent: var(--brand);
+  --color-accent-end: var(--brand-light);
   --color-navy: #1e2b4d;
 
   /* Status (success aliased to brand for visual consistency) */
-  --color-success: #cab1f7;
+  --color-success: var(--brand);
   --color-warning: #f59e0b;
   --color-error: #ef4444;
 }
@@ -103,7 +99,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
-    color-scheme: dark;
     @apply font-sans;
   }
   body {
@@ -168,6 +163,8 @@
 }
 
 :root {
+  color-scheme: light;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -200,9 +197,25 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Custom light mode tokens */
+  --surface: #ffffff;
+  --surface-dim: #f8f8f7;
+  --surface-bright: #f0efed;
+  --surface-deep: #e8e7e5;
+  --surface-deepest: #dddbd8;
+  --text: #1c1917;
+  --text-muted: #57534e;
+  --text-subtle: #a8a29e;
+  --brand: #9b7dd4;
+  --brand-light: #b794f6;
+  --brand-dark: #7c5db8;
+  --brand-50: rgba(155, 125, 212, 0.08);
 }
 
 .dark {
+  color-scheme: dark;
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -234,6 +247,20 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Custom dark mode tokens */
+  --surface: #121212;
+  --surface-dim: #1a1a1a;
+  --surface-bright: #2a2b25;
+  --surface-deep: #0e0e0e;
+  --surface-deepest: #0a0a0a;
+  --text: #faf9f6;
+  --text-muted: #afaeac;
+  --text-subtle: #868584;
+  --brand: #cab1f7;
+  --brand-light: #deb0f7;
+  --brand-dark: #b19eef;
+  --brand-50: rgba(202, 177, 247, 0.12);
 }
 
 /* ── Benefind prose (blog article body) ─────────────────── */
@@ -272,7 +299,7 @@
 
 /* Tables: zebra stripe */
 .benefind-prose table tbody tr:nth-child(even) td {
-  background-color: rgba(42, 43, 37, 0.4);
+  background-color: var(--surface-dim);
 }
 
 /* Images with captions */

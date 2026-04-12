@@ -3,6 +3,7 @@ import { Home, MessageCircle, LayoutDashboard } from "lucide-react";
 import { SignOutButton } from "@/components/sign-out-button";
 import { LanguageSelector } from "@/components/language-selector";
 import { WorkspacePicker } from "@/components/workspace-picker";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 /**
  * AppShell is a lightweight mobile-first layout (header + content + tab bar).
@@ -32,6 +33,7 @@ export function AppShell({ children }: AppShellProps) {
             <WorkspacePicker />
           </div>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <LanguageSelector compact />
             <SignOutButton />
           </div>
