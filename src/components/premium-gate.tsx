@@ -25,36 +25,23 @@ export function PremiumGate({
     return <>{children}</>;
   }
 
+  // SECURITY: do NOT render children for free users. Sensitive data
+  // (benefit amounts, screening results) would be in the DOM even if
+  // visually hidden behind a blur overlay.
   return (
-    <div className="relative">
-      {/* Blurred preview */}
-      <div
-        className="pointer-events-none select-none opacity-30 blur-[2px]"
-        aria-hidden="true"
-      >
-        {children}
-      </div>
-
-      {/* Upgrade overlay */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="rounded-xl border border-brand/20 bg-surface/95 p-6 text-center shadow-lg backdrop-blur-sm max-w-sm">
-          <Lock
-            className="mx-auto mb-3 h-8 w-8 text-brand"
-            aria-hidden="true"
-          />
-          <h3 className="font-semibold text-text">Upgrade to Premium</h3>
-          <p className="mt-2 text-sm text-text-muted">
-            {feature} is available on the Premium plan. Upgrade to unlock
-            unlimited screenings, document storage, and more.
-          </p>
-          <Link href="/dashboard/billing" className="mt-4 inline-block">
-            <Button size="default">
-              <Crown className="h-4 w-4" aria-hidden="true" />
-              View Plans
-            </Button>
-          </Link>
-        </div>
-      </div>
+    <div className="rounded-xl border border-brand/20 bg-surface-dim p-8 text-center">
+      <Lock className="mx-auto mb-3 h-8 w-8 text-brand" aria-hidden="true" />
+      <h3 className="font-semibold text-text">Upgrade to Premium</h3>
+      <p className="mt-2 text-sm text-text-muted">
+        {feature} is available on the Premium plan. Upgrade to unlock unlimited
+        screenings, document storage, and more.
+      </p>
+      <Link href="/dashboard/billing" className="mt-4 inline-block">
+        <Button size="default">
+          <Crown className="h-4 w-4" aria-hidden="true" />
+          View Plans
+        </Button>
+      </Link>
     </div>
   );
 }

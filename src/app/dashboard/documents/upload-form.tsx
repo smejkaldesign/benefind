@@ -126,12 +126,21 @@ export function UploadForm() {
         </div>
       </div>
 
+      <p id="upload-help" className="sr-only">
+        Accepted: PDF, plain text, Microsoft Office, and image files. Maximum 25
+        MB.
+      </p>
       <div className="flex items-center gap-3">
+        <label className="sr-only" htmlFor="document-upload">
+          Choose file to upload
+        </label>
         <input
+          id="document-upload"
           ref={inputRef}
           type="file"
           onChange={handleFileChange}
           disabled={isUploading || !workspace}
+          aria-describedby="upload-help"
           className="block w-full text-sm text-text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-brand/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand hover:file:bg-brand/20 disabled:opacity-50"
           accept=".pdf,.txt,.doc,.docx,.xls,.xlsx,.pptx,.jpg,.jpeg,.png,.gif,.webp,.heic,.heif"
         />
