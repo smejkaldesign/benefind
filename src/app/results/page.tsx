@@ -350,7 +350,7 @@ export default function ResultsPage() {
       <div
         ref={heroRef}
         className="bg-brand px-4 py-8 text-white"
-        role="banner"
+        role="region"
         aria-label="Screening results summary"
       >
         <div className="mx-auto max-w-2xl text-center">
@@ -397,8 +397,10 @@ export default function ResultsPage() {
           aria-label="Results view"
         >
           <button
+            id="tab-programs"
             role="tab"
             aria-selected={activeTab === "programs"}
+            aria-controls="tabpanel-results"
             onClick={() => setActiveTab("programs")}
             className={`flex-1 py-3 text-center text-sm font-medium transition-colors ${
               activeTab === "programs"
@@ -409,8 +411,10 @@ export default function ResultsPage() {
             Programs ({pursuable.length})
           </button>
           <button
+            id="tab-documents"
             role="tab"
             aria-selected={activeTab === "documents"}
+            aria-controls="tabpanel-results"
             onClick={() => setActiveTab("documents")}
             className={`flex-1 py-3 text-center text-sm font-medium transition-colors ${
               activeTab === "documents"
@@ -424,10 +428,11 @@ export default function ResultsPage() {
       </div>
 
       <div
+        id="tabpanel-results"
         className="mx-auto max-w-2xl px-4 py-6"
         role="tabpanel"
-        aria-label={
-          activeTab === "programs" ? "Programs results" : "Documents checklist"
+        aria-labelledby={
+          activeTab === "programs" ? "tab-programs" : "tab-documents"
         }
       >
         {activeTab === "programs" ? (

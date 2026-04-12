@@ -13,7 +13,7 @@
 //     "schema": "storage",
 //     "record": {
 //       "bucket_id": "documents",
-//       "name": "<workspace_id>/<document_id>/<filename>",
+//       "name": "<workspace_id>/<uuid>-<sanitized_filename>",
 //       "owner": "<user_id>",
 //       ...
 //     }
