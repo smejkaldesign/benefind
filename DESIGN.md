@@ -39,9 +39,16 @@ Registry URL: `https://shadcnblocks.com/r/{name}` (configured in `components.jso
 
 ## Theme System
 
-**Dark-first design.** The HTML root sets `color-scheme: dark`. Light mode tokens exist in `:root` but dark is the primary experience.
+**Dual-theme design.** Dark mode is the primary experience, but a full light mode is supported. Powered by `next-themes` with `attribute="class"`, `defaultTheme="dark"`, and `enableSystem`.
 
-**Brand color:** `#cab1f7` (lilac), used for CTAs, links, focus rings, and accent gradients.
+**How theme switching works:**
+- The `ThemeProvider` wraps the app in `src/app/layout.tsx`
+- `ThemeToggle` component lives in the main nav
+- CSS variables automatically switch via `:root` (light) and `.dark` scopes in `globals.css`
+- Access the current theme in components: `const { resolvedTheme } = useTheme()` from `next-themes`
+- All semantic tokens (`bg-surface`, `text-text`, etc.) adapt automatically; no manual switching needed for most components
+
+**Brand color:** `#cab1f7` (dark) / `#9b7dd4` (light), used for CTAs, links, focus rings, and accent gradients. The light variant is deeper to maintain contrast on white backgrounds.
 
 **Font stack:**
 - **Display:** `Aguzzo-TRIAL` (serif, `font-display`, loaded via `@font-face` from `/fonts/`) -- headings, hero text
@@ -55,46 +62,46 @@ Registry URL: `https://shadcnblocks.com/r/{name}` (configured in `components.jso
 
 ## Design Tokens
 
+All tokens switch automatically between `:root` (light) and `.dark` scopes in `globals.css`.
+
 ### Brand
 
-| Token | Value | Use |
-|---|---|---|
-| `--color-brand` | `#cab1f7` | Primary CTAs, links, focus rings |
-| `--color-brand-light` | `#deb0f7` | Hover states, gradient endpoints |
-| `--color-brand-dark` | `#b19eef` | Pressed states, deeper accent |
-| `--color-brand-50` | `rgba(202,177,247,0.12)` | Soft background fills, badge tints |
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `--color-brand` | `#9b7dd4` | `#cab1f7` | Primary CTAs, links, focus rings |
+| `--color-brand-light` | `#b794f6` | `#deb0f7` | Hover states, gradient endpoints |
+| `--color-brand-dark` | `#7c5db8` | `#b19eef` | Pressed states, deeper accent |
+| `--color-brand-50` | `rgba(155,125,212,0.08)` | `rgba(202,177,247,0.12)` | Soft background fills, badge tints |
 
 ### Surfaces
 
-| Token | Value | Use |
-|---|---|---|
-| `--color-surface` | `#121212` | Default page background |
-| `--color-surface-dim` | `#1a1a1a` | Cards, panels, elevated sections |
-| `--color-surface-bright` | `#2a2b25` | Hover/emphasis highlights |
-| `--color-surface-dark` | `#0e0e0e` | Deep recessed areas |
-| `--color-surface-dark-dim` | `#0a0a0a` | Deepest background layer |
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `--color-surface` | `#ffffff` | `#121212` | Default page background |
+| `--color-surface-dim` | `#f8f8f7` | `#1a1a1a` | Cards, panels, elevated sections |
+| `--color-surface-bright` | `#f0efed` | `#2a2b25` | Hover/emphasis highlights |
+| `--color-surface-deep` | `#e8e7e5` | `#0e0e0e` | Deep recessed areas |
+| `--color-surface-deepest` | `#dddbd8` | `#0a0a0a` | Deepest background layer |
 
 ### Text
 
-| Token | Value | Use |
-|---|---|---|
-| `--color-text` | `#faf9f6` | Primary text (warm off-white) |
-| `--color-text-muted` | `#afaeac` | Body copy, captions |
-| `--color-text-subtle` | `#868584` | Meta, timestamps, helper text |
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `--color-text` | `#1c1917` | `#faf9f6` | Primary text |
+| `--color-text-muted` | `#57534e` | `#afaeac` | Body copy, captions |
+| `--color-text-subtle` | `#a8a29e` | `#868584` | Meta, timestamps, helper text |
 
 ### Borders
 
-| Token | Value | Use |
-|---|---|---|
-| `--color-border` | `#353534` | Default borders, dividers |
-| `--color-border-dark` | `#2a2b25` | Quieter divisions |
-| `--color-border-light` | `#e3e2e0` | Light-mode borders (rare) |
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `--color-border` | oklch light neutral | `oklch(1 0 0 / 10%)` | Default borders, dividers |
 
 ### Status
 
 | Token | Value | Use |
 |---|---|---|
-| `--color-success` | `#cab1f7` | Aliased to brand for consistency |
+| `--color-success` | Aliased to `--brand` | Aliased to brand for consistency |
 | `--color-warning` | `#f59e0b` | Amber warnings |
 | `--color-error` | `#ef4444` | Red errors, destructive actions |
 
@@ -195,14 +202,48 @@ Always layer a dark vignette gradient on top for text legibility.
 Left panel: `flex-1 lg:max-w-[55%] bg-surface` for interactive content.
 Right panel: `lg:flex-1` with Grainient + value prop overlay, white text with dark vignette.
 
-### Dark Theme Rules
+### Theme Rules
 
-- `color-scheme: dark` on `<html>` by default
-- Use `bg-surface` / `bg-surface-dim` for backgrounds, never `bg-black` or `bg-gray-*`
+- Use `bg-surface` / `bg-surface-dim` for backgrounds, never `bg-black`, `bg-white`, or `bg-gray-*`
 - Use `text-text` / `text-text-muted` / `text-text-subtle` for text hierarchy
 - Use `border-border` for all borders
 - Brand lilac (`text-brand`, `bg-brand`) for interactive elements and emphasis
 - On `bg-brand` surfaces, use `text-surface` (dark text), never `text-white`
+- Tokens switch automatically between themes; no conditional classes needed for standard UI
+
+### Theme-Aware Component Pattern
+
+When a component accepts hardcoded color props (e.g., reactbits visual effects), use `useTheme()`:
+
+```tsx
+import { useTheme } from "next-themes";
+
+function MyComponent() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
+  return (
+    <BorderGlow
+      backgroundColor={isDark ? "#1A1A1A" : "#F8F8F7"}
+      colors={isDark ? ["#CAB1F7", "#DEB0F7", "#B19EEF"] : ["#9B7DD4", "#B794F6", "#7C5DB8"]}
+    />
+  );
+}
+```
+
+### Reactbits in Light Mode
+
+Most reactbits components accept color props from their callers. The components themselves are theme-agnostic.
+
+| Component | Light Mode Status | Notes |
+|---|---|---|
+| Grainient | Works as-is | Full-bleed WebGL background with vignette overlay; brand colors are identity, not theme-dependent |
+| GradientBlinds | Works as-is (unused) | Color props from caller; not mounted in any live page |
+| BorderGlow | Theme-aware | `stats-strip.tsx` and `bento-grid.tsx` pass `isDark`-switched `backgroundColor` and `colors` |
+| DitherFade | Caller must pass color | Default `#121212` is dark; pass `#ffffff` or a light surface color in light mode when mounting |
+| AsciiWaves | Caller must pass color | Color is a prop; brand lilac default works on both themes |
+| MagicBento | Works as-is (unused) | Semi-transparent glow overlays adapt to any background |
+| SmoothScroll | No colors | Lenis scroll wrapper, no visual output |
 
 ---
 
@@ -251,17 +292,21 @@ All page-level entrance animations use **framer-motion**.
 **DO:**
 - Use shadcn/ui components before building custom ones
 - Use CSS variables from `globals.css`, never hardcode hex colors
-- Test in dark mode (primary theme)
+- Use semantic tokens (`text-text`, `bg-surface`) that adapt to both themes
+- Test components in both light and dark mode
 - Use `font-display` for headings, `font-sans` for body
 - Use the `cn()` utility from `@/lib/utils` for conditional classes
 - Run `pnpm type-check` before committing
+- Pass theme-appropriate color props to reactbits components using `useTheme()`
 
 **DON'T:**
 - Replace reactbits visual effects with registry alternatives
 - Add new fonts without updating `globals.css` and `layout.tsx`
 - Use inline styles for colors or spacing (use tokens)
 - Use `bg-black`, `bg-white`, `text-gray-*` -- use semantic tokens
+- Use `text-white` or hardcoded hex values for content text -- use `text-text` / `text-text-muted`
 - Use `text-white` on `bg-brand` -- always `text-surface` (lilac is too light for white text)
+- Assume dark mode -- always use semantic tokens that work in both themes
 - Use `backdrop-filter: blur` on more than 2 elements per page
 - Skip the `base-nova` style when adding shadcn components
 - Use `rounded-xl` -- use `rounded-lg` (8px) or `rounded-[16px]`
