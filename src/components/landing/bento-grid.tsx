@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Sparkles, MessageSquare, Users, Lock, Play } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useTheme } from "next-themes";
 import { BorderGlow } from "@/components/border-glow";
 import "@/components/magic-bento.css";
 
@@ -43,16 +44,20 @@ const features: Feature[] = [
   },
 ];
 
-// Match the StatsStrip BorderGlow palette so the bento reads as a continuation
-// of the "top callouts" above it.
-const glowProps = {
-  backgroundColor: "#1A1A1A",
-  borderRadius: 16,
-  glowColor: "270 80 80",
-  colors: ["#CAB1F7", "#DEB0F7", "#B19EEF"],
-};
-
 export function BentoGrid() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
+  // Match the StatsStrip BorderGlow palette so the bento reads as a continuation
+  // of the "top callouts" above it. Theme-aware for light/dark.
+  const glowProps = {
+    backgroundColor: isDark ? "#1A1A1A" : "#F8F8F7",
+    borderRadius: 16,
+    glowColor: "270 80 80",
+    colors: isDark
+      ? ["#CAB1F7", "#DEB0F7", "#B19EEF"]
+      : ["#9B7DD4", "#B794F6", "#7C5DB8"],
+  };
   return (
     <section className="px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-[1520px]">

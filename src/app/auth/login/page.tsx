@@ -101,7 +101,7 @@ export default function LoginPage() {
         </div>
 
         {/* Sign-in container — Celune style */}
-        <div className="relative z-10 flex w-full max-w-[534px] flex-col items-center rounded-xl border border-white/[0.05] bg-black/80 px-8 py-16 shadow-2xl shadow-black/50 backdrop-blur-sm sm:px-12 sm:py-20">
+        <div className="relative z-10 flex w-full max-w-[534px] flex-col items-center rounded-xl border border-border bg-surface/80 px-8 py-16 shadow-2xl shadow-surface/50 backdrop-blur-sm sm:px-12 sm:py-20">
           {/* Favicon — 64px square at top */}
           <Image
             src="/images/brand/favilight.png"
@@ -161,7 +161,7 @@ export default function LoginPage() {
                       autoFocus
                       disabled={loading}
                       placeholder="you@example.com"
-                      className="block h-11 w-full rounded-lg border border-white/10 bg-black pl-10 pr-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
+                      className="block h-11 w-full rounded-lg border border-border bg-surface-dim pl-10 pr-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
                     />
                   </div>
                 </div>

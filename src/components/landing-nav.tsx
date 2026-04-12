@@ -15,6 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function LandingNav() {
   const { t } = useI18n();
@@ -73,6 +74,7 @@ export function LandingNav() {
           )}
         </div>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <Button
             variant="outline"
             size="sm"
