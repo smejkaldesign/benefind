@@ -1,7 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Tables } from "@/types/database";
 
-type Client = SupabaseClient<Database>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Client = SupabaseClient<Database, any>;
 type AdminUser = Tables<"admin_users">;
 type AdminAction = Tables<"admin_actions">;
 type SupportTicket = Tables<"support_tickets">;

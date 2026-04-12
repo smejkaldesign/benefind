@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Home, MessageCircle, LayoutDashboard } from "lucide-react";
 import { SignOutButton } from "@/components/sign-out-button";
 import { LanguageSelector } from "@/components/language-selector";
+import { WorkspacePicker } from "@/components/workspace-picker";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -13,9 +14,15 @@ export function AppShell({ children }: AppShellProps) {
       {/* Top nav — mobile-friendly */}
       <header className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
-          <Link href="/" className="text-lg font-bold text-brand">
-            Benefind
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/" className="text-lg font-bold text-brand">
+              Benefind
+            </Link>
+            <span className="text-border" aria-hidden="true">
+              /
+            </span>
+            <WorkspacePicker />
+          </div>
           <div className="flex items-center gap-2">
             <LanguageSelector compact />
             <SignOutButton />

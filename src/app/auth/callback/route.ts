@@ -1,6 +1,7 @@
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { ensureWorkspace } from "@/lib/workspace/ensure-workspace";
 
 function safePath(raw: string | null): string {
   const fallback = "/dashboard";
@@ -21,20 +22,37 @@ export async function GET(request: Request) {
   const next = safePath(searchParams.get("next"));
   const supabase = await createServerSupabase();
 
+  let authenticated = false;
+
   // PKCE flow — OAuth / email signup confirmation
   const code = searchParams.get("code");
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) return NextResponse.redirect(`${origin}${next}`);
+    if (!error) authenticated = true;
   }
 
   // OTP flow — magic link
-  const token_hash = searchParams.get("token_hash");
-  const type = searchParams.get("type") as EmailOtpType | null;
-  if (token_hash && type) {
-    const { error } = await supabase.auth.verifyOtp({ type, token_hash });
-    if (!error) return NextResponse.redirect(`${origin}${next}`);
+  if (!authenticated) {
+    const token_hash = searchParams.get("token_hash");
+    const type = searchParams.get("type") as EmailOtpType | null;
+    if (token_hash && type) {
+      const { error } = await supabase.auth.verifyOtp({ type, token_hash });
+      if (!error) authenticated = true;
+    }
   }
 
-  return NextResponse.redirect(`${origin}/auth/login?error=auth_failed`);
+  if (!authenticated) {
+    return NextResponse.redirect(`${origin}/auth/login?error=auth_failed`);
+  }
+
+  // Ensure user has at least one workspace (creates default on first login)
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    await ensureWorkspace(supabase, user.id);
+  }
+
+  return NextResponse.redirect(`${origin}${next}`);
 }

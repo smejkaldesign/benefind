@@ -6,8 +6,9 @@ import {
   answersToScreeningInput,
 } from "@/lib/screening/steps";
 import { runScreening } from "@/lib/benefits/engine";
-import { PURSUABLE_TIERS } from "@/lib/benefits/types";
+import { PURSUABLE_TIERS, ENGINE_VERSION } from "@/lib/benefits/types";
 import type { ScreeningResult } from "@/lib/benefits/types";
+import { persistScreening } from "./actions";
 import {
   ChatMessage,
   TypingIndicator,
@@ -179,6 +180,25 @@ export default function ScreeningPage() {
               JSON.stringify(safeResult),
             );
           } catch {}
+
+          // Persist to database if authenticated (fire-and-forget)
+          persistScreening({
+            answers: newAnswers,
+            engineVersion: ENGINE_VERSION,
+            state: newAnswers.state,
+            householdSize: parseInt(newAnswers.householdSize) || undefined,
+            results: screeningResult.programs.map((p) => ({
+              programId: p.program.id,
+              confidenceScore: p.result.confidenceScore,
+              eligibilityTier: p.result.eligibilityTier,
+              estimatedValue: p.result.estimatedMonthlyValue
+                ? `$${p.result.estimatedMonthlyValue}/mo`
+                : null,
+              reasons: p.result.reasons as unknown as Record<string, unknown>,
+            })),
+          }).catch(() => {
+            // Non-blocking: screening works client-only if persistence fails
+          });
 
           const eligible = screeningResult.programs.filter((p) =>
             PURSUABLE_TIERS.has(p.result.eligibilityTier),
