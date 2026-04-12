@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n/context";
 import type { Locale } from "@/lib/i18n/types";
+import { Separator } from "@/components/ui/separator";
 
 const LANGUAGES: { label: string; locale: Locale; available: boolean }[] = [
   { label: "English", locale: "en", available: true },
@@ -146,7 +147,8 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-10 border-t border-border pt-6 text-center text-sm text-text-subtle">
+        <Separator className="mt-10" />
+        <div className="pt-6 text-center text-sm text-text-subtle">
           <p>
             &copy; {new Date().getFullYear()} {t.common.appName}.{" "}
             {t.common.free}

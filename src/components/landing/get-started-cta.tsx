@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { User, Building2, MessageCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const cards = [
   {
@@ -17,7 +19,7 @@ const cards = [
     href: "/screening",
     iconBg: "bg-brand/10",
     iconColor: "text-brand",
-    buttonClass: "bg-brand text-surface hover:bg-brand-dark",
+    buttonVariant: "brand" as const,
   },
   {
     icon: Building2,
@@ -31,7 +33,7 @@ const cards = [
     href: "/screening/company",
     iconBg: "bg-brand/10",
     iconColor: "text-brand",
-    buttonClass: "bg-brand text-surface hover:bg-brand-dark",
+    buttonVariant: "brand" as const,
   },
   {
     icon: MessageCircle,
@@ -45,8 +47,7 @@ const cards = [
     href: "/contact",
     iconBg: "bg-accent/10",
     iconColor: "text-accent",
-    buttonClass:
-      "border border-border text-text hover:border-accent bg-transparent",
+    buttonVariant: "outline" as const,
   },
 ];
 
@@ -90,36 +91,40 @@ export function GetStartedCTA() {
           {cards.map((card) => {
             const Icon = card.icon;
             return (
-              <motion.div
-                key={card.cta}
-                variants={cardVariants}
-                className="flex flex-col rounded-[20px] border border-border bg-surface-bright p-8 transition-colors hover:border-accent/20"
-              >
-                <div
-                  className={`mb-6 flex h-12 w-12 items-center justify-center rounded-[10px] ${card.iconBg}`}
-                >
-                  <Icon className={`h-6 w-6 ${card.iconColor}`} />
-                </div>
+              <motion.div key={card.cta} variants={cardVariants}>
+                <Card className="flex h-full flex-col rounded-[20px] border-border bg-surface-bright p-0 transition-colors hover:border-accent/20">
+                  <CardContent className="flex flex-1 flex-col p-8">
+                    <div
+                      className={`mb-6 flex h-12 w-12 items-center justify-center rounded-[10px] ${card.iconBg}`}
+                    >
+                      <Icon className={`h-6 w-6 ${card.iconColor}`} />
+                    </div>
 
-                <h3 className="font-display text-xl text-text">
-                  {card.headline}
-                </h3>
+                    <h3 className="font-display text-xl text-text">
+                      {card.headline}
+                    </h3>
 
-                <ul className="mt-5 space-y-3">
-                  {card.bullets.map((bullet) => (
-                    <li key={bullet} className="flex items-start gap-2.5">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-                      <span className="text-sm text-text-muted">{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
+                    <ul className="mt-5 space-y-3">
+                      {card.bullets.map((bullet) => (
+                        <li key={bullet} className="flex items-start gap-2.5">
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+                          <span className="text-sm text-text-muted">
+                            {bullet}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
 
-                <Link
-                  href={card.href}
-                  className={`mt-auto inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold transition-colors ${card.buttonClass} mt-8`}
-                >
-                  {card.cta}
-                </Link>
+                    <Button
+                      variant={card.buttonVariant}
+                      className="mt-auto pt-8"
+                      size="lg"
+                      render={<Link href={card.href} />}
+                    >
+                      {card.cta}
+                    </Button>
+                  </CardContent>
+                </Card>
               </motion.div>
             );
           })}

@@ -4,6 +4,14 @@ import { SignOutButton } from "@/components/sign-out-button";
 import { LanguageSelector } from "@/components/language-selector";
 import { WorkspacePicker } from "@/components/workspace-picker";
 
+/**
+ * AppShell is a lightweight mobile-first layout (header + content + tab bar).
+ * The shadcn/ui Sidebar component was evaluated but not adopted here because:
+ * 1. AppShell has no collapsible sidebar; it uses a bottom tab bar on mobile.
+ * 2. The shadcn Sidebar assumes a desktop-first left-rail pattern with tooltips,
+ *    keyboard shortcuts, and collapsible groups, none of which apply.
+ * 3. Adopting it would add complexity without improving the mobile UX.
+ */
 interface AppShellProps {
   children: React.ReactNode;
 }

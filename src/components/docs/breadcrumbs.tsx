@@ -1,4 +1,12 @@
 import Link from "next/link";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 interface Crumb {
   label: string;
@@ -11,30 +19,26 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className="mb-6 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-text-subtle"
-    >
-      {items.map((item, idx) => (
-        <span
-          key={`${item.label}-${idx}`}
-          className="flex items-center gap-1.5"
-        >
-          {item.href ? (
-            <Link
-              href={item.href}
-              className="transition-colors hover:text-brand"
-            >
-              {item.label}
-            </Link>
-          ) : (
-            <span className="text-text-muted">{item.label}</span>
-          )}
-          {idx < items.length - 1 && (
-            <span className="text-text-subtle">/</span>
-          )}
-        </span>
-      ))}
-    </nav>
+    <Breadcrumb className="mb-6 font-mono text-[11px] uppercase tracking-widest">
+      <BreadcrumbList>
+        {items.map((item, idx) => (
+          <BreadcrumbItem key={`${item.label}-${idx}`}>
+            {idx > 0 && <BreadcrumbSeparator>/</BreadcrumbSeparator>}
+            {item.href ? (
+              <BreadcrumbLink
+                className="text-text-subtle transition-colors hover:text-brand"
+                render={<Link href={item.href} />}
+              >
+                {item.label}
+              </BreadcrumbLink>
+            ) : (
+              <BreadcrumbPage className="text-text-muted">
+                {item.label}
+              </BreadcrumbPage>
+            )}
+          </BreadcrumbItem>
+        ))}
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 }

@@ -1,19 +1,25 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { LanguageSelector } from "@/components/language-selector";
 import { useI18n } from "@/lib/i18n/context";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 export function LandingNav() {
   const { t } = useI18n();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const isDocsRoute = pathname.startsWith("/docs");
   const isDesignSystem = pathname.startsWith("/docs/design-system");
 
@@ -22,21 +28,6 @@ export function LandingNav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    if (!dropdownOpen) return;
-    const onClick = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
-  }, [dropdownOpen]);
 
   return (
     <header
@@ -82,55 +73,40 @@ export function LandingNav() {
           )}
         </div>
         <div className="flex items-center gap-3">
-          <Link
-            href="/auth/login"
-            className="rounded-lg border border-border px-4 py-1.5 text-sm font-semibold text-text-muted transition-colors hover:border-brand hover:text-brand focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
+          <Button
+            variant="outline"
+            size="sm"
+            render={<Link href="/auth/login" />}
           >
             {t.common.signIn}
-          </Link>
+          </Button>
 
-          {/* Eligibility dropdown — same white style as hero buttons */}
-          <div className="relative w-[200px]" ref={dropdownRef}>
-            <button
-              type="button"
-              onClick={() => setDropdownOpen((v) => !v)}
-              aria-expanded={dropdownOpen}
-              aria-haspopup="menu"
-              className="inline-flex h-[44px] w-full items-center justify-between gap-2 rounded-lg border border-surface/20 bg-white px-5 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
-            >
+          {/* Eligibility dropdown using shadcn/ui DropdownMenu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="inline-flex h-[44px] w-[200px] items-center justify-between gap-2 rounded-lg border border-surface/20 bg-white px-5 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
               {t.landing.heroCta}
-              <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  dropdownOpen ? "rotate-180" : ""
-                }`}
-              />
-            </button>
-
-            {dropdownOpen && (
-              <div
-                role="menu"
-                className="absolute left-0 right-0 top-[calc(100%+8px)] overflow-hidden rounded-lg border border-surface/20 bg-white shadow-lg"
+              <ChevronDown className="h-4 w-4 transition-transform duration-200 data-[popup-open]:rotate-180" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              sideOffset={8}
+              className="w-[200px] bg-white shadow-lg"
+            >
+              <DropdownMenuItem
+                className="px-5 py-3 text-sm font-semibold text-surface hover:bg-surface/5"
+                render={<Link href="/screening" />}
               >
-                <Link
-                  href="/screening"
-                  role="menuitem"
-                  onClick={() => setDropdownOpen(false)}
-                  className="flex items-center px-5 py-3 text-sm font-semibold text-surface transition-colors hover:bg-surface/5"
-                >
-                  Personal Benefits
-                </Link>
-                <div className="h-px bg-surface/10" />
-                <Link
-                  href="/screening/company"
-                  role="menuitem"
-                  onClick={() => setDropdownOpen(false)}
-                  className="flex items-center px-5 py-3 text-sm font-semibold text-surface transition-colors hover:bg-surface/5"
-                >
-                  Business Benefits
-                </Link>
-              </div>
-            )}
-          </div>
+                Personal Benefits
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-surface/10" />
+              <DropdownMenuItem
+                className="px-5 py-3 text-sm font-semibold text-surface hover:bg-surface/5"
+                render={<Link href="/screening/company" />}
+              >
+                Business Benefits
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
