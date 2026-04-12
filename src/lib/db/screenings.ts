@@ -89,7 +89,9 @@ export async function createScreening(
 export async function getLatestScreening(client: Client, workspaceId: string) {
   return client
     .from("screenings")
-    .select("*, screening_results(*)")
+    .select(
+      "id, workspace_id, answers, created_at, state, is_latest, household_size, engine_version, screening_results(id, program_id, confidence_score, eligibility_tier, estimated_value, reasons)",
+    )
     .eq("workspace_id", workspaceId)
     .eq("is_latest", true)
     .is("deleted_at", null)
@@ -102,7 +104,7 @@ export async function getLatestScreening(client: Client, workspaceId: string) {
 export async function listScreenings(client: Client, workspaceId: string) {
   return client
     .from("screenings")
-    .select("*")
+    .select("id, created_at, state, is_latest, engine_version, household_size")
     .eq("workspace_id", workspaceId)
     .is("deleted_at", null)
     .order("created_at", { ascending: false });
@@ -117,7 +119,9 @@ export async function getScreeningWithResults(
 ) {
   return client
     .from("screenings")
-    .select("*, screening_results(*)")
+    .select(
+      "id, workspace_id, created_at, state, is_latest, household_size, engine_version, screening_results(id, program_id, confidence_score, eligibility_tier, estimated_value, reasons)",
+    )
     .eq("id", screeningId)
     .is("deleted_at", null)
     .single();

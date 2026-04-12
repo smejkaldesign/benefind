@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+
+export const revalidate = 3600;
 import { createServerSupabase } from "@/lib/supabase/server";
 import { listActivePrograms } from "@/lib/db/programs";
 import { LandingNav } from "@/components/landing-nav";

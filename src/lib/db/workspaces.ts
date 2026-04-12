@@ -21,7 +21,7 @@ export async function listWorkspacesForUser(client: Client, userId: string) {
 export async function getWorkspace(client: Client, workspaceId: string) {
   return client
     .from("workspaces")
-    .select("*")
+    .select("id, name, slug, type, owner_user_id, created_at")
     .eq("id", workspaceId)
     .is("deleted_at", null)
     .single();
