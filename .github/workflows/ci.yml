@@ -55,6 +55,13 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    env:
+      # Next.js prerenders pages during build, which triggers Supabase client
+      # creation. These are NEXT_PUBLIC (client-side, not secrets) — the build
+      # just needs valid-shaped values so createClient doesn't throw. Runtime
+      # values come from the deployment environment.
+      NEXT_PUBLIC_SUPABASE_URL: https://ttbjntphwogjdzqxftas.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-for-ci-build
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
