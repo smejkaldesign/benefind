@@ -93,7 +93,7 @@ const TIER_META: Record<EligibilityTier, TierMeta> = {
     icon: CircleDot,
     iconClass: "text-success",
     badgeClass: "bg-success/8 text-success border-success/25",
-    accentClass: "border-l-4 border-dashed border-success/60",
+    accentClass: "border-l-4 border-dashed border-success",
     sortGroup: 2,
   },
   maybe_eligible: {
@@ -381,10 +381,7 @@ export default function ResultsPage() {
       {/* Tabs + sticky summary */}
       <div className="sticky top-0 z-20 border-b border-border bg-surface">
         {showStickyTotal && (
-          <div
-            className="border-b border-border bg-brand/5 px-4 py-1.5 text-center"
-            aria-live="polite"
-          >
+          <div className="border-b border-border bg-brand/5 px-4 py-1.5 text-center">
             <p className="text-sm font-semibold text-brand">
               ${result.totalEstimatedMonthly.toLocaleString()}/mo across{" "}
               {pursuable.length} program{pursuable.length !== 1 ? "s" : ""}
@@ -525,9 +522,14 @@ export default function ResultsPage() {
                       href={program.applicationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`Apply now for ${program.shortName} (opens in new tab)`}
                       className="inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-brand-dark"
                     >
-                      Apply now <ExternalLink className="h-3.5 w-3.5" />
+                      Apply now{" "}
+                      <ExternalLink
+                        className="h-3.5 w-3.5"
+                        aria-hidden="true"
+                      />
                     </a>
                   )}
                 </Card>
@@ -555,7 +557,10 @@ export default function ResultsPage() {
                           <p className="text-sm font-medium text-text">
                             {program.shortName}
                           </p>
-                          <span className="text-xs text-text-muted ml-auto">
+                          <span
+                            className="text-xs text-text-muted ml-auto"
+                            aria-label={`Confidence score: ${r.confidenceScore} out of 100`}
+                          >
                             {r.confidenceScore}/100
                           </span>
                         </div>
@@ -592,7 +597,10 @@ export default function ResultsPage() {
                           <p className="text-sm font-medium text-text">
                             {program.shortName}
                           </p>
-                          <span className="text-xs text-text-muted ml-auto">
+                          <span
+                            className="text-xs text-text-muted ml-auto"
+                            aria-label={`Confidence score: ${r.confidenceScore} out of 100`}
+                          >
                             {r.confidenceScore}/100
                           </span>
                         </div>
