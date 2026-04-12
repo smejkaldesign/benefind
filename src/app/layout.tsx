@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Geist } from "next/font/google";
 import { I18nProvider } from "@/lib/i18n/context";
+import { ThemeProvider } from "@/lib/theme";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { OfflineBanner } from "@/components/offline-banner";
 import { AuthErrorRedirect } from "@/components/auth-error-redirect";
@@ -50,7 +51,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn("dark", "font-sans", geist.variable)}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn("font-sans", geist.variable)}
+    >
       <body className={`${inter.variable} ${inter.className} min-h-dvh`}>
         <script
           type="application/ld+json"
@@ -67,13 +72,15 @@ export default function RootLayout({
             }).replace(/</g, "\\u003c"),
           }}
         />
-        <I18nProvider>
-          <SmoothScroll />
-          {children}
-          <AuthErrorRedirect />
-          <ServiceWorkerRegister />
-          <OfflineBanner />
-        </I18nProvider>
+        <ThemeProvider>
+          <I18nProvider>
+            <SmoothScroll />
+            {children}
+            <AuthErrorRedirect />
+            <ServiceWorkerRegister />
+            <OfflineBanner />
+          </I18nProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
