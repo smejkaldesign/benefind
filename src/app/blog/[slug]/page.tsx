@@ -23,10 +23,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPost(slug);
   if (!post) return {};
   const url = `https://benefind.app/blog/${slug}`;
-  // Note: placeholder SVG covers are referenced for now. Before launch we
-  // should generate raster covers (see deferred task) and swap here.
-  const cover = post.heroImage ?? "/images/brand/logo-dark.png";
   const titleWithBrand = `${post.title} | Benefind`;
+  // OG and Twitter images are auto-discovered from opengraph-image.tsx and
+  // twitter-image.tsx via Next.js file conventions, so we omit manual image
+  // entries here.
   return {
     title: titleWithBrand,
     description: post.description,
@@ -36,7 +36,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: post.description,
       url,
       siteName: "Benefind",
-      images: [{ url: cover, width: 1200, height: 630, alt: post.title }],
       locale: "en_US",
       type: "article",
       publishedTime: post.date,
@@ -47,7 +46,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: titleWithBrand,
       description: post.description,
-      images: [cover],
     },
   };
 }
@@ -73,9 +71,7 @@ export default async function BlogPostPage({ params }: Props) {
   const faqItems = extractFAQ(slug);
   const related = getRelatedPosts(slug, 3);
 
-  const schemaImage = post.heroImage
-    ? `https://benefind.app${post.heroImage}`
-    : "https://benefind.app/images/brand/logo-dark.png";
+  const schemaImage = `https://benefind.app/blog/${slug}/opengraph-image`;
 
   const blogPostingLd = {
     "@context": "https://schema.org",
