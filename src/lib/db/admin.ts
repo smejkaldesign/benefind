@@ -3,9 +3,9 @@ import type { Database, Tables } from "@/types/database";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Client = SupabaseClient<Database, any>;
-type AdminUser = Tables<"admin_users">;
-type AdminAction = Tables<"admin_actions">;
-type SupportTicket = Tables<"support_tickets">;
+type _AdminUser = Tables<"admin_users">;
+type _AdminAction = Tables<"admin_actions">;
+type _SupportTicket = Tables<"support_tickets">;
 
 /**
  * Checks whether a user exists in the admin_users table and is not disabled.
@@ -88,4 +88,87 @@ export async function listSupportTickets(
   }
 
   return query;
+}
+
+/**
+ * Returns aggregate stats for the admin dashboard.
+ */
+export async function getAdminStats(client: Client) {
+  const [workspaces, screenings, docsPending, docsInfected, openTickets] =
+    await Promise.all([
+      client
+        .from("workspaces")
+        .select("*", { count: "exact", head: true })
+        .is("deleted_at", null),
+      client
+        .from("screenings")
+        .select("*", { count: "exact", head: true })
+        .is("deleted_at", null),
+      client
+        .from("documents")
+        .select("*", { count: "exact", head: true })
+        .eq("scan_status", "pending")
+        .is("deleted_at", null),
+      client
+        .from("documents")
+        .select("*", { count: "exact", head: true })
+        .eq("scan_status", "infected")
+        .is("deleted_at", null),
+      client
+        .from("support_tickets")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "open"),
+    ]);
+
+  return {
+    workspaceCount: workspaces.count ?? 0,
+    screeningCount: screenings.count ?? 0,
+    docsPendingCount: docsPending.count ?? 0,
+    docsInfectedCount: docsInfected.count ?? 0,
+    openTicketCount: openTickets.count ?? 0,
+  };
+}
+
+/**
+ * Returns recent screenings across all workspaces.
+ */
+export async function listRecentScreenings(client: Client, limit = 20) {
+  return client
+    .from("screenings")
+    .select("*")
+    .is("deleted_at", null)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+}
+
+/**
+ * Lists all programs (active, draft, archived) for admin CMS.
+ */
+export async function listAllPrograms(client: Client) {
+  return client.from("programs").select("*").order("name", { ascending: true });
+}
+
+/**
+ * Updates a program by ID. Caller must verify admin status.
+ */
+export async function updateProgramById(
+  client: Client,
+  programId: string,
+  fields: {
+    name: string;
+    description: string | null;
+    plain_language_summary: string | null;
+    category: string;
+    status: string;
+    eligibility_criteria: Tables<"programs">["eligibility_criteria"];
+    application_url: string | null;
+  },
+) {
+  return client
+    .from("programs")
+    .update({
+      ...fields,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", programId);
 }
