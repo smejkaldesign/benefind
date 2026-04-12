@@ -346,7 +346,18 @@ export const posts: BlogPost[] = [
   },
 ];
 
-import { getPostWordCount } from "./blog-toc";
+/**
+ * getPostWordCount is loaded lazily to avoid pulling node:fs into
+ * edge-runtime bundles (e.g. opengraph-image.tsx imports `posts`).
+ */
+let _getPostWordCount: ((slug: string) => number) | null = null;
+function wordCount(slug: string): number {
+  if (!_getPostWordCount) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    _getPostWordCount = require("./blog-toc").getPostWordCount;
+  }
+  return _getPostWordCount!(slug);
+}
 
 export function getAllPosts(): BlogPostWithMeta[] {
   return posts
@@ -354,7 +365,7 @@ export function getAllPosts(): BlogPostWithMeta[] {
     .sort((a, b) => (a.date < b.date ? 1 : -1))
     .map((p) => ({
       ...p,
-      readingTime: estimateReadingTime(getPostWordCount(p.slug)),
+      readingTime: estimateReadingTime(wordCount(p.slug)),
     }));
 }
 
@@ -363,7 +374,7 @@ export function getPost(slug: string): BlogPostWithMeta | undefined {
   if (!post) return undefined;
   return {
     ...post,
-    readingTime: estimateReadingTime(getPostWordCount(post.slug)),
+    readingTime: estimateReadingTime(wordCount(post.slug)),
   };
 }
 

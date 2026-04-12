@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
-import { getPost } from "@/lib/blog";
+import { posts } from "@/lib/blog";
 
-export const runtime = "edge";
 export const alt = "Blog post cover";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -12,7 +11,7 @@ export default async function Image({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = posts.find((p) => p.slug === slug && p.published);
 
   const title = post?.title ?? "Benefind Blog";
   const tag = post?.tags?.[0] ?? "";
