@@ -1,7 +1,12 @@
 "use server";
 
 import { createServerSupabase } from "@/lib/supabase/server";
-import { createScreening, getLatestScreening } from "@/lib/db/screenings";
+import {
+  createScreening,
+  getLatestScreening,
+  upsertCompanyProfile,
+  replaceCompanyMatches,
+} from "@/lib/db/screenings";
 import { listWorkspacesForUser } from "@/lib/db/workspaces";
 import { cookies } from "next/headers";
 import type { Json } from "@/types/database";
@@ -112,4 +117,113 @@ export async function getLatestAnswers(): Promise<{
 
   // The answers column is typed as Json; cast to the expected shape
   return { answers: screening.answers as Record<string, string> };
+}
+
+// ── Company screening persistence ──────────────────────────────────────────
+
+interface PersistCompanyScreeningInput {
+  answers: Record<string, string>;
+  engineVersion: string;
+  companyName?: string;
+  state?: string;
+  industry?: string;
+  companyAge?: string;
+  employeeCount?: string;
+  annualRevenue?: string;
+  hasRnd?: boolean;
+  rndPercentage?: number;
+  ownershipDemographics?: string[];
+  isRural?: boolean;
+  exportsOrPlans?: boolean;
+  isHiring?: boolean;
+  hasCleanEnergy?: boolean;
+  results: Array<{
+    programId: string;
+    confidenceScore: number;
+    eligible: boolean;
+    estimatedValue?: string | null;
+    reasons: Record<string, unknown>;
+  }>;
+}
+
+/**
+ * Server action to persist a company screening result.
+ * Upserts the company_profiles row and inserts company_program_matches.
+ *
+ * Returns the company profile ID on success, or null if unauthenticated.
+ */
+export async function persistCompanyScreening(
+  input: PersistCompanyScreeningInput,
+) {
+  const supabase = await createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { companyId: null };
+  }
+
+  const cookieStore = await cookies();
+  const workspaceId = cookieStore.get("bf-workspace")?.value;
+
+  if (!workspaceId) {
+    return { companyId: null };
+  }
+
+  // SECURITY: verify workspace membership
+  const { data: memberships } = await listWorkspacesForUser(supabase, user.id);
+  const isMember = memberships?.some((m) => m.workspace_id === workspaceId);
+  if (!isMember) {
+    return { companyId: null };
+  }
+
+  // Upsert company profile (one per workspace)
+  const { data: profile, error: profileError } = await upsertCompanyProfile(
+    supabase,
+    {
+      workspaceId,
+      companyName: input.companyName,
+      state: input.state,
+      industry: input.industry,
+      companyAge: input.companyAge,
+      employeeCount: input.employeeCount,
+      annualRevenue: input.annualRevenue,
+      hasRnd: input.hasRnd,
+      rndPercentage: input.rndPercentage,
+      ownershipDemographics: input.ownershipDemographics,
+      isRural: input.isRural,
+      exportsOrPlans: input.exportsOrPlans,
+      isHiring: input.isHiring,
+      hasCleanEnergy: input.hasCleanEnergy,
+      scanData: input.answers as unknown as Json,
+    },
+  );
+
+  if (profileError || !profile) {
+    console.error("Failed to upsert company profile:", profileError?.message);
+    return { companyId: null };
+  }
+
+  // Replace program matches for this company
+  if (input.results.length > 0) {
+    const { error: matchesError } = await replaceCompanyMatches(
+      supabase,
+      profile.id,
+      workspaceId,
+      input.results.map((r) => ({
+        programId: r.programId,
+        confidenceScore: r.confidenceScore,
+        estimatedValue: r.estimatedValue ?? null,
+        reasons: r.reasons as unknown as Json,
+      })),
+    );
+
+    if (matchesError) {
+      console.error("Failed to persist company matches:", matchesError.message);
+      return { companyId: profile.id };
+    }
+  }
+
+  return { companyId: profile.id };
 }

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { requireAuth } from "@/components/auth-guard";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { listWorkspacesForUser } from "@/lib/db/workspaces";
@@ -6,6 +7,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { PersistScreeningOnMount } from "@/components/screening/persist-on-mount";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import {
@@ -71,6 +73,10 @@ export default async function DashboardPage() {
   if (!workspaceId) {
     return (
       <div className="space-y-6">
+        {/* Post-signup: persist sessionStorage screening results to DB */}
+        <Suspense fallback={null}>
+          <PersistScreeningOnMount />
+        </Suspense>
         <PageHeader
           title="Welcome back"
           description={user.email ?? undefined}
@@ -85,6 +91,11 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      {/* Post-signup: persist sessionStorage screening results to DB */}
+      <Suspense fallback={null}>
+        <PersistScreeningOnMount />
+      </Suspense>
+
       <PageHeader title="Welcome back" description={user.email ?? undefined} />
 
       {latest ? (

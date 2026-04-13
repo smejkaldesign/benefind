@@ -122,3 +122,96 @@ export async function getScreeningWithResults(
     .is("deleted_at", null)
     .single();
 }
+
+// ── Company screening DAL ──────────────────────────────────────────────────
+
+interface UpsertCompanyProfileInput {
+  workspaceId: string;
+  companyName?: string;
+  state?: string;
+  industry?: string;
+  companyAge?: string;
+  employeeCount?: string;
+  annualRevenue?: string;
+  hasRnd?: boolean;
+  rndPercentage?: number;
+  ownershipDemographics?: string[];
+  isRural?: boolean;
+  exportsOrPlans?: boolean;
+  isHiring?: boolean;
+  hasCleanEnergy?: boolean;
+  scanData?: Json;
+}
+
+/**
+ * Upserts a company profile for a workspace.
+ * company_profiles has a unique constraint on workspace_id, so this
+ * creates or updates the single profile per workspace.
+ */
+export async function upsertCompanyProfile(
+  client: Client,
+  input: UpsertCompanyProfileInput,
+) {
+  const row: TablesInsert<"company_profiles"> = {
+    workspace_id: input.workspaceId,
+    company_name: input.companyName ?? null,
+    state: input.state ?? null,
+    industry: input.industry ?? null,
+    company_age: input.companyAge ?? null,
+    employee_count: input.employeeCount ?? null,
+    annual_revenue: input.annualRevenue ?? null,
+    has_rnd: input.hasRnd ?? false,
+    rnd_percentage: input.rndPercentage ?? null,
+    ownership_demographics: input.ownershipDemographics ?? null,
+    is_rural: input.isRural ?? false,
+    exports_or_plans: input.exportsOrPlans ?? false,
+    is_hiring: input.isHiring ?? false,
+    has_clean_energy: input.hasCleanEnergy ?? false,
+    scan_data: input.scanData ?? null,
+  };
+
+  return client
+    .from("company_profiles")
+    .upsert(row, { onConflict: "workspace_id" })
+    .select("id")
+    .single();
+}
+
+interface CompanyMatchInput {
+  programId: string;
+  confidenceScore: number;
+  estimatedValue?: string | null;
+  reasons: Json;
+}
+
+/**
+ * Replaces all company program matches for a given company profile.
+ * Deletes existing matches, then inserts the new set.
+ */
+export async function replaceCompanyMatches(
+  client: Client,
+  companyId: string,
+  workspaceId: string,
+  matches: CompanyMatchInput[],
+) {
+  // Delete old matches
+  await client
+    .from("company_program_matches")
+    .delete()
+    .eq("company_id", companyId);
+
+  if (matches.length === 0) {
+    return { error: null };
+  }
+
+  const rows: TablesInsert<"company_program_matches">[] = matches.map((m) => ({
+    workspace_id: workspaceId,
+    company_id: companyId,
+    program_id: m.programId,
+    confidence_score: m.confidenceScore,
+    estimated_value: m.estimatedValue ?? null,
+    reasons: m.reasons,
+  }));
+
+  return client.from("company_program_matches").insert(rows);
+}
