@@ -265,10 +265,11 @@ export default function CompanyScreeningPage() {
     setSignupLoading(true);
 
     const supabase = createClient();
+    // Include ?next so callback redirects to dashboard with from=company-screening
     const { error } = await supabase.auth.signInWithOtp({
       email: signupEmail,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent("/dashboard?from=company-screening")}`,
       },
     });
 

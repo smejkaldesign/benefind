@@ -2,14 +2,18 @@
 
 import { useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { persistScreening } from "@/app/screening/actions";
+import {
+  persistScreening,
+  persistCompanyScreening,
+} from "@/app/screening/actions";
 import { ENGINE_VERSION } from "@/lib/benefits/types";
 import { STORAGE_KEYS } from "@/lib/constants";
 
 /**
  * Client component that persists sessionStorage screening results to the
  * database after a post-screening signup flow. Mounts invisibly on the
- * dashboard; runs once when `?from=screening` is in the URL.
+ * dashboard; runs once when `?from=screening` or `?from=company-screening`
+ * is in the URL.
  *
  * Flow: user completes screening (unauthenticated) -> signs up -> callback
  * redirects to /dashboard?from=screening -> this component reads
@@ -23,8 +27,75 @@ export function PersistScreeningOnMount() {
 
   useEffect(() => {
     if (persisted.current) return;
-    if (searchParams.get("from") !== "screening") return;
 
+    const from = searchParams.get("from");
+    if (from !== "screening" && from !== "company-screening") return;
+
+    if (from === "company-screening") {
+      const raw = sessionStorage.getItem(STORAGE_KEYS.COMPANY_SCREENING_RESULT);
+      if (!raw) return;
+
+      persisted.current = true;
+
+      try {
+        const result = JSON.parse(raw);
+        if (!Array.isArray(result.programs)) return;
+
+        persistCompanyScreening({
+          answers: result.answers ?? {},
+          engineVersion: result.engineVersion ?? ENGINE_VERSION,
+          companyName: result.companyName,
+          state: result.state,
+          industry: result.industry,
+          companyAge: result.companyAge,
+          employeeCount: result.employeeCount,
+          annualRevenue: result.annualRevenue,
+          hasRnd: result.hasRnd,
+          rndPercentage: result.rndPercentage,
+          ownershipDemographics: result.ownershipDemographics,
+          isRural: result.isRural,
+          exportsOrPlans: result.exportsOrPlans,
+          isHiring: result.isHiring,
+          hasCleanEnergy: result.hasCleanEnergy,
+          results: result.programs.map(
+            (p: {
+              program: { id: string };
+              result: {
+                matchScore: number;
+                eligible: boolean;
+                estimatedValue?: string | null;
+                reason: string;
+                whyYouQualify: string[];
+                nextSteps: string[];
+              };
+            }) => ({
+              programId: p.program.id,
+              confidenceScore: p.result.matchScore,
+              eligible: p.result.eligible,
+              estimatedValue: p.result.estimatedValue ?? null,
+              reasons: {
+                reason: p.result.reason,
+                whyYouQualify: p.result.whyYouQualify,
+                nextSteps: p.result.nextSteps,
+              },
+            }),
+          ),
+        })
+          .then(() => {
+            sessionStorage.removeItem(STORAGE_KEYS.COMPANY_SCREENING_RESULT);
+            router.replace("/dashboard");
+            router.refresh();
+          })
+          .catch(() => {
+            // Non-blocking: dashboard still shows DB results if available
+          });
+      } catch {
+        // Malformed sessionStorage data; ignore
+      }
+      return;
+    }
+
+    // Personal screening flow
     const raw = sessionStorage.getItem(STORAGE_KEYS.SCREENING_RESULT);
     const rawAnswers = sessionStorage.getItem(STORAGE_KEYS.SCREENING_ANSWERS);
     if (!raw) return;

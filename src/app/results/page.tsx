@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { EligibilityTier, ScreeningResult } from "@/lib/benefits/types";
+import { STORAGE_KEYS } from "@/lib/constants";
 import { DocumentChecklist } from "@/components/screening/document-checklist";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -295,7 +296,7 @@ export default function ResultsPage() {
 
       // Not authenticated: check for sessionStorage results
       try {
-        const stored = sessionStorage.getItem("screening_result");
+        const stored = sessionStorage.getItem(STORAGE_KEYS.SCREENING_RESULT);
         if (!stored) {
           router.replace("/screening");
           return;

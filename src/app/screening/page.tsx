@@ -21,6 +21,7 @@ import {
 import { Grainient } from "@/components/grainient";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import { STORAGE_KEYS } from "@/lib/constants";
 import {
   ArrowLeft,
   RotateCcw,
@@ -231,12 +232,12 @@ function ScreeningPageInner() {
           try {
             const { input: _pii, ...safeResult } = screeningResult;
             sessionStorage.setItem(
-              "screening_result",
+              STORAGE_KEYS.SCREENING_RESULT,
               JSON.stringify(safeResult),
             );
             // Store answers separately for post-signup persistence
             sessionStorage.setItem(
-              "screening_answers",
+              STORAGE_KEYS.SCREENING_ANSWERS,
               JSON.stringify(newAnswers),
             );
           } catch {}

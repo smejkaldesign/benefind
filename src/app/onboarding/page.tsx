@@ -75,6 +75,8 @@ export default function OnboardingPage() {
     } catch {
       // If update fails, still let them through
       router.replace("/dashboard");
+    } finally {
+      setSaving(false);
     }
   }
 
