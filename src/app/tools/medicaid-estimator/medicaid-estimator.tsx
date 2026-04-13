@@ -641,7 +641,11 @@ export function MedicaidEstimator() {
                   </Button>
 
                   {result && (
-                    <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
+                    <div
+                      role="status"
+                      aria-live="polite"
+                      className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4"
+                    >
                       <div className="flex items-center justify-between">
                         <p className="font-mono text-xs uppercase tracking-widest text-text-subtle">
                           Result
