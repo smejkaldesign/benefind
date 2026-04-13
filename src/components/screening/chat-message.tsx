@@ -1,9 +1,10 @@
 interface ChatMessageProps {
   role: "assistant" | "user";
   children: React.ReactNode;
+  helpText?: string;
 }
 
-export function ChatMessage({ role, children }: ChatMessageProps) {
+export function ChatMessage({ role, children, helpText }: ChatMessageProps) {
   const isAssistant = role === "assistant";
 
   return (
@@ -17,6 +18,11 @@ export function ChatMessage({ role, children }: ChatMessageProps) {
         }`}
       >
         {children}
+        {helpText && (
+          <p className="mt-1.5 text-xs leading-relaxed text-text-subtle">
+            {helpText}
+          </p>
+        )}
       </div>
     </div>
   );

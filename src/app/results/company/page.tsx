@@ -59,6 +59,8 @@ const STATUS_BADGES: Record<
 
 export default function CompanyResultsPage() {
   const [result, setResult] = useState<CompanyScreeningResult | null>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [showStickyTotal, setShowStickyTotal] = useState(false);
 
   useEffect(() => {
     try {
@@ -75,6 +77,19 @@ export default function CompanyResultsPage() {
         setResult(parsed);
       }
     } catch {}
+  }, []);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry) setShowStickyTotal(!entry.isIntersecting);
+      },
+      { threshold: 0 },
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
   }, []);
 
   if (!result) {
@@ -116,22 +131,6 @@ export default function CompanyResultsPage() {
     "incentive",
     "contracting",
   ];
-
-  const heroRef = useRef<HTMLDivElement>(null);
-  const [showStickyTotal, setShowStickyTotal] = useState(false);
-
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry) setShowStickyTotal(!entry.isIntersecting);
-      },
-      { threshold: 0 },
-    );
-    observer.observe(hero);
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <main className="min-h-dvh bg-surface">
