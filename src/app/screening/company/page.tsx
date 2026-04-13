@@ -190,6 +190,11 @@ export default function CompanyScreeningPage() {
               STORAGE_KEYS.COMPANY_SCREENING_RESULT,
               JSON.stringify(safeResult),
             );
+            // Store answers separately for post-signup persistence
+            sessionStorage.setItem(
+              STORAGE_KEYS.COMPANY_SCREENING_ANSWERS,
+              JSON.stringify(newAnswers),
+            );
           } catch {}
 
           // Persist to database if authenticated (fire-and-forget)
@@ -279,9 +284,6 @@ export default function CompanyScreeningPage() {
 
     setSignupSent(true);
     setSignupLoading(false);
-    try {
-      sessionStorage.setItem("pending_screening_signup", "true");
-    } catch {}
   }
 
   function handleSkipSignup() {
@@ -302,6 +304,7 @@ export default function CompanyScreeningPage() {
     setSignupError(null);
     try {
       sessionStorage.removeItem(STORAGE_KEYS.COMPANY_SCREENING_RESULT);
+      sessionStorage.removeItem(STORAGE_KEYS.COMPANY_SCREENING_ANSWERS);
     } catch {}
     initialized.current = false;
     setTimeout(() => {

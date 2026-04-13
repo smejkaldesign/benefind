@@ -312,9 +312,6 @@ function ScreeningPageInner() {
 
     setSignupSent(true);
     setSignupLoading(false);
-    try {
-      sessionStorage.setItem("pending_screening_signup", "true");
-    } catch {}
   }
 
   function handleSkipSignup() {

@@ -33,30 +33,42 @@ export function PersistScreeningOnMount() {
 
     if (from === "company-screening") {
       const raw = sessionStorage.getItem(STORAGE_KEYS.COMPANY_SCREENING_RESULT);
+      const rawAnswers = sessionStorage.getItem(
+        STORAGE_KEYS.COMPANY_SCREENING_ANSWERS,
+      );
       if (!raw) return;
 
       persisted.current = true;
 
       try {
         const result = JSON.parse(raw);
+        const answers: Record<string, string> = rawAnswers
+          ? JSON.parse(rawAnswers)
+          : {};
         if (!Array.isArray(result.programs)) return;
 
         persistCompanyScreening({
-          answers: result.answers ?? {},
+          answers,
           engineVersion: result.engineVersion ?? ENGINE_VERSION,
-          companyName: result.companyName,
-          state: result.state,
-          industry: result.industry,
-          companyAge: result.companyAge,
-          employeeCount: result.employeeCount,
-          annualRevenue: result.annualRevenue,
-          hasRnd: result.hasRnd,
-          rndPercentage: result.rndPercentage,
-          ownershipDemographics: result.ownershipDemographics,
-          isRural: result.isRural,
-          exportsOrPlans: result.exportsOrPlans,
-          isHiring: result.isHiring,
-          hasCleanEnergy: result.hasCleanEnergy,
+          companyName: answers.companyName,
+          state: answers.state,
+          industry: answers.industry,
+          companyAge: answers.companyAge,
+          employeeCount: answers.employeeCount,
+          annualRevenue: answers.annualRevenue,
+          hasRnd: answers.hasRnd === "yes",
+          rndPercentage: answers.rndPercentage
+            ? parseInt(answers.rndPercentage) || undefined
+            : undefined,
+          ownershipDemographics: answers.ownershipDemographics
+            ? answers.ownershipDemographics
+                .split(",")
+                .filter((v) => v !== "none")
+            : undefined,
+          isRural: answers.isRural === "yes",
+          exportsOrPlans: answers.exportsOrPlans === "yes",
+          isHiring: answers.isHiring === "yes",
+          hasCleanEnergy: answers.hasCleanEnergy === "yes",
           results: result.programs.map(
             (p: {
               program: { id: string };
@@ -83,6 +95,7 @@ export function PersistScreeningOnMount() {
         })
           .then(() => {
             sessionStorage.removeItem(STORAGE_KEYS.COMPANY_SCREENING_RESULT);
+            sessionStorage.removeItem(STORAGE_KEYS.COMPANY_SCREENING_ANSWERS);
             router.replace("/dashboard");
             router.refresh();
           })
