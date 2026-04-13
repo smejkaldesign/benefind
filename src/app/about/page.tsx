@@ -12,6 +12,7 @@ import {
 import { LandingNav } from "@/components/landing-nav";
 import { Footer } from "@/components/footer";
 import { TrustBar } from "@/components/trust-bar";
+import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-jsonld";
 
 export const metadata: Metadata = {
   title: "About Benefind | Making Benefits Accessible to Everyone",
@@ -103,6 +104,9 @@ export default function AboutPage() {
     <main className="flex min-h-dvh flex-col bg-surface">
       <LandingNav />
 
+      <BreadcrumbJsonLd
+        items={[{ name: "Home", href: "/" }, { name: "About" }]}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

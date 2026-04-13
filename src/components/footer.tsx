@@ -71,18 +71,26 @@ export function Footer() {
             <ul className="mt-3 space-y-2">
               <li>
                 <Link
-                  href="/docs"
-                  className="text-sm text-text-muted transition-colors hover:text-brand"
-                >
-                  {t.landing.footerDocs}
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/blog"
                   className="text-sm text-text-muted transition-colors hover:text-brand"
                 >
                   {t.landing.footerBlog}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tools"
+                  className="text-sm text-text-muted transition-colors hover:text-brand"
+                >
+                  {t.landing.footerTools}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/benefits-for/low-income-families"
+                  className="text-sm text-text-muted transition-colors hover:text-brand"
+                >
+                  {t.landing.footerBenefitsFor}
                 </Link>
               </li>
               <li>
@@ -93,13 +101,29 @@ export function Footer() {
                   {t.landing.footerGuides}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/docs"
+                  className="text-sm text-text-muted transition-colors hover:text-brand"
+                >
+                  {t.landing.footerDocs}
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider text-text-subtle">
-              {t.landing.footerLegal}
+              {t.landing.footerCompany}
             </h4>
             <ul className="mt-3 space-y-2">
+              <li>
+                <Link
+                  href="/about"
+                  className="text-sm text-text-muted transition-colors hover:text-brand"
+                >
+                  {t.landing.footerAbout}
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/privacy"

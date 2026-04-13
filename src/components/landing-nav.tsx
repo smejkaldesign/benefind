@@ -59,6 +59,33 @@ export function LandingNav() {
             />
           </Link>
           <LanguageSelector />
+          {!isDocsRoute && (
+            <nav
+              className="hidden items-center gap-4 md:flex"
+              aria-label="Main"
+            >
+              <Link
+                href="/tools"
+                className={`text-sm transition-colors hover:text-brand ${
+                  pathname.startsWith("/tools")
+                    ? "font-medium text-brand"
+                    : "text-text-muted"
+                }`}
+              >
+                Tools
+              </Link>
+              <Link
+                href="/about"
+                className={`text-sm transition-colors hover:text-brand ${
+                  pathname === "/about"
+                    ? "font-medium text-brand"
+                    : "text-text-muted"
+                }`}
+              >
+                About
+              </Link>
+            </nav>
+          )}
           {isDocsRoute && (
             <nav className="flex items-center gap-4" aria-label="Docs tabs">
               <Link
