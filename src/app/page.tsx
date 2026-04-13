@@ -12,6 +12,7 @@ import { BentoGrid } from "@/components/landing/bento-grid";
 import { Testimonial7 } from "@/components/testimonial7";
 import { GetStartedCTA } from "@/components/landing/get-started-cta";
 import { Footer } from "@/components/footer";
+import { TrustBar } from "@/components/trust-bar";
 import { useI18n } from "@/lib/i18n/context";
 
 export default function Home() {
@@ -136,6 +137,9 @@ export default function Home() {
         {/* Scrolling chips — full viewport width, on top of everything */}
         <SuccessChips />
       </section>
+
+      {/* ── Trust Bar ────────────────────────────────────────── */}
+      <TrustBar />
 
       {/* ── Stats Strip ──────────────────────────────────────── */}
       <StatsStrip />
