@@ -63,6 +63,8 @@ export default function CompanyResultsPage() {
   const router = useRouter();
   const [result, setResult] = useState<CompanyScreeningResult | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [showStickyTotal, setShowStickyTotal] = useState(false);
 
   // Redirect authenticated users to dashboard, unauthenticated without data to screening
   useEffect(() => {
@@ -105,6 +107,19 @@ export default function CompanyResultsPage() {
     checkAuth();
   }, [router]);
 
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry) setShowStickyTotal(!entry.isIntersecting);
+      },
+      { threshold: 0 },
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
+
   if (!authChecked || !result) {
     return (
       <main className="flex min-h-dvh items-center justify-center px-4">
@@ -135,22 +150,6 @@ export default function CompanyResultsPage() {
     "incentive",
     "contracting",
   ];
-
-  const heroRef = useRef<HTMLDivElement>(null);
-  const [showStickyTotal, setShowStickyTotal] = useState(false);
-
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry) setShowStickyTotal(!entry.isIntersecting);
-      },
-      { threshold: 0 },
-    );
-    observer.observe(hero);
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <main className="min-h-dvh bg-surface">

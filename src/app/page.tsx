@@ -33,19 +33,19 @@ export default function Home() {
 
       {/* ── Hero with Vanta.js Clouds (Oz-style container) ──── */}
       <section className="relative pt-[76px]">
-        {/* Dark edge gradients — fixed 200px each, hidden at viewport >= 2000px */}
+        {/* Dark edge gradients — width matches gap between hero container and viewport edge */}
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-30 w-[200px] min-[2000px]:hidden"
+          className="pointer-events-none absolute inset-y-0 left-0 z-30 w-[calc((100vw-1600px)/2)] min-w-0"
           style={{
             background:
-              "linear-gradient(to right, #121212 0%, transparent 100%)",
+              "linear-gradient(to right, var(--color-surface) 0%, transparent 100%)",
           }}
         />
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 z-30 w-[200px] min-[2000px]:hidden"
+          className="pointer-events-none absolute inset-y-0 right-0 z-30 w-[calc((100vw-1600px)/2)] min-w-0"
           style={{
             background:
-              "linear-gradient(to left, #121212 0%, transparent 100%)",
+              "linear-gradient(to left, var(--color-surface) 0%, transparent 100%)",
           }}
         />
         <div
