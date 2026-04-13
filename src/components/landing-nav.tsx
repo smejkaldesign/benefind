@@ -86,7 +86,7 @@ export function LandingNav() {
           <ThemeToggle />
           <Button
             variant="outline"
-            className="h-[44px] px-5"
+            className="h-[44px] shrink-0 whitespace-nowrap px-5"
             nativeButton={false}
             render={<Link href="/auth/login" />}
           >
@@ -95,7 +95,7 @@ export function LandingNav() {
 
           {/* Eligibility dropdown using shadcn/ui DropdownMenu */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex h-[44px] w-[200px] items-center justify-between gap-2 rounded-lg border border-border bg-brand px-5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+            <DropdownMenuTrigger className="inline-flex h-[44px] shrink-0 items-center justify-between gap-2 whitespace-nowrap rounded-lg border border-border bg-brand px-5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
               {t.landing.heroCta}
               <ChevronDown className="h-4 w-4 transition-transform duration-200 data-[popup-open]:rotate-180" />
             </DropdownMenuTrigger>
