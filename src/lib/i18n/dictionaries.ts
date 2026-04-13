@@ -140,6 +140,9 @@ export interface Dictionary {
     footerDocs: string;
     footerGuides: string;
     footerDesignSystem: string;
+    footerTools: string;
+    footerBenefitsFor: string;
+    footerCompany: string;
     // Problem section
     problemTitle: string;
     problemSubtitle: string;
@@ -346,6 +349,9 @@ const en: Dictionary = {
     footerDocs: "Docs",
     footerGuides: "Guides",
     footerDesignSystem: "Design System",
+    footerTools: "Tools",
+    footerBenefitsFor: "Benefits For",
+    footerCompany: "Company",
     // Problem section
     problemTitle: "Billions in Benefits Go Unclaimed Every Year",
     problemSubtitle: "The system is confusing. We made it simple.",
@@ -600,6 +606,9 @@ const es: Dictionary = {
     footerDocs: "Documentación",
     footerGuides: "Guías",
     footerDesignSystem: "Sistema de Diseño",
+    footerTools: "Herramientas",
+    footerBenefitsFor: "Beneficios Para",
+    footerCompany: "Empresa",
     // Problem section
     problemTitle: "Miles de Millones en Beneficios No Se Reclaman Cada Año",
     problemSubtitle: "El sistema es confuso. Lo hicimos simple.",
@@ -839,6 +848,9 @@ const zh: Dictionary = {
     footerDocs: "文档",
     footerGuides: "指南",
     footerDesignSystem: "设计系统",
+    footerTools: "工具",
+    footerBenefitsFor: "福利适用于",
+    footerCompany: "公司",
     problemTitle: "每年数十亿福利无人认领",
     problemSubtitle: "系统太复杂了。我们让它变得简单。",
     pain1Stat: "$800亿+",
@@ -1038,6 +1050,9 @@ const vi: Dictionary = {
     footerDocs: "Tài liệu",
     footerGuides: "Hướng dẫn",
     footerDesignSystem: "Hệ thống thiết kế",
+    footerTools: "Công cụ",
+    footerBenefitsFor: "Quyền lợi cho",
+    footerCompany: "Công ty",
     problemTitle: "Hàng tỷ đô la trợ cấp không được nhận mỗi năm",
     problemSubtitle: "Hệ thống quá phức tạp. Chúng tôi đã đơn giản hóa nó.",
     pain1Stat: "$80T+",
@@ -1235,6 +1250,9 @@ const ar: Dictionary = {
     footerDocs: "التوثيق",
     footerGuides: "أدلة",
     footerDesignSystem: "نظام التصميم",
+    footerTools: "أدوات",
+    footerBenefitsFor: "مزايا لـ",
+    footerCompany: "الشركة",
     problemTitle: "مليارات من المزايا لا يتم المطالبة بها كل عام",
     problemSubtitle: "النظام معقد. جعلناه بسيطاً.",
     pain1Stat: "+$80 مليار",
