@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { User, Building2, MessageCircle, CheckCircle2 } from "lucide-react";
+import { User, Building2, HelpCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 const cards = [
   {
     icon: User,
-    headline: "Find Your Benefits",
+    headline: "For Individuals",
     bullets: [
       "Answer simple questions about your household",
       "Get matched with 80+ federal and state programs",
@@ -23,7 +23,7 @@ const cards = [
   },
   {
     icon: Building2,
-    headline: "Find Grants & Credits",
+    headline: "For Businesses",
     bullets: [
       "3-minute company profile",
       "Scan grants, tax credits, and incentives",
@@ -36,7 +36,7 @@ const cards = [
     buttonVariant: "brand" as const,
   },
   {
-    icon: MessageCircle,
+    icon: HelpCircle,
     headline: "Need Help?",
     bullets: [
       "Not sure which path is right?",
@@ -92,7 +92,7 @@ export function GetStartedCTA() {
             const Icon = card.icon;
             return (
               <motion.div key={card.cta} variants={cardVariants}>
-                <Card className="flex h-full flex-col rounded-[20px] border-border bg-surface-bright p-0 transition-colors hover:border-accent/20">
+                <Card className="flex h-full flex-col rounded-[20px] border-border bg-surface-dim p-0 shadow-none transition-colors hover:border-accent/20">
                   <CardContent className="flex flex-1 flex-col p-8">
                     <div
                       className={`mb-6 flex h-12 w-12 items-center justify-center rounded-[10px] ${card.iconBg}`}
@@ -117,7 +117,7 @@ export function GetStartedCTA() {
 
                     <Button
                       variant={card.buttonVariant}
-                      className="mt-auto pt-8"
+                      className="mt-6 w-full justify-center text-center"
                       size="lg"
                       render={<Link href={card.href} />}
                     >

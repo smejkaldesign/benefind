@@ -25,7 +25,7 @@ const stats: Stat[] = [
   },
   {
     value: "$4,200",
-    label: "Average annual benefits found",
+    label: "Benefits Claimed",
     icon: DollarSign,
   },
 ];
