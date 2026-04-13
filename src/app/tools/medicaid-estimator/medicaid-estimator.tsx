@@ -64,7 +64,6 @@ const EXPANSION_STATES = new Set([
   "Virginia",
   "Washington",
   "West Virginia",
-  "Wisconsin",
   "District of Columbia",
 ]);
 
@@ -255,8 +254,8 @@ export function MedicaidEstimator() {
 
   function handleEstimate() {
     const size = parseInt(householdSize, 10);
-    const income = parseFloat(annualIncome) || 0;
-    const ageNum = parseInt(age, 10) || 35;
+    const income = Math.max(0, parseFloat(annualIncome) || 0);
+    const ageNum = Math.max(0, Math.min(120, parseInt(age, 10) || 35));
     setResult(
       estimateMedicaid(state, size, income, ageNum, isPregnant, hasDisability),
     );
@@ -444,7 +443,7 @@ export function MedicaidEstimator() {
                   },
                   {
                     q: "Which states expanded Medicaid?",
-                    a: "As of 2026, 41 states and DC have expanded Medicaid. States that have not expanded include Alabama, Florida, Georgia, Kansas, Mississippi, South Carolina, Tennessee, Texas, and Wyoming.",
+                    a: "As of 2026, 41 states and DC have expanded Medicaid. States that have not expanded include Alabama, Florida, Georgia, Mississippi, South Carolina, Tennessee, Texas, Wisconsin, and Wyoming.",
                   },
                   {
                     q: "How do I apply for Medicaid?",
@@ -615,6 +614,7 @@ export function MedicaidEstimator() {
                     <Switch
                       checked={isPregnant}
                       onCheckedChange={setIsPregnant}
+                      aria-label="Currently pregnant"
                     />
                   </div>
 
@@ -630,6 +630,7 @@ export function MedicaidEstimator() {
                     <Switch
                       checked={hasDisability}
                       onCheckedChange={setHasDisability}
+                      aria-label="Has disability or receives SSI/SSDI"
                     />
                   </div>
 

@@ -41,7 +41,7 @@ const faqSchema = {
       name: "Which states expanded Medicaid?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "As of 2026, 41 states and Washington DC have expanded Medicaid under the ACA. States that have not expanded include Alabama, Florida, Georgia, Kansas, Mississippi, South Carolina, Tennessee, Texas, Wisconsin, and Wyoming.",
+        text: "As of 2026, 41 states and Washington DC have expanded Medicaid under the ACA. States that have not expanded include Alabama, Florida, Georgia, Mississippi, South Carolina, Tennessee, Texas, Wisconsin, and Wyoming.",
       },
     },
     {

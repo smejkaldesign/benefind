@@ -58,7 +58,7 @@ export const comparisons: Comparison[] = [
         },
         {
           label: "Income limit (family of 4)",
-          a: "~$3,250/month gross",
+          a: "~$3,381/month gross (2026)",
           b: "",
         },
         {
@@ -304,7 +304,7 @@ export const comparisons: Comparison[] = [
         { label: "Type", a: "Tax credit against income or payroll tax", b: "" },
         {
           label: "Amount",
-          a: "20% of qualified research expenses above base",
+          a: "14% of QREs above base (ASC method); 20% regular method",
           b: "",
         },
         {

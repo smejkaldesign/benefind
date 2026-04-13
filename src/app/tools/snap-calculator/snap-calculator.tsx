@@ -192,8 +192,8 @@ export function SNAPCalculator() {
 
   function handleCalculate() {
     const size = parseInt(householdSize, 10);
-    const income = parseFloat(grossIncome) || 0;
-    const shelter = parseFloat(shelterCosts) || 0;
+    const income = Math.max(0, parseFloat(grossIncome) || 0);
+    const shelter = Math.max(0, parseFloat(shelterCosts) || 0);
     setResult(calculateSNAP(size, income, shelter, hasElderly));
   }
 
@@ -553,6 +553,7 @@ export function SNAPCalculator() {
                     <Switch
                       checked={hasElderly}
                       onCheckedChange={setHasElderly}
+                      aria-label="Elderly or disabled household member"
                     />
                   </div>
 

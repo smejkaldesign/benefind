@@ -87,7 +87,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/benefits-for/low-income-families"
+                  href="/benefits-for/single-parents"
                   className="text-sm text-text-muted transition-colors hover:text-brand"
                 >
                   {t.landing.footerBenefitsFor}

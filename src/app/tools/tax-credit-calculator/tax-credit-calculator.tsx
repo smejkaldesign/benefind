@@ -98,10 +98,13 @@ export function RDTaxCreditCalculator() {
   const [result, setResult] = useState<RDResult | null>(null);
 
   function handleCalculate() {
-    const qre = parseFloat(totalQREs) || parseFloat(rdSpending) * 0.65 || 0;
-    const receipts = parseFloat(grossReceipts) || 0;
-    const years = parseInt(yearsInBusiness, 10) || 0;
-    const avgPrior = parseFloat(priorQREs) || 0;
+    const qre = Math.max(
+      0,
+      parseFloat(totalQREs) || (parseFloat(rdSpending) || 0) * 0.65 || 0,
+    );
+    const receipts = Math.max(0, parseFloat(grossReceipts) || 0);
+    const years = Math.max(0, parseInt(yearsInBusiness, 10) || 0);
+    const avgPrior = Math.max(0, parseFloat(priorQREs) || 0);
     setResult(calculateRDCredit(qre, avgPrior, receipts, years));
   }
 
