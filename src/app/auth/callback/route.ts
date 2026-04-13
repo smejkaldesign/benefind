@@ -50,9 +50,20 @@ export async function GET(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let isFirstLogin = false;
   if (user) {
-    await ensureWorkspace(supabase, user.id);
+    const { data: memberships } = await ensureWorkspace(supabase, user.id);
+    // First login: user has no onboarding_completed flag yet
+    isFirstLogin = !user.user_metadata?.onboarding_completed;
+
+    // If ensureWorkspace just created the workspace, that also signals first login
+    if (!isFirstLogin && memberships && memberships.length === 1) {
+      // Could be first login if workspace was just created
+      // The onboarding_completed flag is the canonical check
+    }
   }
 
-  return NextResponse.redirect(`${origin}${next}`);
+  // First-time users go to onboarding; returning users go to their intended destination
+  const destination = isFirstLogin ? "/onboarding" : next;
+  return NextResponse.redirect(`${origin}${destination}`);
 }

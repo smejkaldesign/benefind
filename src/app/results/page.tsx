@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import type { EligibilityTier, ScreeningResult } from "@/lib/benefits/types";
 import { DocumentChecklist } from "@/components/screening/document-checklist";
 import { Badge } from "@/components/ui/badge";
@@ -269,31 +271,55 @@ function WhyPanel({
 }
 
 export default function ResultsPage() {
+  const router = useRouter();
   const [result, setResult] = useState<ScreeningResult | null>(null);
   const [activeTab, setActiveTab] = useState<"programs" | "documents">(
     "programs",
   );
   const heroRef = useRef<HTMLDivElement>(null);
   const [showStickyTotal, setShowStickyTotal] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
+  // Redirect authenticated users to dashboard, unauthenticated without data to screening
   useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem("screening_result");
-      if (!stored) return;
-      const parsed = JSON.parse(stored);
-      // Validate shape before trusting parsed data
-      if (
-        parsed &&
-        Array.isArray(parsed.programs) &&
-        typeof parsed.totalEstimatedMonthly === "number" &&
-        typeof parsed.totalEstimatedAnnual === "number"
-      ) {
-        setResult(parsed);
+    async function checkAuth() {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        router.replace("/dashboard");
+        return;
       }
-    } catch {
-      // Malformed or missing stored results
+
+      // Not authenticated: check for sessionStorage results
+      try {
+        const stored = sessionStorage.getItem("screening_result");
+        if (!stored) {
+          router.replace("/screening");
+          return;
+        }
+        const parsed = JSON.parse(stored);
+        if (
+          parsed &&
+          Array.isArray(parsed.programs) &&
+          typeof parsed.totalEstimatedMonthly === "number" &&
+          typeof parsed.totalEstimatedAnnual === "number"
+        ) {
+          setResult(parsed);
+        } else {
+          router.replace("/screening");
+          return;
+        }
+      } catch {
+        router.replace("/screening");
+        return;
+      }
+      setAuthChecked(true);
     }
-  }, []);
+    checkAuth();
+  }, [router]);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -306,19 +332,11 @@ export default function ResultsPage() {
     return () => observer.disconnect();
   }, [result]);
 
-  if (!result) {
+  // Show loading while auth check runs or redirecting
+  if (!authChecked || !result) {
     return (
       <main className="flex min-h-dvh items-center justify-center px-4">
-        <div className="text-center space-y-4">
-          <HelpCircle className="mx-auto h-10 w-10 text-text-subtle" />
-          <h1 className="text-xl font-bold text-text">No screening results</h1>
-          <p className="text-sm text-text-muted">
-            Complete a screening to see your results here.
-          </p>
-          <Link href="/screening">
-            <Button>Start Screening</Button>
-          </Link>
-        </div>
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand border-t-transparent" />
       </main>
     );
   }

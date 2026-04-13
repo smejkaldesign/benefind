@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import type {
   CompanyScreeningResult,
   CompanyProgramCategory,
@@ -58,38 +60,55 @@ const STATUS_BADGES: Record<
 };
 
 export default function CompanyResultsPage() {
+  const router = useRouter();
   const [result, setResult] = useState<CompanyScreeningResult | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
 
+  // Redirect authenticated users to dashboard, unauthenticated without data to screening
   useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem(
-        STORAGE_KEYS.COMPANY_SCREENING_RESULT,
-      );
-      if (!stored) return;
-      const parsed = JSON.parse(stored);
-      if (
-        parsed &&
-        Array.isArray(parsed.programs) &&
-        typeof parsed.totalMatched === "number"
-      ) {
-        setResult(parsed);
-      }
-    } catch {}
-  }, []);
+    async function checkAuth() {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-  if (!result) {
+      if (user) {
+        router.replace("/dashboard");
+        return;
+      }
+
+      try {
+        const stored = sessionStorage.getItem(
+          STORAGE_KEYS.COMPANY_SCREENING_RESULT,
+        );
+        if (!stored) {
+          router.replace("/screening/company");
+          return;
+        }
+        const parsed = JSON.parse(stored);
+        if (
+          parsed &&
+          Array.isArray(parsed.programs) &&
+          typeof parsed.totalMatched === "number"
+        ) {
+          setResult(parsed);
+        } else {
+          router.replace("/screening/company");
+          return;
+        }
+      } catch {
+        router.replace("/screening/company");
+        return;
+      }
+      setAuthChecked(true);
+    }
+    checkAuth();
+  }, [router]);
+
+  if (!authChecked || !result) {
     return (
       <main className="flex min-h-dvh items-center justify-center px-4">
-        <div className="text-center space-y-4">
-          <HelpCircle className="mx-auto h-10 w-10 text-text-subtle" />
-          <h1 className="text-xl font-bold text-text">No screening results</h1>
-          <p className="text-sm text-text-muted">
-            Complete a company screening to see your results here.
-          </p>
-          <Link href="/screening/company">
-            <Button>Start Company Screening</Button>
-          </Link>
-        </div>
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand border-t-transparent" />
       </main>
     );
   }
