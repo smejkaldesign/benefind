@@ -344,6 +344,128 @@ export const posts: BlogPost[] = [
     keyword: "medicaid vs medicare",
     lastModified: "2026-04-12",
   },
+
+  // ── AFK blog batch (2026-04-12) ──────────────────────────────────
+  {
+    slug: "how-to-appeal-ssi-denial-2026",
+    title: "How to Appeal a Denied SSI Claim in 2026",
+    description:
+      "The 4 levels of SSI appeal, timelines, success rates, and when to get a disability lawyer.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["SSI", "Disability", "Appeals", "How To"],
+    published: true,
+    keyword: "how to appeal SSI denial",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "snap-myths-debunked-2026",
+    title: "10 SNAP Myths Debunked: What People Get Wrong About Food Stamps",
+    description:
+      "Common myths about SNAP benefits, from who qualifies to what you can buy, backed by data.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["SNAP", "Food Assistance", "Myths", "Guide"],
+    published: true,
+    keyword: "food stamps myths",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "how-to-find-snap-office-2026",
+    title: "How to Find Your Local SNAP Office in 2026",
+    description:
+      "Locate your nearest SNAP/DHHS office, what to bring, and how to apply in person or by phone.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["SNAP", "Food Assistance", "How To", "Local"],
+    published: true,
+    keyword: "find SNAP office near me",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "how-to-apply-multiple-benefits-2026",
+    title: "How to Apply for Multiple Government Benefits at Once",
+    description:
+      "Which programs share applications, the best order to apply, and how to manage multiple benefit applications.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Government Benefits", "How To", "Guide", "Eligibility"],
+    published: true,
+    keyword: "apply for multiple government benefits",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "benefits-for-seniors-over-65-2026",
+    title: "Government Benefits for Seniors Over 65 in 2026",
+    description:
+      "Every federal and state benefit available to Americans over 65, from Medicare to SSI to senior SNAP deductions.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Seniors", "Medicare", "SSI", "Government Benefits"],
+    published: true,
+    keyword: "government benefits for seniors over 65",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "benefits-for-disabled-adults-2026",
+    title: "Government Benefits for Disabled Adults in 2026",
+    description:
+      "SSI, SSDI, Medicaid, SNAP, Section 8, and state programs for adults with disabilities. Complete guide.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Disability", "SSI", "SSDI", "Government Benefits"],
+    published: true,
+    keyword: "government benefits for disabled adults",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "emergency-benefits-homeless-2026",
+    title: "Emergency Benefits for Homeless Individuals in 2026",
+    description:
+      "Expedited SNAP, emergency Medicaid, shelter programs, and how to apply without an address or ID.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Homeless", "Emergency", "SNAP", "Government Benefits"],
+    published: true,
+    keyword: "government benefits for homeless",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "tax-credits-you-are-missing-2026",
+    title: "5 Tax Credits You're Probably Missing in 2026",
+    description:
+      "EITC, Child Tax Credit, Saver's Credit, AOTC, and CDCC. Who qualifies, how much they're worth, and how to claim.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Tax Credits", "EITC", "Guide", "Government Benefits"],
+    published: true,
+    keyword: "tax credits 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "help-paying-rent-2026",
+    title: "How to Get Help Paying Rent in 2026",
+    description:
+      "Section 8, emergency rental assistance, HUD housing, and state programs to help cover rent.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Housing", "Section 8", "Rent Assistance", "Government Benefits"],
+    published: true,
+    keyword: "help paying rent 2026",
+    lastModified: "2026-04-12",
+  },
+  {
+    slug: "lost-job-benefits-guide-2026",
+    title: "Lost Your Job? Every Benefit You Can Get in 2026",
+    description:
+      "Unemployment insurance, COBRA vs Medicaid, expedited SNAP, rent help, and retraining programs after job loss.",
+    date: "2026-04-12",
+    author: "Benefind Team",
+    tags: ["Unemployment", "Job Loss", "Government Benefits", "Guide"],
+    published: true,
+    keyword: "lost my job what benefits can I get",
+    lastModified: "2026-04-12",
+  },
 ];
 
 /**
