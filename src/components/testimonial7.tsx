@@ -193,7 +193,7 @@ const Testimonial7 = ({ className }: Testimonial7Props) => {
   return (
     <section className={cn("w-full bg-surface py-24 sm:py-28", className)}>
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6">
-        <Badge variant="brand">Testimonials</Badge>
+        <Badge variant="brand">Success Stories</Badge>
         <h2 className="text-center font-display text-3xl font-semibold text-text sm:text-4xl lg:text-5xl">
           Real money. Real people. Real businesses.
         </h2>
