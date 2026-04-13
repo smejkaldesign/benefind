@@ -36,6 +36,7 @@ interface Message {
   id: string;
   role: "assistant" | "user";
   content: string;
+  helpText?: string;
 }
 
 const STEPS_PREVIEW = [
@@ -86,10 +87,10 @@ function ScreeningPageInner() {
   }, []);
 
   const addMessage = useCallback(
-    (role: "assistant" | "user", content: string) => {
+    (role: "assistant" | "user", content: string, helpText?: string) => {
       setMessages((prev) => [
         ...prev,
-        { id: crypto.randomUUID(), role, content },
+        { id: crypto.randomUUID(), role, content, helpText },
       ]);
       scrollToBottom();
     },
@@ -122,12 +123,7 @@ function ScreeningPageInner() {
       setIsTyping(true);
       setTimeout(() => {
         setIsTyping(false);
-        addMessage("assistant", step.question);
-        if (step.helpText) {
-          setTimeout(() => {
-            addMessage("assistant", step.helpText!);
-          }, 300);
-        }
+        addMessage("assistant", step.question, step.helpText);
       }, 600);
     },
     [addMessage],
@@ -349,7 +345,11 @@ function ScreeningPageInner() {
                 aria-label="Conversation"
               >
                 {messages.map((msg) => (
-                  <ChatMessage key={msg.id} role={msg.role}>
+                  <ChatMessage
+                    key={msg.id}
+                    role={msg.role}
+                    helpText={msg.helpText}
+                  >
                     {msg.content}
                   </ChatMessage>
                 ))}

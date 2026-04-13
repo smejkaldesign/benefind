@@ -119,6 +119,7 @@ export function GetStartedCTA() {
                       variant={card.buttonVariant}
                       className="mt-6 w-full justify-center text-center"
                       size="lg"
+                      nativeButton={false}
                       render={<Link href={card.href} />}
                     >
                       {card.cta}
