@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -22,9 +22,12 @@ export function LandingNav() {
   const { t } = useI18n();
   const pathname = usePathname();
   const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const isDocsRoute = pathname.startsWith("/docs");
   const isDesignSystem = pathname.startsWith("/docs/design-system");
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -45,7 +48,7 @@ export function LandingNav() {
           <Link href="/" className="flex items-center gap-2">
             <Image
               src={
-                resolvedTheme === "dark"
+                !mounted || resolvedTheme === "dark"
                   ? "/images/brand/logo-light.svg"
                   : "/images/brand/logo-dark.svg"
               }
@@ -84,6 +87,7 @@ export function LandingNav() {
           <Button
             variant="outline"
             className="h-[44px] px-5"
+            nativeButton={false}
             render={<Link href="/auth/login" />}
           >
             {t.common.signIn}

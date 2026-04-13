@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, MessageSquare, Users, Lock, Play } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -46,7 +47,9 @@ const features: Feature[] = [
 
 export function BentoGrid() {
   const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = !mounted || resolvedTheme === "dark";
 
   // Match the StatsStrip BorderGlow palette so the bento reads as a continuation
   // of the "top callouts" above it. Theme-aware for light/dark.

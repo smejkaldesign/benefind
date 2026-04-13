@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, Clock, DollarSign } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -32,7 +33,10 @@ const stats: Stat[] = [
 
 export function StatsStrip() {
   const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  // Default to dark on SSR to match defaultTheme="dark" and avoid hydration mismatch
+  const isDark = !mounted || resolvedTheme === "dark";
 
   return (
     <section className="px-6 pb-20 pt-[180px] sm:pb-28 sm:pt-[212px]">
