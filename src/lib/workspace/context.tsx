@@ -5,6 +5,7 @@ import {
   useContext,
   useState,
   useCallback,
+  useEffect,
   type ReactNode,
 } from "react";
 import type { Tables } from "@/types/database";
@@ -60,6 +61,14 @@ export function WorkspaceProvider({
   const [activeWorkspace, setActiveWorkspace] = useState<Workspace | null>(
     initial,
   );
+
+  // Auto-set the cookie on mount when no cookie existed (new users).
+  // This ensures server actions can read the workspace ID immediately.
+  useEffect(() => {
+    if (initialWorkspaceId || !initial) return;
+    const secure = window.location.protocol === "https:" ? ";secure" : "";
+    document.cookie = `bf-workspace=${initial.id};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax${secure}`;
+  }, [initialWorkspaceId, initial]);
 
   const switchWorkspace = useCallback(
     (workspaceId: string) => {

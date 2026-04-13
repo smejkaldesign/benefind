@@ -43,3 +43,6 @@ next-env.d.ts
 public/blog/covers 2
 public/images/brand 2
 scripts/check-design-sync 2.ts
+# macOS duplicate files with spaces
+**/* 2.tsx
+**/* 2.ts

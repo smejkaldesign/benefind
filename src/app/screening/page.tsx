@@ -20,6 +20,8 @@ import {
 } from "@/components/screening/inline-options";
 import { Grainient } from "@/components/grainient";
 import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
+import { STORAGE_KEYS } from "@/lib/constants";
 import {
   ArrowLeft,
   RotateCcw,
@@ -27,6 +29,8 @@ import {
   Zap,
   CheckCircle2,
   Lock,
+  Mail,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -71,6 +75,12 @@ function ScreeningPageInner() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isTyping, setIsTyping] = useState(false);
   const [result, setResult] = useState<ScreeningResult | null>(null);
+  const [showSignupGate, setShowSignupGate] = useState(false);
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupLoading, setSignupLoading] = useState(false);
+  const [signupSent, setSignupSent] = useState(false);
+  const [signupError, setSignupError] = useState<string | null>(null);
+  const [showResults, setShowResults] = useState(false);
   const [prefillLoaded, setPrefillLoaded] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
@@ -218,8 +228,13 @@ function ScreeningPageInner() {
           try {
             const { input: _pii, ...safeResult } = screeningResult;
             sessionStorage.setItem(
-              "screening_result",
+              STORAGE_KEYS.SCREENING_RESULT,
               JSON.stringify(safeResult),
+            );
+            // Store answers separately for post-signup persistence
+            sessionStorage.setItem(
+              STORAGE_KEYS.SCREENING_ANSWERS,
+              JSON.stringify(newAnswers),
             );
           } catch {}
 
@@ -248,13 +263,22 @@ function ScreeningPageInner() {
           if (eligible.length > 0) {
             addMessage(
               "assistant",
-              `You may qualify for ${eligible.length} program${eligible.length > 1 ? "s" : ""} worth an estimated $${screeningResult.totalEstimatedMonthly.toLocaleString()}/month ($${screeningResult.totalEstimatedAnnual.toLocaleString()}/year). Scroll down to see your results.`,
+              `Great news! We found ${eligible.length} program${eligible.length > 1 ? "s" : ""} you may qualify for, worth up to $${screeningResult.totalEstimatedAnnual.toLocaleString()}/year.`,
             );
+            setTimeout(() => {
+              addMessage(
+                "assistant",
+                "Create a free account to save your results and get personalized next steps.",
+              );
+              setShowSignupGate(true);
+              scrollToBottom();
+            }, 400);
           } else {
             addMessage(
               "assistant",
-              "Based on the information provided, you may not qualify for the programs we currently check. This doesn't mean there aren't other programs available — check with your local social services office.",
+              "Based on the information provided, you may not qualify for the programs we currently check. This doesn't mean there aren't other programs available.",
             );
+            setShowResults(true);
           }
         }, 1500);
       }, 600);
@@ -264,11 +288,48 @@ function ScreeningPageInner() {
     }
   }
 
+  async function handleSignup(e: React.FormEvent) {
+    e.preventDefault();
+    setSignupError(null);
+    setSignupLoading(true);
+
+    const supabase = createClient();
+    // Include ?next so callback redirects to dashboard with from=screening
+    const { error } = await supabase.auth.signInWithOtp({
+      email: signupEmail,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent("/dashboard?from=screening")}`,
+      },
+    });
+
+    if (error) {
+      setSignupError(
+        error.message.charAt(0).toUpperCase() + error.message.slice(1),
+      );
+      setSignupLoading(false);
+      return;
+    }
+
+    setSignupSent(true);
+    setSignupLoading(false);
+  }
+
+  function handleSkipSignup() {
+    setShowSignupGate(false);
+    setShowResults(true);
+    scrollToBottom();
+  }
+
   function handleRestart() {
     setMessages([]);
     setCurrentStep(0);
     setAnswers({});
     setResult(null);
+    setShowSignupGate(false);
+    setShowResults(false);
+    setSignupEmail("");
+    setSignupSent(false);
+    setSignupError(null);
     initialized.current = false;
     setTimeout(() => {
       initialized.current = true;
@@ -368,13 +429,81 @@ function ScreeningPageInner() {
                       defaultValue={answers[currentStepData.id]}
                     />
                   )}
+                {showSignupGate && !showResults && (
+                  <div className="mt-4">
+                    <ChatMessage role="assistant">
+                      {signupSent ? (
+                        <div className="space-y-3 text-center py-2">
+                          <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-brand/15">
+                            <CheckCircle2 className="h-5 w-5 text-brand" />
+                          </div>
+                          <p className="text-sm font-medium text-text">
+                            Check your email for a magic link to access your
+                            results.
+                          </p>
+                          <p className="text-xs text-text-muted">
+                            Sent to{" "}
+                            <strong className="text-text">{signupEmail}</strong>
+                          </p>
+                        </div>
+                      ) : (
+                        <form
+                          onSubmit={handleSignup}
+                          className="space-y-3 py-1"
+                        >
+                          <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-subtle" />
+                            <input
+                              type="email"
+                              value={signupEmail}
+                              onChange={(e) => setSignupEmail(e.target.value)}
+                              required
+                              placeholder="you@example.com"
+                              disabled={signupLoading}
+                              className="block h-11 w-full rounded-lg border border-border bg-surface-dim pl-10 pr-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
+                            />
+                          </div>
+                          {signupError && (
+                            <p
+                              className="rounded-lg bg-error/10 px-3 py-2 text-xs font-medium text-error"
+                              role="alert"
+                            >
+                              {signupError}
+                            </p>
+                          )}
+                          <button
+                            type="submit"
+                            disabled={signupLoading || !signupEmail}
+                            className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand text-sm font-semibold text-surface transition-colors hover:bg-brand-dark disabled:opacity-50"
+                          >
+                            {signupLoading ? (
+                              <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Sending link...
+                              </>
+                            ) : (
+                              "Create Account"
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleSkipSignup}
+                            className="block w-full text-center text-xs text-text-muted hover:text-brand transition-colors"
+                          >
+                            Skip for now
+                          </button>
+                        </form>
+                      )}
+                    </ChatMessage>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
 
         {/* Bottom input */}
-        {!result && currentStepData && (
+        {!result && !showSignupGate && currentStepData && (
           <div className="sticky bottom-0 border-t border-border bg-surface/80 px-6 py-4 backdrop-blur-[30px]">
             <div className="mx-auto max-w-xl">
               <StepInput
@@ -389,7 +518,7 @@ function ScreeningPageInner() {
         )}
 
         {/* Results summary */}
-        {result && (
+        {result && showResults && (
           <div className="border-t border-border bg-surface-dim px-6 py-6">
             <div className="mx-auto max-w-xl space-y-4">
               <div className="rounded-[16px] border border-brand/30 bg-brand/5 p-5 text-center space-y-2">

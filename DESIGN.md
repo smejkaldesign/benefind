@@ -4,6 +4,36 @@ Authoritative frontend reference. All tokens live in `src/app/globals.css` under
 
 ---
 
+## User Flow
+
+### Screening -> Signup -> Dashboard
+
+1. User visits /screening or /screening/company
+2. Completes questionnaire (3-5 minutes)
+3. Results computed client-side, stored in sessionStorage
+4. Signup gate appears: "Create free account to save results"
+5. User enters email, magic link sent
+6. Magic link -> /auth/callback -> /onboarding (first time) or /dashboard (returning)
+7. Onboarding: name, notification preference, language (first time only)
+8. Dashboard shows results prominently + history of past screenings
+9. "Skip for now" on signup gate -> shows ephemeral results at /results
+
+### Auth Model
+
+- Supabase Auth with magic link (OTP)
+- No passwords
+- Workspace created on first login (ensureWorkspace)
+- Session persisted via cookies (Supabase SSR)
+- First-login detection via `user_metadata.onboarding_completed` flag
+
+### Route Protection
+
+- `/dashboard`, `/onboarding`, and other app routes require authentication (middleware redirect to /auth/login)
+- `/results` and `/results/company` redirect authenticated users to /dashboard (middleware); unauthenticated users without sessionStorage data get redirected to /screening (page-level)
+- First-time authenticated users (no `onboarding_completed` flag) are redirected to /onboarding from any protected route
+
+---
+
 ## Component Library Stack
 
 | Layer | Library | Purpose |
