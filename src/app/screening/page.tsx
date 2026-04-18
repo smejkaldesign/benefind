@@ -474,7 +474,7 @@ function ScreeningPageInner() {
                           <button
                             type="submit"
                             disabled={signupLoading || !signupEmail}
-                            className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand text-sm font-semibold text-surface transition-colors hover:bg-brand-dark disabled:opacity-50"
+                            className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand text-sm font-semibold text-stone-900 transition-colors hover:bg-brand-dark disabled:opacity-50"
                           >
                             {signupLoading ? (
                               <>
@@ -562,7 +562,7 @@ function ScreeningPageInner() {
               <div className="flex justify-center gap-3 pt-2">
                 <button
                   onClick={() => router.push("/results")}
-                  className="rounded-lg bg-brand px-6 py-3 text-sm font-semibold text-surface transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
+                  className="rounded-lg bg-brand px-6 py-3 text-sm font-semibold text-stone-900 transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
                 >
                   View Full Results
                 </button>

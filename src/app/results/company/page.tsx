@@ -154,22 +154,24 @@ export default function CompanyResultsPage() {
   return (
     <main className="min-h-dvh bg-surface">
       {/* Header */}
-      <div ref={heroRef} className="bg-brand px-4 py-8 text-white">
+      <div ref={heroRef} className="bg-brand px-4 py-8 text-stone-900">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium text-white/70">Programs matched</p>
+          <p className="text-sm font-medium text-stone-900/60">
+            Programs matched
+          </p>
           <p className="mt-1 text-4xl font-bold">
             {result.totalMatched}
-            <span className="text-lg font-normal text-white/70">
+            <span className="text-lg font-normal text-stone-900/60">
               {" "}
               program{result.totalMatched !== 1 ? "s" : ""}
             </span>
           </p>
-          <p className="mt-1 text-sm text-white/70">
+          <p className="mt-1 text-sm text-stone-900/60">
             Across grants, tax credits, incentives, and contracting preferences
           </p>
           <div className="mt-4 flex items-center justify-center gap-2">
-            <TrendingUp className="h-4 w-4 text-white/70" />
-            <p className="text-xs text-white/70">
+            <TrendingUp className="h-4 w-4 text-stone-900/60" />
+            <p className="text-xs text-stone-900/60">
               Matched against your company profile
             </p>
           </div>
