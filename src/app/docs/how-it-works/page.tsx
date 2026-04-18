@@ -145,7 +145,7 @@ export default function HowItWorksPage() {
         <div className="flex flex-wrap gap-3">
           <Link
             href="/screening"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-surface transition-colors hover:bg-brand-light"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-stone-900 transition-colors hover:bg-brand-light"
           >
             For individuals →
           </Link>

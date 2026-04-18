@@ -3,24 +3,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n/context";
-import type { Locale } from "@/lib/i18n/types";
 import { Separator } from "@/components/ui/separator";
 
-const LANGUAGES: { label: string; locale: Locale; available: boolean }[] = [
-  { label: "English", locale: "en", available: true },
-  { label: "Español", locale: "es", available: true },
-  { label: "中文", locale: "zh", available: false },
-  { label: "Tiếng Việt", locale: "vi", available: false },
-  { label: "العربية", locale: "ar", available: false },
-];
-
 export function Footer() {
-  const { t, locale, setLocale } = useI18n();
+  const { t } = useI18n();
 
   return (
     <footer className="border-t border-border px-6 py-12">
       <div className="mx-auto max-w-[1520px]">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Image
               src="/images/brand/logo-light.svg"
@@ -140,34 +131,6 @@ export function Footer() {
                   {t.landing.footerTerms}
                 </Link>
               </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-text-subtle">
-              {t.landing.footerLanguages}
-            </h4>
-            <ul className="mt-3 space-y-2">
-              {LANGUAGES.map((lang) => (
-                <li key={lang.locale}>
-                  {lang.available ? (
-                    <button
-                      type="button"
-                      onClick={() => setLocale(lang.locale)}
-                      className={`text-sm cursor-pointer transition-colors ${
-                        locale === lang.locale
-                          ? "text-brand"
-                          : "text-text-muted hover:text-brand"
-                      }`}
-                    >
-                      {lang.label}
-                    </button>
-                  ) : (
-                    <span className="text-sm text-text-subtle/40 cursor-default">
-                      {lang.label}
-                    </span>
-                  )}
-                </li>
-              ))}
             </ul>
           </div>
         </div>

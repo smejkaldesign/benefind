@@ -14,7 +14,7 @@ export function ChatMessage({ role, children, helpText }: ChatMessageProps) {
         className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed sm:max-w-[70%] ${
           isAssistant
             ? "rounded-bl-md bg-surface-bright text-text"
-            : "rounded-br-md bg-brand text-surface"
+            : "rounded-br-md bg-brand text-stone-900"
         }`}
       >
         {children}

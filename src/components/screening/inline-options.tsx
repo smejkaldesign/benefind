@@ -95,7 +95,7 @@ export function InlineOptions({
               if (!disabled) onSubmit(selected.join(","));
             }}
             disabled={disabled}
-            className="rounded-lg bg-brand px-5 py-2 text-sm font-semibold text-surface transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
+            className="rounded-lg bg-brand px-5 py-2 text-sm font-semibold text-stone-900 transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
           >
             Continue &rarr;
           </button>
@@ -126,7 +126,7 @@ export function InlineOptions({
               if (!disabled) onSubmit(stateValue);
             }}
             disabled={disabled}
-            className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-surface transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
+            className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-stone-900 transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
           >
             Continue &rarr;
           </button>
