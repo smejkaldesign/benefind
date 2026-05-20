@@ -51,6 +51,8 @@ interface Message {
   helpText?: string;
 }
 
+const SIGNUP_RESEND_COOLDOWN_SECONDS = 60;
+
 const STEPS_PREVIEW = [
   {
     icon: Building2,
@@ -80,6 +82,13 @@ export default function CompanyScreeningPage() {
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupSent, setSignupSent] = useState(false);
   const [signupError, setSignupError] = useState<string | null>(null);
+  const [signupCooldownEnd, setSignupCooldownEnd] = useState<number | null>(
+    null,
+  );
+  const [signupCooldown, setSignupCooldown] = useState(0);
+  const signupCooldownTimerRef = useRef<ReturnType<typeof setInterval> | null>(
+    null,
+  );
   const [showResults, setShowResults] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
@@ -118,6 +127,38 @@ export default function CompanyScreeningPage() {
     },
     [addMessage],
   );
+
+  // Resend-link cooldown countdown
+  useEffect(() => {
+    if (!signupCooldownEnd) {
+      setSignupCooldown(0);
+      return;
+    }
+
+    function tick() {
+      const remaining = Math.ceil((signupCooldownEnd! - Date.now()) / 1000);
+      if (remaining <= 0) {
+        setSignupCooldown(0);
+        setSignupCooldownEnd(null);
+        if (signupCooldownTimerRef.current) {
+          clearInterval(signupCooldownTimerRef.current);
+          signupCooldownTimerRef.current = null;
+        }
+      } else {
+        setSignupCooldown(remaining);
+      }
+    }
+
+    tick();
+    signupCooldownTimerRef.current = setInterval(tick, 1000);
+
+    return () => {
+      if (signupCooldownTimerRef.current) {
+        clearInterval(signupCooldownTimerRef.current);
+        signupCooldownTimerRef.current = null;
+      }
+    };
+  }, [signupCooldownEnd]);
 
   useEffect(() => {
     if (initialized.current) return;
@@ -261,8 +302,7 @@ export default function CompanyScreeningPage() {
     }
   }
 
-  async function handleSignup(e: FormEvent) {
-    e.preventDefault();
+  async function sendSignupLink() {
     setSignupError(null);
     setSignupLoading(true);
 
@@ -285,6 +325,17 @@ export default function CompanyScreeningPage() {
 
     setSignupSent(true);
     setSignupLoading(false);
+    setSignupCooldownEnd(Date.now() + SIGNUP_RESEND_COOLDOWN_SECONDS * 1000);
+  }
+
+  async function handleSignup(e: FormEvent) {
+    e.preventDefault();
+    await sendSignupLink();
+  }
+
+  async function handleResendSignupLink() {
+    if (signupCooldown > 0 || signupLoading) return;
+    await sendSignupLink();
   }
 
   function handleSkipSignup() {
@@ -303,6 +354,7 @@ export default function CompanyScreeningPage() {
     setSignupEmail("");
     setSignupSent(false);
     setSignupError(null);
+    setSignupCooldownEnd(null);
     try {
       sessionStorage.removeItem(STORAGE_KEYS.COMPANY_SCREENING_RESULT);
       sessionStorage.removeItem(STORAGE_KEYS.COMPANY_SCREENING_ANSWERS);
@@ -421,6 +473,33 @@ export default function CompanyScreeningPage() {
                             Sent to{" "}
                             <strong className="text-text">{signupEmail}</strong>
                           </p>
+                          {signupError && (
+                            <p
+                              className="rounded-lg bg-error/10 px-3 py-2 text-xs font-medium text-error"
+                              role="alert"
+                            >
+                              {signupError}
+                            </p>
+                          )}
+                          <button
+                            type="button"
+                            onClick={handleResendSignupLink}
+                            disabled={signupLoading || signupCooldown > 0}
+                            className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-brand transition-colors hover:text-brand-dark disabled:cursor-not-allowed disabled:text-text-subtle"
+                          >
+                            {signupLoading ? (
+                              <>
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                                Sending...
+                              </>
+                            ) : signupCooldown > 0 ? (
+                              <span className="tabular-nums">
+                                Resend link in {signupCooldown}s
+                              </span>
+                            ) : (
+                              "Resend link"
+                            )}
+                          </button>
                         </div>
                       ) : (
                         <form
