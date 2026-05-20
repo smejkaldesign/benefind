@@ -7,7 +7,14 @@
 export function getAppOrigin(): string {
   const envUrl = process.env.NEXT_PUBLIC_APP_URL;
   if (envUrl) {
-    return envUrl.replace(/\/$/, "");
+    try {
+      const parsed = new URL(envUrl);
+      if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+        return parsed.origin;
+      }
+    } catch {
+      // Malformed NEXT_PUBLIC_APP_URL — fall through to browser origin.
+    }
   }
   if (typeof window !== "undefined") {
     return window.location.origin;
