@@ -2,6 +2,7 @@ import { type EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { ensureWorkspace } from "@/lib/workspace/ensure-workspace";
+import { getAppOrigin } from "@/lib/app-url";
 
 function safePath(raw: string | null): string {
   const fallback = "/dashboard";
@@ -18,7 +19,10 @@ function safePath(raw: string | null): string {
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const { searchParams } = requestUrl;
-  const origin = requestUrl.origin;
+  // requestUrl.origin reflects the internal bind host (e.g. http://0.0.0.0:8080
+  // on Railway because the standalone server doesn't trust forwarded headers).
+  // Use the canonical app origin so outbound redirects land on benefind.ai.
+  const origin = getAppOrigin();
   const next = safePath(searchParams.get("next"));
   const supabase = await createServerSupabase();
 

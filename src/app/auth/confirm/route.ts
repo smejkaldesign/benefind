@@ -1,6 +1,7 @@
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getAppOrigin } from "@/lib/app-url";
 
 function safePath(raw: string | null): string {
   const fallback = "/dashboard";
@@ -17,7 +18,9 @@ function safePath(raw: string | null): string {
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const { searchParams } = requestUrl;
-  const origin = requestUrl.origin;
+  // requestUrl.origin reflects the internal bind host on Railway (0.0.0.0:8080);
+  // use the canonical app origin so outbound redirects land on benefind.ai.
+  const origin = getAppOrigin();
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
   const next = safePath(searchParams.get("next"));
