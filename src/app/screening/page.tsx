@@ -35,6 +35,7 @@ import {
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { US_STATES } from "@/lib/screening/us-states";
+import { getAppOrigin } from "@/lib/app-url";
 
 interface Message {
   id: string;
@@ -298,7 +299,7 @@ function ScreeningPageInner() {
     const { error } = await supabase.auth.signInWithOtp({
       email: signupEmail,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent("/dashboard?from=screening")}`,
+        emailRedirectTo: `${getAppOrigin()}/auth/callback?next=${encodeURIComponent("/dashboard?from=screening")}`,
       },
     });
 
