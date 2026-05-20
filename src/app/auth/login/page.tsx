@@ -189,7 +189,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading || !email || cooldown > 0}
-                  className="flex h-[52px] w-full items-center justify-center gap-2 rounded-lg bg-brand text-sm font-semibold text-surface transition-colors hover:bg-brand-dark disabled:opacity-50"
+                  className="flex h-[52px] w-full items-center justify-center gap-2 rounded-lg bg-brand text-sm font-semibold text-stone-900 transition-colors hover:bg-brand-dark disabled:opacity-50"
                 >
                   {loading ? (
                     <>

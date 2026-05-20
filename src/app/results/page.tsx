@@ -368,12 +368,12 @@ export default function ResultsPage() {
       {/* Header with total */}
       <div
         ref={heroRef}
-        className="bg-brand px-4 py-8 text-white"
+        className="bg-brand px-4 py-8 text-stone-900"
         role="region"
         aria-label="Screening results summary"
       >
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium text-white/70">
+          <p className="text-sm font-medium text-stone-900/60">
             You may qualify for
           </p>
           <p
@@ -381,16 +381,18 @@ export default function ResultsPage() {
             aria-label={`Estimated ${result.totalEstimatedMonthly.toLocaleString()} dollars per month`}
           >
             ${result.totalEstimatedMonthly.toLocaleString()}
-            <span className="text-lg font-normal text-white/70">/month</span>
+            <span className="text-lg font-normal text-stone-900/60">
+              /month
+            </span>
           </p>
-          <p className="mt-1 text-sm text-white/70">
+          <p className="mt-1 text-sm text-stone-900/60">
             ${result.totalEstimatedAnnual.toLocaleString()}/year across{" "}
             {pursuable.length} program
             {pursuable.length !== 1 ? "s" : ""}
           </p>
           <div className="mt-4 flex items-center justify-center gap-2">
-            <TrendingUp className="h-4 w-4 text-white/70" />
-            <p className="text-xs text-white/70">
+            <TrendingUp className="h-4 w-4 text-stone-900/60" />
+            <p className="text-xs text-stone-900/60">
               Estimates based on your household information
             </p>
           </div>

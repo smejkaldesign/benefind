@@ -89,7 +89,7 @@ export function ProgramFilters({
           onClick={() => updateParams({ category: undefined })}
           className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
             !activeCategory
-              ? "bg-brand text-surface"
+              ? "bg-brand text-stone-900"
               : "bg-surface-bright text-text-muted hover:text-text"
           }`}
         >
@@ -106,7 +106,7 @@ export function ProgramFilters({
             }
             className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
               activeCategory === value
-                ? "bg-brand text-surface"
+                ? "bg-brand text-stone-900"
                 : "bg-surface-bright text-text-muted hover:text-text"
             }`}
           >

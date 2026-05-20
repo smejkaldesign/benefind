@@ -23,7 +23,7 @@ const buttonVariants = cva(
         error:
           "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500/50 dark:bg-red-700 dark:hover:bg-red-800",
         brand:
-          "bg-brand text-white hover:bg-brand/90 focus-visible:ring-brand/50",
+          "bg-brand text-stone-900 hover:bg-brand/90 focus-visible:ring-brand/50",
       },
       size: {
         default:

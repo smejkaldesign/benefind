@@ -215,7 +215,7 @@ export default async function ProgramDetailPage({ params }: Props) {
             <div className="flex gap-3">
               <Link
                 href="/screening"
-                className="rounded-lg bg-brand px-6 py-3 text-sm font-semibold text-surface transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
+                className="rounded-lg bg-brand px-6 py-3 text-sm font-semibold text-stone-900 transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
               >
                 Start Screening
               </Link>

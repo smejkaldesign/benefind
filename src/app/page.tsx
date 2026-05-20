@@ -109,7 +109,7 @@ export default function Home() {
                   className="group inline-flex h-[52px] items-center gap-2 rounded-lg border border-surface/20 bg-white px-6 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/95"
                 >
                   <User className="h-4 w-4" />
-                  Personal Benefits
+                  For Individuals
                   <ArrowRight className="h-4 w-4 max-w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-200 group-hover:max-w-[16px] group-hover:translate-x-0 group-hover:opacity-100" />
                 </Link>
                 <Link
@@ -117,7 +117,7 @@ export default function Home() {
                   className="group inline-flex h-[52px] items-center gap-2 rounded-lg border border-surface/20 bg-white px-6 text-sm font-semibold text-surface transition-colors hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
                 >
                   <Building2 className="h-4 w-4" />
-                  Business Benefits
+                  For Businesses
                   <ArrowRight className="h-4 w-4 max-w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-200 group-hover:max-w-[16px] group-hover:translate-x-0 group-hover:opacity-100" />
                 </Link>
               </motion.div>

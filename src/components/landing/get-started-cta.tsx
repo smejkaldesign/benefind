@@ -45,8 +45,8 @@ const cards = [
     ],
     cta: "Contact Us",
     href: "/contact",
-    iconBg: "bg-accent/10",
-    iconColor: "text-accent",
+    iconBg: "bg-brand/10",
+    iconColor: "text-brand",
     buttonVariant: "outline" as const,
   },
 ];

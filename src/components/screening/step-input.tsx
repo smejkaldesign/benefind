@@ -78,7 +78,7 @@ export function StepInput({
           onClick={handleSubmit}
           disabled={disabled || !value.trim()}
           aria-label="Send"
-          className="absolute right-1.5 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-surface transition-all hover:bg-brand-dark disabled:bg-surface-bright disabled:text-text-subtle"
+          className="absolute right-1.5 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-stone-900 transition-all hover:bg-brand-dark disabled:bg-surface-bright disabled:text-text-subtle"
         >
           <ArrowUp className="h-4 w-4" />
         </button>

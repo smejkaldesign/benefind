@@ -122,7 +122,7 @@ export function LandingNav() {
 
           {/* Eligibility dropdown using shadcn/ui DropdownMenu */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex h-[44px] shrink-0 items-center justify-between gap-2 whitespace-nowrap rounded-lg border border-border bg-brand px-5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
+            <DropdownMenuTrigger className="inline-flex h-[44px] shrink-0 items-center justify-between gap-2 whitespace-nowrap rounded-lg border border-border bg-brand px-5 text-sm font-semibold text-stone-900 shadow-sm transition-all hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none">
               {t.landing.heroCta}
               <ChevronDown className="h-4 w-4 transition-transform duration-200 data-[popup-open]:rotate-180" />
             </DropdownMenuTrigger>
@@ -135,14 +135,14 @@ export function LandingNav() {
                 className="px-5 py-3 text-sm font-semibold text-text hover:bg-surface-dim"
                 render={<Link href="/screening" />}
               >
-                Personal Benefits
+                For Individuals
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-border" />
               <DropdownMenuItem
                 className="px-5 py-3 text-sm font-semibold text-text hover:bg-surface-dim"
                 render={<Link href="/screening/company" />}
               >
-                Business Benefits
+                For Businesses
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
