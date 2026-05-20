@@ -90,8 +90,8 @@ export default function OnboardingPage() {
 
   return (
     <main className="flex min-h-dvh items-center justify-center bg-surface px-4">
-      <div className="w-full max-w-md">
-        <Card className="space-y-6">
+      <div className="w-full max-w-2xl">
+        <Card className="space-y-6 px-6 py-10 sm:px-16 sm:py-14">
           {/* Header */}
           <div className="text-center space-y-2">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[16px] bg-brand/15">
