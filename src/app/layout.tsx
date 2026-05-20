@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/lib/theme";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { OfflineBanner } from "@/components/offline-banner";
 import { AuthErrorRedirect } from "@/components/auth-error-redirect";
+import { HashAuthBootstrap } from "@/components/hash-auth-bootstrap";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -79,6 +80,7 @@ export default function RootLayout({
           <I18nProvider>
             <SmoothScroll />
             {children}
+            <HashAuthBootstrap />
             <AuthErrorRedirect />
             <ServiceWorkerRegister />
             <OfflineBanner />
