@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { LandingNav } from "@/components/landing-nav";
 import { GradientBlinds } from "@/components/gradient-blinds";
+import { getAppOrigin } from "@/lib/app-url";
 
 const RATE_LIMIT_SECONDS = 60;
 
@@ -72,7 +73,7 @@ export default function LoginPage() {
     // Forward ?next param so the callback redirects to the right place
     const params = new URLSearchParams(window.location.search);
     const next = params.get("next");
-    const callbackUrl = new URL("/auth/callback", window.location.origin);
+    const callbackUrl = new URL("/auth/callback", getAppOrigin());
     if (next) {
       callbackUrl.searchParams.set("next", next);
     }
