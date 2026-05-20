@@ -135,8 +135,12 @@ export default function CompanyScreeningPage() {
       return;
     }
 
+    // Capture in a local const so the closure holds a non-null number, not
+    // the (number | null) state that React might update underneath us.
+    const end = signupCooldownEnd;
+
     function tick() {
-      const remaining = Math.ceil((signupCooldownEnd! - Date.now()) / 1000);
+      const remaining = Math.ceil((end - Date.now()) / 1000);
       if (remaining <= 0) {
         setSignupCooldown(0);
         setSignupCooldownEnd(null);
