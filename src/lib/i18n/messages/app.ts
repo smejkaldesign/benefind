@@ -122,6 +122,12 @@ const en = {
     download: "Download {name}",
     delete: "Delete {name}",
   },
+  emailAlerts: {
+    label: "Email me about new benefits",
+    description:
+      "We check your last screening when we add or update programs. If you may qualify for something new, we send you one email.",
+    saveFailed: "We could not save this setting. Please try again.",
+  },
   premiumGate: {
     title: "Upgrade to Premium",
     body: "{feature} is available on the Premium plan. Upgrade to unlock unlimited screenings, document storage, and more.",
@@ -141,34 +147,34 @@ export type AppMessages = typeof en;
 const es: AppMessages = {
   login: {
     noPassword:
-      "No necesitas contraseña. Te enviaremos un enlace mágico por correo.",
-    emailPlaceholder: "tu@ejemplo.com",
+      "No necesita contraseña. Le enviaremos un enlace mágico por correo.",
+    emailPlaceholder: "usted@ejemplo.com",
     sentBody:
-      "Enviamos un enlace mágico a {email}. Haz clic en el enlace para iniciar sesión.",
+      "Enviamos un enlace mágico a {email}. Haga clic en el enlace para iniciar sesión.",
     sending: "Enviando enlace...",
-    tryAgainIn: "Inténtalo de nuevo en {seconds} s",
+    tryAgainIn: "Inténtelo de nuevo en {seconds} s",
     cooldown: "({seconds} s)",
     backHome: "Volver al inicio",
     linkExpired:
-      "Ese enlace para iniciar sesión ya venció o ya se usó. Pide uno nuevo abajo.",
-    authFailed: "No se pudo iniciar sesión. Inténtalo de nuevo.",
+      "Ese enlace para iniciar sesión ya venció o ya se usó. Pida uno nuevo abajo.",
+    authFailed: "No se pudo iniciar sesión. Inténtelo de nuevo.",
     workspaceError:
-      "Ya iniciaste sesión, pero no pudimos preparar tu espacio de trabajo. Inténtalo de nuevo o comunícate con soporte.",
-    genericError: "Algo salió mal al iniciar sesión. Inténtalo de nuevo.",
-    rateLimited: "Demasiados intentos. Espera un minuto y vuelve a intentarlo.",
+      "Ya inició sesión, pero no pudimos preparar su espacio de trabajo. Inténtelo de nuevo o comuníquese con soporte.",
+    genericError: "Algo salió mal al iniciar sesión. Inténtelo de nuevo.",
+    rateLimited: "Demasiados intentos. Espere un minuto y vuelva a intentarlo.",
     sendFailed:
-      "No pudimos enviar el enlace. Revisa tu correo electrónico e inténtalo de nuevo.",
+      "No pudimos enviar el enlace. Revise su correo electrónico e inténtelo de nuevo.",
   },
   onboarding: {
-    welcome: "¡Te damos la bienvenida a Benefind!",
+    welcome: "¡Le damos la bienvenida a Benefind!",
     subtitle:
-      "Solo unas preferencias rápidas antes de mostrarte tus resultados.",
-    nameLabel: "Tu nombre (opcional)",
-    namePlaceholder: "¿Cómo te gustaría que te llamemos?",
+      "Solo unas preferencias rápidas antes de mostrarle sus resultados.",
+    nameLabel: "Su nombre (opcional)",
+    namePlaceholder: "¿Cómo le gustaría que lo llamemos?",
     notifyLabel:
-      "Envíame un correo cuando cambien los programas para los que califico",
+      "Envíeme un correo cuando cambien los programas para los que califico",
     languageLabel: "Idioma",
-    languageHint: "Cambia tu idioma preferido",
+    languageHint: "Cambie su idioma preferido",
     saving: "Guardando...",
     continue_: "Ver mis resultados",
   },
@@ -182,20 +188,20 @@ const es: AppMessages = {
     personalTag: "(personal)",
     personalName: "Personal",
     offline:
-      "No tienes conexión a internet. Algunas funciones pueden no funcionar hasta que te vuelvas a conectar.",
+      "No tiene conexión a internet. Algunas funciones pueden no funcionar hasta que se vuelva a conectar.",
   },
   dashboard: {
     welcomeBack: "Hola de nuevo",
-    noAccess: "No tienes acceso a este espacio de trabajo.",
+    noAccess: "No tiene acceso a este espacio de trabajo.",
     rescreen: "Volver a evaluar",
     documents: "Documentos",
     screeningHistory: "Historial de evaluaciones",
     householdOne: "Hogar de {count} persona",
     householdOther: "Hogar de {count} personas",
     latest: "Más reciente",
-    noScreeningsTitle: "Aún no tienes evaluaciones",
+    noScreeningsTitle: "Aún no tiene evaluaciones",
     noScreeningsBody:
-      "Haz una evaluación para descubrir los beneficios para los que calificas.",
+      "Haga una evaluación para descubrir los beneficios para los que califica.",
     startScreening: "Empezar evaluación",
     latestScreening: "Evaluación más reciente",
     programsOne: "{count} programa",
@@ -212,7 +218,7 @@ const es: AppMessages = {
   },
   billing: {
     title: "Facturación",
-    description: "Administra tu suscripción y tus pagos.",
+    description: "Administre su suscripción y sus pagos.",
     premiumPlan: "Plan Premium",
     active: "Activo",
     cancelsOn: "Se cancela el {date}",
@@ -222,12 +228,12 @@ const es: AppMessages = {
     perMonth: "/mes",
     singleScreening: "Una evaluación",
     resultsView: "Ver resultados",
-    currentPlan: "Tu plan actual",
+    currentPlan: "Su plan actual",
     recommended: "Recomendado",
     unlimitedScreenings: "Evaluaciones ilimitadas",
     screeningHistory: "Historial de evaluaciones",
     documentStorage: "Almacenamiento de documentos",
-    rescreenPrefill: "Nuevas evaluaciones con tus respuestas ya completadas",
+    rescreenPrefill: "Nuevas evaluaciones con sus respuestas ya completadas",
     prioritySupport: "Soporte prioritario",
     subscribeMonthly: "Suscribirme mensualmente",
     subscribeAnnually: "Suscribirme anualmente ($89/año)",
@@ -236,45 +242,52 @@ const es: AppMessages = {
   documents: {
     title: "Documentos",
     description:
-      "Sube y administra tus archivos. Revisamos cada archivo por seguridad.",
+      "Suba y administre sus archivos. Revisamos cada archivo por seguridad.",
     uploadTitle: "Subir un archivo",
     uploadHint: "PDF, imágenes y documentos de Office de hasta 25 MB",
     uploadHelp:
       "Se aceptan: PDF, texto simple, Microsoft Office e imágenes. Máximo 25 MB.",
-    chooseFile: "Elige un archivo para subir",
+    chooseFile: "Elija un archivo para subir",
     uploading: 'Subiendo "{name}"...',
-    uploadFailed: "No pudimos subir tu archivo. Inténtalo de nuevo.",
-    saveFailed: "No pudimos guardar tu documento. Inténtalo de nuevo.",
-    sessionExpired: "Tu sesión venció. Vuelve a iniciar sesión.",
+    uploadFailed: "No pudimos subir su archivo. Inténtelo de nuevo.",
+    saveFailed: "No pudimos guardar su documento. Inténtelo de nuevo.",
+    sessionExpired: "Su sesión venció. Vuelva a iniciar sesión.",
     fileEmpty: "Este archivo está vacío.",
     fileTooLarge: "Este archivo es demasiado grande (máximo {max} MB).",
     invalidFilename: "El nombre del archivo no es válido.",
     unsupportedType: "No aceptamos este tipo de archivo ({type}).",
     unknownType: "desconocido",
-    fallbackName: "tu archivo",
+    fallbackName: "su archivo",
     scanPending: 'Revisando "{name}". Esto suele tardar solo unos segundos.',
     scanClean: '"{name}" es seguro.',
     scanInfected:
-      'No pudimos aceptar "{name}". Nuestra revisión de seguridad encontró un problema con este archivo. Prueba con otro archivo o comunícate con soporte si crees que es un error.',
+      'No pudimos aceptar "{name}". Nuestra revisión de seguridad encontró un problema con este archivo. Pruebe con otro archivo o comuníquese con soporte si cree que es un error.',
     scanError:
-      'Algo salió mal al revisar "{name}". Intenta subirlo de nuevo o comunícate con soporte si el problema continúa.',
+      'Algo salió mal al revisar "{name}". Intente subirlo de nuevo o comuníquese con soporte si el problema continúa.',
     statusPending: "Revisando...",
     statusClean: "Seguro",
     statusInfected: "Bloqueado: archivo infectado",
-    statusError: "Falló la revisión, inténtalo de nuevo",
-    empty: "Aún no tienes documentos. Sube tu primer archivo arriba.",
+    statusError: "Falló la revisión, inténtelo de nuevo",
+    empty: "Aún no tiene documentos. Suba su primer archivo arriba.",
     download: "Descargar {name}",
     delete: "Eliminar {name}",
   },
+  emailAlerts: {
+    label: "Envíeme un correo sobre nuevos beneficios",
+    description:
+      "Revisamos su última evaluación cuando agregamos o actualizamos programas. Si usted podría calificar para algo nuevo, le enviamos un correo.",
+    saveFailed:
+      "No pudimos guardar esta configuración. Por favor, inténtelo de nuevo.",
+  },
   premiumGate: {
-    title: "Mejora a Premium",
-    body: "{feature} está disponible en el plan Premium. Mejora tu plan para tener evaluaciones ilimitadas, almacenamiento de documentos y más.",
+    title: "Mejore a Premium",
+    body: "{feature} está disponible en el plan Premium. Mejore su plan para tener evaluaciones ilimitadas, almacenamiento de documentos y más.",
     defaultFeature: "Esta función",
     viewPlans: "Ver planes",
   },
   error: {
     title: "Algo salió mal",
-    body: "Ocurrió un error inesperado. Tus datos están seguros.",
+    body: "Ocurrió un error inesperado. Sus datos están seguros.",
     tryAgain: "Intentar de nuevo",
     goHome: "Ir al inicio",
   },
@@ -396,6 +409,12 @@ const zh: AppMessages = {
     empty: "暂无文件。请在上方上传您的第一个文件。",
     download: "下载 {name}",
     delete: "删除 {name}",
+  },
+  emailAlerts: {
+    label: "有新福利时给我发邮件",
+    description:
+      "每当我们新增或更新项目时，都会检查您最近一次的筛查结果。如果您可能符合新项目的条件，我们会给您发送一封邮件。",
+    saveFailed: "无法保存此设置。请重试。",
   },
   premiumGate: {
     title: "升级到 Premium",
@@ -539,6 +558,12 @@ const vi: AppMessages = {
     download: "Tải xuống {name}",
     delete: "Xóa {name}",
   },
+  emailAlerts: {
+    label: "Gửi email cho tôi về phúc lợi mới",
+    description:
+      "Chúng tôi kiểm tra lần sàng lọc gần nhất của bạn mỗi khi thêm hoặc cập nhật chương trình. Nếu bạn có thể đủ điều kiện cho chương trình mới, chúng tôi sẽ gửi cho bạn một email.",
+    saveFailed: "Không thể lưu cài đặt này. Vui lòng thử lại.",
+  },
   premiumGate: {
     title: "Nâng cấp lên Premium",
     body: "{feature} có trong gói Premium. Nâng cấp để dùng kiểm tra không giới hạn, lưu trữ giấy tờ và nhiều tính năng khác.",
@@ -677,6 +702,12 @@ const ar: AppMessages = {
     empty: "لا توجد مستندات بعد. ارفع ملفك الأول في الأعلى.",
     download: "تنزيل {name}",
     delete: "حذف {name}",
+  },
+  emailAlerts: {
+    label: "أرسلوا لي بريدًا إلكترونيًا عن المزايا الجديدة",
+    description:
+      "نراجع آخر فحص أجريته عندما نضيف برامج أو نحدّثها. إذا كنت قد تكون مؤهلًا لشيء جديد، نرسل لك رسالة بريد إلكتروني واحدة.",
+    saveFailed: "تعذّر حفظ هذا الإعداد. يُرجى المحاولة مرة أخرى.",
   },
   premiumGate: {
     title: "الترقية إلى Premium",

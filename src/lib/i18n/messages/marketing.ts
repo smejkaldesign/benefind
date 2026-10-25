@@ -303,25 +303,25 @@ const es: MarketingMessages = {
   bento: {
     title: "Cómo funciona Benefind",
     subtitle:
-      "Una forma más fácil de encontrar todos los beneficios para los que calificas",
+      "Una forma más fácil de encontrar todos los beneficios para los que califica",
     playDemo: "Ver video de demostración",
     posterAlt: "Demostración de Benefind",
     walkthrough: "Recorrido de 90 segundos",
-    seeInAction: "Míralo en acción",
+    seeInAction: "Véalo en acción",
     seeInActionDesc:
-      "De la primera pregunta a tus programas en menos de cinco minutos.",
+      "De la primera pregunta a sus programas en menos de cinco minutos.",
     videoPlayer: "Reproductor de video",
     closeVideo: "Cerrar video",
     features: [
       {
         title: "Evaluación con IA",
         description:
-          "Responde unas preguntas sencillas sobre tu hogar. Nuestra IA te compara con más de 80 programas federales y estatales en unos cinco minutos.",
+          "Responda unas preguntas sencillas sobre su hogar. Nuestra IA compara su información con más de 80 programas federales y estatales en unos cinco minutos.",
       },
       {
         title: "Lenguaje sencillo",
         description:
-          "Sin palabras complicadas del gobierno. Cada programa se explica con palabras claras y te decimos cuál es el siguiente paso.",
+          "Sin palabras complicadas del gobierno. Cada programa se explica con palabras claras y le decimos cuál es el siguiente paso.",
       },
       {
         title: "Personas y empresas",
@@ -331,57 +331,57 @@ const es: MarketingMessages = {
       {
         title: "Privacidad desde el diseño",
         description:
-          "Tus datos se quedan en tu dispositivo. No se envía nada a ningún servidor. Sin registro, sin correo, sin rastreo. Gratis, siempre.",
+          "Sus datos se quedan en su dispositivo. No se envía nada a ningún servidor. Sin registro, sin correo, sin rastreo. Gratis, siempre.",
       },
     ],
   },
   video: {
-    title: "Míralo en acción",
-    subtitle: "Mira cómo Benefind encuentra beneficios en minutos, no en horas",
+    title: "Véalo en acción",
+    subtitle: "Vea cómo Benefind encuentra beneficios en minutos, no en horas",
     comingSoon: "Demostración próximamente",
     individuals: {
       label: "Personas",
       description:
-        "Responde unas preguntas sencillas sobre tu hogar, tus ingresos y tus necesidades. Benefind te conecta al instante con programas como SNAP, Medicaid, ayuda de vivienda y más.",
+        "Responda unas preguntas sencillas sobre su hogar, sus ingresos y sus necesidades. Benefind le conecta al instante con programas como SNAP, Medicaid, ayuda de vivienda y más.",
     },
     companies: {
       label: "Empresas",
       description:
-        "Cuéntanos sobre tu negocio, tu industria y tus metas. Revisamos más de 20 programas federales y estatales de subvenciones, créditos fiscales, incentivos y preferencias en contratos.",
+        "Cuéntenos sobre su negocio, su industria y sus metas. Revisamos más de 20 programas federales y estatales de subvenciones, créditos fiscales, incentivos y preferencias en contratos.",
     },
     multilingual: {
       label: "Multilingüe",
       description:
-        "Haz toda la evaluación en el idioma que prefieras. Cada explicación, cada resultado y cada paso siguiente, todo traducido.",
+        "Haga toda la evaluación en el idioma que prefiera. Cada explicación, cada resultado y cada paso siguiente, todo traducido.",
     },
   },
   getStartedCta: {
-    title: "Empieza ahora",
-    subtitle: "Elige el camino que mejor te queda",
+    title: "Empiece ahora",
+    subtitle: "Elija el camino que mejor le convenga",
     individuals: {
       bullets: [
-        "Responde preguntas sencillas sobre tu hogar",
-        "Te conectamos con más de 80 programas federales y estatales",
-        "Ve los montos estimados y cómo solicitar",
+        "Responda preguntas sencillas sobre su hogar",
+        "Le conectamos con más de 80 programas federales y estatales",
+        "Vea los montos estimados y cómo solicitar",
       ],
       cta: "Comenzar evaluación",
     },
     businesses: {
       bullets: [
         "Perfil de empresa en 3 minutos",
-        "Revisa subvenciones, créditos fiscales e incentivos",
-        "Recibe puntajes de coincidencia y enlaces para solicitar",
+        "Revise subvenciones, créditos fiscales e incentivos",
+        "Reciba puntajes de coincidencia y enlaces para solicitar",
       ],
       cta: "Evaluación para empresas",
     },
     help: {
-      headline: "¿Necesitas ayuda?",
+      headline: "¿Necesita ayuda?",
       bullets: [
-        "¿No sabes qué camino elegir?",
-        "¿Tienes preguntas sobre un programa?",
-        "¿Quieres ofrecer Benefind en tu comunidad?",
+        "¿No sabe qué camino elegir?",
+        "¿Tiene preguntas sobre un programa?",
+        "¿Quiere ofrecer Benefind en su comunidad?",
       ],
-      cta: "Contáctanos",
+      cta: "Contáctenos",
     },
   },
   testimonials: {
@@ -412,11 +412,11 @@ const es: MarketingMessages = {
       "Cada año, miles de millones de dólares en beneficios quedan sin reclamar porque el sistema es demasiado complicado, incluso para quienes califican. Benefind existe para cambiar eso.",
     whyTitle: "Por qué lo creamos",
     whyP1:
-      "El sistema federal de beneficios se creó agencia por agencia, no pensando en cada persona. SNAP, Medicaid, la Sección 8, el EITC, WIC: cada programa tiene su propia solicitud, su propia oficina y su propio lenguaje. Tienes que saber que existen antes de poder usarlos.",
+      "El sistema federal de beneficios se creó agencia por agencia, no pensando en cada persona. SNAP, Medicaid, la Sección 8, el EITC, WIC: cada programa tiene su propia solicitud, su propia oficina y su propio lenguaje. Tiene que saber que existen antes de poder usarlos.",
     whyP2:
       "Se estima que el 20% de los hogares que califican para SNAP nunca reclaman sus beneficios. Cerca de $60 mil millones en créditos fiscales quedan sin reclamar cada año. Hay familias que terminan en salas de emergencia porque nunca supieron que calificaban para Medicaid.",
     whyP3:
-      "Benefind es una herramienta de evaluación gratuita que hace unas preguntas sencillas y te muestra cada programa para el que podrías calificar. Funciona en español, inglés y otros tres idiomas, con lenguaje sencillo, sin cuenta y sin intentar venderte nada.",
+      "Benefind es una herramienta de evaluación gratuita que hace unas preguntas sencillas y le muestra cada programa para el que podrías calificar. Funciona en español, inglés y otros tres idiomas, con lenguaje sencillo, sin cuenta y sin intentar venderle nada.",
     scaleTitle: "Hecho para crecer",
     impactStats: [
       { value: "80+", label: "Programas federales y estatales" },
@@ -427,19 +427,19 @@ const es: MarketingMessages = {
     howTitle: "Cómo funciona",
     steps: [
       {
-        title: "Responde unas preguntas",
+        title: "Responda unas preguntas",
         description:
-          "Te preguntamos sobre el tamaño de tu hogar, tus ingresos y tu situación. No necesitas cuenta. Toma unos 5 minutos.",
+          "Le preguntamos sobre el tamaño de su hogar, sus ingresos y su situación. No necesita cuenta. Toma unos 5 minutos.",
       },
       {
-        title: "La IA revisa tu perfil",
+        title: "La IA revisa su perfil",
         description:
-          "Nuestro sistema compara tus respuestas con las reglas de más de 80 programas en todos los estados.",
+          "Nuestro sistema compara sus respuestas con las reglas de más de 80 programas en todos los estados.",
       },
       {
-        title: "Ve tus resultados",
+        title: "Vea sus resultados",
         description:
-          "Recibes una lista personalizada de programas para los que probablemente calificas, con instrucciones para solicitar.",
+          "Recibe una lista personalizada de programas para los que probablemente califica, con instrucciones para solicitar.",
       },
     ],
     startScreening: "Comenzar mi evaluación gratis",
@@ -461,7 +461,7 @@ const es: MarketingMessages = {
       {
         title: "Privado",
         description:
-          "No vendemos tus datos ni te rastreamos en internet. Tus respuestas son tuyas.",
+          "No vendemos sus datos ni le rastreamos en internet. Sus respuestas son suyas.",
       },
       {
         title: "Sin rastreo",
@@ -469,19 +469,19 @@ const es: MarketingMessages = {
           "Sin publicidad. Sin vendedores de datos. Sin costos ocultos. Solo respuestas.",
       },
     ],
-    ctaTitle: "¿Listo para ver para qué calificas?",
-    ctaSubtitle: "Toma 5 minutos. No necesitas cuenta. Totalmente gratis.",
+    ctaTitle: "¿Está listo para ver para qué califica?",
+    ctaSubtitle: "Toma 5 minutos. No necesita cuenta. Totalmente gratis.",
     ctaButton: "Comenzar evaluación gratis",
   },
   contact: {
-    title: "Contáctanos",
-    subtitle: "¿Tienes preguntas sobre Benefind? Nos encantaría saber de ti.",
+    title: "Contáctenos",
+    subtitle: "¿Tiene preguntas sobre Benefind? Nos encantaría saber de usted.",
     name: "Nombre",
-    namePlaceholder: "Tu nombre",
+    namePlaceholder: "Su nombre",
     email: "Correo electrónico",
-    emailPlaceholder: "tu@ejemplo.com",
+    emailPlaceholder: "correo@ejemplo.com",
     subject: "Asunto",
-    selectTopic: "Elige un tema",
+    selectTopic: "Elija un tema",
     topics: {
       general: "Consulta general",
       individual: "Beneficios personales",
@@ -490,17 +490,17 @@ const es: MarketingMessages = {
       bug: "Reportar un error",
     },
     message: "Mensaje",
-    messagePlaceholder: "¿Cómo podemos ayudarte?",
+    messagePlaceholder: "¿Cómo podemos ayudarle?",
     send: "Enviar mensaje",
-    sent: "¡Mensaje enviado! Te responderemos pronto.",
-    emailDirect: "O escríbenos directamente a",
+    sent: "¡Mensaje enviado! Le responderemos pronto.",
+    emailDirect: "O escríbanos directamente a",
     responseTime: "Normalmente respondemos en menos de 24 horas",
     privacy:
-      "Solo usamos tu información para responder a tu mensaje. Nunca compartimos tus datos.",
+      "Solo usamos su información para responder a su mensaje. Nunca compartimos sus datos.",
   },
   getStarted: {
-    title: "¿Qué estás buscando?",
-    subtitle: "Elige tu camino. Ambos toman unos 3 minutos.",
+    title: "¿Qué está buscando?",
+    subtitle: "Elija su camino. Ambos toman unos 3 minutos.",
     cta: "Comenzar",
     individual: {
       title: "Personas",
@@ -511,12 +511,12 @@ const es: MarketingMessages = {
     company: {
       title: "Empresas",
       description:
-        "Subvenciones, créditos fiscales e incentivos para tu negocio",
+        "Subvenciones, créditos fiscales e incentivos para su negocio",
       examples:
         "Crédito de I+D, SBIR, WOTC, capacitación laboral, subvenciones para exportar",
     },
     privacy:
-      "Tus respuestas se guardan en tu dispositivo y nunca se envían a un servidor. No necesitas cuenta.",
+      "Sus respuestas se guardan en su dispositivo y nunca se envían a un servidor. No necesita cuenta.",
   },
 };
 

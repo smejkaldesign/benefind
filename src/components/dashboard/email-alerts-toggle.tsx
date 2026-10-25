@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { Mail } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { useI18n } from "@/lib/i18n/context";
 import { getNewMatchEmails, setNewMatchEmails } from "./email-alerts-actions";
 
 /**
@@ -11,6 +12,7 @@ import { getNewMatchEmails, setNewMatchEmails } from "./email-alerts-actions";
  * dashboard only needs to render <EmailAlertsToggle />.
  */
 export function EmailAlertsToggle() {
+  const m = useI18n().t.app.emailAlerts;
   const [enabled, setEnabled] = useState<boolean | null>(null);
   const [failed, setFailed] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -45,15 +47,12 @@ export function EmailAlertsToggle() {
             htmlFor="new-match-emails"
             className="font-semibold text-text cursor-pointer"
           >
-            Email me about new benefits
+            {m.label}
           </label>
-          <p className="mt-1 text-xs text-text-muted">
-            We check your last screening when we add or update programs. If you
-            may qualify for something new, we send you one email.
-          </p>
+          <p className="mt-1 text-xs text-text-muted">{m.description}</p>
           {failed && (
             <p role="alert" className="mt-1 text-xs text-error">
-              We could not save this setting. Please try again.
+              {m.saveFailed}
             </p>
           )}
         </div>
@@ -63,7 +62,7 @@ export function EmailAlertsToggle() {
         checked={enabled}
         disabled={pending}
         onCheckedChange={onChange}
-        aria-label="Email me about new benefits"
+        aria-label={m.label}
       />
     </Card>
   );

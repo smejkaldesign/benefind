@@ -272,7 +272,7 @@ const es: CoreDictionary = {
     aiTranslationNotice:
       "Estas traducciones fueron generadas por IA y pueden contener errores gramaticales.",
     appName: "Benefind",
-    tagline: "Encuentra Todos los Beneficios que Mereces",
+    tagline: "Encuentre Todos los Beneficios que Merece",
     home: "Inicio",
     screening: "Evaluar",
     dashboard: "Panel",
@@ -285,51 +285,51 @@ const es: CoreDictionary = {
     loading: "Cargando...",
     learnMore: "Más información",
     applyNow: "Solicitar ahora",
-    free: "Encuentra todos los beneficios que mereces.",
+    free: "Encuentre todos los beneficios que merece.",
   },
   hero: {
-    title1: "Encuentra Todos los Beneficios",
-    title2: "que Mereces",
+    title1: "Encuentre Todos los Beneficios",
+    title2: "que Merece",
     subtitle:
-      "Responde unas preguntas sencillas y descubre los programas del gobierno para los que calificas, explicados en lenguaje simple y en tu idioma.",
+      "Responda unas preguntas sencillas y descubra los programas del gobierno para los que califica, explicados en lenguaje simple y en su idioma.",
     cta: "Verificar Mi Elegibilidad",
-    noAccount: "100% gratis. No necesitas cuenta para verificar elegibilidad.",
+    noAccount: "100% gratis. No necesita cuenta para verificar elegibilidad.",
   },
   screening: {
     title: "Evaluación de Elegibilidad",
     welcome:
-      "¡Hola! Estoy aquí para ayudarte a encontrar beneficios del gobierno para los que puedas calificar. Toma unos 3 minutos.",
+      "¡Hola! Estoy aquí para ayudarle a encontrar beneficios del gobierno para los que pueda calificar. Toma unos 3 minutos.",
     privacy:
-      "Tus respuestas son privadas y no se compartirán con nadie. ¡Comencemos!",
+      "Sus respuestas son privadas y no se compartirán con nadie. ¡Comencemos!",
     calculating:
-      "Perfecto, tengo todo lo que necesito. Déjame verificar para qué programas calificas...",
+      "Perfecto, tengo todo lo que necesito. Permítame verificar para qué programas califica...",
     eligible:
-      "Puedes calificar para {count} programa{s} con un valor estimado de ${monthly}/mes (${annual}/año). Desplázate hacia abajo para ver tus resultados.",
+      "Puede calificar para {count} programa{s} con un valor estimado de ${monthly}/mes (${annual}/año). Desplácese hacia abajo para ver sus resultados.",
     notEligible:
-      "Según la información proporcionada, es posible que no califiques para los programas que verificamos actualmente. Consulta con tu oficina local de servicios sociales.",
+      "Según la información proporcionada, es posible que no califique para los programas que verificamos actualmente. Consulte con su oficina local de servicios sociales.",
     perMonth: "/mes",
     perYear: "/año",
     viewResults: "Ver Resultados Completos",
   },
   results: {
-    youMayQualify: "Puedes calificar para",
+    youMayQualify: "Puede calificar para",
     programs: "Programas",
     documents: "Documentos",
     nextSteps: "Próximos Pasos",
     confidence: "confianza",
     notCurrentlyEligible: "No elegible actualmente",
     disclaimer:
-      "Estos resultados son estimaciones basadas en la información que proporcionaste. La elegibilidad real es determinada por la agencia administradora de cada programa.",
+      "Estos resultados son estimaciones basadas en la información que proporcionó. La elegibilidad real es determinada por la agencia administradora de cada programa.",
     totalEstimate: "Beneficio total estimado",
     gathered: "reunidos",
   },
   auth: {
     signInTitle: "Iniciar sesión en Benefind",
     noPassword:
-      "No necesitas contraseña. Te enviaremos un enlace mágico por correo.",
+      "No necesita contraseña. Le enviaremos un enlace mágico por correo.",
     emailLabel: "Correo electrónico",
     sendLink: "Enviar enlace mágico",
-    checkEmail: "Revisa tu correo",
+    checkEmail: "Revise su correo",
     magicLinkSent: "Enviamos un enlace mágico a",
     differentEmail: "Usar otro correo",
   },
@@ -342,31 +342,31 @@ const es: CoreDictionary = {
     guidanceDesc:
       "Explicamos cada pregunta de cada formulario en lenguaje simple. Sin jerga.",
     privacyDesc:
-      "Tus datos permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tu información.",
+      "Sus datos permanecen en su dispositivo y nunca se envían a nuestros servidores. Nunca vendemos su información.",
   },
   landing: {
     badge: "Verificar elegibilidad gratis",
     heroTitle1: "Miles de millones en beneficios no se reclaman.",
-    heroTitle2: "Los tuyos podrían ser los próximos.",
+    heroTitle2: "Los suyos podrían ser los próximos.",
     heroSubtitle:
-      "Responde unas preguntas simples y te conectaremos con los programas gubernamentales para los que calificas. Guía paso a paso, en tu idioma.",
+      "Responda unas preguntas simples y le conectaremos con los programas gubernamentales para los que califica. Guía paso a paso, en su idioma.",
     heroCta: "Verificar Mi Elegibilidad",
     heroSecondaryCta: "Cómo Funciona",
     statPrograms: "Programas",
     statLanguages: "Idiomas",
     statMinutes: "Tiempo Promedio",
-    programsLabel: "Programas que te ayudamos a encontrar",
+    programsLabel: "Programas que le ayudamos a encontrar",
     howTitle: "Cómo Funciona",
-    howSubtitle: "Tres pasos para encontrar lo que te corresponde",
-    step1Title: "Cuéntanos sobre ti",
+    howSubtitle: "Tres pasos para encontrar lo que le corresponde",
+    step1Title: "Cuéntenos sobre usted",
     step1Desc:
-      "Responde preguntas sencillas sobre tu hogar. No se requiere identificación personal. Toma unos 3 minutos.",
-    step2Title: "Obtén resultados al instante",
+      "Responda preguntas sencillas sobre su hogar. No se requiere identificación personal. Toma unos 3 minutos.",
+    step2Title: "Obtenga resultados al instante",
     step2Desc:
-      "Nuestra IA verifica tu elegibilidad en más de 50 programas federales y estatales y te muestra para cuáles calificas.",
-    step3Title: "Aplica con confianza",
+      "Nuestra IA verifica su elegibilidad en más de 50 programas federales y estatales y le muestra para cuáles califica.",
+    step3Title: "Aplique con confianza",
     step3Desc:
-      "Recibe guía paso a paso para cada formulario, explicado en lenguaje simple, en el idioma que prefieras.",
+      "Reciba guía paso a paso para cada formulario, explicado en lenguaje simple, en el idioma que prefiera.",
     featuresTitle: "Diseñado para quienes más lo necesitan",
     featuresSubtitle:
       "Cada función existe porque alguien fue dejado atrás por el sistema.",
@@ -378,17 +378,17 @@ const es: CoreDictionary = {
       "Los formularios gubernamentales son confusos. Reescribimos cada pregunta para que cualquiera pueda entenderla.",
     feat3Title: "Privado y Seguro",
     feat3Desc:
-      "Tus datos permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tu información. Punto.",
+      "Sus datos permanecen en su dispositivo y nunca se envían a nuestros servidores. Nunca vendemos su información. Punto.",
     feat4Title: "Matching con IA",
     feat4Desc:
-      "Evaluación inteligente que cruza tu situación con docenas de programas simultáneamente.",
+      "Evaluación inteligente que cruza su situación con docenas de programas simultáneamente.",
     feat5Title: "Guía Paso a Paso",
     feat5Desc:
-      "No solo te decimos para qué calificas. Te guiamos en cómo obtenerlo.",
+      "No solo le decimos para qué califica. Le guiamos en cómo obtenerlo.",
     feat6Title: "Gratis para empezar",
     feat6Desc:
-      "Verifica tu elegibilidad sin costo. Mejora para obtener ayuda guiada, seguimiento de documentos y recordatorios.",
-    impactTitle: "El problema es mayor de lo que piensas",
+      "Verifique su elegibilidad sin costo. Mejore su plan para obtener ayuda guiada, seguimiento de documentos y recordatorios.",
+    impactTitle: "El problema es mayor de lo que piensa",
     impactSubtitle:
       "Cada año, miles de millones en beneficios gubernamentales no llegan a nadie.",
     impact1Value: "$80B+",
@@ -398,33 +398,33 @@ const es: CoreDictionary = {
     impact3Value: "50+",
     impact3Label: "Programas federales y estatales verificados",
     impact4Value: "~3 min",
-    impact4Label: "Para verificar tu elegibilidad",
+    impact4Label: "Para verificar su elegibilidad",
     faqTitle: "¿Preguntas? Tenemos respuestas.",
-    faqSubtitle: "Todo lo que necesitas saber sobre Benefind.",
+    faqSubtitle: "Todo lo que necesita saber sobre Benefind.",
     faq1Q: "¿Qué es Benefind?",
     faq1A:
-      "Benefind es una herramienta gratuita que te ayuda a encontrar beneficios gubernamentales para los que podrías calificar. Responde algunas preguntas y te conectaremos con programas como SNAP, Medicaid, WIC y más.",
+      "Benefind es una herramienta gratuita que le ayuda a encontrar beneficios gubernamentales para los que podría calificar. Responda algunas preguntas y le conectaremos con programas como SNAP, Medicaid, WIC y más.",
     faq2Q: "¿Benefind es gratis?",
     faq2A:
-      "Verificar tu elegibilidad es 100% gratis, sin cuenta necesaria. Para ayuda guiada, seguimiento de documentos y recordatorios, los planes comienzan en $4.99/mes o $99 acceso de por vida.",
+      "Verificar su elegibilidad es 100% gratis, sin cuenta necesaria. Para ayuda guiada, seguimiento de documentos y recordatorios, los planes comienzan en $4.99/mes o $99 acceso de por vida.",
     faq3Q: "¿Qué programas verifica Benefind?",
     faq3A:
       "Verificamos elegibilidad para más de 50 programas federales y estatales incluyendo SNAP, Medicaid, WIC, CHIP, SSI, SSDI, TANF, Sección 8, LIHEAP, Becas Pell, EITC y muchos más.",
     faq4Q: "¿Necesito crear una cuenta?",
     faq4A:
-      "No. Puedes verificar tu elegibilidad sin crear una cuenta. Si quieres guardar tus resultados, puedes crear una cuenta gratuita opcionalmente.",
+      "No. Puede verificar su elegibilidad sin crear una cuenta. Si quiere guardar sus resultados, puede crear una cuenta gratuita opcionalmente.",
     faq5Q: "¿Mi información es privada?",
     faq5A:
-      "Absolutamente. Tus datos de evaluación permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tus datos a terceros.",
+      "Absolutamente. Sus datos de evaluación permanecen en su dispositivo y nunca se envían a nuestros servidores. Nunca vendemos sus datos a terceros.",
     faq6Q: "¿Qué tan precisos son los resultados?",
     faq6A:
-      "Nuestra evaluación con IA proporciona elegibilidad estimada basada en la información que proporcionas. La elegibilidad final la determina la agencia administradora del programa.",
-    ctaTitle: "¿Listo para encontrar lo que te corresponde?",
+      "Nuestra evaluación con IA proporciona elegibilidad estimada basada en la información que proporciona. La elegibilidad final la determina la agencia administradora del programa.",
+    ctaTitle: "¿Está listo para encontrar lo que le corresponde?",
     ctaSubtitle:
       "Toma unos 3 minutos. Sin cuenta necesaria. Completamente gratis.",
     ctaButton: "Verificar Mi Elegibilidad",
-    ctaNote: "Únete a miles que ya encuentran sus beneficios.",
-    footerTagline: "Encuentra Todos los Beneficios que Mereces",
+    ctaNote: "Únase a miles que ya encuentran sus beneficios.",
+    footerTagline: "Encuentre Todos los Beneficios que Merece",
     footerProduct: "Producto",
     footerLegal: "Legal",
     footerLanguages: "Idiomas",
@@ -458,13 +458,13 @@ const es: CoreDictionary = {
     pain3Desc:
       "No porque no necesiten ayuda, sino porque el proceso se siente imposible.",
     // Trust section
-    trustTitle: "Tus Datos Son Tuyos",
+    trustTitle: "Sus Datos Son Suyos",
     trustSubtitle:
-      "Privacidad por diseño. Construimos Benefind para protegerte, no para lucrar contigo.",
-    trust1Title: "Almacenado en Tu Dispositivo",
+      "Privacidad por diseño. Construimos Benefind para protegerle, no para lucrar con usted.",
+    trust1Title: "Almacenado en Su Dispositivo",
     trust1Desc:
-      "Tus respuestas de evaluación permanecen en tu dispositivo y nunca se envían a nuestros servidores. No podemos verlas, aunque quisiéramos.",
-    trust2Title: "Nunca Vendemos Tus Datos",
+      "Sus respuestas de evaluación permanecen en su dispositivo y nunca se envían a nuestros servidores. No podemos verlas, aunque quisiéramos.",
+    trust2Title: "Nunca Vendemos Sus Datos",
     trust2Desc:
       "Ni a anunciantes. Ni a corredores de datos. Ni a nadie, nunca. Eso es una promesa.",
     trust3Title: "Código Abierto y Transparente",
@@ -519,7 +519,7 @@ const es: CoreDictionary = {
       },
     ],
     // Final CTA
-    ctaHeadline: "Podrías Estar Dejando Miles de Dólares Sobre la Mesa",
+    ctaHeadline: "Podría Estar Dejando Miles de Dólares Sobre la Mesa",
     ctaDesc:
       "Tanto individuos como empresas califican para programas que nunca reclaman. Ya sean beneficios personales o subvenciones empresariales, solo hay una forma de averiguarlo.",
     ctaFree: "Gratis. 5 minutos. Sin registro. 100% privado.",
