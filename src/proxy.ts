@@ -1,21 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 import { createServerClient } from "@supabase/ssr";
-
-const PUBLIC_PATHS = [
-  "/",
-  "/auth",
-  "/screening",
-  "/results",
-  "/programs",
-  "/docs",
-  "/blog",
-  "/api/health",
-  // Authenticated by CRON_SECRET and a signed token, not a session
-  "/api/cron",
-  "/api/alerts/unsubscribe",
-  "/sitemap.xml",
-];
+import { isProtectedPath } from "@/lib/auth/protected-paths";
 
 /**
  * Routes where authenticated users should be redirected to /dashboard.
@@ -27,9 +13,7 @@ const AUTH_REDIRECT_PATHS = ["/results", "/auth/login"];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const isPublic = PUBLIC_PATHS.some(
-    (p) => pathname === p || pathname.startsWith(p + "/"),
-  );
+  const isPublic = !isProtectedPath(pathname);
 
   // Always refresh the session cookie
   const response = await updateSession(request);
