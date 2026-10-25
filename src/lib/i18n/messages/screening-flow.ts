@@ -130,6 +130,11 @@ const en = {
       "These are estimates. Actual amounts depend on your situation and state.",
     viewFull: "View Full Results",
     startOver: "Start Over",
+    matchesOne: "You may qualify for {count} program",
+    matchesOther: "You may qualify for {count} programs",
+    noMatches: "No strong matches right now",
+    noMatchesDetail:
+      "The full results show every program we checked and why. Re-screen when your situation changes.",
   },
   panel: {
     signedInAs: "Signed in as {email}",
@@ -138,6 +143,8 @@ const en = {
     headline: "Here's what's about to happen",
     intro:
       "A short conversation is all it takes. No account needed. No paperwork. Just answers.",
+    introSignedIn:
+      "A short conversation is all it takes. No paperwork. Just answers.",
     stepLabel: "Step {n}",
     step1Label: "Answer a few questions",
     step1Desc:
@@ -149,7 +156,9 @@ const en = {
     step3Desc:
       "View every program you qualify for, with estimated amounts and next steps.",
     privacy:
-      "Your answers are stored locally on your device and never sent to a server. This is a screening tool, not a formal application.",
+      "Your answers stay in this browser and are checked here. They reach our servers only if you create an account or sign in to save your results. This screening does not submit an application.",
+    privacySignedIn:
+      "Your answers and results are saved to your Benefind account, so you can re-screen and track programs later. This screening does not submit an application.",
     programsCount:
       "Checks eligibility across {highlight} including SNAP, Medicaid, WIC, SSI, and more.",
     programsHighlight: "12+ federal and state programs",
@@ -295,6 +304,11 @@ const es: ScreeningFlowMessages = {
       "Son cálculos aproximados. Las cantidades reales dependen de su situación y de su estado.",
     viewFull: "Ver todos los resultados",
     startOver: "Empezar de nuevo",
+    matchesOne: "Usted podría calificar para {count} programa",
+    matchesOther: "Usted podría calificar para {count} programas",
+    noMatches: "Por ahora no hay coincidencias claras",
+    noMatchesDetail:
+      "Los resultados completos muestran cada programa que revisamos y el motivo. Vuelva a evaluarse cuando cambie su situación.",
   },
   panel: {
     signedInAs: "Sesión iniciada como {email}",
@@ -303,6 +317,8 @@ const es: ScreeningFlowMessages = {
     headline: "Esto es lo que va a pasar",
     intro:
       "Solo hace falta una conversación corta. No necesita cuenta. Sin papeleo. Solo respuestas.",
+    introSignedIn:
+      "Solo hace falta una conversación corta. Sin papeleo. Solo respuestas.",
     stepLabel: "Paso {n}",
     step1Label: "Responda unas preguntas",
     step1Desc:
@@ -314,7 +330,9 @@ const es: ScreeningFlowMessages = {
     step3Desc:
       "Vea cada programa para el que califica, con cantidades aproximadas y los próximos pasos.",
     privacy:
-      "Sus respuestas se guardan solo en su dispositivo y nunca se envían a un servidor. Esta es una herramienta de evaluación, no una solicitud oficial.",
+      "Sus respuestas se quedan en este navegador y se revisan aquí. Solo llegan a nuestros servidores si usted crea una cuenta o inicia sesión para guardar sus resultados. Esta evaluación no presenta ninguna solicitud.",
+    privacySignedIn:
+      "Sus respuestas y resultados se guardan en su cuenta de Benefind, para que pueda volver a evaluarse y dar seguimiento a los programas. Esta evaluación no presenta ninguna solicitud.",
     programsCount:
       "Revisa su elegibilidad en {highlight}, como SNAP (cupones de alimentos), Medicaid, WIC, SSI y más.",
     programsHighlight: "más de 12 programas federales y estatales",
@@ -446,6 +464,11 @@ const zh: ScreeningFlowMessages = {
     disclaimer: "以上为估算。实际金额取决于您的情况和所在州。",
     viewFull: "查看完整结果",
     startOver: "重新开始",
+    matchesOne: "您可能符合 {count} 个项目的条件",
+    matchesOther: "您可能符合 {count} 个项目的条件",
+    noMatches: "目前没有明确匹配的项目",
+    noMatchesDetail:
+      "完整结果列出了我们核对的每个项目及原因。情况有变化时，请重新筛查。",
   },
   panel: {
     signedInAs: "已登录：{email}",
@@ -453,6 +476,7 @@ const zh: ScreeningFlowMessages = {
     tagline: "为您打造的福利向导",
     headline: "接下来会发生什么",
     intro: "只需简短对话。无需账户。无需填表。直接得到答案。",
+    introSignedIn: "只需简短对话。无需填表。直接得到答案。",
     stepLabel: "第 {n} 步",
     step1Label: "回答几个问题",
     step1Desc: "家庭人数、收入和居住地。大约需要 3 分钟。",
@@ -461,7 +485,9 @@ const zh: ScreeningFlowMessages = {
     step3Label: "查看结果",
     step3Desc: "查看您符合资格的每个项目，包括估计金额和后续步骤。",
     privacy:
-      "您的回答只保存在您的设备上，绝不会发送到服务器。这是一个筛查工具，不是正式申请。",
+      "您的回答保留在此浏览器中，并在这里完成核对。只有当您创建账户或登录以保存结果时，回答才会发送到我们的服务器。此筛查不会提交任何申请。",
+    privacySignedIn:
+      "您的回答和结果会保存到您的 Benefind 账户，方便您以后重新筛查并跟进各个项目。此筛查不会提交任何申请。",
     programsCount:
       "检查 {highlight} 的资格，包括 SNAP（食品券）、Medicaid、WIC、SSI 等。",
     programsHighlight: "12 个以上联邦和州项目",
@@ -607,6 +633,11 @@ const vi: ScreeningFlowMessages = {
       "Đây là số ước tính. Số tiền thực tế tùy vào hoàn cảnh và tiểu bang của quý vị.",
     viewFull: "Xem toàn bộ kết quả",
     startOver: "Làm lại từ đầu",
+    matchesOne: "Quý vị có thể đủ điều kiện cho {count} chương trình",
+    matchesOther: "Quý vị có thể đủ điều kiện cho {count} chương trình",
+    noMatches: "Hiện chưa có chương trình phù hợp rõ ràng",
+    noMatchesDetail:
+      "Kết quả đầy đủ liệt kê từng chương trình chúng tôi đã kiểm tra và lý do. Hãy kiểm tra lại khi hoàn cảnh của quý vị thay đổi.",
   },
   panel: {
     signedInAs: "Đã đăng nhập: {email}",
@@ -615,6 +646,8 @@ const vi: ScreeningFlowMessages = {
     headline: "Đây là những gì sắp diễn ra",
     intro:
       "Chỉ cần một cuộc trò chuyện ngắn. Không cần tài khoản. Không giấy tờ. Chỉ có câu trả lời.",
+    introSignedIn:
+      "Chỉ cần một cuộc trò chuyện ngắn. Không giấy tờ. Chỉ có câu trả lời.",
     stepLabel: "Bước {n}",
     step1Label: "Trả lời vài câu hỏi",
     step1Desc:
@@ -626,7 +659,9 @@ const vi: ScreeningFlowMessages = {
     step3Desc:
       "Xem mọi chương trình quý vị đủ điều kiện, kèm số tiền ước tính và các bước tiếp theo.",
     privacy:
-      "Câu trả lời của quý vị chỉ được lưu trên thiết bị của quý vị và không bao giờ gửi lên máy chủ. Đây là công cụ kiểm tra, không phải đơn đăng ký chính thức.",
+      "Câu trả lời của quý vị được giữ và kiểm tra ngay trong trình duyệt này. Chúng chỉ được gửi đến máy chủ của chúng tôi khi quý vị tạo tài khoản hoặc đăng nhập để lưu kết quả. Công cụ kiểm tra này không nộp đơn đăng ký nào.",
+    privacySignedIn:
+      "Câu trả lời và kết quả của quý vị được lưu vào tài khoản Benefind, để quý vị có thể kiểm tra lại và theo dõi các chương trình sau này. Công cụ kiểm tra này không nộp đơn đăng ký nào.",
     programsCount:
       "Kiểm tra điều kiện với {highlight}, gồm SNAP (phiếu thực phẩm), Medicaid, WIC, SSI và nhiều chương trình khác.",
     programsHighlight: "hơn 12 chương trình liên bang và tiểu bang",
@@ -764,6 +799,11 @@ const ar: ScreeningFlowMessages = {
     disclaimer: "هذه تقديرات. تعتمد المبالغ الفعلية على وضعك وولايتك.",
     viewFull: "عرض النتائج كاملة",
     startOver: "البدء من جديد",
+    matchesOne: "قد تكون مؤهلًا لبرنامج واحد",
+    matchesOther: "قد تكون مؤهلًا لـ {count} برامج",
+    noMatches: "لا توجد مطابقات واضحة حاليًا",
+    noMatchesDetail:
+      "تعرض النتائج الكاملة كل برنامج فحصناه والسبب. أعد الفحص عندما يتغير وضعك.",
   },
   panel: {
     signedInAs: "مسجّل الدخول باسم {email}",
@@ -771,6 +811,7 @@ const ar: ScreeningFlowMessages = {
     tagline: "دليل المساعدات، مصمم لك",
     headline: "إليك ما سيحدث الآن",
     intro: "كل ما يلزم محادثة قصيرة. لا حاجة إلى حساب. لا أوراق. فقط إجابات.",
+    introSignedIn: "كل ما يلزم محادثة قصيرة. لا أوراق. فقط إجابات.",
     stepLabel: "الخطوة {n}",
     step1Label: "أجب عن بعض الأسئلة",
     step1Desc: "عدد أفراد الأسرة والدخل ومكان السكن. يستغرق حوالي 3 دقائق.",
@@ -781,7 +822,9 @@ const ar: ScreeningFlowMessages = {
     step3Desc:
       "اعرض كل برنامج أنت مؤهل له، مع المبالغ التقديرية والخطوات التالية.",
     privacy:
-      "تُحفظ إجاباتك على جهازك فقط ولا تُرسل أبدًا إلى أي خادم. هذه أداة فحص وليست طلبًا رسميًا.",
+      "تبقى إجاباتك في هذا المتصفح ويتم فحصها هنا. لا تصل إلى خوادمنا إلا إذا أنشأت حسابًا أو سجّلت الدخول لحفظ نتائجك. هذا الفحص لا يقدّم أي طلب.",
+    privacySignedIn:
+      "تُحفظ إجاباتك ونتائجك في حسابك على Benefind، حتى تتمكن من إعادة الفحص ومتابعة البرامج لاحقًا. هذا الفحص لا يقدّم أي طلب.",
     programsCount:
       "يفحص الأهلية لـ {highlight}، ومنها SNAP (قسائم الطعام) وMedicaid وWIC وSSI وغيرها.",
     programsHighlight: "أكثر من 12 برنامجًا فيدراليًا وولائيًا",
