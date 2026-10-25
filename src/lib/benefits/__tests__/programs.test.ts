@@ -5,6 +5,8 @@ import { eitc } from "../programs/eitc";
 import { runScreening } from "../engine";
 import { isEvaluation } from "../scoring";
 import type { ScreeningInput } from "../types";
+import { PURSUABLE_TIERS } from "../types";
+import { answersToScreeningInput } from "../../screening/steps";
 
 // Sample inputs for common scenarios
 const lowIncomeFamily: ScreeningInput = {
@@ -65,6 +67,29 @@ const pregnantLowIncome: ScreeningInput = {
   monthlyIncome: 2000,
   isEmployed: true,
 };
+
+// 2-person, $250k Oregon household with no children, with optional overrides.
+function oregon250k(overrides: Record<string, string> = {}): ScreeningInput {
+  return answersToScreeningInput({
+    state: "OR",
+    householdSize: "2",
+    hasChildren: "no",
+    annualIncome: "250000",
+    isEmployed: "yes",
+    hasHealthInsurance: "all",
+    monthlyRent: "3750",
+    specialCircumstances: "none",
+    ...overrides,
+  });
+}
+
+function scoreFor(input: ScreeningInput, programId: string) {
+  const p = runScreening(input).programs.find(
+    (x) => x.program.id === programId,
+  );
+  expect(p).toBeDefined();
+  return p!.result;
+}
 
 describe("SNAP — refactored to EligibilityEvaluation", () => {
   it("returns EligibilityEvaluation shape, not legacy", () => {
@@ -160,6 +185,105 @@ describe("Medicaid — refactored to EligibilityEvaluation", () => {
     expect(m).toBeDefined();
     expect(m!.result.confidenceScore).toBe(0);
   });
+
+  it("income over the limit vetoes Medicaid for a 2-person, $250k household", () => {
+    const m = scoreFor(oregon250k(), "medicaid");
+    expect(m.confidenceScore).toBe(0);
+    expect(m.eligibilityTier).toBe("ineligible");
+  });
+
+  it("low-income adult in an expansion state matches", () => {
+    const m = scoreFor(oregon250k({ annualIncome: "15000" }), "medicaid");
+    expect(PURSUABLE_TIERS.has(m.eligibilityTier)).toBe(true);
+  });
+
+  it("pregnancy and children above 400% FPL are vetoed", () => {
+    expect(
+      scoreFor(oregon250k({ specialCircumstances: "pregnant" }), "medicaid")
+        .confidenceScore,
+    ).toBe(0);
+    expect(
+      scoreFor(
+        oregon250k({
+          householdSize: "3",
+          hasChildren: "yes",
+          childrenAges: "2",
+        }),
+        "medicaid",
+      ).confidenceScore,
+    ).toBe(0);
+  });
+
+  it("pregnancy between the pathway limit and 400% FPL is not vetoed", () => {
+    // 2-person household at ~300% FPL: above the 200% model limit, but
+    // several states cover pregnancy at this level.
+    const m = scoreFor(
+      oregon250k({ annualIncome: "63000", specialCircumstances: "pregnant" }),
+      "medicaid",
+    );
+    expect(m.confidenceScore).toBeGreaterThan(0);
+  });
+
+  it("$250k with a disability is maybe eligible (buy-in), not pursuable", () => {
+    // Some states run Medicaid buy-in for workers with disabilities with no
+    // income cap, so the income rule does not veto. The typical 250% FPL
+    // buy-in limit fails, which keeps the match out of pursuable tiers.
+    const m = scoreFor(
+      oregon250k({ specialCircumstances: "disabled" }),
+      "medicaid",
+    );
+    expect(m.eligibilityTier).toBe("maybe_eligible");
+    const buyIn = m.reasons.rules.find(
+      (r) => r.name === "disability_buy_in_income",
+    );
+    expect(buyIn?.passed).toBe(false);
+  });
+
+  it("working adult with a disability under 250% FPL is pursuable", () => {
+    const m = scoreFor(
+      oregon250k({ annualIncome: "40000", specialCircumstances: "disabled" }),
+      "medicaid",
+    );
+    expect(PURSUABLE_TIERS.has(m.eligibilityTier)).toBe(true);
+  });
+});
+
+describe("Income ceilings on categorical programs", () => {
+  it("CHIP and WIC are vetoed for a $250k household with a toddler", () => {
+    const input = oregon250k({
+      householdSize: "3",
+      hasChildren: "yes",
+      childrenAges: "2",
+    });
+    expect(scoreFor(input, "chip").confidenceScore).toBe(0);
+    expect(scoreFor(input, "wic").confidenceScore).toBe(0);
+  });
+
+  it("WIC is vetoed for a pregnant member at $250k", () => {
+    expect(
+      scoreFor(oregon250k({ specialCircumstances: "pregnant" }), "wic")
+        .confidenceScore,
+    ).toBe(0);
+  });
+
+  it("SNAP net income test vetoes elderly or disabled households at $250k", () => {
+    for (const c of ["elderly", "disabled"]) {
+      expect(
+        scoreFor(oregon250k({ specialCircumstances: c }), "snap")
+          .confidenceScore,
+      ).toBe(0);
+    }
+  });
+
+  it("SNAP is not vetoed for a disabled household near the net limit", () => {
+    // ~189% FPL gross; the uncapped shelter deduction the estimate leaves
+    // out can bring net income under 100% FPL.
+    const s = scoreFor(
+      oregon250k({ annualIncome: "40000", specialCircumstances: "disabled" }),
+      "snap",
+    );
+    expect(s.confidenceScore).toBeGreaterThan(0);
+  });
 });
 
 describe("EITC — refactored to EligibilityEvaluation", () => {
@@ -204,6 +328,39 @@ describe("EITC — refactored to EligibilityEvaluation", () => {
       (s) => s.name === "state_has_matching_eitc",
     );
     expect(txSignal?.matched).toBe(false);
+  });
+
+  it("income over the limit vetoes EITC for a 2-person, $250k household", () => {
+    const input = answersToScreeningInput({
+      state: "OR",
+      householdSize: "2",
+      hasChildren: "no",
+      annualIncome: "250000",
+      isEmployed: "yes",
+      hasHealthInsurance: "all",
+      monthlyRent: "3750",
+      specialCircumstances: "none",
+    });
+    const result = runScreening(input);
+    const e = result.programs.find((p) => p.program.id === "eitc");
+    expect(e!.result.confidenceScore).toBe(0);
+    expect(e!.result.eligibilityTier).toBe("ineligible");
+    expect(
+      result.programs.filter((p) =>
+        PURSUABLE_TIERS.has(p.result.eligibilityTier),
+      ),
+    ).toEqual([]);
+    expect(result.totalEstimatedAnnual).toBe(0);
+  });
+
+  it("childless filer outside ages 25-64 is vetoed", () => {
+    const young: ScreeningInput = {
+      ...highIncomeSingle,
+      householdMembers: [{ age: 22, relationship: "self", isCitizen: true }],
+      monthlyIncome: 1000,
+    };
+    const e = runScreening(young).programs.find((p) => p.program.id === "eitc");
+    expect(e!.result.confidenceScore).toBe(0);
   });
 });
 

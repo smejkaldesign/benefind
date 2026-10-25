@@ -1143,6 +1143,19 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      create_screening: {
+        Args: {
+          p_workspace_id: string;
+          p_answers: Json;
+          p_engine_version: string;
+          p_state: string | null;
+          p_zip: string | null;
+          p_household_size: number | null;
+          p_language: string;
+          p_results: Json;
+        };
+        Returns: string;
+      };
       is_admin: { Args: never; Returns: boolean };
       is_workspace_member: { Args: { ws_id: string }; Returns: boolean };
     };

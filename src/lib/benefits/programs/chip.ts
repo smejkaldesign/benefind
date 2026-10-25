@@ -6,7 +6,7 @@ import type {
   ScreeningInput,
   Signal,
 } from "../types";
-import { getFPL, isBelowFPLPercent } from "../types";
+import { CATEGORICAL_FPL_CEILING, getFPL, isBelowFPLPercent } from "../types";
 
 export const chip: BenefitProgram = {
   id: "chip",
@@ -59,6 +59,12 @@ export const chip: BenefitProgram = {
         label: "Income below 250% of FPL (varies by state, some up to 300%)",
         passed: isBelowFPLPercent(annualIncome, input.householdSize, 250),
         weight: 30,
+        // States vary up to the categorical ceiling; above it no CHIP plan applies.
+        veto: !isBelowFPLPercent(
+          annualIncome,
+          input.householdSize,
+          CATEGORICAL_FPL_CEILING,
+        ),
         actual: `${incomePercent}% FPL`,
         threshold: "≤250% FPL",
       },

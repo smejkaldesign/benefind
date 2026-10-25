@@ -292,22 +292,29 @@ function ScreeningPageInner() {
             );
           } catch {}
 
-          // Persist to database if authenticated
-          const persisted = persistScreening({
-            answers: newAnswers,
-            engineVersion: ENGINE_VERSION,
-            state: newAnswers.state,
-            householdSize: parseInt(newAnswers.householdSize) || undefined,
-            results: screeningResult.programs.map((p) => ({
-              programId: p.program.id,
-              confidenceScore: p.result.confidenceScore,
-              eligibilityTier: p.result.eligibilityTier,
-              estimatedValue: p.result.estimatedMonthlyValue
-                ? `$${p.result.estimatedMonthlyValue}/mo`
-                : null,
-              reasons: p.result.reasons as unknown as Record<string, unknown>,
-            })),
-          }).catch(() => ({ screeningId: null }));
+          // Only signed-in answers go to the server. Signed-out answers stay
+          // in sessionStorage until PersistScreeningOnMount saves them after
+          // signup.
+          const persisted = signedInEmail
+            ? persistScreening({
+                answers: newAnswers,
+                engineVersion: ENGINE_VERSION,
+                state: newAnswers.state,
+                householdSize: parseInt(newAnswers.householdSize) || undefined,
+                results: screeningResult.programs.map((p) => ({
+                  programId: p.program.id,
+                  confidenceScore: p.result.confidenceScore,
+                  eligibilityTier: p.result.eligibilityTier,
+                  estimatedValue: p.result.estimatedMonthlyValue
+                    ? `$${p.result.estimatedMonthlyValue}/mo`
+                    : null,
+                  reasons: p.result.reasons as unknown as Record<
+                    string,
+                    unknown
+                  >,
+                })),
+              }).catch(() => ({ screeningId: null }))
+            : Promise.resolve({ screeningId: null });
 
           const eligible = screeningResult.programs.filter((p) =>
             PURSUABLE_TIERS.has(p.result.eligibilityTier),
@@ -342,12 +349,12 @@ function ScreeningPageInner() {
             addMessage("assistant", m.chat.notEligible);
             if (signedInEmail) {
               persisted.then(({ screeningId }) => {
-                if (screeningId) {
-                  addMessage(
-                    "assistant",
-                    fmt(m.chat.savedRescreen, { email: signedInEmail }),
-                  );
-                }
+                addMessage(
+                  "assistant",
+                  screeningId
+                    ? fmt(m.chat.savedRescreen, { email: signedInEmail })
+                    : m.chat.saveFailed,
+                );
                 setShowResults(true);
               });
               return;
@@ -652,7 +659,10 @@ function ScreeningPageInner() {
         {!result && !showSignupGate && currentStepData && (
           <div className="sticky bottom-0 border-t border-border bg-surface/80 px-6 py-4 backdrop-blur-[30px]">
             <div className="mx-auto max-w-xl">
+              {/* Keyed per step so each step mounts with its prefilled answer;
+                  prefillLoaded covers a first step shown before answers load. */}
               <StepInput
+                key={`${currentStepData.id}-${prefillLoaded}`}
                 step={currentStepData}
                 onSubmit={handleAnswer}
                 isSecondary={hasInlineOptions(currentStepData)}
@@ -669,20 +679,32 @@ function ScreeningPageInner() {
             <div className="mx-auto max-w-xl space-y-4">
               <div className="rounded-[16px] border border-brand/30 bg-brand/5 p-5 text-center space-y-2">
                 <p className="font-display text-3xl font-semibold text-brand">
-                  {fmt(m.results.perMonth, {
-                    amount: result.totalEstimatedMonthly.toLocaleString(),
-                  })}
+                  {pursuableCount === 0
+                    ? m.results.noMatches
+                    : result.totalEstimatedMonthly > 0
+                      ? fmt(m.results.perMonth, {
+                          amount: result.totalEstimatedMonthly.toLocaleString(),
+                        })
+                      : fmt(
+                          pursuableCount === 1
+                            ? m.results.matchesOne
+                            : m.results.matchesOther,
+                          { count: pursuableCount },
+                        )}
                 </p>
                 <p className="text-sm text-text-muted">
-                  {fmt(
-                    pursuableCount === 1
-                      ? m.results.annualOne
-                      : m.results.annualOther,
-                    {
-                      amount: result.totalEstimatedAnnual.toLocaleString(),
-                      count: pursuableCount,
-                    },
-                  )}
+                  {pursuableCount === 0
+                    ? m.results.noMatchesDetail
+                    : result.totalEstimatedMonthly > 0 &&
+                      fmt(
+                        pursuableCount === 1
+                          ? m.results.annualOne
+                          : m.results.annualOther,
+                        {
+                          amount: result.totalEstimatedAnnual.toLocaleString(),
+                          count: pursuableCount,
+                        },
+                      )}
                 </p>
                 <div className="flex flex-wrap justify-center gap-1.5 pt-1">
                   {result.programs
@@ -784,7 +806,7 @@ function ScreeningPageInner() {
             {m.panel.headline}
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-white/70 max-w-xs">
-            {m.panel.intro}
+            {signedInEmail ? m.panel.introSignedIn : m.panel.intro}
           </p>
 
           {/* Steps */}
@@ -811,7 +833,7 @@ function ScreeningPageInner() {
           <div className="mt-12 flex items-start gap-3 rounded-[16px] border border-white/20 bg-white/10 px-4 py-3.5 backdrop-blur-md">
             <Lock className="h-4 w-4 text-white/80 mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed text-white/80">
-              {m.panel.privacy}
+              {signedInEmail ? m.panel.privacySignedIn : m.panel.privacy}
             </p>
           </div>
 
