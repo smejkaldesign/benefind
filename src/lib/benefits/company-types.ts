@@ -125,27 +125,30 @@ export function isSmallBusiness(range: EmployeeRange): boolean {
 }
 
 /**
- * Parse a human-readable estimatedValue string into a numeric annual value.
+ * Parse a human-readable estimatedValue string into a dollar amount.
  * Handles formats like:
  *   "$48K-$96K/year"  → midpoint 72000
  *   "$150K"           → 150000
  *   "$2.1M"           → 2100000
- *   "$12K-$30K/year"  → 21000
+ *   "$1,500,000"      → 1500000
  *   "Up to $250K"     → 250000
  *
- * Returns 0 if the string can't be parsed.
+ * Only "$" amounts count. Percentages ("30% of clean energy investment")
+ * and per-unit rates ("$0.59-$1.19/sq ft") have no fixed dollar value
+ * without the company's spend or square footage, so they return 0, as does
+ * anything unparseable.
  */
 export function parseEstimatedValue(value: string | undefined): number {
   if (!value) return 0;
+  if (/%|\/\s*(sq|unit|hour|hr|employee)|\bper\b/i.test(value)) return 0;
 
-  // Find all numeric tokens with optional K/M suffix
-  const matches = value.match(/\$?(\d+(?:\.\d+)?)\s*([KkMm]?)/g);
-  if (!matches || matches.length === 0) return 0;
+  const matches = [...value.matchAll(/\$\s*(\d[\d,]*(?:\.\d+)?)\s*([KkMm])?/g)];
+  if (matches.length === 0) return 0;
 
-  const numbers = matches.map((m) => {
-    const num = parseFloat(m.replace(/[$,]/g, ""));
-    if (/M/i.test(m)) return num * 1_000_000;
-    if (/K/i.test(m)) return num * 1_000;
+  const numbers = matches.map(([, digits, suffix]) => {
+    const num = parseFloat(digits!.replace(/,/g, ""));
+    if (suffix && /m/i.test(suffix)) return num * 1_000_000;
+    if (suffix && /k/i.test(suffix)) return num * 1_000;
     return num;
   });
 
@@ -157,12 +160,20 @@ export function parseEstimatedValue(value: string | undefined): number {
 }
 
 /**
- * Sum estimated annual values across all eligible programs.
+ * Sum estimated dollar values across eligible programs that are accepting
+ * applications. Paused or expired programs (e.g. SBIR Phase II) still appear
+ * in results but would inflate the headline total with money the company
+ * cannot apply for today.
  */
 export function totalEstimatedAnnualValue(
-  programs: { result: { eligible: boolean; estimatedValue?: string } }[],
+  programs: {
+    program?: { status?: CompanyProgram["status"] };
+    result: { eligible: boolean; estimatedValue?: string };
+  }[],
 ): number {
   return programs
-    .filter((p) => p.result.eligible)
+    .filter(
+      (p) => p.result.eligible && (p.program?.status ?? "active") === "active",
+    )
     .reduce((sum, p) => sum + parseEstimatedValue(p.result.estimatedValue), 0);
 }
