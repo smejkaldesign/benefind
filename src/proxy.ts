@@ -11,6 +11,8 @@ const PUBLIC_PATHS = [
   "/docs",
   "/blog",
   "/api/health",
+  // Stripe calls this without a session; the route verifies the signature.
+  "/api/webhooks",
   "/sitemap.xml",
 ];
 
