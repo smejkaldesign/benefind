@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PersistScreeningOnMount } from "@/components/screening/persist-on-mount";
+import { EmailAlertsToggle } from "@/components/dashboard/email-alerts-toggle";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import {
@@ -138,6 +139,8 @@ export default async function DashboardPage() {
               </Button>
             </Link>
           </div>
+
+          <EmailAlertsToggle />
 
           {/* Screening history */}
           {history && history.length > 1 && (
