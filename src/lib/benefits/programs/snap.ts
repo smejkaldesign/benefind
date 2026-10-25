@@ -90,6 +90,12 @@ export const snap: BenefitProgram = {
         label: "Net income (after deductions) below 100% of FPL",
         passed: isBelowFPLPercent(netAnnual, input.householdSize, 100),
         weight: 25,
+        // Elderly/disabled households skip the gross test, so the net test is
+        // their income limit. The estimate leaves out the uncapped shelter and
+        // medical deductions they get, so only veto at twice the limit.
+        veto:
+          hasElderlyOrDisabled &&
+          !isBelowFPLPercent(netAnnual, input.householdSize, 200),
         actual: `${netIncomePercent}% FPL (estimated)`,
         threshold: "≤100% FPL",
       },

@@ -6,7 +6,7 @@ import type {
   ScreeningInput,
   Signal,
 } from "../types";
-import { getFPL, isBelowFPLPercent } from "../types";
+import { CATEGORICAL_FPL_CEILING, getFPL, isBelowFPLPercent } from "../types";
 
 // States that have NOT expanded Medicaid under the ACA.
 // Source: KFF "Status of State Medicaid Expansion Decisions" + CBPP tracker.
@@ -91,6 +91,27 @@ export const medicaid: BenefitProgram = {
       !hasDisabled &&
       !hasElderly;
 
+    // The income limit is a hard stop unless a categorical pathway allows
+    // more. Pregnancy, child, and aged pathways top out at the categorical
+    // ceiling in every state. Disability has no veto: a few states run
+    // Medicaid buy-in programs for workers with disabilities with no income
+    // cap, so the buy-in rule below scores it instead.
+    const incomeUnderThreshold = isBelowFPLPercent(
+      annualIncome,
+      input.householdSize,
+      threshold,
+    );
+    const hasCategoricalPathway = hasPregnant || hasChildren || hasElderly;
+    const incomeVeto =
+      !hasDisabled &&
+      (!hasCategoricalPathway ||
+        !isBelowFPLPercent(
+          annualIncome,
+          input.householdSize,
+          CATEGORICAL_FPL_CEILING,
+        ));
+    const buyInApplies = hasDisabled && !incomeUnderThreshold;
+
     const rules: RuleResult[] = [
       {
         name: "has_citizen_or_eligible_immigrant",
@@ -105,8 +126,9 @@ export const medicaid: BenefitProgram = {
       {
         name: "income_under_applicable_fpl",
         label: `Income below ${threshold}% FPL for the ${pathway.replace(/_/g, " ")} pathway`,
-        passed: isBelowFPLPercent(annualIncome, input.householdSize, threshold),
+        passed: incomeUnderThreshold,
         weight: 50,
+        veto: incomeVeto,
         actual: `${incomePercent}% FPL`,
         threshold: `≤${threshold}% FPL`,
       },
@@ -130,6 +152,21 @@ export const medicaid: BenefitProgram = {
           ? `${input.state} has not expanded Medicaid`
           : "Has alternate pathway",
         threshold: "Required for childless adult eligibility",
+      },
+      {
+        name: "disability_buy_in_income",
+        label: buyInApplies
+          ? "Working, with income below 250% FPL (typical Medicaid buy-in limit for workers with disabilities)"
+          : "Not applicable (income is within the pathway limit)",
+        passed:
+          !buyInApplies ||
+          (input.isEmployed !== false &&
+            isBelowFPLPercent(annualIncome, input.householdSize, 250)),
+        weight: buyInApplies ? 30 : 0,
+        actual: buyInApplies
+          ? `${incomePercent}% FPL, ${input.isEmployed === false ? "not working" : "working"}`
+          : "Within pathway limit",
+        threshold: "≤250% FPL and working",
       },
     ];
 
@@ -189,6 +226,8 @@ export const medicaid: BenefitProgram = {
         "Medicaid requires at least one household member to be a US citizen or qualified immigrant.";
     } else if (!gapPass) {
       reason = `You may fall into the Medicaid coverage gap in ${input.state}. Childless adults without Medicaid expansion have limited options — check ACA marketplace subsidies instead.`;
+    } else if (!incomePass && hasDisabled) {
+      reason = `Your income (${incomePercent}% FPL) is above the ${threshold}% threshold for the ${pathway.replace(/_/g, " ")} pathway. Some states offer Medicaid buy-in for working people with disabilities at higher incomes; check your state's limit.`;
     } else if (!incomePass) {
       reason = `Your income (${incomePercent}% FPL) is above the ${threshold}% threshold for the ${pathway.replace(/_/g, " ")} pathway. Check ACA marketplace subsidies.`;
     } else {
