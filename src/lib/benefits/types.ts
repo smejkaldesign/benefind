@@ -239,6 +239,13 @@ export function getFPL(householdSize: number): number {
   return FPL_2025[8]! + (householdSize - 8) * 5500;
 }
 
+/**
+ * Highest income limit any state sets for pregnancy, child, or aged
+ * Medicaid/CHIP pathways (the top states sit near 380-405% FPL). Above
+ * this, those pathways and the WIC adjunctive route they open are closed.
+ */
+export const CATEGORICAL_FPL_CEILING = 400;
+
 /** Check if income is below X% of FPL */
 export function isBelowFPLPercent(
   annualIncome: number,
