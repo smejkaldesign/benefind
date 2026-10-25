@@ -659,7 +659,10 @@ function ScreeningPageInner() {
         {!result && !showSignupGate && currentStepData && (
           <div className="sticky bottom-0 border-t border-border bg-surface/80 px-6 py-4 backdrop-blur-[30px]">
             <div className="mx-auto max-w-xl">
+              {/* Keyed per step so each step mounts with its prefilled answer;
+                  prefillLoaded covers a first step shown before answers load. */}
               <StepInput
+                key={`${currentStepData.id}-${prefillLoaded}`}
                 step={currentStepData}
                 onSubmit={handleAnswer}
                 isSecondary={hasInlineOptions(currentStepData)}
