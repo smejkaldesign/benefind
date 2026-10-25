@@ -4,27 +4,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { User, Building2, ArrowLeft } from "lucide-react";
 import { LandingNav } from "@/components/landing-nav";
+import { useI18n } from "@/lib/i18n/context";
 
-const tracks = [
-  {
-    id: "individual",
-    href: "/screening",
-    icon: User,
-    title: "Individual",
-    description: "Personal benefits, tax credits, and assistance programs",
-    examples: "SNAP, Medicaid, EITC, WIC, Section 8, Pell Grant",
-  },
-  {
-    id: "company",
-    href: "/screening/company",
-    icon: Building2,
-    title: "Company",
-    description: "Grants, tax credits, and incentives for your business",
-    examples: "R&D Credit, SBIR, WOTC, Workforce Training, Export Grants",
-  },
+const trackMeta = [
+  { id: "individual", href: "/screening", icon: User },
+  { id: "company", href: "/screening/company", icon: Building2 },
 ] as const;
 
 export default function GetStartedPage() {
+  const { t } = useI18n();
+  const g = t.marketing.getStarted;
+  const tracks = trackMeta.map((meta) => ({ ...meta, ...g[meta.id] }));
   return (
     <>
       <LandingNav />
@@ -35,25 +25,23 @@ export default function GetStartedPage() {
             href="/"
             className="mb-8 inline-flex items-center gap-1.5 text-sm text-text-subtle hover:text-text-muted transition-colors"
           >
-            <ArrowLeft className="h-4 w-4" />
-            Back
+            <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" />
+            {t.common.back}
           </Link>
 
           {/* Header */}
           <div className="mb-10">
             <Image
               src="/images/brand/logo-light.svg"
-              alt="Benefind"
+              alt={t.common.appName}
               width={100}
               height={18}
               className="mb-4"
             />
             <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-text sm:text-4xl">
-              What are you looking for?
+              {g.title}
             </h1>
-            <p className="mt-2 text-base text-text-muted">
-              Choose your path. Both take about 3 minutes.
-            </p>
+            <p className="mt-2 text-base text-text-muted">{g.subtitle}</p>
           </div>
 
           {/* Track cards */}
@@ -79,8 +67,8 @@ export default function GetStartedPage() {
                     {track.examples}
                   </p>
                   <div className="mt-4 flex items-center gap-1 text-sm font-medium text-brand opacity-0 transition-opacity group-hover:opacity-100">
-                    Get started
-                    <ArrowLeft className="h-3.5 w-3.5 rotate-180" />
+                    {g.cta}
+                    <ArrowLeft className="h-3.5 w-3.5 rotate-180 rtl:rotate-0" />
                   </div>
                 </Link>
               );
@@ -89,8 +77,7 @@ export default function GetStartedPage() {
 
           {/* Privacy note */}
           <p className="mt-8 text-center text-xs text-text-subtle">
-            Your answers are stored locally on your device and never sent to a
-            server. No account required.
+            {g.privacy}
           </p>
         </div>
       </div>

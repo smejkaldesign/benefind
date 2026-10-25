@@ -70,7 +70,7 @@ export function LandingNav() {
           {!isDocsRoute && (
             <nav
               className="hidden items-center gap-4 md:flex"
-              aria-label="Main"
+              aria-label={t.marketing.nav.mainLabel}
             >
               <Link
                 href="/tools"
@@ -80,7 +80,7 @@ export function LandingNav() {
                     : "text-text-muted"
                 }`}
               >
-                Tools
+                {t.marketing.nav.tools}
               </Link>
               <Link
                 href="/about"
@@ -90,12 +90,15 @@ export function LandingNav() {
                     : "text-text-muted"
                 }`}
               >
-                About
+                {t.marketing.nav.about}
               </Link>
             </nav>
           )}
           {isDocsRoute && (
-            <nav className="flex items-center gap-4" aria-label="Docs tabs">
+            <nav
+              className="flex items-center gap-4"
+              aria-label={t.marketing.nav.docsTabsLabel}
+            >
               <Link
                 href="/docs"
                 className={`text-sm transition-colors hover:text-brand ${
@@ -104,7 +107,7 @@ export function LandingNav() {
                     : "text-text-muted"
                 }`}
               >
-                Docs
+                {t.marketing.nav.docs}
               </Link>
               <Link
                 href="/docs/design-system"
@@ -112,7 +115,7 @@ export function LandingNav() {
                   isDesignSystem ? "font-medium text-brand" : "text-text-muted"
                 }`}
               >
-                Design
+                {t.marketing.nav.design}
               </Link>
             </nav>
           )}
@@ -125,7 +128,7 @@ export function LandingNav() {
             nativeButton={false}
             render={<Link href={signedIn ? "/dashboard" : "/auth/login"} />}
           >
-            {signedIn ? "Dashboard" : t.common.signIn}
+            {signedIn ? t.common.dashboard : t.common.signIn}
           </Button>
 
           {/* Eligibility dropdown using shadcn/ui DropdownMenu */}
@@ -143,14 +146,14 @@ export function LandingNav() {
                 className="px-5 py-3 text-sm font-semibold text-text hover:bg-surface-dim"
                 render={<Link href="/screening" />}
               >
-                For Individuals
+                {t.marketing.forIndividuals}
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-border" />
               <DropdownMenuItem
                 className="px-5 py-3 text-sm font-semibold text-text hover:bg-surface-dim"
                 render={<Link href="/screening/company" />}
               >
-                For Businesses
+                {t.marketing.forBusinesses}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

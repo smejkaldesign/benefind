@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
+import { getLocaleConfig, isLocale } from "@/lib/i18n/types";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 // In-memory rate limiter: map of userId -> { count, resetTime }
@@ -66,7 +67,11 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { messages: { role: string; content: string }[]; context?: string };
+  let body: {
+    messages: { role: string; content: string }[];
+    context?: string;
+    locale?: string;
+  };
   try {
     body = await request.json();
   } catch {
@@ -118,9 +123,12 @@ export async function POST(request: Request) {
     }
   }
 
-  const systemPrompt = sanitizedContext
+  let systemPrompt = sanitizedContext
     ? `${SYSTEM_PROMPT}\n\nContext about this user's screening results:\n${sanitizedContext}`
     : SYSTEM_PROMPT;
+  if (isLocale(body.locale) && body.locale !== "en") {
+    systemPrompt += `\n\nAlways reply in ${getLocaleConfig(body.locale).name}. Keep program names and acronyms (SNAP, WIC, Medicaid) as they are.`;
+  }
 
   try {
     const client = new Anthropic({ apiKey });

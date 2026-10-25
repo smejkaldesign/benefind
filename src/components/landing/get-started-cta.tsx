@@ -5,51 +5,7 @@ import { User, Building2, HelpCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-const cards = [
-  {
-    icon: User,
-    headline: "For Individuals",
-    bullets: [
-      "Answer simple questions about your household",
-      "Get matched with 80+ federal and state programs",
-      "See estimated amounts and how to apply",
-    ],
-    cta: "Start Screening",
-    href: "/screening",
-    iconBg: "bg-brand/10",
-    iconColor: "text-brand",
-    buttonVariant: "brand" as const,
-  },
-  {
-    icon: Building2,
-    headline: "For Businesses",
-    bullets: [
-      "3-minute company profile",
-      "Scan grants, tax credits, and incentives",
-      "Get match scores and application links",
-    ],
-    cta: "Company Screening",
-    href: "/screening/company",
-    iconBg: "bg-brand/10",
-    iconColor: "text-brand",
-    buttonVariant: "brand" as const,
-  },
-  {
-    icon: HelpCircle,
-    headline: "Need Help?",
-    bullets: [
-      "Not sure which path is right?",
-      "Have questions about a specific program?",
-      "Want to integrate Benefind for your community?",
-    ],
-    cta: "Contact Us",
-    href: "/contact",
-    iconBg: "bg-brand/10",
-    iconColor: "text-brand",
-    buttonVariant: "outline" as const,
-  },
-];
+import { useI18n } from "@/lib/i18n/context";
 
 const containerVariants = {
   hidden: {},
@@ -69,16 +25,49 @@ const cardVariants = {
 };
 
 export function GetStartedCTA() {
+  const { t } = useI18n();
+  const m = t.marketing.getStartedCta;
+  const cards = [
+    {
+      icon: User,
+      headline: t.marketing.forIndividuals,
+      bullets: m.individuals.bullets,
+      cta: m.individuals.cta,
+      href: "/screening",
+      iconBg: "bg-brand/10",
+      iconColor: "text-brand",
+      buttonVariant: "brand" as const,
+    },
+    {
+      icon: Building2,
+      headline: t.marketing.forBusinesses,
+      bullets: m.businesses.bullets,
+      cta: m.businesses.cta,
+      href: "/screening/company",
+      iconBg: "bg-brand/10",
+      iconColor: "text-brand",
+      buttonVariant: "brand" as const,
+    },
+    {
+      icon: HelpCircle,
+      headline: m.help.headline,
+      bullets: m.help.bullets,
+      cta: m.help.cta,
+      href: "/contact",
+      iconBg: "bg-brand/10",
+      iconColor: "text-brand",
+      buttonVariant: "outline" as const,
+    },
+  ];
+
   return (
     <section className="w-full px-6 py-24">
       <div className="mx-auto max-w-[1520px]">
         <div className="mb-12 text-center">
           <h2 className="font-display text-4xl text-text sm:text-5xl">
-            Get Started
+            {m.title}
           </h2>
-          <p className="mt-4 text-lg text-text-muted">
-            Choose the path that fits you
-          </p>
+          <p className="mt-4 text-lg text-text-muted">{m.subtitle}</p>
         </div>
 
         <motion.div
@@ -91,7 +80,7 @@ export function GetStartedCTA() {
           {cards.map((card) => {
             const Icon = card.icon;
             return (
-              <motion.div key={card.cta} variants={cardVariants}>
+              <motion.div key={card.href} variants={cardVariants}>
                 <Card className="flex h-full flex-col rounded-[20px] border-border bg-surface-dim p-0 shadow-none transition-colors hover:border-accent/20">
                   <CardContent className="flex flex-1 flex-col p-8">
                     <div

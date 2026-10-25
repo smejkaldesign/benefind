@@ -5,10 +5,11 @@ import {
   useRef,
   useEffect,
   useCallback,
+  useMemo,
   type FormEvent,
 } from "react";
 import {
-  COMPANY_SCREENING_STEPS,
+  getCompanyScreeningSteps,
   answersToCompanyInput,
 } from "@/lib/screening/company-steps";
 import { runCompanyScreening } from "@/lib/benefits/company-engine";
@@ -43,6 +44,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { US_STATES } from "@/lib/screening/us-states";
 import { getAppOrigin } from "@/lib/app-url";
+import { useI18n } from "@/lib/i18n/context";
+import { fmt } from "@/lib/i18n/format";
+import { localizeCompanyProgram } from "@/lib/i18n/localize-company-program";
 
 interface Message {
   id: string;
@@ -53,25 +57,23 @@ interface Message {
 
 const SIGNUP_RESEND_COOLDOWN_SECONDS = 60;
 
-const STEPS_PREVIEW = [
-  {
-    icon: Building2,
-    label: "Tell us about your company",
-    desc: "Industry, size, revenue, and what you do. Takes about 3 minutes.",
-  },
-  {
-    icon: Search,
-    label: "We scan 20+ programs",
-    desc: "Federal grants, tax credits, state incentives, and contracting preferences matched to your profile.",
-  },
-  {
-    icon: CheckCircle2,
-    label: "See your matches",
-    desc: "View every program you qualify for, with estimated values and next steps.",
-  },
-];
-
 export default function CompanyScreeningPage() {
+  const { t } = useI18n();
+  const c = t.company;
+  const steps = useMemo(() => getCompanyScreeningSteps(t), [t]);
+  const stepsPreview = [
+    {
+      icon: Building2,
+      label: c.panel.step1Label,
+      desc: c.panel.step1Desc,
+    },
+    { icon: Search, label: c.panel.step2Label, desc: c.panel.step2Desc },
+    {
+      icon: CheckCircle2,
+      label: c.panel.step3Label,
+      desc: c.panel.step3Desc,
+    },
+  ];
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -116,7 +118,7 @@ export default function CompanyScreeningPage() {
 
   const showStep = useCallback(
     (stepIndex: number) => {
-      const step = COMPANY_SCREENING_STEPS[stepIndex];
+      const step = steps[stepIndex];
       if (!step) return;
 
       setIsTyping(true);
@@ -125,7 +127,7 @@ export default function CompanyScreeningPage() {
         addMessage("assistant", step.question, step.helpText);
       }, 600);
     },
-    [addMessage],
+    [addMessage, steps],
   );
 
   // Resend-link cooldown countdown
@@ -168,21 +170,15 @@ export default function CompanyScreeningPage() {
     if (initialized.current) return;
     initialized.current = true;
 
-    addMessage(
-      "assistant",
-      "Hi! I'll help you find government grants, tax credits, and incentives for your business. This takes about 3 minutes.",
-    );
+    addMessage("assistant", c.chat.welcome);
     setTimeout(() => {
-      addMessage(
-        "assistant",
-        "Your answers are private and won't be shared. Let's find what you qualify for.",
-      );
+      addMessage("assistant", c.chat.privacy);
       setTimeout(() => showStep(0), 400);
     }, 800);
-  }, [addMessage, showStep]);
+  }, [addMessage, showStep, c]);
 
   function handleAnswer(value: string) {
-    const step = COMPANY_SCREENING_STEPS[currentStep];
+    const step = steps[currentStep];
     if (!step) return;
 
     let displayValue = value;
@@ -210,20 +206,17 @@ export default function CompanyScreeningPage() {
 
     // Skip R&D percentage if no R&D
     if (
-      COMPANY_SCREENING_STEPS[nextStep]?.id === "rndPercentage" &&
+      steps[nextStep]?.id === "rndPercentage" &&
       newAnswers.hasRnd !== "yes"
     ) {
       nextStep++;
     }
 
-    if (nextStep >= COMPANY_SCREENING_STEPS.length) {
+    if (nextStep >= steps.length) {
       setIsTyping(true);
       setTimeout(() => {
         setIsTyping(false);
-        addMessage(
-          "assistant",
-          "Great, I have your company profile. Let me scan for matching programs...",
-        );
+        addMessage("assistant", c.chat.calculating);
         setIsTyping(true);
         setTimeout(() => {
           setIsTyping(false);
@@ -281,21 +274,18 @@ export default function CompanyScreeningPage() {
           if (eligible.length > 0) {
             addMessage(
               "assistant",
-              `Great news! We found ${eligible.length} program${eligible.length > 1 ? "s" : ""} ${input.companyName} may qualify for.`,
+              fmt(eligible.length === 1 ? c.chat.foundOne : c.chat.foundOther, {
+                count: eligible.length,
+                company: input.companyName,
+              }),
             );
             setTimeout(() => {
-              addMessage(
-                "assistant",
-                "Create a free account to save your results and get personalized next steps.",
-              );
+              addMessage("assistant", c.chat.signupPrompt);
               setShowSignupGate(true);
               scrollToBottom();
             }, 400);
           } else {
-            addMessage(
-              "assistant",
-              "Based on the information provided, we didn't find strong matches right now. This may change as new programs are announced.",
-            );
+            addMessage("assistant", c.chat.noMatches);
             setShowResults(true);
           }
         }, 1500);
@@ -366,21 +356,16 @@ export default function CompanyScreeningPage() {
     initialized.current = false;
     setTimeout(() => {
       initialized.current = true;
-      addMessage(
-        "assistant",
-        "Let's start fresh. I'll ask you the same questions again.",
-      );
+      addMessage("assistant", c.chat.restartMessage);
       setTimeout(() => showStep(0), 400);
     }, 100);
   }
 
-  const currentStepData = COMPANY_SCREENING_STEPS[currentStep];
-  const progress = Math.round(
-    (currentStep / COMPANY_SCREENING_STEPS.length) * 100,
-  );
+  const currentStepData = steps[currentStep];
+  const progress = Math.round((currentStep / steps.length) * 100);
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-surface text-text">
+    <div className="flex h-[calc(100dvh-var(--ai-banner-h))] overflow-hidden bg-surface text-text">
       {/* ── Left panel: conversation ──────────────────────────── */}
       <div className="flex flex-1 flex-col overflow-hidden lg:max-w-[55%]">
         {/* Header */}
@@ -388,14 +373,15 @@ export default function CompanyScreeningPage() {
           <div className="flex h-16 items-center gap-3 px-6">
             <Link
               href="/get-started"
+              aria-label={t.common.back}
               className="text-text-subtle hover:text-text transition-colors"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-5 w-5 rtl:-scale-x-100" />
             </Link>
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-semibold text-text">
-                  Company Eligibility Check
+                  {c.chat.title}
                 </h1>
                 {result && (
                   <button
@@ -403,7 +389,7 @@ export default function CompanyScreeningPage() {
                     className="flex items-center gap-1 text-xs text-text-subtle hover:text-brand transition-colors"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
-                    Restart
+                    {c.chat.restart}
                   </button>
                 )}
               </div>
@@ -413,7 +399,7 @@ export default function CompanyScreeningPage() {
                 aria-valuenow={result ? 100 : progress}
                 aria-valuemin={0}
                 aria-valuemax={100}
-                aria-label="Screening progress"
+                aria-label={c.chat.progressLabel}
               >
                 <div
                   className="h-full rounded-full bg-brand transition-all duration-500"
@@ -436,7 +422,7 @@ export default function CompanyScreeningPage() {
                 className="space-y-3"
                 role="log"
                 aria-live="polite"
-                aria-label="Conversation"
+                aria-label={c.chat.conversationLabel}
               >
                 {messages.map((msg) => (
                   <ChatMessage
@@ -470,11 +456,10 @@ export default function CompanyScreeningPage() {
                             <CheckCircle2 className="h-5 w-5 text-brand" />
                           </div>
                           <p className="text-sm font-medium text-text">
-                            Check your email for a magic link to access your
-                            results.
+                            {c.chat.checkEmail}
                           </p>
                           <p className="text-xs text-text-muted">
-                            Sent to{" "}
+                            {c.chat.sentTo}{" "}
                             <strong className="text-text">{signupEmail}</strong>
                           </p>
                           {signupError && (
@@ -494,14 +479,16 @@ export default function CompanyScreeningPage() {
                             {signupLoading ? (
                               <>
                                 <Loader2 className="h-3 w-3 animate-spin" />
-                                Sending...
+                                {c.chat.sending}
                               </>
                             ) : signupCooldown > 0 ? (
                               <span className="tabular-nums">
-                                Resend link in {signupCooldown}s
+                                {fmt(c.chat.resendIn, {
+                                  seconds: signupCooldown,
+                                })}
                               </span>
                             ) : (
-                              "Resend link"
+                              c.chat.resendLink
                             )}
                           </button>
                         </div>
@@ -511,15 +498,17 @@ export default function CompanyScreeningPage() {
                           className="space-y-3 py-1"
                         >
                           <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-subtle" />
+                            <Mail className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-subtle" />
                             <input
                               type="email"
                               value={signupEmail}
                               onChange={(e) => setSignupEmail(e.target.value)}
                               required
-                              placeholder="you@example.com"
+                              placeholder={c.chat.emailPlaceholder}
+                              aria-label={c.chat.emailLabel}
+                              dir="ltr"
                               disabled={signupLoading}
-                              className="block h-11 w-full rounded-lg border border-border bg-surface-dim pl-10 pr-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
+                              className="block h-11 w-full rounded-lg border border-border bg-surface-dim ps-10 pe-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
                             />
                           </div>
                           {signupError && (
@@ -538,10 +527,10 @@ export default function CompanyScreeningPage() {
                             {signupLoading ? (
                               <>
                                 <Loader2 className="h-4 w-4 animate-spin" />
-                                Sending link...
+                                {c.chat.sendingLink}
                               </>
                             ) : (
-                              "Create Account"
+                              c.chat.createAccount
                             )}
                           </button>
                           <button
@@ -549,7 +538,7 @@ export default function CompanyScreeningPage() {
                             onClick={handleSkipSignup}
                             className="block w-full text-center text-xs text-text-muted hover:text-brand transition-colors"
                           >
-                            Skip for now
+                            {c.chat.skipForNow}
                           </button>
                         </form>
                       )}
@@ -584,12 +573,16 @@ export default function CompanyScreeningPage() {
                   ${totalEstimatedAnnualValue(result.programs).toLocaleString()}
                   <span className="text-base font-normal text-text-muted">
                     {" "}
-                    / year
+                    {c.chat.perYear}
                   </span>
                 </p>
                 <p className="text-sm text-text-muted">
-                  Estimated value across {result.totalMatched} program
-                  {result.totalMatched !== 1 ? "s" : ""}
+                  {fmt(
+                    result.totalMatched === 1
+                      ? c.chat.estimatedAcrossOne
+                      : c.chat.estimatedAcrossOther,
+                    { count: result.totalMatched },
+                  )}
                 </p>
                 <div className="flex flex-wrap justify-center gap-1.5 pt-1">
                   {result.programs
@@ -600,18 +593,17 @@ export default function CompanyScreeningPage() {
                         key={program.id}
                         className="rounded-full bg-brand/15 px-2.5 py-0.5 text-xs font-medium text-brand"
                       >
-                        {program.shortName}
+                        {localizeCompanyProgram(program, t).shortName}
                       </span>
                     ))}
                   {result.totalMatched > 5 && (
                     <span className="rounded-full bg-surface-bright px-2.5 py-0.5 text-xs font-medium text-text-muted">
-                      +{result.totalMatched - 5} more
+                      {fmt(c.chat.more, { count: result.totalMatched - 5 })}
                     </span>
                   )}
                 </div>
                 <p className="text-xs text-text-subtle pt-1">
-                  These are preliminary matches. Verify eligibility with program
-                  administrators.
+                  {c.chat.preliminary}
                 </p>
               </div>
               <div className="flex justify-center gap-3 pt-2">
@@ -619,13 +611,13 @@ export default function CompanyScreeningPage() {
                   onClick={() => router.push("/results/company")}
                   className="rounded-lg bg-brand px-6 py-3 text-sm font-semibold text-stone-900 transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
                 >
-                  View Full Results
+                  {t.screening.viewResults}
                 </button>
                 <button
                   onClick={handleRestart}
                   className="rounded-lg border border-border px-6 py-3 text-sm font-semibold text-text-muted transition-colors hover:border-brand hover:text-brand"
                 >
-                  Start Over
+                  {t.common.startOver}
                 </button>
               </div>
             </div>
@@ -634,7 +626,7 @@ export default function CompanyScreeningPage() {
       </div>
 
       {/* ── Right panel: Grainient + value prop ─────────────── */}
-      <div className="hidden lg:flex lg:flex-1 relative border-l border-border overflow-hidden h-full">
+      <div className="hidden lg:flex lg:flex-1 relative border-s border-border overflow-hidden h-full">
         <div className="absolute inset-0">
           <Grainient
             color1="#FF9FFC"
@@ -663,28 +655,25 @@ export default function CompanyScreeningPage() {
               height={22}
               priority
             />
-            <p className="mt-2 text-sm text-white/70">
-              Grant navigator, built for your business
-            </p>
+            <p className="mt-2 text-sm text-white/70">{c.panel.tagline}</p>
           </div>
 
           <h2 className="font-display text-3xl font-semibold tracking-tight text-white xl:text-4xl">
-            Here&apos;s what&apos;s about to happen
+            {c.panel.title}
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-white/70 max-w-xs">
-            A short conversation about your business. We scan 20+ federal and
-            state programs to find your matches.
+            {c.panel.intro}
           </p>
 
           <div className="mt-10 space-y-7">
-            {STEPS_PREVIEW.map(({ icon: Icon, label, desc }, i) => (
+            {stepsPreview.map(({ icon: Icon, label, desc }, i) => (
               <div key={label} className="flex gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-white/15 backdrop-blur-sm mt-0.5">
                   <Icon className="h-4 w-4 text-white" />
                 </div>
                 <div>
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-white/60">
-                    Step {i + 1}
+                    {fmt(c.panel.step, { n: i + 1 })}
                   </span>
                   <p className="text-sm font-semibold text-white">{label}</p>
                   <p className="mt-0.5 text-sm text-white/70 leading-relaxed">
@@ -698,18 +687,16 @@ export default function CompanyScreeningPage() {
           <div className="mt-12 flex items-start gap-3 rounded-[16px] border border-white/20 bg-white/10 px-4 py-3.5 backdrop-blur-md">
             <Lock className="h-4 w-4 text-white/80 mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed text-white/80">
-              Your business information is stored locally on your device and
-              never sent to a server. This is a screening tool, not a formal
-              application.
+              {c.panel.privacyNote}
             </p>
           </div>
 
           <p className="mt-6 text-xs text-white/60">
-            Scans{" "}
+            {c.panel.scansPrefix}{" "}
             <span className="font-semibold text-white/90">
-              20+ federal and state programs
+              {c.panel.scansHighlight}
             </span>{" "}
-            including R&D Tax Credit, SBIR, WOTC, Workforce Training, and more.
+            {c.panel.scansSuffix}
           </p>
         </div>
       </div>

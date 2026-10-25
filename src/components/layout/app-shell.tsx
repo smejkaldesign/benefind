@@ -6,6 +6,7 @@ import { SignOutButton } from "@/components/sign-out-button";
 import { LanguageSelector } from "@/components/language-selector";
 import { WorkspacePicker } from "@/components/workspace-picker";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { getServerI18n } from "@/lib/i18n/server";
 
 /**
  * AppShell is a lightweight mobile-first layout (header + content + tab bar).
@@ -19,7 +20,8 @@ interface AppShellProps {
   children: React.ReactNode;
 }
 
-export function AppShell({ children }: AppShellProps) {
+export async function AppShell({ children }: AppShellProps) {
+  const { t } = await getServerI18n();
   return (
     <div className="flex min-h-dvh flex-col">
       {/* Top nav — mobile-friendly */}
@@ -50,10 +52,10 @@ export function AppShell({ children }: AppShellProps) {
             <WorkspacePicker />
           </div>
           <div className="flex items-center gap-2">
-            <HoverHint label="Toggle theme">
+            <HoverHint label={t.app.shell.toggleTheme}>
               <ThemeToggle />
             </HoverHint>
-            <HoverHint label="Change language">
+            <HoverHint label={t.app.shell.changeLanguage}>
               <LanguageSelector compact />
             </HoverHint>
             <SignOutButton />
@@ -69,9 +71,17 @@ export function AppShell({ children }: AppShellProps) {
       {/* Bottom nav — mobile tab bar */}
       <nav className="sticky bottom-0 z-30 border-t border-border bg-surface/95 backdrop-blur-sm sm:hidden">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-around">
-          <NavTab href="/" icon={Home} label="Home" />
-          <NavTab href="/screening" icon={MessageCircle} label="Screen" />
-          <NavTab href="/dashboard" icon={LayoutDashboard} label="Dashboard" />
+          <NavTab href="/" icon={Home} label={t.common.home} />
+          <NavTab
+            href="/screening"
+            icon={MessageCircle}
+            label={t.common.screening}
+          />
+          <NavTab
+            href="/dashboard"
+            icon={LayoutDashboard}
+            label={t.common.dashboard}
+          />
         </div>
       </nav>
     </div>

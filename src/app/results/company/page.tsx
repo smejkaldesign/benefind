@@ -12,6 +12,12 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { STORAGE_KEYS } from "@/lib/constants";
+import { useI18n } from "@/lib/i18n/context";
+import { fmt } from "@/lib/i18n/format";
+import {
+  localizeCompanyProgram,
+  localizeCompanyResult,
+} from "@/lib/i18n/localize-company-program";
 import {
   ExternalLink,
   TrendingUp,
@@ -43,24 +49,16 @@ const CATEGORY_COLORS: Record<CompanyProgramCategory, string> = {
   contracting: "bg-brand/15 text-brand",
 };
 
-const CATEGORY_LABELS: Record<CompanyProgramCategory, string> = {
-  "tax-credit": "Tax Credits",
-  grant: "Grants",
-  incentive: "Incentives",
-  contracting: "Contracting",
-};
-
-const STATUS_BADGES: Record<
-  string,
-  { label: string; variant: "success" | "warning" | "default" }
-> = {
-  active: { label: "Active", variant: "success" },
-  paused: { label: "Paused", variant: "warning" },
-  expired: { label: "Expired", variant: "default" },
+const STATUS_VARIANTS: Record<string, "success" | "warning" | "default"> = {
+  active: "success",
+  paused: "warning",
+  expired: "default",
 };
 
 export default function CompanyResultsPage() {
   const router = useRouter();
+  const { t } = useI18n();
+  const c = t.company;
   const [result, setResult] = useState<CompanyScreeningResult | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -118,7 +116,7 @@ export default function CompanyResultsPage() {
     );
     observer.observe(hero);
     return () => observer.disconnect();
-  }, []);
+  }, [authChecked]);
 
   if (!authChecked || !result) {
     return (
@@ -128,8 +126,12 @@ export default function CompanyResultsPage() {
     );
   }
 
-  const eligible = result.programs.filter((p) => p.result.eligible);
-  const notEligible = result.programs.filter((p) => !p.result.eligible);
+  const localized = result.programs.map((p) => ({
+    program: localizeCompanyProgram(p.program, t),
+    result: localizeCompanyResult(p.result, t),
+  }));
+  const eligible = localized.filter((p) => p.result.eligible);
+  const notEligible = localized.filter((p) => !p.result.eligible);
 
   // Group eligible programs by category
   const grouped = eligible.reduce<
@@ -157,22 +159,22 @@ export default function CompanyResultsPage() {
       <div ref={heroRef} className="bg-brand px-4 py-8 text-stone-900">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-medium text-stone-900/60">
-            Programs matched
+            {c.results.programsMatched}
           </p>
           <p className="mt-1 text-4xl font-bold">
             {result.totalMatched}
             <span className="text-lg font-normal text-stone-900/60">
               {" "}
-              program{result.totalMatched !== 1 ? "s" : ""}
+              {result.totalMatched === 1
+                ? c.results.programOne
+                : c.results.programOther}
             </span>
           </p>
-          <p className="mt-1 text-sm text-stone-900/60">
-            Across grants, tax credits, incentives, and contracting preferences
-          </p>
+          <p className="mt-1 text-sm text-stone-900/60">{c.results.across}</p>
           <div className="mt-4 flex items-center justify-center gap-2">
             <TrendingUp className="h-4 w-4 text-stone-900/60" />
             <p className="text-xs text-stone-900/60">
-              Matched against your company profile
+              {c.results.matchedAgainst}
             </p>
           </div>
         </div>
@@ -182,8 +184,12 @@ export default function CompanyResultsPage() {
       {showStickyTotal && (
         <div className="sticky top-banner z-20 border-b border-border bg-brand/5 px-4 py-1.5 text-center">
           <p className="text-sm font-semibold text-brand">
-            {result.totalMatched} program{result.totalMatched !== 1 ? "s" : ""}{" "}
-            matched
+            {fmt(
+              result.totalMatched === 1
+                ? c.results.stickyOne
+                : c.results.stickyOther,
+              { count: result.totalMatched },
+            )}
           </p>
         </div>
       )}
@@ -196,7 +202,7 @@ export default function CompanyResultsPage() {
 
           const Icon = CATEGORY_ICONS[cat];
           const colorClass = CATEGORY_COLORS[cat];
-          const label = CATEGORY_LABELS[cat];
+          const label = c.results.categories[cat];
 
           return (
             <section key={cat}>
@@ -213,7 +219,11 @@ export default function CompanyResultsPage() {
 
               <div className="space-y-3">
                 {items.map(({ program, result: r }) => {
-                  const statusBadge = STATUS_BADGES[program.status];
+                  const statusVariant = STATUS_VARIANTS[program.status];
+                  const statusLabel =
+                    c.results.statuses[
+                      program.status as keyof typeof c.results.statuses
+                    ];
 
                   return (
                     <Card key={program.id} className="space-y-3">
@@ -234,10 +244,8 @@ export default function CompanyResultsPage() {
                                   {r.estimatedValue}
                                 </Badge>
                               )}
-                              <Badge
-                                variant={statusBadge?.variant ?? "default"}
-                              >
-                                {statusBadge?.label ?? program.status}
+                              <Badge variant={statusVariant ?? "default"}>
+                                {statusLabel ?? program.status}
                               </Badge>
                             </div>
                           </div>
@@ -261,7 +269,7 @@ export default function CompanyResultsPage() {
                             style={{ width: `${r.matchScore}%` }}
                           />
                         </div>
-                        <span className="text-xs font-semibold text-text-muted tabular-nums w-10 text-right">
+                        <span className="text-xs font-semibold text-text-muted tabular-nums w-10 text-end">
                           {r.matchScore}%
                         </span>
                       </div>
@@ -270,7 +278,7 @@ export default function CompanyResultsPage() {
                       {r.whyYouQualify && r.whyYouQualify.length > 0 && (
                         <div className="rounded-lg bg-brand/10 px-3 py-2 space-y-1">
                           <p className="text-xs font-semibold text-brand uppercase tracking-wide">
-                            Why you qualify
+                            {c.results.whyYouQualify}
                           </p>
                           {r.whyYouQualify.map((reason, i) => (
                             <div
@@ -306,7 +314,7 @@ export default function CompanyResultsPage() {
                       {r.nextSteps.length > 0 && (
                         <div className="space-y-1.5">
                           <p className="text-xs font-semibold text-text-muted uppercase tracking-wide">
-                            Next Steps
+                            {c.results.nextSteps}
                           </p>
                           {r.nextSteps.map((step, i) => (
                             <div
@@ -329,7 +337,8 @@ export default function CompanyResultsPage() {
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-brand-dark"
                         >
-                          Learn more <ExternalLink className="h-3.5 w-3.5" />
+                          {t.common.learnMore}{" "}
+                          <ExternalLink className="h-3.5 w-3.5" />
                         </a>
                       )}
                     </Card>
@@ -344,7 +353,7 @@ export default function CompanyResultsPage() {
         {notEligible.length > 0 && (
           <details className="rounded-xl border border-border bg-surface p-4">
             <summary className="cursor-pointer text-sm font-medium text-text-muted">
-              Not currently eligible ({notEligible.length} programs)
+              {fmt(c.results.notEligible, { count: notEligible.length })}
             </summary>
             <div className="mt-3 divide-y divide-border">
               {notEligible.map(({ program, result: r }) => (
@@ -364,7 +373,7 @@ export default function CompanyResultsPage() {
           <Link href="/screening/company">
             <Button variant="secondary" size="default">
               <RotateCcw className="h-4 w-4" />
-              Update Company Info
+              {c.results.updateInfo}
             </Button>
           </Link>
         </div>
@@ -373,10 +382,7 @@ export default function CompanyResultsPage() {
       {/* Disclaimer */}
       <div className="border-t border-border bg-surface-dim px-4 py-4 text-center">
         <p className="mx-auto max-w-lg text-xs text-text-subtle">
-          These are preliminary matches based on the information you provided.
-          Actual eligibility is determined by each program&apos;s administering
-          agency. Benefind does not guarantee eligibility or award amounts.
-          Consult a tax advisor for tax credit claims.
+          {c.results.disclaimer}
         </p>
       </div>
     </main>

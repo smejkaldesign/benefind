@@ -1,8 +1,15 @@
 "use client";
 
-import { Suspense, useState, useRef, useEffect, useCallback } from "react";
 import {
-  SCREENING_STEPS,
+  Suspense,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
+import {
+  getScreeningSteps,
   answersToScreeningInput,
 } from "@/lib/screening/steps";
 import { runScreening } from "@/lib/benefits/engine";
@@ -38,6 +45,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { US_STATES } from "@/lib/screening/us-states";
 import { getAppOrigin } from "@/lib/app-url";
+import { useI18n } from "@/lib/i18n/context";
+import { fmt } from "@/lib/i18n/format";
+import { localizeProgram } from "@/lib/i18n/localize-program";
 
 interface Message {
   id: string;
@@ -48,23 +58,17 @@ interface Message {
 
 const SIGNUP_RESEND_COOLDOWN_SECONDS = 60;
 
-const STEPS_PREVIEW = [
-  {
-    icon: MessageSquare,
-    label: "Answer a few questions",
-    desc: "Household size, income, and where you live. Takes about 3 minutes.",
-  },
-  {
-    icon: Zap,
-    label: "We match you instantly",
-    desc: "Our engine checks eligibility across 12+ federal programs in real time.",
-  },
-  {
-    icon: CheckCircle2,
-    label: "See your results",
-    desc: "View every program you qualify for, with estimated amounts and next steps.",
-  },
-];
+/** Splits a template around a `{slot}` placeholder so JSX can fill it. */
+function withSlot(template: string, slot: string, node: React.ReactNode) {
+  const [before, after] = template.split(`{${slot}}`);
+  return (
+    <>
+      {before}
+      {node}
+      {after}
+    </>
+  );
+}
 
 export default function ScreeningPage() {
   return (
@@ -100,6 +104,14 @@ function ScreeningPageInner() {
   const initialized = useRef(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useI18n();
+  const m = t.screeningFlow;
+  const screeningSteps = useMemo(() => getScreeningSteps(t), [t]);
+  const stepsPreview = [
+    { icon: MessageSquare, label: m.panel.step1Label, desc: m.panel.step1Desc },
+    { icon: Zap, label: m.panel.step2Label, desc: m.panel.step2Desc },
+    { icon: CheckCircle2, label: m.panel.step3Label, desc: m.panel.step3Desc },
+  ];
 
   const scrollToBottom = useCallback(() => {
     setTimeout(() => {
@@ -184,7 +196,7 @@ function ScreeningPageInner() {
 
   const showStep = useCallback(
     (stepIndex: number) => {
-      const step = SCREENING_STEPS[stepIndex];
+      const step = screeningSteps[stepIndex];
       if (!step) return;
 
       setIsTyping(true);
@@ -193,7 +205,7 @@ function ScreeningPageInner() {
         addMessage("assistant", step.question, step.helpText);
       }, 600);
     },
-    [addMessage],
+    [addMessage, screeningSteps],
   );
 
   useEffect(() => {
@@ -205,34 +217,22 @@ function ScreeningPageInner() {
       Object.keys(answers).length > 0;
 
     if (isPrefill) {
-      addMessage(
-        "assistant",
-        "Welcome back! I've loaded your previous answers. You can update anything that's changed, or just re-submit to get fresh results.",
-      );
+      addMessage("assistant", m.chat.welcomeBack);
       setTimeout(() => {
-        addMessage(
-          "assistant",
-          "Let's go through the questions. Your previous answers are pre-filled.",
-        );
+        addMessage("assistant", m.chat.prefilled);
         setTimeout(() => showStep(0), 400);
       }, 800);
     } else {
-      addMessage(
-        "assistant",
-        "Hi! I'm here to help you find government benefits you may qualify for. This takes about 3 minutes.",
-      );
+      addMessage("assistant", m.chat.welcome);
       setTimeout(() => {
-        addMessage(
-          "assistant",
-          "Your answers are private and won't be shared with anyone. Let's get started.",
-        );
+        addMessage("assistant", m.chat.privacy);
         setTimeout(() => showStep(0), 400);
       }, 800);
     }
-  }, [addMessage, showStep, prefillLoaded, searchParams, answers]);
+  }, [addMessage, showStep, prefillLoaded, searchParams, answers, m]);
 
   function handleAnswer(value: string) {
-    const step = SCREENING_STEPS[currentStep];
+    const step = screeningSteps[currentStep];
     if (!step) return;
 
     let displayValue = value;
@@ -262,20 +262,17 @@ function ScreeningPageInner() {
     let nextStep = currentStep + 1;
 
     if (
-      SCREENING_STEPS[nextStep]?.id === "childrenAges" &&
+      screeningSteps[nextStep]?.id === "childrenAges" &&
       newAnswers.hasChildren !== "yes"
     ) {
       nextStep++;
     }
 
-    if (nextStep >= SCREENING_STEPS.length) {
+    if (nextStep >= screeningSteps.length) {
       setIsTyping(true);
       setTimeout(() => {
         setIsTyping(false);
-        addMessage(
-          "assistant",
-          "Great, I have everything I need. Let me check which programs you qualify for...",
-        );
+        addMessage("assistant", m.chat.calculating);
         setIsTyping(true);
         setTimeout(() => {
           setIsTyping(false);
@@ -319,8 +316,9 @@ function ScreeningPageInner() {
             addMessage(
               "assistant",
               summarizeEligible(
-                eligible.map((p) => p.program),
+                eligible.map((p) => localizeProgram(p.program, t)),
                 screeningResult.totalEstimatedAnnual,
+                t,
               ),
             );
             if (signedInEmail) {
@@ -328,32 +326,26 @@ function ScreeningPageInner() {
                 addMessage(
                   "assistant",
                   screeningId
-                    ? `Saved to your account (${signedInEmail}).`
-                    : "We couldn't save these results to your account, but you can still see them below.",
+                    ? fmt(m.chat.saved, { email: signedInEmail })
+                    : m.chat.saveFailed,
                 );
                 setShowResults(true);
               });
               return;
             }
             setTimeout(() => {
-              addMessage(
-                "assistant",
-                "Create a free account or sign in to save your results and get personalized next steps.",
-              );
+              addMessage("assistant", m.chat.signupEligible);
               setShowSignupGate(true);
               scrollToBottom();
             }, 400);
           } else {
-            addMessage(
-              "assistant",
-              "Based on the information provided, you may not qualify for the programs we currently check. This doesn't mean there aren't other programs available.",
-            );
+            addMessage("assistant", m.chat.notEligible);
             if (signedInEmail) {
               persisted.then(({ screeningId }) => {
                 if (screeningId) {
                   addMessage(
                     "assistant",
-                    `Saved to your account (${signedInEmail}). You can re-screen anytime from your dashboard.`,
+                    fmt(m.chat.savedRescreen, { email: signedInEmail }),
                   );
                 }
                 setShowResults(true);
@@ -361,10 +353,7 @@ function ScreeningPageInner() {
               return;
             }
             setTimeout(() => {
-              addMessage(
-                "assistant",
-                "Create a free account or sign in to save your answers, so you can re-screen anytime without starting over.",
-              );
+              addMessage("assistant", m.chat.signupNotEligible);
               setShowSignupGate(true);
               scrollToBottom();
             }, 400);
@@ -433,19 +422,20 @@ function ScreeningPageInner() {
     initialized.current = false;
     setTimeout(() => {
       initialized.current = true;
-      addMessage(
-        "assistant",
-        "Let's start fresh. I'll ask you the same questions again.",
-      );
+      addMessage("assistant", m.chat.restart);
       setTimeout(() => showStep(0), 400);
     }, 100);
   }
 
-  const currentStepData = SCREENING_STEPS[currentStep];
-  const progress = Math.round((currentStep / SCREENING_STEPS.length) * 100);
+  const currentStepData = screeningSteps[currentStep];
+  const progress = Math.round((currentStep / screeningSteps.length) * 100);
+  const pursuableCount =
+    result?.programs.filter((p) =>
+      PURSUABLE_TIERS.has(p.result.eligibilityTier),
+    ).length ?? 0;
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-surface text-text">
+    <div className="flex h-[calc(100dvh-var(--ai-banner-h))] overflow-hidden bg-surface text-text">
       {/* ── Left panel: conversation ──────────────────────────── */}
       <div className="flex flex-1 flex-col overflow-hidden lg:max-w-[55%]">
         {/* Header */}
@@ -454,23 +444,26 @@ function ScreeningPageInner() {
             <Link
               href="/"
               className="text-text-subtle hover:text-text transition-colors"
-              aria-label="Back to home"
+              aria-label={m.header.backHome}
             >
-              <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+              <ArrowLeft
+                className="h-5 w-5 rtl:-scale-x-100"
+                aria-hidden="true"
+              />
             </Link>
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-semibold text-text">
-                  Eligibility Check
+                  {m.header.title}
                 </h1>
                 {result && (
                   <button
                     onClick={handleRestart}
-                    aria-label="Restart screening"
+                    aria-label={m.header.restartAria}
                     className="flex items-center gap-1 text-xs text-text-subtle hover:text-brand transition-colors"
                   >
                     <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-                    Restart
+                    {m.header.restart}
                   </button>
                 )}
               </div>
@@ -480,7 +473,7 @@ function ScreeningPageInner() {
                 aria-valuenow={result ? 100 : progress}
                 aria-valuemin={0}
                 aria-valuemax={100}
-                aria-label="Screening progress"
+                aria-label={m.header.progressAria}
               >
                 <div
                   className="h-full rounded-full bg-brand transition-all duration-500"
@@ -503,7 +496,7 @@ function ScreeningPageInner() {
                 className="space-y-3"
                 role="log"
                 aria-live="polite"
-                aria-label="Conversation"
+                aria-label={m.header.conversationAria}
               >
                 {messages.map((msg) => (
                   <ChatMessage
@@ -538,12 +531,16 @@ function ScreeningPageInner() {
                             <CheckCircle2 className="h-5 w-5 text-brand" />
                           </div>
                           <p className="text-sm font-medium text-text">
-                            Check your email for a magic link to access your
-                            results.
+                            {m.signup.checkEmail}
                           </p>
                           <p className="text-xs text-text-muted">
-                            Sent to{" "}
-                            <strong className="text-text">{signupEmail}</strong>
+                            {withSlot(
+                              m.signup.sentTo,
+                              "email",
+                              <strong className="text-text">
+                                {signupEmail}
+                              </strong>,
+                            )}
                           </p>
                           {signupError && (
                             <p
@@ -562,14 +559,16 @@ function ScreeningPageInner() {
                             {signupLoading ? (
                               <>
                                 <Loader2 className="h-3 w-3 animate-spin" />
-                                Sending...
+                                {m.signup.sending}
                               </>
                             ) : signupCooldown > 0 ? (
                               <span className="tabular-nums">
-                                Resend link in {signupCooldown}s
+                                {fmt(m.signup.resendIn, {
+                                  seconds: signupCooldown,
+                                })}
                               </span>
                             ) : (
-                              "Resend link"
+                              m.signup.resend
                             )}
                           </button>
                         </div>
@@ -579,15 +578,15 @@ function ScreeningPageInner() {
                           className="space-y-3 py-1"
                         >
                           <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-subtle" />
+                            <Mail className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-subtle" />
                             <input
                               type="email"
                               value={signupEmail}
                               onChange={(e) => setSignupEmail(e.target.value)}
                               required
-                              placeholder="you@example.com"
+                              placeholder={m.signup.emailPlaceholder}
                               disabled={signupLoading}
-                              className="block h-11 w-full rounded-lg border border-border bg-surface-dim pl-10 pr-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
+                              className="block h-11 w-full rounded-lg border border-border bg-surface-dim ps-10 pe-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
                             />
                           </div>
                           {signupError && (
@@ -606,18 +605,18 @@ function ScreeningPageInner() {
                             {signupLoading ? (
                               <>
                                 <Loader2 className="h-4 w-4 animate-spin" />
-                                Sending link...
+                                {m.signup.sendingLink}
                               </>
                             ) : signupMode === "signin" ? (
-                              "Send sign-in link"
+                              m.signup.sendSignin
                             ) : (
-                              "Create Account"
+                              m.signup.createAccount
                             )}
                           </button>
                           <p className="text-center text-xs text-text-muted">
                             {signupMode === "signin"
-                              ? "New to Benefind? "
-                              : "Already have an account? "}
+                              ? m.signup.newHere
+                              : m.signup.haveAccount}{" "}
                             <button
                               type="button"
                               onClick={() =>
@@ -628,8 +627,8 @@ function ScreeningPageInner() {
                               className="font-semibold text-brand transition-colors hover:text-brand-dark"
                             >
                               {signupMode === "signin"
-                                ? "Create an account"
-                                : "Sign in"}
+                                ? m.signup.createLink
+                                : m.signup.signIn}
                             </button>
                           </p>
                           <button
@@ -637,7 +636,7 @@ function ScreeningPageInner() {
                             onClick={handleSkipSignup}
                             className="block w-full text-center text-xs text-text-muted hover:text-brand transition-colors"
                           >
-                            Skip for now
+                            {m.signup.skip}
                           </button>
                         </form>
                       )}
@@ -670,22 +669,20 @@ function ScreeningPageInner() {
             <div className="mx-auto max-w-xl space-y-4">
               <div className="rounded-[16px] border border-brand/30 bg-brand/5 p-5 text-center space-y-2">
                 <p className="font-display text-3xl font-semibold text-brand">
-                  ${result.totalEstimatedMonthly.toLocaleString()}/month
+                  {fmt(m.results.perMonth, {
+                    amount: result.totalEstimatedMonthly.toLocaleString(),
+                  })}
                 </p>
                 <p className="text-sm text-text-muted">
-                  Estimated ${result.totalEstimatedAnnual.toLocaleString()}/year
-                  across{" "}
-                  {
-                    result.programs.filter((p) =>
-                      PURSUABLE_TIERS.has(p.result.eligibilityTier),
-                    ).length
-                  }{" "}
-                  program
-                  {result.programs.filter((p) =>
-                    PURSUABLE_TIERS.has(p.result.eligibilityTier),
-                  ).length !== 1
-                    ? "s"
-                    : ""}
+                  {fmt(
+                    pursuableCount === 1
+                      ? m.results.annualOne
+                      : m.results.annualOther,
+                    {
+                      amount: result.totalEstimatedAnnual.toLocaleString(),
+                      count: pursuableCount,
+                    },
+                  )}
                 </p>
                 <div className="flex flex-wrap justify-center gap-1.5 pt-1">
                   {result.programs
@@ -697,13 +694,12 @@ function ScreeningPageInner() {
                         key={program.id}
                         className="rounded-full bg-brand/15 px-2.5 py-0.5 text-xs font-medium text-brand"
                       >
-                        {program.shortName}
+                        {localizeProgram(program, t).shortName}
                       </span>
                     ))}
                 </div>
                 <p className="text-xs text-text-subtle pt-1">
-                  These are estimates. Actual amounts depend on your situation
-                  and state.
+                  {m.results.disclaimer}
                 </p>
               </div>
               <div className="flex justify-center gap-3 pt-2">
@@ -711,13 +707,13 @@ function ScreeningPageInner() {
                   onClick={() => router.push("/results")}
                   className="rounded-lg bg-brand px-6 py-3 text-sm font-semibold text-stone-900 transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
                 >
-                  View Full Results
+                  {m.results.viewFull}
                 </button>
                 <button
                   onClick={handleRestart}
                   className="rounded-lg border border-border px-6 py-3 text-sm font-semibold text-text-muted transition-colors hover:border-brand hover:text-brand focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
                 >
-                  Start Over
+                  {m.results.startOver}
                 </button>
               </div>
             </div>
@@ -726,8 +722,8 @@ function ScreeningPageInner() {
       </div>
 
       {/* ── Right panel: Grainient + value prop ─────────────── */}
-      <div className="hidden lg:flex lg:flex-1 relative border-l border-border overflow-hidden h-full">
-        {/* Grainient background — same as homepage hero */}
+      <div className="hidden lg:flex lg:flex-1 relative border-s border-border overflow-hidden h-full">
+        {/* Grainient background, same as homepage hero */}
         <div className="absolute inset-0">
           <Grainient
             color1="#FF9FFC"
@@ -749,10 +745,13 @@ function ScreeningPageInner() {
         />
 
         {signedInEmail && (
-          <div className="absolute top-4 right-6 z-20 flex items-center gap-3 text-sm text-white/80">
+          <div className="absolute top-4 end-6 z-20 flex items-center gap-3 text-sm text-white/80">
             <span>
-              Signed in as{" "}
-              <span className="font-medium text-white">{signedInEmail}</span>
+              {withSlot(
+                m.panel.signedInAs,
+                "email",
+                <span className="font-medium text-white">{signedInEmail}</span>,
+              )}
             </span>
             <form action="/auth/signout" method="post">
               <button
@@ -760,7 +759,7 @@ function ScreeningPageInner() {
                 className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-white/80 transition-colors hover:bg-white/10 hover:text-white"
               >
                 <LogOut className="h-4 w-4" aria-hidden="true" />
-                Sign out
+                {m.panel.signOut}
               </button>
             </form>
           </div>
@@ -777,30 +776,27 @@ function ScreeningPageInner() {
               height={22}
               priority
             />
-            <p className="mt-2 text-sm text-white/70">
-              Benefits navigator, built for you
-            </p>
+            <p className="mt-2 text-sm text-white/70">{m.panel.tagline}</p>
           </div>
 
           {/* Headline */}
           <h2 className="font-display text-3xl font-semibold tracking-tight text-white xl:text-4xl">
-            Here&apos;s what&apos;s about to happen
+            {m.panel.headline}
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-white/70 max-w-xs">
-            A short conversation is all it takes. No account needed. No
-            paperwork. Just answers.
+            {m.panel.intro}
           </p>
 
           {/* Steps */}
           <div className="mt-10 space-y-7">
-            {STEPS_PREVIEW.map(({ icon: Icon, label, desc }, i) => (
+            {stepsPreview.map(({ icon: Icon, label, desc }, i) => (
               <div key={label} className="flex gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-white/15 backdrop-blur-sm mt-0.5">
                   <Icon className="h-4 w-4 text-white" />
                 </div>
                 <div>
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-white/60">
-                    Step {i + 1}
+                    {fmt(m.panel.stepLabel, { n: i + 1 })}
                   </span>
                   <p className="text-sm font-semibold text-white">{label}</p>
                   <p className="mt-0.5 text-sm text-white/70 leading-relaxed">
@@ -815,18 +811,19 @@ function ScreeningPageInner() {
           <div className="mt-12 flex items-start gap-3 rounded-[16px] border border-white/20 bg-white/10 px-4 py-3.5 backdrop-blur-md">
             <Lock className="h-4 w-4 text-white/80 mt-0.5 shrink-0" />
             <p className="text-xs leading-relaxed text-white/80">
-              Your answers are stored locally on your device and never sent to a
-              server. This is a screening tool, not a formal application.
+              {m.panel.privacy}
             </p>
           </div>
 
           {/* Programs count */}
           <p className="mt-6 text-xs text-white/60">
-            Checks eligibility across{" "}
-            <span className="font-semibold text-white/90">
-              12+ federal and state programs
-            </span>{" "}
-            including SNAP, Medicaid, WIC, SSI, and more.
+            {withSlot(
+              m.panel.programsCount,
+              "highlight",
+              <span className="font-semibold text-white/90">
+                {m.panel.programsHighlight}
+              </span>,
+            )}
           </p>
         </div>
       </div>

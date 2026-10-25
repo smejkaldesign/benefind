@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
+import { useI18n } from "@/lib/i18n/context";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -12,6 +13,7 @@ interface UseChatOptions {
 }
 
 export function useChat(options?: UseChatOptions) {
+  const { t, locale } = useI18n();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,17 +36,18 @@ export function useChat(options?: UseChatOptions) {
           body: JSON.stringify({
             messages: updatedMessages,
             context: options?.context,
+            locale,
           }),
           signal: abortRef.current.signal,
         });
 
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
-          throw new Error(data.error || "Failed to send message");
+          throw new Error(data.error || t.screeningFlow.errors.sendFailed);
         }
 
         const reader = res.body?.getReader();
-        if (!reader) throw new Error("No response stream");
+        if (!reader) throw new Error(t.screeningFlow.errors.noStream);
 
         const decoder = new TextDecoder();
         let assistantContent = "";
@@ -94,7 +97,9 @@ export function useChat(options?: UseChatOptions) {
         }
       } catch (err) {
         if (err instanceof Error && err.name === "AbortError") return;
-        setError(err instanceof Error ? err.message : "Something went wrong");
+        setError(
+          err instanceof Error ? err.message : t.screeningFlow.errors.generic,
+        );
         // Remove the empty assistant message if error
         setMessages((prev) => {
           if (prev.length > 0 && prev[prev.length - 1]?.content === "") {
@@ -107,7 +112,7 @@ export function useChat(options?: UseChatOptions) {
         abortRef.current = null;
       }
     },
-    [messages, options?.context],
+    [messages, options?.context, locale, t],
   );
 
   const stop = useCallback(() => {

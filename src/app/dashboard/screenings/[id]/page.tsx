@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { getServerI18n } from "@/lib/i18n/server";
+import { fmt } from "@/lib/i18n/format";
+import { localizeProgramName } from "@/lib/i18n/localize-program";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 import {
   ArrowLeft,
   RotateCcw,
@@ -25,7 +29,6 @@ import {
 const TIER_META: Record<
   string,
   {
-    label: string;
     icon: React.ComponentType<{ className?: string }>;
     iconClass: string;
     badgeVariant: "success" | "warning" | "default";
@@ -33,39 +36,34 @@ const TIER_META: Record<
   }
 > = {
   eligible_with_requirements: {
-    label: "Eligible",
     icon: CheckCircle2,
     iconClass: "text-success",
     badgeVariant: "success",
-    accentClass: "border-l-4 border-success",
+    accentClass: "border-s-4 border-success",
   },
   probably_eligible: {
-    label: "Probably Eligible",
     icon: CircleDot,
     iconClass: "text-success",
     badgeVariant: "success",
-    accentClass: "border-l-4 border-dashed border-success",
+    accentClass: "border-s-4 border-dashed border-success",
   },
   maybe_eligible: {
-    label: "Maybe Eligible",
     icon: HelpCircle,
     iconClass: "text-warning",
     badgeVariant: "warning",
-    accentClass: "border-l-4 border-warning",
+    accentClass: "border-s-4 border-warning",
   },
   not_likely: {
-    label: "Unlikely",
     icon: CircleSlash,
     iconClass: "text-text-muted",
     badgeVariant: "default",
-    accentClass: "border-l-4 border-border",
+    accentClass: "border-s-4 border-border",
   },
   ineligible: {
-    label: "Not Eligible",
     icon: XCircle,
     iconClass: "text-text-subtle",
     badgeVariant: "default",
-    accentClass: "border-l-4 border-border-dark",
+    accentClass: "border-s-4 border-border-dark",
   },
 };
 
@@ -76,6 +74,8 @@ export default async function ScreeningDetailPage({
 }) {
   await requireAuth();
   const { id } = await params;
+  const { t, locale } = await getServerI18n();
+  const d = t.resultsPage.detail;
   const supabase = await createServerSupabase();
 
   const cookieStore = await cookies();
@@ -120,7 +120,7 @@ export default async function ScreeningDetailPage({
   );
 
   const formattedDate = new Date(screening.created_at).toLocaleDateString(
-    "en-US",
+    `${locale}-u-nu-latn`,
     {
       month: "long",
       day: "numeric",
@@ -136,15 +136,15 @@ export default async function ScreeningDetailPage({
           href="/dashboard"
           className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Back to Dashboard
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
+          {d.back}
         </Link>
 
-        <PageHeader title="Screening Results" description={formattedDate}>
+        <PageHeader title={d.title} description={formattedDate}>
           <Link href="/screening?prefill=latest">
             <Button variant="secondary" size="default">
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
-              Re-screen
+              {d.rescreen}
             </Button>
           </Link>
         </PageHeader>
@@ -161,23 +161,31 @@ export default async function ScreeningDetailPage({
         {screening.household_size && (
           <div className="flex items-center gap-1.5 rounded-lg border border-border bg-surface-dim px-3 py-1.5 text-sm text-text-muted">
             <Users className="h-3.5 w-3.5" aria-hidden="true" />
-            {screening.household_size} person household
+            {fmt(
+              screening.household_size === 1
+                ? d.householdOne
+                : d.householdOther,
+              { count: screening.household_size },
+            )}
           </div>
         )}
         <div className="flex items-center gap-1.5 rounded-lg border border-border bg-surface-dim px-3 py-1.5 text-sm text-text-muted">
           <Cpu className="h-3.5 w-3.5" aria-hidden="true" />
-          Engine v{screening.engine_version}
+          {fmt(d.engine, { version: screening.engine_version })}
         </div>
         <div className="flex items-center gap-1.5 rounded-lg border border-border bg-surface-dim px-3 py-1.5 text-sm text-text-muted">
           <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-          {new Date(screening.created_at).toLocaleTimeString("en-US", {
-            hour: "numeric",
-            minute: "2-digit",
-          })}
+          {new Date(screening.created_at).toLocaleTimeString(
+            `${locale}-u-nu-latn`,
+            {
+              hour: "numeric",
+              minute: "2-digit",
+            },
+          )}
         </div>
         {screening.is_latest && (
           <Badge variant="success" className="text-xs">
-            Latest
+            {d.latest}
           </Badge>
         )}
       </div>
@@ -188,8 +196,9 @@ export default async function ScreeningDetailPage({
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5 text-brand" aria-hidden="true" />
             <h2 className="font-semibold text-text">
-              {pursuable.length} program{pursuable.length !== 1 ? "s" : ""} you
-              likely qualify for
+              {fmt(pursuable.length === 1 ? d.likelyOne : d.likelyOther, {
+                count: pursuable.length,
+              })}
             </h2>
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -198,7 +207,7 @@ export default async function ScreeningDetailPage({
                 key={r.id}
                 className="rounded-full bg-brand/15 px-2.5 py-0.5 text-xs font-medium text-brand"
               >
-                {r.program_id}
+                {localizeProgramName(r.program_id, t)}
                 {r.estimated_value ? ` (${r.estimated_value})` : ""}
               </span>
             ))}
@@ -210,10 +219,10 @@ export default async function ScreeningDetailPage({
       {pursuable.length > 0 && (
         <section className="space-y-3">
           <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wide">
-            Eligible Programs
+            {d.eligiblePrograms}
           </h2>
           {pursuable.map((r) => (
-            <ResultCard key={r.id} result={r} />
+            <ResultCard key={r.id} result={r} t={t} />
           ))}
         </section>
       )}
@@ -222,10 +231,10 @@ export default async function ScreeningDetailPage({
       {maybe.length > 0 && (
         <section className="space-y-3">
           <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wide">
-            Maybe Eligible ({maybe.length})
+            {fmt(d.maybeCount, { count: maybe.length })}
           </h2>
           {maybe.map((r) => (
-            <ResultCard key={r.id} result={r} />
+            <ResultCard key={r.id} result={r} t={t} />
           ))}
         </section>
       )}
@@ -234,19 +243,17 @@ export default async function ScreeningDetailPage({
       {unlikely.length > 0 && (
         <section className="space-y-3">
           <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wide">
-            Not Currently Eligible ({unlikely.length})
+            {fmt(d.notEligibleCount, { count: unlikely.length })}
           </h2>
           {unlikely.map((r) => (
-            <ResultCard key={r.id} result={r} compact />
+            <ResultCard key={r.id} result={r} t={t} compact />
           ))}
         </section>
       )}
 
       {/* Disclaimer */}
       <p className="text-xs text-text-subtle text-center pt-4">
-        These results are estimates based on the information you provided.
-        Actual eligibility is determined by each program&apos;s administering
-        agency.
+        {d.disclaimer}
       </p>
     </div>
   );
@@ -254,8 +261,10 @@ export default async function ScreeningDetailPage({
 
 function ResultCard({
   result,
+  t,
   compact = false,
 }: {
+  t: Dictionary;
   result: {
     id: string;
     program_id: string;
@@ -268,6 +277,10 @@ function ResultCard({
 }) {
   const tier = TIER_META[result.eligibility_tier] ?? TIER_META.not_likely!;
   const TierIcon = tier.icon;
+  const d = t.resultsPage.detail;
+  const tierLabel =
+    d.tiers[result.eligibility_tier as keyof typeof d.tiers] ??
+    d.tiers.not_likely;
 
   return (
     <Card className={`space-y-2 ${tier.accentClass}`}>
@@ -277,7 +290,9 @@ function ResultCard({
             className={`h-4 w-4 ${tier.iconClass}`}
             aria-hidden="true"
           />
-          <h3 className="font-semibold text-text">{result.program_id}</h3>
+          <h3 className="font-semibold text-text">
+            {localizeProgramName(result.program_id, t)}
+          </h3>
         </div>
         <div className="flex items-center gap-2">
           {result.estimated_value && (
@@ -286,14 +301,14 @@ function ResultCard({
             </span>
           )}
           <Badge variant={tier.badgeVariant} className="text-xs">
-            {tier.label}
+            {tierLabel}
           </Badge>
         </div>
       </div>
 
       {!compact && (
         <div className="flex items-center justify-between text-xs text-text-muted">
-          <span>Confidence: {result.confidence_score}/100</span>
+          <span>{fmt(d.confidence, { score: result.confidence_score })}</span>
         </div>
       )}
     </Card>

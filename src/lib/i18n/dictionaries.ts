@@ -31,7 +31,7 @@ const en = {
     title1: "Find Every Benefit",
     title2: "You Deserve",
     subtitle:
-      "Answer a few simple questions and discover government programs you qualify for — explained in plain language, in your language.",
+      "Answer a few simple questions and discover government programs you qualify for, explained in plain language and in your language.",
     cta: "Check My Eligibility",
     noAccount: "100% free. No account required to check eligibility.",
   },
@@ -46,7 +46,7 @@ const en = {
     eligible:
       "You may qualify for {count} program{s} worth an estimated ${monthly}/month (${annual}/year). Scroll down to see your results.",
     notEligible:
-      "Based on the information provided, you may not qualify for the programs we currently check. This doesn't mean there aren't other programs available — check with your local social services office.",
+      "Based on the information provided, you may not qualify for the programs we currently check. This doesn't mean there aren't other programs available. Check with your local social services office.",
     perMonth: "/month",
     perYear: "/year",
     viewResults: "View Full Results",
@@ -65,7 +65,7 @@ const en = {
   },
   auth: {
     signInTitle: "Sign in to Benefind",
-    noPassword: "No password needed — we'll email you a magic link.",
+    noPassword: "No password needed. We'll email you a magic link.",
     emailLabel: "Email address",
     sendLink: "Send magic link",
     checkEmail: "Check your email",
@@ -291,7 +291,7 @@ const es: CoreDictionary = {
     title1: "Encuentra Todos los Beneficios",
     title2: "que Mereces",
     subtitle:
-      "Responde unas preguntas sencillas y descubre los programas del gobierno para los que calificas — explicados en lenguaje simple, en tu idioma.",
+      "Responde unas preguntas sencillas y descubre los programas del gobierno para los que calificas, explicados en lenguaje simple y en tu idioma.",
     cta: "Verificar Mi Elegibilidad",
     noAccount: "100% gratis. No necesitas cuenta para verificar elegibilidad.",
   },
@@ -326,7 +326,7 @@ const es: CoreDictionary = {
   auth: {
     signInTitle: "Iniciar sesión en Benefind",
     noPassword:
-      "No necesitas contraseña — te enviaremos un enlace mágico por correo.",
+      "No necesitas contraseña. Te enviaremos un enlace mágico por correo.",
     emailLabel: "Correo electrónico",
     sendLink: "Enviar enlace mágico",
     checkEmail: "Revisa tu correo",
@@ -549,7 +549,7 @@ const zh: CoreDictionary = {
     title1: "找到您应得的",
     title2: "每一项福利",
     subtitle:
-      "回答几个简单的问题，发现您有资格获得的政府项目——用简单的语言、用您的语言解释。",
+      "回答几个简单的问题，发现您有资格获得的政府项目，并用简单易懂的语言、用您的母语为您解释。",
     cta: "检查我的资格",
     noAccount: "100%免费。无需账户即可检查资格。",
   },
@@ -582,7 +582,7 @@ const zh: CoreDictionary = {
   },
   auth: {
     signInTitle: "登录Benefind",
-    noPassword: "无需密码——我们会发送一个魔法链接到您的邮箱。",
+    noPassword: "无需密码。我们会发送一个魔法链接到您的邮箱。",
     emailLabel: "电子邮箱",
     sendLink: "发送魔法链接",
     checkEmail: "请查看您的邮箱",
@@ -710,7 +710,50 @@ const zh: CoreDictionary = {
       "我们的代码是公开的。任何人都可以查看Benefind如何运作。没有黑箱，没有隐藏的把戏。",
     testimonialsTitle: "真实故事，真实影响",
     testimonialsSubtitle: "个人和企业正在发现他们从未知道的福利。",
-    testimonials: en.landing.testimonials,
+    testimonials: [
+      {
+        quote:
+          "我完全不知道自己符合 SNAP 和 LIHEAP 的资格。每个月多出 400 美元，我之前一直没有领取。",
+        name: "Maria G.",
+        location: "Houston, TX",
+        initials: "MG",
+      },
+      {
+        quote:
+          "我是单身爸爸，那些表格总是让我不知所措。Benefind 像朋友一样一步步带我完成。现在我的孩子们都有了 CHIP。",
+        name: "James R.",
+        location: "Atlanta, GA",
+        initials: "JR",
+      },
+      {
+        quote:
+          "我们是一家 12 人的初创公司，完全不知道自己符合研发税收抵免（R&D Tax Credit）的资格。Benefind 在不到 5 分钟内帮我们找到了每年 4.7 万美元的节省。",
+        name: "Priya K.",
+        location: "Austin, TX",
+        initials: "PK",
+      },
+      {
+        quote:
+          "我妈妈只会说越南语。她用自己的语言使用 Benefind，发现自己符合 Medicaid 的资格。",
+        name: "Linh T.",
+        location: "San Jose, CA",
+        initials: "LT",
+      },
+      {
+        quote:
+          "我们在一个农村县经营一家小型制造厂。Benefind 帮我们找到了 USDA 补助金和州政府的职业培训项目，这些我们自己根本找不到。",
+        name: "Tom 和 Linda B.",
+        location: "Asheville, NC",
+        initials: "TB",
+      },
+      {
+        quote:
+          "作为一家女性拥有的企业，我之前不知道 WOSB 政府合同项目。Benefind 告诉我如何获得专门留给像我这样企业的联邦合同。",
+        name: "Rachel M.",
+        location: "Denver, CO",
+        initials: "RM",
+      },
+    ],
     ctaHeadline: "您可能正在错失数千美元",
     ctaDesc:
       "个人和企业都有资格获得他们从未申请的项目。无论是个人福利还是企业补助，只有一种方式可以知道。",
@@ -742,7 +785,7 @@ const vi: CoreDictionary = {
     title1: "Tìm Mọi Quyền Lợi",
     title2: "Bạn Xứng Đáng",
     subtitle:
-      "Trả lời vài câu hỏi đơn giản và khám phá các chương trình chính phủ bạn đủ điều kiện — giải thích bằng ngôn ngữ đơn giản, bằng ngôn ngữ của bạn.",
+      "Trả lời vài câu hỏi đơn giản và khám phá các chương trình chính phủ bạn đủ điều kiện, được giải thích bằng ngôn ngữ đơn giản và bằng ngôn ngữ của bạn.",
     cta: "Kiểm Tra Điều Kiện",
     noAccount: "Miễn phí 100%. Không cần tài khoản để kiểm tra điều kiện.",
   },
@@ -777,7 +820,7 @@ const vi: CoreDictionary = {
   auth: {
     signInTitle: "Đăng nhập Benefind",
     noPassword:
-      "Không cần mật khẩu — chúng tôi sẽ gửi liên kết đến email của bạn.",
+      "Không cần mật khẩu. Chúng tôi sẽ gửi liên kết đến email của bạn.",
     emailLabel: "Địa chỉ email",
     sendLink: "Gửi liên kết",
     checkEmail: "Kiểm tra email của bạn",
@@ -918,7 +961,50 @@ const vi: CoreDictionary = {
     testimonialsTitle: "Câu chuyện thực, tác động thực",
     testimonialsSubtitle:
       "Cá nhân và doanh nghiệp đang tìm thấy các trợ cấp mà họ không bao giờ biết.",
-    testimonials: en.landing.testimonials,
+    testimonials: [
+      {
+        quote:
+          "Tôi không hề biết mình đủ điều kiện nhận SNAP và LIHEAP. Đó là thêm $400 mỗi tháng mà trước đây tôi đã bỏ lỡ.",
+        name: "Maria G.",
+        location: "Houston, TX",
+        initials: "MG",
+      },
+      {
+        quote:
+          "Tôi là một người cha đơn thân và các mẫu đơn luôn khiến tôi choáng ngợp. Benefind hướng dẫn tôi từng bước như một người bạn. Giờ các con tôi đã có CHIP.",
+        name: "James R.",
+        location: "Atlanta, GA",
+        initials: "JR",
+      },
+      {
+        quote:
+          "Chúng tôi là một công ty khởi nghiệp 12 người và không biết mình đủ điều kiện nhận Tín dụng Thuế R&D. Benefind đã tìm cho chúng tôi $47K tiết kiệm mỗi năm trong chưa đầy 5 phút.",
+        name: "Priya K.",
+        location: "Austin, TX",
+        initials: "PK",
+      },
+      {
+        quote:
+          "Mẹ tôi chỉ nói tiếng Việt. Bà đã dùng Benefind bằng tiếng mẹ đẻ và biết mình đủ điều kiện nhận Medicaid.",
+        name: "Linh T.",
+        location: "San Jose, CA",
+        initials: "LT",
+      },
+      {
+        quote:
+          "Chúng tôi điều hành một xưởng sản xuất nhỏ ở một quận nông thôn. Benefind đã kết nối chúng tôi với các khoản tài trợ của USDA và chương trình đào tạo nghề của tiểu bang mà tự chúng tôi sẽ không bao giờ tìm thấy.",
+        name: "Tom và Linda B.",
+        location: "Asheville, NC",
+        initials: "TB",
+      },
+      {
+        quote:
+          "Là một doanh nghiệp do phụ nữ làm chủ, tôi không biết về chương trình hợp đồng WOSB. Benefind đã chỉ cho tôi cách tiếp cận các hợp đồng liên bang dành riêng cho những doanh nghiệp như của tôi.",
+        name: "Rachel M.",
+        location: "Denver, CO",
+        initials: "RM",
+      },
+    ],
     ctaHeadline: "Bạn có thể đang bỏ lỡ hàng ngàn đô la",
     ctaDesc:
       "Cả cá nhân và doanh nghiệp đều đủ điều kiện cho các chương trình mà họ không bao giờ yêu cầu. Chỉ có một cách để biết.",
@@ -950,7 +1036,7 @@ const ar: CoreDictionary = {
     title1: "اكتشف كل المزايا",
     title2: "التي تستحقها",
     subtitle:
-      "أجب عن بضعة أسئلة بسيطة واكتشف البرامج الحكومية التي تؤهل لها — موضحة بلغة بسيطة، بلغتك.",
+      "أجب عن بضعة أسئلة بسيطة واكتشف البرامج الحكومية التي تؤهل لها، موضحة بلغة بسيطة وبلغتك.",
     cta: "تحقق من أهليتي",
     noAccount: "مجاني 100%. لا حاجة لحساب للتحقق من الأهلية.",
   },
@@ -984,7 +1070,7 @@ const ar: CoreDictionary = {
   auth: {
     signInTitle: "تسجيل الدخول إلى Benefind",
     noPassword:
-      "لا حاجة لكلمة مرور — سنرسل لك رابطاً سحرياً عبر البريد الإلكتروني.",
+      "لا حاجة لكلمة مرور. سنرسل لك رابطاً سحرياً عبر البريد الإلكتروني.",
     emailLabel: "البريد الإلكتروني",
     sendLink: "إرسال الرابط السحري",
     checkEmail: "تحقق من بريدك الإلكتروني",
@@ -1116,7 +1202,50 @@ const ar: CoreDictionary = {
       "شفرتنا عامة. يمكن لأي شخص فحص كيف يعمل Benefind. لا صناديق سوداء، لا حيل مخفية.",
     testimonialsTitle: "قصص حقيقية، تأثير حقيقي",
     testimonialsSubtitle: "الأفراد والشركات يجدون مزايا لم يعرفوا بوجودها.",
-    testimonials: en.landing.testimonials,
+    testimonials: [
+      {
+        quote:
+          "لم أكن أعرف أنني مؤهلة لبرنامجي SNAP وLIHEAP. هذا مبلغ إضافي قدره 400 دولار شهرياً كنت أفوّته.",
+        name: "Maria G.",
+        location: "Houston, TX",
+        initials: "MG",
+      },
+      {
+        quote:
+          "أنا أب أعزب وكانت الاستمارات تربكني دائماً. ساعدني Benefind خطوة بخطوة كما يفعل الصديق. أطفالي مسجلون الآن في CHIP.",
+        name: "James R.",
+        location: "Atlanta, GA",
+        initials: "JR",
+      },
+      {
+        quote:
+          "نحن شركة ناشئة من 12 شخصاً ولم نكن نعرف أننا مؤهلون لائتمان ضريبة البحث والتطوير (R&D Tax Credit). وجد لنا Benefind توفيراً سنوياً بقيمة 47 ألف دولار في أقل من 5 دقائق.",
+        name: "Priya K.",
+        location: "Austin, TX",
+        initials: "PK",
+      },
+      {
+        quote:
+          "أمي لا تتحدث إلا الفيتنامية. استطاعت استخدام Benefind بلغتها واكتشفت أنها مؤهلة لبرنامج Medicaid.",
+        name: "Linh T.",
+        location: "San Jose, CA",
+        initials: "LT",
+      },
+      {
+        quote:
+          "ندير ورشة تصنيع صغيرة في مقاطعة ريفية. ربطنا Benefind بمنح USDA وبرامج تدريب القوى العاملة في الولاية، ولم نكن لنجدها بأنفسنا.",
+        name: "Tom وLinda B.",
+        location: "Asheville, NC",
+        initials: "TB",
+      },
+      {
+        quote:
+          "بصفتي صاحبة شركة مملوكة لامرأة، لم أكن أعرف برنامج التعاقد WOSB. أوضح لي Benefind كيف أصل إلى العقود الفيدرالية المخصصة لشركات مثل شركتي.",
+        name: "Rachel M.",
+        location: "Denver, CO",
+        initials: "RM",
+      },
+    ],
     ctaHeadline: "قد تكون تترك آلاف الدولارات على الطاولة",
     ctaDesc:
       "الأفراد والشركات على حد سواء مؤهلون لبرامج لا يطالبون بها أبداً. سواء كانت مزايا شخصية أو منح تجارية، هناك طريقة واحدة فقط لمعرفة ذلك.",

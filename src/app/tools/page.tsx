@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getServerI18n } from "@/lib/i18n/server";
 
 export const metadata: Metadata = {
   title: "Free Benefit Calculators | Benefind",
@@ -24,34 +25,10 @@ export const metadata: Metadata = {
 };
 
 const TOOLS = [
-  {
-    href: "/tools/snap-calculator",
-    label: "[SNAP]",
-    title: "SNAP Benefit Calculator",
-    description:
-      "Estimate your monthly food stamp benefit in under 60 seconds. Enter household size, income, and state to see how much you could receive.",
-    badge: "Free food assistance",
-    cta: "Calculate SNAP benefits",
-  },
-  {
-    href: "/tools/medicaid-estimator",
-    label: "[Medicaid]",
-    title: "Medicaid Eligibility Estimator",
-    description:
-      "Find out if your income qualifies for Medicaid in your state. Expansion and non-expansion states handled separately.",
-    badge: "Free health coverage",
-    cta: "Check Medicaid eligibility",
-  },
-  {
-    href: "/tools/tax-credit-calculator",
-    label: "[R&D Tax Credit]",
-    title: "R&D Tax Credit Calculator",
-    description:
-      "Estimate your federal R&D tax credit using the ASC method. Startups may qualify for the payroll tax offset — find out instantly.",
-    badge: "Business tax savings",
-    cta: "Calculate R&D credit",
-  },
-];
+  { href: "/tools/snap-calculator", key: "snap" },
+  { href: "/tools/medicaid-estimator", key: "medicaid" },
+  { href: "/tools/tax-credit-calculator", key: "rd" },
+] as const;
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
@@ -72,7 +49,9 @@ const breadcrumbSchema = {
   ],
 };
 
-export default function ToolsIndexPage() {
+export default async function ToolsIndexPage() {
+  const { t } = await getServerI18n();
+  const tt = t.tools.index;
   return (
     <>
       <script
@@ -86,14 +65,13 @@ export default function ToolsIndexPage() {
       <div className="border-b border-dashed border-border">
         <div className="mx-auto max-w-[1520px] px-6 py-16 md:py-24">
           <p className="mb-4 font-mono text-xs uppercase tracking-widest text-brand">
-            [Free Calculators]
+            {tt.eyebrow}
           </p>
           <h1 className="mb-3 font-display text-3xl font-semibold tracking-tight text-text md:text-5xl">
-            Know before you apply.
+            {tt.title}
           </h1>
           <p className="max-w-2xl text-base leading-relaxed text-text-muted md:text-lg">
-            Instant estimates for the programs that matter most. No account
-            required. Full screenings available when you're ready.
+            {tt.intro}
           </p>
         </div>
       </div>
@@ -101,31 +79,37 @@ export default function ToolsIndexPage() {
       {/* Tool cards */}
       <div className="mx-auto max-w-[1520px] px-6 py-12 md:py-16">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {TOOLS.map((tool) => (
-            <Link
-              key={tool.href}
-              href={tool.href}
-              className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface-dim p-6 transition-all hover:border-brand/40 hover:bg-surface-bright"
-            >
-              <p className="mb-3 font-mono text-xs uppercase tracking-widest text-brand">
-                {tool.label}
-              </p>
-              <h2 className="mb-2 font-display text-xl font-semibold text-text transition-colors group-hover:text-brand">
-                {tool.title}
-              </h2>
-              <p className="mb-4 flex-1 text-sm leading-relaxed text-text-muted">
-                {tool.description}
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="rounded bg-surface-bright px-2 py-1 font-mono text-[10px] text-text-subtle">
-                  {tool.badge}
-                </span>
-                <span className="text-sm font-medium text-brand transition-colors group-hover:underline">
-                  {tool.cta} →
-                </span>
-              </div>
-            </Link>
-          ))}
+          {TOOLS.map(({ href, key }) => {
+            const tool = tt[key];
+            return (
+              <Link
+                key={href}
+                href={href}
+                className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface-dim p-6 transition-all hover:border-brand/40 hover:bg-surface-bright"
+              >
+                <p className="mb-3 font-mono text-xs uppercase tracking-widest text-brand">
+                  {tool.label}
+                </p>
+                <h2 className="mb-2 font-display text-xl font-semibold text-text transition-colors group-hover:text-brand">
+                  {tool.title}
+                </h2>
+                <p className="mb-4 flex-1 text-sm leading-relaxed text-text-muted">
+                  {tool.description}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="rounded bg-surface-bright px-2 py-1 font-mono text-[10px] text-text-subtle">
+                    {tool.badge}
+                  </span>
+                  <span className="text-sm font-medium text-brand transition-colors group-hover:underline">
+                    {tool.cta}{" "}
+                    <span aria-hidden className="inline-block rtl:-scale-x-100">
+                      →
+                    </span>
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </>

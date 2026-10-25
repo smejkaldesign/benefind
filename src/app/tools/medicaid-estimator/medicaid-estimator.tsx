@@ -20,6 +20,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { useI18n } from "@/lib/i18n/context";
+import { fmt } from "@/lib/i18n/format";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 // States that have expanded Medicaid under the ACA (as of 2026)
 const EXPANSION_STATES = new Set([
@@ -138,12 +141,21 @@ function getFPL(householdSize: number): number {
   return FPL_ANNUAL[capped] ?? FPL_ANNUAL[8]!;
 }
 
+type ResultKind =
+  | "noState"
+  | "disability"
+  | "pregnancy"
+  | "eligible"
+  | "gap"
+  | "marketplace"
+  | "over";
+
 type EligibilityResult = {
-  status: "Likely eligible" | "May not qualify" | "Check with your state";
+  status: "likely" | "notQualify" | "checkState";
   badge: "green" | "yellow" | "gray";
-  headline: string;
-  detail: string;
-  stateDetail: string;
+  kind: ResultKind;
+  isExpansion: boolean;
+  params: Record<string, string | number>;
 };
 
 function estimateMedicaid(
@@ -156,12 +168,11 @@ function estimateMedicaid(
 ): EligibilityResult {
   if (!state) {
     return {
-      status: "Check with your state",
+      status: "checkState",
       badge: "gray",
-      headline: "Select a state to continue",
-      detail:
-        "Medicaid rules vary significantly by state. Select your state above for a personalized estimate.",
-      stateDetail: "",
+      kind: "noState",
+      isExpansion: false,
+      params: {},
     };
   }
 
@@ -175,66 +186,108 @@ function estimateMedicaid(
   // Disability/SSI: typically qualify if on SSI or SSDI regardless of income in most states
   const disabilityQualifies = hasDisability && age >= 18;
 
-  const stateName = state;
-  const expansionLabel = isExpansion ? "expansion" : "non-expansion";
+  const base = {
+    isExpansion,
+    params: {
+      state,
+      size: householdSize,
+      income: annualIncome.toLocaleString(),
+    },
+  };
 
   if (disabilityQualifies) {
-    return {
-      status: "Likely eligible",
-      badge: "green",
-      headline: "Likely eligible through disability pathway",
-      detail: `People receiving SSI or SSDI benefits typically qualify for Medicaid automatically in most states, regardless of income limits. ${stateName} is a ${expansionLabel} state.`,
-      stateDetail: `In ${stateName}, individuals with a qualifying disability are often auto-enrolled in Medicaid when they receive federal disability benefits. Verify your specific benefit type with your state agency.`,
-    };
+    return { ...base, status: "likely", badge: "green", kind: "disability" };
   }
 
   if (isPregnant && annualIncome <= pregnancyThreshold) {
     return {
-      status: "Likely eligible",
+      ...base,
+      status: "likely",
       badge: "green",
-      headline: "Likely eligible through pregnancy Medicaid",
-      detail: `${stateName} covers pregnant individuals with incomes up to approximately 185% FPL ($${pregnancyThreshold.toLocaleString()}/year for a household of ${householdSize}). Your income appears to be within this threshold.`,
-      stateDetail: `Pregnancy Medicaid in ${stateName} covers prenatal care, labor and delivery, and postpartum care. Coverage often continues for 60 days postpartum, with some states extending to 12 months.`,
+      kind: "pregnancy",
+      params: { ...base.params, limit: pregnancyThreshold.toLocaleString() },
     };
   }
 
   if (annualIncome <= thresholdIncome) {
     return {
-      status: "Likely eligible",
+      ...base,
+      status: "likely",
       badge: "green",
-      headline: `Likely eligible in ${stateName}`,
-      detail: `Your income ($${annualIncome.toLocaleString()}/year) appears to be within the ${stateName} Medicaid limit of ${isExpansion ? "138%" : "100%"} FPL ($${thresholdIncome.toLocaleString()}/year for a household of ${householdSize}).`,
-      stateDetail: `${stateName} ${isExpansion ? "expanded Medicaid under the ACA, covering" : "has not expanded Medicaid. Coverage is primarily available for"} adults with incomes up to ${isExpansion ? "138%" : "100%"} of the federal poverty level. Children, pregnant individuals, and people with disabilities may qualify at higher thresholds.`,
+      kind: "eligible",
+      params: {
+        ...base.params,
+        pct: isExpansion ? "138%" : "100%",
+        limit: thresholdIncome.toLocaleString(),
+      },
     };
   }
 
   if (!isExpansion && annualIncome <= Math.round(fpl * 1.38)) {
-    return {
-      status: "Check with your state",
-      badge: "yellow",
-      headline: `Coverage gap in ${stateName}`,
-      detail: `Your income ($${annualIncome.toLocaleString()}/year) is above ${stateName}'s Medicaid limit but below 138% FPL. Because ${stateName} has not expanded Medicaid, you may fall in the coverage gap.`,
-      stateDetail: `In the coverage gap, income is too high for traditional Medicaid but too low to qualify for ACA marketplace subsidies (which start at 100% FPL). Check whether ${stateName} has any limited expansion or special programs. You may also be eligible for marketplace coverage.`,
-    };
+    return { ...base, status: "checkState", badge: "yellow", kind: "gap" };
   }
 
   if (annualIncome <= Math.round(fpl * 4.0)) {
     return {
-      status: "Check with your state",
+      ...base,
+      status: "checkState",
       badge: "yellow",
-      headline: "Income above Medicaid limit — marketplace may help",
-      detail: `Your income ($${annualIncome.toLocaleString()}/year) is likely above the Medicaid threshold for ${stateName}, but you may qualify for subsidized marketplace coverage through Healthcare.gov.`,
-      stateDetail: `In ${stateName}, households earning between 100% and 400% FPL ($${Math.round(fpl).toLocaleString()} to $${Math.round(fpl * 4).toLocaleString()}/year) may qualify for premium tax credits. A full Benefind screening will check marketplace eligibility as well.`,
+      kind: "marketplace",
+      params: {
+        ...base.params,
+        low: Math.round(fpl).toLocaleString(),
+        high: Math.round(fpl * 4).toLocaleString(),
+      },
     };
   }
 
-  return {
-    status: "May not qualify",
-    badge: "gray",
-    headline: "Income likely above eligibility thresholds",
-    detail: `Your income ($${annualIncome.toLocaleString()}/year) appears to exceed Medicaid and marketplace subsidy thresholds for ${stateName}. However, other household factors may change this.`,
-    stateDetail: `A full Benefind screening will check for other programs, including CHIP for children in the household, state-specific programs, and employer coverage alternatives.`,
-  };
+  return { ...base, status: "notQualify", badge: "gray", kind: "over" };
+}
+
+function resultText(
+  tm: Dictionary["tools"]["medicaid"],
+  result: EligibilityResult,
+): { headline: string; detail: string; stateDetail: string } {
+  const r = tm.results;
+  const p = result.params;
+  switch (result.kind) {
+    case "noState":
+      return {
+        headline: r.noState.headline,
+        detail: r.noState.detail,
+        stateDetail: "",
+      };
+    case "disability":
+      return {
+        headline: r.disability.headline,
+        detail: fmt(
+          result.isExpansion
+            ? r.disability.detailExpansion
+            : r.disability.detailNonExpansion,
+          p,
+        ),
+        stateDetail: fmt(r.disability.stateDetail, p),
+      };
+    case "eligible":
+      return {
+        headline: fmt(r.eligible.headline, p),
+        detail: fmt(r.eligible.detail, p),
+        stateDetail: fmt(
+          result.isExpansion
+            ? r.eligible.stateDetailExpansion
+            : r.eligible.stateDetailNonExpansion,
+          p,
+        ),
+      };
+    default: {
+      const entry = r[result.kind];
+      return {
+        headline: fmt(entry.headline, p),
+        detail: fmt(entry.detail, p),
+        stateDetail: fmt(entry.stateDetail, p),
+      };
+    }
+  }
 }
 
 const BADGE_CLASSES: Record<string, string> = {
@@ -244,6 +297,11 @@ const BADGE_CLASSES: Record<string, string> = {
 };
 
 export function MedicaidEstimator() {
+  const { t } = useI18n();
+  const ts = t.tools.shared;
+  const tm = t.tools.medicaid;
+  const people = (n: number) =>
+    fmt(n === 1 ? ts.personOne : ts.personOther, { n });
   const [state, setState] = useState<string>("");
   const [householdSize, setHouseholdSize] = useState<string>("2");
   const [annualIncome, setAnnualIncome] = useState<string>("");
@@ -261,6 +319,8 @@ export function MedicaidEstimator() {
     );
   }
 
+  const text = result ? resultText(tm, result) : null;
+
   return (
     <>
       {/* Hero */}
@@ -268,25 +328,23 @@ export function MedicaidEstimator() {
         <div className="mx-auto max-w-[1520px] px-6 py-12 md:py-16">
           <nav className="mb-4 flex items-center gap-2 font-mono text-xs text-text-subtle">
             <Link href="/" className="hover:text-text">
-              Home
+              {t.common.home}
             </Link>
             <span>/</span>
             <Link href="/tools" className="hover:text-text">
-              Tools
+              {ts.breadcrumbTools}
             </Link>
             <span>/</span>
-            <span className="text-text">Medicaid Estimator</span>
+            <span className="text-text">{tm.breadcrumb}</span>
           </nav>
           <p className="mb-3 font-mono text-xs uppercase tracking-widest text-brand">
-            [Medicaid]
+            {tm.eyebrow}
           </p>
           <h1 className="mb-3 font-display text-3xl font-semibold tracking-tight text-text md:text-4xl">
-            Medicaid Eligibility Estimator 2026
+            {tm.title}
           </h1>
           <p className="max-w-2xl text-base leading-relaxed text-text-muted">
-            Find out if your income qualifies for Medicaid in your state. We
-            handle expansion and non-expansion states separately so you get an
-            accurate picture, not a generic answer.
+            {tm.intro}
           </p>
         </div>
       </div>
@@ -297,57 +355,41 @@ export function MedicaidEstimator() {
           <div className="order-2 lg:order-1">
             <section className="mb-10">
               <h2 className="mb-4 font-display text-2xl font-semibold tracking-tight text-text">
-                Medicaid Expansion: What It Means for You
+                {tm.expansionTitle}
               </h2>
               <p className="mb-4 leading-relaxed text-text-muted">
-                The Affordable Care Act (ACA) gave states the option to expand
-                Medicaid to cover adults earning up to 138% of the federal
-                poverty level. As of 2026, 41 states and Washington DC have
-                expanded. In expansion states, a single adult earning up to
-                about $20,783 per year qualifies regardless of family structure
-                or disability status.
+                {tm.expansionP1}
               </p>
               <p className="mb-4 leading-relaxed text-text-muted">
-                In non-expansion states, coverage for adults without children is
-                often extremely limited or nonexistent. Many non-expansion
-                states require disability status, pregnancy, or very low income
-                to qualify. This creates what policy experts call the coverage
-                gap — too much income for traditional Medicaid, too little for
-                marketplace subsidies.
+                {tm.expansionP2}
               </p>
               <p className="leading-relaxed text-text-muted">
-                The federal government continues to incentivize expansion, and
-                several additional states have passed expansion legislation that
-                takes effect in 2025-2026. Your state's status can change, so
-                always verify current rules through your state Medicaid agency
-                or a full Benefind screening.
+                {tm.expansionP3}
               </p>
             </section>
 
             <section className="mb-10">
               <h2 className="mb-4 font-display text-2xl font-semibold tracking-tight text-text">
-                Medicaid Income Limits by State Type (2026)
+                {tm.limitsTitle}
               </h2>
               <p className="mb-4 leading-relaxed text-text-muted">
-                Income limits vary by household size, state, and whether you
-                fall into a specific category (pregnant, disabled, child,
-                elderly). These are the general adult thresholds:
+                {tm.limitsIntro}
               </p>
               <div className="overflow-x-auto rounded-xl border border-border">
                 <table className="w-full text-sm">
                   <thead className="bg-surface-dim">
                     <tr>
-                      <th className="px-4 py-3 text-left font-semibold text-text">
-                        Household Size
+                      <th className="px-4 py-3 text-start font-semibold text-text">
+                        {tm.colHousehold}
                       </th>
-                      <th className="px-4 py-3 text-left font-semibold text-text">
-                        100% FPL
+                      <th className="px-4 py-3 text-start font-semibold text-text">
+                        {tm.col100}
                       </th>
-                      <th className="px-4 py-3 text-left font-semibold text-text">
-                        138% FPL (Expansion)
+                      <th className="px-4 py-3 text-start font-semibold text-text">
+                        {tm.col138}
                       </th>
-                      <th className="px-4 py-3 text-left font-semibold text-text">
-                        185% FPL (Pregnancy)
+                      <th className="px-4 py-3 text-start font-semibold text-text">
+                        {tm.col185}
                       </th>
                     </tr>
                   </thead>
@@ -362,16 +404,19 @@ export function MedicaidEstimator() {
                           }
                         >
                           <td className="px-4 py-3 text-text-muted">
-                            {size} {size === 1 ? "person" : "people"}
+                            {people(size)}
                           </td>
                           <td className="px-4 py-3 text-text-muted">
-                            ${fpl.toLocaleString()}/yr
+                            ${fpl.toLocaleString()}
+                            {ts.perYear}
                           </td>
                           <td className="px-4 py-3 font-medium text-text">
-                            ${Math.round(fpl * 1.38).toLocaleString()}/yr
+                            ${Math.round(fpl * 1.38).toLocaleString()}
+                            {ts.perYear}
                           </td>
                           <td className="px-4 py-3 text-text-muted">
-                            ${Math.round(fpl * 1.85).toLocaleString()}/yr
+                            ${Math.round(fpl * 1.85).toLocaleString()}
+                            {ts.perYear}
                           </td>
                         </tr>
                       );
@@ -380,42 +425,16 @@ export function MedicaidEstimator() {
                 </table>
               </div>
               <p className="mt-3 font-mono text-xs text-text-subtle">
-                * Annual income figures. Alaska and Hawaii have higher FPL
-                baselines.
+                {tm.limitsFootnote}
               </p>
             </section>
 
             <section className="mb-10">
               <h2 className="mb-4 font-display text-2xl font-semibold tracking-tight text-text">
-                Who Qualifies for Medicaid?
+                {tm.whoTitle}
               </h2>
               <div className="grid gap-4 sm:grid-cols-2">
-                {[
-                  {
-                    title: "Low-Income Adults (Expansion States)",
-                    desc: "Adults 19-64 with income at or below 138% FPL automatically qualify in expansion states. There are no asset tests or work requirements for this group.",
-                  },
-                  {
-                    title: "Children (CHIP or Medicaid)",
-                    desc: "Children qualify at much higher income thresholds, typically 200-300% FPL, through Medicaid or the Children's Health Insurance Program (CHIP). Many states cover children up to 400% FPL.",
-                  },
-                  {
-                    title: "Pregnant Individuals",
-                    desc: "Pregnancy Medicaid typically covers income up to 185-200% FPL, sometimes higher. Coverage includes prenatal care, delivery, and postpartum care, often extended to 12 months post-delivery.",
-                  },
-                  {
-                    title: "People with Disabilities",
-                    desc: "Individuals receiving SSI (Supplemental Security Income) are typically automatically eligible for Medicaid. Those receiving SSDI may qualify after a 24-month waiting period for Medicare, but Medicaid can fill the gap.",
-                  },
-                  {
-                    title: "Elderly Adults (65+)",
-                    desc: "Seniors with limited income and assets may qualify for full Medicaid in addition to Medicare. Medicaid covers services Medicare does not, including long-term care and nursing home costs.",
-                  },
-                  {
-                    title: "Non-Expansion State Adults",
-                    desc: "Without expansion, coverage depends heavily on your category. Parents with very low income, pregnant individuals, and people with disabilities may still qualify. Childless adults often have no pathway in non-expansion states.",
-                  },
-                ].map((item) => (
+                {tm.who.map((item) => (
                   <div
                     key={item.title}
                     className="rounded-xl border border-border bg-surface-dim p-5"
@@ -433,31 +452,10 @@ export function MedicaidEstimator() {
 
             <section className="mb-10">
               <h2 className="mb-6 font-display text-2xl font-semibold tracking-tight text-text">
-                Frequently Asked Questions
+                {ts.faqTitle}
               </h2>
               <div className="flex flex-col gap-4">
-                {[
-                  {
-                    q: "What is the income limit for Medicaid in 2026?",
-                    a: "In states that expanded Medicaid, adults qualify with incomes up to 138% FPL, about $20,783 per year for a single person in 2026. Non-expansion states set their own thresholds, often much lower.",
-                  },
-                  {
-                    q: "Which states expanded Medicaid?",
-                    a: "As of 2026, 41 states and DC have expanded Medicaid. States that have not expanded include Alabama, Florida, Georgia, Mississippi, South Carolina, Tennessee, Texas, Wisconsin, and Wyoming.",
-                  },
-                  {
-                    q: "How do I apply for Medicaid?",
-                    a: "You can apply through your state Medicaid agency, Healthcare.gov during open enrollment, or year-round with a qualifying life event. A Benefind screening guides you directly to your state's application portal.",
-                  },
-                  {
-                    q: "Does pregnancy affect Medicaid eligibility?",
-                    a: "Yes. Pregnant individuals typically qualify at higher income thresholds, usually 185-250% FPL. In many states, pregnancy Medicaid is available regardless of immigration status.",
-                  },
-                  {
-                    q: "Can I get Medicaid if I have Medicare?",
-                    a: "Yes. Dual-eligible individuals qualify for both. Medicaid covers Medicare premiums, copays, and services Medicare excludes, such as long-term care and dental.",
-                  },
-                ].map((item) => (
+                {tm.faqs.map((item) => (
                   <div
                     key={item.q}
                     className="rounded-xl border border-border bg-surface-dim p-5"
@@ -473,21 +471,22 @@ export function MedicaidEstimator() {
 
             <div className="rounded-xl border border-brand/30 bg-brand/5 p-6">
               <p className="mb-1 font-mono text-xs uppercase tracking-widest text-brand">
-                [Full screening]
+                {tm.ctaEyebrow}
               </p>
               <h3 className="mb-2 font-display text-lg font-semibold text-text">
-                Get an exact determination
+                {tm.ctaTitle}
               </h3>
               <p className="mb-4 text-sm leading-relaxed text-text-muted">
-                This estimator covers the basics. A full Benefind screening
-                checks every Medicaid pathway, CHIP, marketplace credits, and
-                40+ other programs in one pass.
+                {tm.ctaBody}
               </p>
               <Link
                 href="/get-started"
                 className="inline-flex items-center gap-1 text-sm font-medium text-brand hover:underline"
               >
-                Start your free screening &rarr;
+                {tm.ctaLink}{" "}
+                <span aria-hidden className="inline-block rtl:-scale-x-100">
+                  &rarr;
+                </span>
               </Link>
             </div>
           </div>
@@ -498,17 +497,16 @@ export function MedicaidEstimator() {
               <Card className="border-border bg-surface-dim">
                 <CardHeader>
                   <CardTitle className="font-display text-xl text-text">
-                    Medicaid Eligibility Estimator
+                    {tm.cardTitle}
                   </CardTitle>
                   <CardDescription className="text-text-muted">
-                    Based on 2026 federal and state Medicaid rules. Estimates
-                    only.
+                    {tm.cardDescription}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-5">
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="med-state" className="text-sm text-text">
-                      State
+                      {ts.state}
                     </Label>
                     <Select
                       value={state}
@@ -520,7 +518,7 @@ export function MedicaidEstimator() {
                         id="med-state"
                         className="border-border bg-surface text-text"
                       >
-                        <SelectValue placeholder="Select your state" />
+                        <SelectValue placeholder={ts.selectState} />
                       </SelectTrigger>
                       <SelectContent className="max-h-60">
                         {US_STATES.map((s) => (
@@ -533,8 +531,8 @@ export function MedicaidEstimator() {
                     {state && (
                       <p className="font-mono text-[11px] text-text-subtle">
                         {EXPANSION_STATES.has(state)
-                          ? "Expansion state (138% FPL threshold)"
-                          : "Non-expansion state (thresholds vary)"}
+                          ? tm.expansionHint
+                          : tm.nonExpansionHint}
                       </p>
                     )}
                   </div>
@@ -544,7 +542,7 @@ export function MedicaidEstimator() {
                       htmlFor="med-household"
                       className="text-sm text-text"
                     >
-                      Household size
+                      {ts.householdSize}
                     </Label>
                     <Select
                       value={householdSize}
@@ -556,12 +554,14 @@ export function MedicaidEstimator() {
                         id="med-household"
                         className="border-border bg-surface text-text"
                       >
-                        <SelectValue />
+                        <SelectValue>
+                          {(v: string) => people(Number(v))}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {Array.from({ length: 8 }, (_, i) => i + 1).map((n) => (
                           <SelectItem key={n} value={String(n)}>
-                            {n} {n === 1 ? "person" : "people"}
+                            {people(n)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -570,32 +570,32 @@ export function MedicaidEstimator() {
 
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="med-income" className="text-sm text-text">
-                      Annual household income ($)
+                      {tm.incomeLabel}
                     </Label>
                     <Input
                       id="med-income"
                       type="number"
                       min={0}
-                      placeholder="e.g. 24000"
+                      placeholder={fmt(ts.eg, { value: "24000" })}
                       value={annualIncome}
                       onChange={(e) => setAnnualIncome(e.target.value)}
                       className="border-border bg-surface text-text"
                     />
                     <p className="font-mono text-[11px] text-text-subtle">
-                      Gross income before taxes
+                      {tm.incomeHelp}
                     </p>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="med-age" className="text-sm text-text">
-                      Age (primary applicant)
+                      {tm.ageLabel}
                     </Label>
                     <Input
                       id="med-age"
                       type="number"
                       min={0}
                       max={120}
-                      placeholder="e.g. 34"
+                      placeholder={fmt(ts.eg, { value: "34" })}
                       value={age}
                       onChange={(e) => setAge(e.target.value)}
                       className="border-border bg-surface text-text"
@@ -605,32 +605,32 @@ export function MedicaidEstimator() {
                   <div className="flex items-center justify-between rounded-lg border border-border bg-surface p-3">
                     <div>
                       <p className="text-sm font-medium text-text">
-                        Currently pregnant
+                        {tm.pregnantLabel}
                       </p>
                       <p className="font-mono text-[11px] text-text-subtle">
-                        Higher income thresholds may apply
+                        {tm.pregnantHelp}
                       </p>
                     </div>
                     <Switch
                       checked={isPregnant}
                       onCheckedChange={setIsPregnant}
-                      aria-label="Currently pregnant"
+                      aria-label={tm.pregnantLabel}
                     />
                   </div>
 
                   <div className="flex items-center justify-between rounded-lg border border-border bg-surface p-3">
                     <div>
                       <p className="text-sm font-medium text-text">
-                        Has disability or receives SSI/SSDI
+                        {tm.disabilityLabel}
                       </p>
                       <p className="font-mono text-[11px] text-text-subtle">
-                        May qualify through disability pathway
+                        {tm.disabilityHelp}
                       </p>
                     </div>
                     <Switch
                       checked={hasDisability}
                       onCheckedChange={setHasDisability}
-                      aria-label="Has disability or receives SSI/SSDI"
+                      aria-label={tm.disabilityLabel}
                     />
                   </div>
 
@@ -638,10 +638,10 @@ export function MedicaidEstimator() {
                     onClick={handleEstimate}
                     className="w-full bg-brand text-white hover:bg-brand-dark"
                   >
-                    Check eligibility
+                    {tm.check}
                   </Button>
 
-                  {result && (
+                  {result && text && (
                     <div
                       role="status"
                       aria-live="polite"
@@ -649,37 +649,42 @@ export function MedicaidEstimator() {
                     >
                       <div className="flex items-center justify-between">
                         <p className="font-mono text-xs uppercase tracking-widest text-text-subtle">
-                          Result
+                          {tm.resultLabel}
                         </p>
                         <span
                           className={`rounded border px-2 py-0.5 font-mono text-[10px] font-semibold ${BADGE_CLASSES[result.badge]}`}
                         >
-                          {result.status}
+                          {tm.status[result.status]}
                         </span>
                       </div>
                       <p className="font-display text-xl font-semibold text-text">
-                        {result.headline}
+                        {text.headline}
                       </p>
                       <p className="text-sm leading-relaxed text-text-muted">
-                        {result.detail}
+                        {text.detail}
                       </p>
-                      {result.stateDetail && (
+                      {text.stateDetail && (
                         <p className="text-sm leading-relaxed text-text-subtle">
-                          {result.stateDetail}
+                          {text.stateDetail}
                         </p>
                       )}
                       <Link
                         href="/get-started"
-                        className="mt-1 inline-flex w-full items-center justify-center rounded-lg bg-brand/10 px-4 py-2.5 text-sm font-medium text-brand transition-colors hover:bg-brand/20"
+                        className="mt-1 inline-flex w-full items-center justify-center gap-1 rounded-lg bg-brand/10 px-4 py-2.5 text-sm font-medium text-brand transition-colors hover:bg-brand/20"
                       >
-                        Start full screening for exact results &rarr;
+                        {ts.startFullScreening}{" "}
+                        <span
+                          aria-hidden
+                          className="inline-block rtl:-scale-x-100"
+                        >
+                          &rarr;
+                        </span>
                       </Link>
                     </div>
                   )}
 
                   <p className="font-mono text-[10px] text-text-subtle">
-                    Estimates only. Rules change frequently. Verify eligibility
-                    with your state Medicaid agency.
+                    {tm.disclaimer}
                   </p>
                 </CardContent>
               </Card>

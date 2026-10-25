@@ -7,67 +7,70 @@
  * - Full viewport width, dark edge gradients handled by parent
  */
 
-const ROW_1 = [
-  { emoji: "🍎", text: "Maria saved $340/mo on groceries", gap: 180, y: -18 },
+import { useI18n } from "@/lib/i18n/context";
+
+const ROW_1: Chip[] = [
+  { emoji: "🍎", gap: 180, y: -18 },
   {
     emoji: "🚀",
-    text: "TechStart Inc. received $150K SBIR grant",
     gap: 280,
     y: 12,
   },
   {
     emoji: "🌱",
-    text: "GreenBuild Co. saved $45K in energy credits",
     gap: 140,
     y: -8,
   },
-  { emoji: "🎓", text: "Lin received a $6,500 Pell Grant", gap: 320, y: 22 },
+  { emoji: "🎓", gap: 320, y: 22 },
   {
     emoji: "💊",
-    text: "Sarah qualified for free healthcare",
     gap: 200,
     y: -14,
   },
 ];
 
-const ROW_2 = [
+const ROW_2: Chip[] = [
   {
     emoji: "🔥",
-    text: "James got $2,400 in heating assistance",
     gap: 260,
     y: 16,
   },
   {
     emoji: "🎯",
-    text: "Acme Logistics got $12K workforce grant",
     gap: 160,
     y: -20,
   },
   {
     emoji: "💰",
-    text: "David found $8,200 in annual benefits",
     gap: 300,
     y: 8,
   },
   {
     emoji: "🏠",
-    text: "Rosa found Section 8 housing assistance",
     gap: 220,
     y: -12,
   },
 ];
 
+type Chip = { emoji: string; gap: number; y: number };
+
 function ChipRow({
   chips,
+  texts,
+  dir,
   duration,
 }: {
-  chips: { emoji: string; text: string; gap: number; y: number }[];
+  chips: Chip[];
+  texts: string[];
+  dir: "ltr" | "rtl";
   duration: number;
 }) {
-  const tripled = [...chips, ...chips, ...chips];
+  const withText = chips.map((chip, i) => ({ ...chip, text: texts[i] }));
+  const tripled = [...withText, ...withText, ...withText];
 
   return (
     <div
+      dir="ltr"
       style={{
         display: "flex",
         alignItems: "center",
@@ -91,6 +94,7 @@ function ChipRow({
         {tripled.map((chip, i) => (
           <div
             key={`${chip.text}-${i}`}
+            dir={dir}
             style={{
               display: "flex",
               alignItems: "center",
@@ -143,6 +147,7 @@ function ChipRow({
 }
 
 export function SuccessChips() {
+  const { t, dir } = useI18n();
   return (
     <div
       className="pointer-events-none absolute z-20"
@@ -164,8 +169,18 @@ export function SuccessChips() {
       }}
     >
       <div className="relative flex h-full flex-col items-start justify-center gap-[30px] overflow-hidden">
-        <ChipRow chips={ROW_1} duration={104} />
-        <ChipRow chips={ROW_2} duration={124} />
+        <ChipRow
+          chips={ROW_1}
+          texts={t.marketing.chips.row1}
+          dir={dir}
+          duration={104}
+        />
+        <ChipRow
+          chips={ROW_2}
+          texts={t.marketing.chips.row2}
+          dir={dir}
+          duration={124}
+        />
       </div>
     </div>
   );

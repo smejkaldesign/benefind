@@ -14,6 +14,7 @@ import { GetStartedCTA } from "@/components/landing/get-started-cta";
 import { Footer } from "@/components/footer";
 import { TrustBar } from "@/components/trust-bar";
 import { useI18n } from "@/lib/i18n/context";
+import { fmt } from "@/lib/i18n/format";
 
 export default function Home() {
   const { t } = useI18n();
@@ -109,16 +110,16 @@ export default function Home() {
                   className="group inline-flex h-[52px] items-center gap-2 rounded-lg border border-surface/20 bg-white px-6 text-sm font-semibold text-surface shadow-sm transition-all hover:bg-white/95"
                 >
                   <User className="h-4 w-4" />
-                  For Individuals
-                  <ArrowRight className="h-4 w-4 max-w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-200 group-hover:max-w-[16px] group-hover:translate-x-0 group-hover:opacity-100" />
+                  {t.marketing.forIndividuals}
+                  <ArrowRight className="h-4 w-4 max-w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-200 group-hover:max-w-[16px] group-hover:translate-x-0 rtl:-scale-x-100 group-hover:opacity-100" />
                 </Link>
                 <Link
                   href="/screening/company"
                   className="group inline-flex h-[52px] items-center gap-2 rounded-lg border border-surface/20 bg-white px-6 text-sm font-semibold text-surface transition-colors hover:bg-white/95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
                 >
                   <Building2 className="h-4 w-4" />
-                  For Businesses
-                  <ArrowRight className="h-4 w-4 max-w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-200 group-hover:max-w-[16px] group-hover:translate-x-0 group-hover:opacity-100" />
+                  {t.marketing.forBusinesses}
+                  <ArrowRight className="h-4 w-4 max-w-0 -translate-x-2 overflow-hidden opacity-0 transition-all duration-200 group-hover:max-w-[16px] group-hover:translate-x-0 rtl:-scale-x-100 group-hover:opacity-100" />
                 </Link>
               </motion.div>
             </div>
@@ -182,10 +183,15 @@ export default function Home() {
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   aria-expanded={openFaq === i}
                   aria-controls={`faq-answer-${i}`}
-                  aria-label={`${faq.q} — ${openFaq === i ? "collapse" : "expand"} answer`}
+                  aria-label={fmt(
+                    openFaq === i
+                      ? t.marketing.faq.collapse
+                      : t.marketing.faq.expand,
+                    { question: faq.q },
+                  )}
                   className="flex w-full items-center justify-between py-5 text-start active:opacity-70"
                 >
-                  <span className="pr-4 font-medium text-text">{faq.q}</span>
+                  <span className="pe-4 font-medium text-text">{faq.q}</span>
                   <ChevronDown
                     className={`h-5 w-5 shrink-0 text-text-subtle transition-transform duration-200 ${openFaq === i ? "rotate-180" : ""}`}
                   />

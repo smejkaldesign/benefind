@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowUp } from "lucide-react";
 import type { ScreeningStep } from "@/lib/screening/steps";
+import { useI18n } from "@/lib/i18n/context";
 
 interface StepInputProps {
   step: ScreeningStep;
@@ -21,16 +22,17 @@ export function StepInput({
   isSecondary,
   defaultValue,
 }: StepInputProps) {
+  const { t } = useI18n();
   const [value, setValue] = useState(defaultValue ?? "");
   const [error, setError] = useState<string | null>(null);
 
   const isNumber = step.type === "number";
   const isMoney = isNumber && step.id !== "householdSize";
   const placeholder = isSecondary
-    ? "Or type your answer..."
+    ? t.screeningFlow.input.placeholderSecondary
     : isMoney
       ? "0"
-      : "Type your answer...";
+      : t.screeningFlow.input.placeholder;
 
   function handleSubmit() {
     if (disabled || !value.trim()) return;
@@ -52,7 +54,7 @@ export function StepInput({
     <div className="space-y-1">
       <div className="relative">
         {isMoney && (
-          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-text-subtle">
+          <span className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-sm text-text-subtle">
             $
           </span>
         )}
@@ -71,14 +73,14 @@ export function StepInput({
           placeholder={placeholder}
           aria-label={step.question}
           className={`block h-11 w-full rounded-lg border border-border bg-surface-bright text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50 ${
-            isMoney ? "pl-7 pr-14" : "pl-4 pr-14"
+            isMoney ? "ps-7 pe-14" : "ps-4 pe-14"
           }`}
         />
         <button
           onClick={handleSubmit}
           disabled={disabled || !value.trim()}
-          aria-label="Send"
-          className="absolute right-1.5 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-stone-900 transition-all hover:bg-brand-dark disabled:bg-surface-bright disabled:text-text-subtle"
+          aria-label={t.screeningFlow.input.send}
+          className="absolute end-1.5 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-stone-900 transition-all hover:bg-brand-dark disabled:bg-surface-bright disabled:text-text-subtle"
         >
           <ArrowUp className="h-4 w-4" />
         </button>

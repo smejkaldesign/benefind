@@ -6,32 +6,12 @@ import { TrendingUp, Clock, DollarSign } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { BorderGlow } from "@/components/border-glow";
+import { useI18n } from "@/lib/i18n/context";
 
-interface Stat {
-  value: string;
-  label: string;
-  icon: LucideIcon;
-}
-
-const stats: Stat[] = [
-  {
-    value: "80+",
-    label: "Government programs scanned",
-    icon: TrendingUp,
-  },
-  {
-    value: "5 min",
-    label: "Average screening time",
-    icon: Clock,
-  },
-  {
-    value: "$4,200",
-    label: "Benefits Claimed",
-    icon: DollarSign,
-  },
-];
+const statIcons: LucideIcon[] = [TrendingUp, Clock, DollarSign];
 
 export function StatsStrip() {
+  const { t } = useI18n();
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -41,11 +21,11 @@ export function StatsStrip() {
   return (
     <section className="px-6 pb-20 pt-[180px] sm:pb-28 sm:pt-[212px]">
       <div className="mx-auto grid max-w-[1520px] grid-cols-1 gap-6 sm:grid-cols-3">
-        {stats.map((stat, i) => {
-          const Icon = stat.icon;
+        {t.marketing.stats.map((stat, i) => {
+          const Icon = statIcons[i];
           return (
             <motion.div
-              key={stat.label}
+              key={i}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true, margin: "-60px" }}
@@ -62,7 +42,7 @@ export function StatsStrip() {
                 }
               >
                 <div className="relative p-8">
-                  <Icon className="absolute right-6 top-6 h-5 w-5 text-accent opacity-50" />
+                  <Icon className="absolute end-6 top-6 h-5 w-5 text-accent opacity-50" />
                   <p className="font-display text-5xl font-semibold text-text">
                     {stat.value}
                   </p>

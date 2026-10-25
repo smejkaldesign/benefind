@@ -1,4 +1,6 @@
 import type { BenefitProgram } from "@/lib/benefits/types";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { fmt } from "../i18n/format";
 
 /**
  * Programs without a dollar estimate (services, waivers, referrals) total $0,
@@ -7,18 +9,32 @@ import type { BenefitProgram } from "@/lib/benefits/types";
 export function summarizeEligible(
   programs: Pick<BenefitProgram, "name" | "description">[],
   totalAnnual: number,
+  t: Dictionary,
 ): string {
-  const count = `${programs.length} program${programs.length > 1 ? "s" : ""}`;
+  const m = t.screeningFlow.summary;
+  const count = fmt(programs.length > 1 ? m.programsOther : m.programsOne, {
+    count: programs.length,
+  });
   if (totalAnnual > 0) {
-    return `Great news! We found ${count} you may qualify for, worth up to $${totalAnnual.toLocaleString()}/year.`;
+    return fmt(m.withValue, {
+      programs: count,
+      amount: totalAnnual.toLocaleString(),
+    });
   }
   if (programs.length === 1) {
     const [program] = programs;
     const sentence = (
-      program.description.match(/^.*?[.!?](\s|$)/)?.[0] ?? program.description
+      program.description.match(/^.*?(?:[.!?](?:\s|$)|[。！？])/)?.[0] ??
+      program.description
     ).trim();
-    const ending = /[.!?]$/.test(sentence) ? "" : ".";
-    return `Great news! You may qualify for ${program.name}. ${sentence}${ending}`;
+    const ending = /[.!?。！？]$/.test(sentence) ? "" : m.sentenceEnd;
+    return fmt(m.single, {
+      name: program.name,
+      sentence: `${sentence}${ending}`,
+    });
   }
-  return `Great news! We found ${count} you may qualify for: ${programs.map((p) => p.name).join(", ")}.`;
+  return fmt(m.several, {
+    programs: count,
+    names: programs.map((p) => p.name).join(m.listSeparator),
+  });
 }

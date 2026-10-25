@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { Crown, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n/context";
+import { fmt } from "@/lib/i18n/format";
 
 interface PremiumGateProps {
   children: React.ReactNode;
@@ -19,8 +21,9 @@ interface PremiumGateProps {
 export function PremiumGate({
   children,
   isPremium,
-  feature = "this feature",
+  feature,
 }: PremiumGateProps) {
+  const { t } = useI18n();
   if (isPremium) {
     return <>{children}</>;
   }
@@ -31,15 +34,16 @@ export function PremiumGate({
   return (
     <div className="rounded-xl border border-brand/20 bg-surface-dim p-8 text-center">
       <Lock className="mx-auto mb-3 h-8 w-8 text-brand" aria-hidden="true" />
-      <h3 className="font-semibold text-text">Upgrade to Premium</h3>
+      <h3 className="font-semibold text-text">{t.app.premiumGate.title}</h3>
       <p className="mt-2 text-sm text-text-muted">
-        {feature} is available on the Premium plan. Upgrade to unlock unlimited
-        screenings, document storage, and more.
+        {fmt(t.app.premiumGate.body, {
+          feature: feature ?? t.app.premiumGate.defaultFeature,
+        })}
       </p>
       <Link href="/dashboard/billing" className="mt-4 inline-block">
         <Button size="default">
           <Crown className="h-4 w-4" aria-hidden="true" />
-          View Plans
+          {t.app.premiumGate.viewPlans}
         </Button>
       </Link>
     </div>
