@@ -14,7 +14,7 @@ import {
   ArrowRight,
   FileSearch,
   Clock,
-  TrendingUp,
+  ClipboardList,
   RotateCcw,
   CheckCircle2,
 } from "lucide-react";
@@ -109,11 +109,6 @@ export default async function DashboardPage() {
               <Button variant="secondary" size="default">
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
                 Re-screen
-              </Button>
-            </Link>
-            <Link href="/screening">
-              <Button variant="secondary" size="default">
-                New Screening
               </Button>
             </Link>
             <Link href="/dashboard/documents">
@@ -239,7 +234,7 @@ function LatestScreeningCard({
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-brand" aria-hidden="true" />
+            <ClipboardList className="h-5 w-5 text-brand" aria-hidden="true" />
             <h2 className="font-semibold text-text">Latest Screening</h2>
           </div>
           <p className="mt-1 text-xs text-text-muted">

@@ -8,6 +8,7 @@ import {
 import { runScreening } from "@/lib/benefits/engine";
 import { PURSUABLE_TIERS, ENGINE_VERSION } from "@/lib/benefits/types";
 import type { ScreeningResult } from "@/lib/benefits/types";
+import { summarizeEligible } from "@/lib/screening/summarize";
 import { persistScreening, getLatestAnswers } from "./actions";
 import {
   ChatMessage,
@@ -31,6 +32,7 @@ import {
   Lock,
   Mail,
   Loader2,
+  LogOut,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -79,6 +81,8 @@ function ScreeningPageInner() {
   const [isTyping, setIsTyping] = useState(false);
   const [result, setResult] = useState<ScreeningResult | null>(null);
   const [showSignupGate, setShowSignupGate] = useState(false);
+  const [signedInEmail, setSignedInEmail] = useState<string | null>(null);
+  const [signupMode, setSignupMode] = useState<"create" | "signin">("create");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupSent, setSignupSent] = useState(false);
@@ -116,6 +120,13 @@ function ScreeningPageInner() {
     },
     [scrollToBottom],
   );
+
+  // Signed-in users skip the signup gate; their results save to their account
+  useEffect(() => {
+    createClient()
+      .auth.getUser()
+      .then(({ data }) => setSignedInEmail(data.user?.email ?? null));
+  }, []);
 
   // Resend-link cooldown countdown
   useEffect(() => {
@@ -284,8 +295,8 @@ function ScreeningPageInner() {
             );
           } catch {}
 
-          // Persist to database if authenticated (fire-and-forget)
-          persistScreening({
+          // Persist to database if authenticated
+          const persisted = persistScreening({
             answers: newAnswers,
             engineVersion: ENGINE_VERSION,
             state: newAnswers.state,
@@ -299,9 +310,7 @@ function ScreeningPageInner() {
                 : null,
               reasons: p.result.reasons as unknown as Record<string, unknown>,
             })),
-          }).catch(() => {
-            // Non-blocking: screening works client-only if persistence fails
-          });
+          }).catch(() => ({ screeningId: null }));
 
           const eligible = screeningResult.programs.filter((p) =>
             PURSUABLE_TIERS.has(p.result.eligibilityTier),
@@ -309,12 +318,27 @@ function ScreeningPageInner() {
           if (eligible.length > 0) {
             addMessage(
               "assistant",
-              `Great news! We found ${eligible.length} program${eligible.length > 1 ? "s" : ""} you may qualify for, worth up to $${screeningResult.totalEstimatedAnnual.toLocaleString()}/year.`,
+              summarizeEligible(
+                eligible.map((p) => p.program),
+                screeningResult.totalEstimatedAnnual,
+              ),
             );
+            if (signedInEmail) {
+              persisted.then(({ screeningId }) => {
+                addMessage(
+                  "assistant",
+                  screeningId
+                    ? `Saved to your account (${signedInEmail}).`
+                    : "We couldn't save these results to your account, but you can still see them below.",
+                );
+                setShowResults(true);
+              });
+              return;
+            }
             setTimeout(() => {
               addMessage(
                 "assistant",
-                "Create a free account to save your results and get personalized next steps.",
+                "Create a free account or sign in to save your results and get personalized next steps.",
               );
               setShowSignupGate(true);
               scrollToBottom();
@@ -324,7 +348,26 @@ function ScreeningPageInner() {
               "assistant",
               "Based on the information provided, you may not qualify for the programs we currently check. This doesn't mean there aren't other programs available.",
             );
-            setShowResults(true);
+            if (signedInEmail) {
+              persisted.then(({ screeningId }) => {
+                if (screeningId) {
+                  addMessage(
+                    "assistant",
+                    `Saved to your account (${signedInEmail}). You can re-screen anytime from your dashboard.`,
+                  );
+                }
+                setShowResults(true);
+              });
+              return;
+            }
+            setTimeout(() => {
+              addMessage(
+                "assistant",
+                "Create a free account or sign in to save your answers, so you can re-screen anytime without starting over.",
+              );
+              setShowSignupGate(true);
+              scrollToBottom();
+            }, 400);
           }
         }, 1500);
       }, 600);
@@ -565,10 +608,30 @@ function ScreeningPageInner() {
                                 <Loader2 className="h-4 w-4 animate-spin" />
                                 Sending link...
                               </>
+                            ) : signupMode === "signin" ? (
+                              "Send sign-in link"
                             ) : (
                               "Create Account"
                             )}
                           </button>
+                          <p className="text-center text-xs text-text-muted">
+                            {signupMode === "signin"
+                              ? "New to Benefind? "
+                              : "Already have an account? "}
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setSignupMode((m) =>
+                                  m === "signin" ? "create" : "signin",
+                                )
+                              }
+                              className="font-semibold text-brand transition-colors hover:text-brand-dark"
+                            >
+                              {signupMode === "signin"
+                                ? "Create an account"
+                                : "Sign in"}
+                            </button>
+                          </p>
                           <button
                             type="button"
                             onClick={handleSkipSignup}
@@ -684,6 +747,24 @@ function ScreeningPageInner() {
               "linear-gradient(to bottom, rgba(20,10,40,0.55) 0%, rgba(20,10,40,0.25) 50%, rgba(20,10,40,0.55) 100%)",
           }}
         />
+
+        {signedInEmail && (
+          <div className="absolute top-4 right-6 z-20 flex items-center gap-3 text-sm text-white/80">
+            <span>
+              Signed in as{" "}
+              <span className="font-medium text-white">{signedInEmail}</span>
+            </span>
+            <form action="/auth/signout" method="post">
+              <button
+                type="submit"
+                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <LogOut className="h-4 w-4" aria-hidden="true" />
+                Sign out
+              </button>
+            </form>
+          </div>
+        )}
 
         {/* Value prop content */}
         <div className="relative z-10 flex flex-col justify-center px-12 py-16 xl:px-16">

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 import type { Tables } from "@/types/database";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -106,16 +107,22 @@ export function ProgramEditForm({ program }: ProgramEditFormProps) {
           <label htmlFor="status" className="text-sm font-medium text-text">
             Status
           </label>
-          <select
-            id="status"
-            name="status"
-            defaultValue={program.status}
-            className="block h-11 w-full rounded-xl border border-border bg-surface px-3 text-sm text-text transition-colors focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none"
-          >
-            <option value="active">Active</option>
-            <option value="draft">Draft</option>
-            <option value="archived">Archived</option>
-          </select>
+          <div className="relative">
+            <select
+              id="status"
+              name="status"
+              defaultValue={program.status}
+              className="block h-11 w-full appearance-none rounded-xl border border-border bg-surface pr-10 pl-3 text-sm text-text transition-colors focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none"
+            >
+              <option value="active">Active</option>
+              <option value="draft">Draft</option>
+              <option value="archived">Archived</option>
+            </select>
+            <ChevronDown
+              aria-hidden="true"
+              className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-text-muted"
+            />
+          </div>
         </div>
 
         <div className="space-y-1.5">

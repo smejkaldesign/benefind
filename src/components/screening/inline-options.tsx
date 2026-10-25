@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import type { ScreeningStep } from "@/lib/screening/steps";
 import { US_STATES } from "@/lib/screening/us-states";
 
@@ -34,6 +35,19 @@ export function InlineOptions({
   const [stateValue, setStateValue] = useState(
     defaultValue && step.type === "state" ? defaultValue : "",
   );
+  const continueRef = useRef<HTMLButtonElement>(null);
+  const hasSelection = selected.length > 0;
+
+  // The Continue button appears below the options after the first pick and
+  // would otherwise sit under the sticky answer bar until the next message.
+  useEffect(() => {
+    if (hasSelection) {
+      continueRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [hasSelection]);
 
   if (step.type === "select") {
     return (
@@ -89,13 +103,14 @@ export function InlineOptions({
             );
           })}
         </div>
-        {selected.length > 0 && (
+        {hasSelection && (
           <button
+            ref={continueRef}
             onClick={() => {
               if (!disabled) onSubmit(selected.join(","));
             }}
             disabled={disabled}
-            className="rounded-lg bg-brand px-5 py-2 text-sm font-semibold text-stone-900 transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
+            className="scroll-mb-28 rounded-lg bg-brand px-5 py-2 text-sm font-semibold text-stone-900 transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
           >
             Continue &rarr;
           </button>
@@ -107,19 +122,25 @@ export function InlineOptions({
   if (step.type === "state") {
     return (
       <div className="flex items-center gap-2 pt-1 pl-1">
-        <select
-          value={stateValue}
-          onChange={(e) => setStateValue(e.target.value)}
-          disabled={disabled}
-          className="h-10 rounded-lg border border-border bg-surface-bright px-4 text-sm font-semibold text-text focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-40"
-        >
-          <option value="">Select your state...</option>
-          {US_STATES.map((s) => (
-            <option key={s.value} value={s.value}>
-              {s.label}
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            value={stateValue}
+            onChange={(e) => setStateValue(e.target.value)}
+            disabled={disabled}
+            className="h-10 appearance-none rounded-lg border border-border bg-surface-bright pr-10 pl-4 text-sm font-semibold text-text focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-40"
+          >
+            <option value="">Select your state...</option>
+            {US_STATES.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            aria-hidden="true"
+            className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-text-muted"
+          />
+        </div>
         {stateValue && (
           <button
             onClick={() => {

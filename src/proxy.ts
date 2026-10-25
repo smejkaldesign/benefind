@@ -17,9 +17,10 @@ const PUBLIC_PATHS = [
 /**
  * Routes where authenticated users should be redirected to /dashboard.
  * Unauthenticated users hitting these without sessionStorage data will be
- * caught by the page-level check and sent to /screening.
+ * caught by the page-level check and sent to /screening. /auth/login is here
+ * so a returning user with a live session skips the magic link.
  */
-const AUTH_REDIRECT_PATHS = ["/results"];
+const AUTH_REDIRECT_PATHS = ["/results", "/auth/login"];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -30,10 +31,14 @@ export async function proxy(request: NextRequest) {
   // Always refresh the session cookie
   const response = await updateSession(request);
 
-  // Authenticated users hitting /results should go to /dashboard instead
-  const isAuthRedirect = AUTH_REDIRECT_PATHS.some(
-    (p) => pathname === p || pathname.startsWith(p + "/"),
-  );
+  // Authenticated users hitting these should go to /dashboard instead. Skip
+  // when an error is being reported (e.g. workspace_error comes FROM the
+  // dashboard, so bouncing back would loop).
+  const isAuthRedirect =
+    !request.nextUrl.searchParams.has("error") &&
+    AUTH_REDIRECT_PATHS.some(
+      (p) => pathname === p || pathname.startsWith(p + "/"),
+    );
 
   if (isAuthRedirect) {
     const supabaseCheck = createServerClient(

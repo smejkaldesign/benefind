@@ -1,5 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Home, MessageCircle, LayoutDashboard } from "lucide-react";
+import { HoverHint } from "@/components/hover-hint";
 import { SignOutButton } from "@/components/sign-out-button";
 import { LanguageSelector } from "@/components/language-selector";
 import { WorkspacePicker } from "@/components/workspace-picker";
@@ -24,8 +26,23 @@ export function AppShell({ children }: AppShellProps) {
       <header className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
-            <Link href="/" className="text-lg font-bold text-brand">
-              Benefind
+            <Link href="/" className="flex items-center" aria-label="Benefind">
+              <Image
+                src="/images/brand/logo-dark.svg"
+                alt=""
+                width={104}
+                height={19}
+                priority
+                className="dark:hidden"
+              />
+              <Image
+                src="/images/brand/logo-light.svg"
+                alt=""
+                width={104}
+                height={19}
+                priority
+                className="hidden dark:block"
+              />
             </Link>
             <span className="text-border" aria-hidden="true">
               /
@@ -33,8 +50,12 @@ export function AppShell({ children }: AppShellProps) {
             <WorkspacePicker />
           </div>
           <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <LanguageSelector compact />
+            <HoverHint label="Toggle theme">
+              <ThemeToggle />
+            </HoverHint>
+            <HoverHint label="Change language">
+              <LanguageSelector compact />
+            </HoverHint>
             <SignOutButton />
           </div>
         </div>

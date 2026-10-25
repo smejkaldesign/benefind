@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronDown } from "lucide-react";
 import { LandingNav } from "@/components/landing-nav";
 import { SUPPORT_EMAIL } from "@/lib/constants";
 
@@ -98,19 +98,25 @@ export default function ContactPage() {
                 >
                   Subject
                 </label>
-                <select
-                  id="subject"
-                  name="subject"
-                  required
-                  className="rounded-[10px] border border-border bg-surface-dim px-4 py-3 text-text focus:border-accent focus:outline-none transition-colors"
-                >
-                  <option value="">Select a topic</option>
-                  <option value="general">General Inquiry</option>
-                  <option value="individual">Individual Benefits</option>
-                  <option value="company">Company Programs</option>
-                  <option value="partnership">Partnership</option>
-                  <option value="bug">Bug Report</option>
-                </select>
+                <div className="relative">
+                  <select
+                    id="subject"
+                    name="subject"
+                    required
+                    className="w-full appearance-none rounded-[10px] border border-border bg-surface-dim py-3 pr-10 pl-4 text-text focus:border-accent focus:outline-none transition-colors"
+                  >
+                    <option value="">Select a topic</option>
+                    <option value="general">General Inquiry</option>
+                    <option value="individual">Individual Benefits</option>
+                    <option value="company">Company Programs</option>
+                    <option value="partnership">Partnership</option>
+                    <option value="bug">Bug Report</option>
+                  </select>
+                  <ChevronDown
+                    aria-hidden="true"
+                    className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-text-muted"
+                  />
+                </div>
               </div>
 
               {/* Message */}
