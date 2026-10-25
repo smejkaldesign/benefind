@@ -27,6 +27,27 @@ const en = {
     "adult non expansion": "adult non expansion",
   },
   text: {
+    "Centers for Medicare & Medicaid Services (CMS)":
+      "Centers for Medicare & Medicaid Services (CMS)",
+    "Internal Revenue Service (IRS)": "Internal Revenue Service (IRS)",
+    "U.S. Department of Education": "U.S. Department of Education",
+    "U.S. Department of Housing and Urban Development (HUD)":
+      "U.S. Department of Housing and Urban Development (HUD)",
+    "Administration for Children and Families (ACF)":
+      "Administration for Children and Families (ACF)",
+    "USDA Food and Nutrition Service": "USDA Food and Nutrition Service",
+    "Social Security Administration (SSA)":
+      "Social Security Administration (SSA)",
+    "Covers children between Medicaid threshold (~138% FPL) and ~250% FPL. Some states extend to 300% FPL.":
+      "Covers children between Medicaid threshold (~138% FPL) and ~250% FPL. Some states extend to 300% FPL.",
+    "50% of Area Median Income (AMI)": "50% of Area Median Income (AMI)",
+    "80% AMI in some cases": "80% AMI in some cases",
+    "Households paying >50% of income on rent may receive priority":
+      "Households paying >50% of income on rent may receive priority",
+    "60% of state median income (varies by state)":
+      "60% of state median income (varies by state)",
+    "Childless adults in non-expansion states may fall into coverage gap":
+      "Childless adults in non-expansion states may fall into coverage gap",
     "Children's Health Insurance Program (CHIP)":
       "Children's Health Insurance Program (CHIP)",
     CHIP: "CHIP",
@@ -716,6 +737,28 @@ const es: ProgramsMessages = {
     "adult non expansion": "adultos sin ampliación",
   },
   text: {
+    "Centers for Medicare & Medicaid Services (CMS)":
+      "Centros de Servicios de Medicare y Medicaid (CMS)",
+    "Internal Revenue Service (IRS)": "Servicio de Impuestos Internos (IRS)",
+    "U.S. Department of Education": "Departamento de Educación de EE. UU.",
+    "U.S. Department of Housing and Urban Development (HUD)":
+      "Departamento de Vivienda y Desarrollo Urbano de EE. UU. (HUD)",
+    "Administration for Children and Families (ACF)":
+      "Administración para Niños y Familias (ACF)",
+    "USDA Food and Nutrition Service":
+      "Servicio de Alimentos y Nutrición del USDA",
+    "Social Security Administration (SSA)":
+      "Administración del Seguro Social (SSA)",
+    "Covers children between Medicaid threshold (~138% FPL) and ~250% FPL. Some states extend to 300% FPL.":
+      "Cubre a niños con ingresos entre el límite de Medicaid (aproximadamente 138% del nivel federal de pobreza) y aproximadamente 250% del nivel federal de pobreza. Algunos estados llegan hasta 300%.",
+    "50% of Area Median Income (AMI)": "50% del ingreso medio del área (AMI)",
+    "80% AMI in some cases": "80% del AMI en algunos casos",
+    "Households paying >50% of income on rent may receive priority":
+      "Los hogares que pagan más del 50% de sus ingresos en renta pueden recibir prioridad",
+    "60% of state median income (varies by state)":
+      "60% del ingreso medio del estado (varía según el estado)",
+    "Childless adults in non-expansion states may fall into coverage gap":
+      "Los adultos sin hijos en estados que no ampliaron Medicaid pueden quedar sin cobertura",
     "Children's Health Insurance Program (CHIP)":
       "Programa de Seguro Médico para Niños (CHIP)",
     CHIP: "CHIP",
@@ -1429,6 +1472,25 @@ const zh: ProgramsMessages = {
     "adult non expansion": "未扩大覆盖的成年人",
   },
   text: {
+    "Centers for Medicare & Medicaid Services (CMS)":
+      "联邦医疗保险和医疗补助服务中心（CMS）",
+    "Internal Revenue Service (IRS)": "美国国税局（IRS）",
+    "U.S. Department of Education": "美国教育部",
+    "U.S. Department of Housing and Urban Development (HUD)":
+      "美国住房和城市发展部（HUD）",
+    "Administration for Children and Families (ACF)": "儿童和家庭管理局（ACF）",
+    "USDA Food and Nutrition Service": "美国农业部食品和营养服务局",
+    "Social Security Administration (SSA)": "社会保障局（SSA）",
+    "Covers children between Medicaid threshold (~138% FPL) and ~250% FPL. Some states extend to 300% FPL.":
+      "覆盖收入在 Medicaid 标准（约为联邦贫困线的 138%）到约联邦贫困线 250% 之间的儿童。部分州的上限为 300%。",
+    "50% of Area Median Income (AMI)": "地区收入中位数（AMI）的 50%",
+    "80% AMI in some cases": "部分情况下为 AMI 的 80%",
+    "Households paying >50% of income on rent may receive priority":
+      "房租超过收入 50% 的家庭可能获得优先",
+    "60% of state median income (varies by state)":
+      "州收入中位数的 60%（各州不同）",
+    "Childless adults in non-expansion states may fall into coverage gap":
+      "在未扩大 Medicaid 的州，没有子女的成年人可能无法获得任何医疗保险",
     "Children's Health Insurance Program (CHIP)": "儿童健康保险计划 (CHIP)",
     CHIP: "CHIP",
     "Low-cost health coverage for children in families that earn too much for Medicaid but can't afford private insurance.":
@@ -2072,6 +2134,28 @@ const vi: ProgramsMessages = {
     "adult non expansion": "người lớn không mở rộng",
   },
   text: {
+    "Centers for Medicare & Medicaid Services (CMS)":
+      "Trung tâm Dịch vụ Medicare & Medicaid (CMS)",
+    "Internal Revenue Service (IRS)": "Sở Thuế Vụ Hoa Kỳ (IRS)",
+    "U.S. Department of Education": "Bộ Giáo dục Hoa Kỳ",
+    "U.S. Department of Housing and Urban Development (HUD)":
+      "Bộ Gia cư và Phát triển Đô thị Hoa Kỳ (HUD)",
+    "Administration for Children and Families (ACF)":
+      "Cơ quan Trẻ em và Gia đình (ACF)",
+    "USDA Food and Nutrition Service":
+      "Cơ quan Thực phẩm và Dinh dưỡng thuộc USDA",
+    "Social Security Administration (SSA)": "Sở An sinh Xã hội (SSA)",
+    "Covers children between Medicaid threshold (~138% FPL) and ~250% FPL. Some states extend to 300% FPL.":
+      "Dành cho trẻ em trong gia đình có thu nhập từ mức giới hạn của Medicaid (khoảng 138% mức nghèo liên bang) đến khoảng 250% mức nghèo liên bang. Một số tiểu bang nâng lên 300%.",
+    "50% of Area Median Income (AMI)":
+      "50% thu nhập trung bình của khu vực (AMI)",
+    "80% AMI in some cases": "80% AMI trong một số trường hợp",
+    "Households paying >50% of income on rent may receive priority":
+      "Hộ gia đình trả hơn 50% thu nhập cho tiền thuê nhà có thể được ưu tiên",
+    "60% of state median income (varies by state)":
+      "60% thu nhập trung bình của tiểu bang (khác nhau tùy tiểu bang)",
+    "Childless adults in non-expansion states may fall into coverage gap":
+      "Người lớn không có con ở các tiểu bang chưa mở rộng Medicaid có thể không đủ điều kiện cho bảo hiểm y tế nào",
     "Children's Health Insurance Program (CHIP)":
       "Chương trình Bảo hiểm Y tế cho Trẻ em (CHIP)",
     CHIP: "CHIP",
@@ -2768,6 +2852,27 @@ const ar: ProgramsMessages = {
     "adult non expansion": "البالغين دون توسيع التغطية",
   },
   text: {
+    "Centers for Medicare & Medicaid Services (CMS)":
+      "مراكز خدمات Medicare وMedicaid (CMS)",
+    "Internal Revenue Service (IRS)": "دائرة الإيرادات الداخلية (IRS)",
+    "U.S. Department of Education": "وزارة التعليم الأمريكية",
+    "U.S. Department of Housing and Urban Development (HUD)":
+      "وزارة الإسكان والتنمية الحضرية الأمريكية (HUD)",
+    "Administration for Children and Families (ACF)":
+      "إدارة الأطفال والأسر (ACF)",
+    "USDA Food and Nutrition Service":
+      "خدمة الغذاء والتغذية التابعة لوزارة الزراعة الأمريكية (USDA)",
+    "Social Security Administration (SSA)": "إدارة الضمان الاجتماعي (SSA)",
+    "Covers children between Medicaid threshold (~138% FPL) and ~250% FPL. Some states extend to 300% FPL.":
+      "يغطي الأطفال الذين يقع دخل أسرهم بين حد Medicaid (حوالي 138% من خط الفقر الفيدرالي) وحوالي 250% من خط الفقر الفيدرالي. بعض الولايات ترفع الحد إلى 300%.",
+    "50% of Area Median Income (AMI)": "50% من متوسط دخل المنطقة (AMI)",
+    "80% AMI in some cases": "80% من AMI في بعض الحالات",
+    "Households paying >50% of income on rent may receive priority":
+      "قد تحصل الأسر التي تدفع أكثر من 50% من دخلها على الإيجار على أولوية",
+    "60% of state median income (varies by state)":
+      "60% من متوسط دخل الولاية (يختلف حسب الولاية)",
+    "Childless adults in non-expansion states may fall into coverage gap":
+      "قد لا يحصل البالغون الذين ليس لديهم أطفال في الولايات التي لم توسّع Medicaid على أي تغطية صحية",
     "Children's Health Insurance Program (CHIP)":
       "برنامج التأمين الصحي للأطفال (CHIP)",
     CHIP: "CHIP",

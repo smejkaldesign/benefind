@@ -6,6 +6,7 @@ import { resultsPage } from "./messages/results-page";
 import { programs } from "./messages/programs";
 import { app } from "./messages/app";
 import { tools } from "./messages/tools";
+import { seoPages } from "./messages/seo-pages";
 
 const en = {
   common: {
@@ -1265,6 +1266,7 @@ function buildDictionary(locale: Locale) {
     programs: programs[locale],
     app: app[locale],
     tools: tools[locale],
+    seoPages: seoPages[locale],
   };
 }
 

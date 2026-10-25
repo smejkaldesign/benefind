@@ -11,6 +11,8 @@ import { LandingNav } from "@/components/landing-nav";
 import { Footer } from "@/components/footer";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-jsonld";
 import { TrustBar } from "@/components/trust-bar";
+import { getServerI18n } from "@/lib/i18n/server";
+import { localizeSituation } from "@/lib/i18n/localize-content";
 
 interface Props {
   params: Promise<{ situation: string }>;
@@ -80,17 +82,21 @@ const PROGRAM_ICONS: Record<string, string> = {
 
 export default async function SituationPage({ params }: Props) {
   const { situation: slug } = await params;
-  const situation = getSituation(slug);
-  if (!situation) notFound();
+  const source = getSituation(slug);
+  if (!source) notFound();
 
-  const relatedSituations = situations.filter((s) =>
-    situation.relatedSituations.includes(s.slug),
-  );
+  const { t, locale } = await getServerI18n();
+  const ts = t.seoPages.situation;
+  const situation = localizeSituation(source, locale);
+
+  const relatedSituations = situations
+    .filter((s) => situation.relatedSituations.includes(s.slug))
+    .map((s) => localizeSituation(s, locale));
 
   const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: situation.faqs.map((faq) => ({
+    mainEntity: source.faqs.map((faq) => ({
       "@type": "Question",
       name: faq.q,
       acceptedAnswer: {
@@ -114,7 +120,7 @@ export default async function SituationPage({ params }: Props) {
         items={[
           { name: "Home", href: "/" },
           { name: "Benefits For", href: "/benefits-for" },
-          { name: situation.title },
+          { name: source.title },
         ]}
       />
 
@@ -123,9 +129,9 @@ export default async function SituationPage({ params }: Props) {
         <div className="mx-auto max-w-3xl">
           <div className="mb-4 flex items-center gap-2 text-sm text-text-subtle">
             <Link href="/" className="transition-colors hover:text-text">
-              Home
+              {ts.home}
             </Link>
-            <ChevronRight className="h-3.5 w-3.5" />
+            <ChevronRight className="h-3.5 w-3.5 rtl:-scale-x-100" />
             <span className="text-text-muted">{situation.title}</span>
           </div>
           <h1 className="mb-4 font-display text-4xl font-semibold tracking-tight text-text sm:text-5xl">
@@ -138,8 +144,8 @@ export default async function SituationPage({ params }: Props) {
             href="/screening"
             className="inline-flex items-center gap-2 rounded-lg bg-brand px-6 py-3 font-medium text-white transition-opacity hover:opacity-90"
           >
-            Check My Eligibility
-            <ArrowRight className="h-4 w-4" />
+            {ts.checkEligibility}
+            <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
           </Link>
         </div>
       </section>
@@ -151,12 +157,9 @@ export default async function SituationPage({ params }: Props) {
       <section className="px-6 py-16">
         <div className="mx-auto max-w-5xl">
           <h2 className="mb-2 font-display text-2xl font-semibold text-text">
-            Programs you may qualify for
+            {ts.programsTitle}
           </h2>
-          <p className="mb-10 text-text-muted">
-            These are the most relevant federal and state programs for your
-            situation. Click any program to learn more.
-          </p>
+          <p className="mb-10 text-text-muted">{ts.programsIntro}</p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {situation.programs.map((program) => {
               const icon = PROGRAM_ICONS[program.slug] ?? "📋";
@@ -181,7 +184,8 @@ export default async function SituationPage({ params }: Props) {
                     {program.summary}
                   </p>
                   <div className="mt-4 flex items-center gap-1 text-xs font-medium text-brand opacity-0 transition-opacity group-hover:opacity-100">
-                    Learn more <ArrowRight className="h-3 w-3" />
+                    {ts.learnMore}{" "}
+                    <ArrowRight className="h-3 w-3 rtl:-scale-x-100" />
                   </div>
                 </Link>
               );
@@ -194,19 +198,15 @@ export default async function SituationPage({ params }: Props) {
       <section className="border-y border-border bg-surface-dim px-6 py-16">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="mb-3 font-display text-2xl font-semibold text-text">
-            See exactly what you qualify for
+            {ts.ctaTitle}
           </h2>
-          <p className="mb-8 text-text-muted">
-            Answer a few questions and Benefind will match you with every
-            program you may be eligible for — across all 50 states. Free,
-            private, takes 5 minutes.
-          </p>
+          <p className="mb-8 text-text-muted">{ts.ctaBody}</p>
           <Link
             href="/screening"
             className="inline-flex items-center gap-2 rounded-lg bg-brand px-8 py-4 font-medium text-white transition-opacity hover:opacity-90"
           >
-            Start Free Screening
-            <ArrowRight className="h-4 w-4" />
+            {ts.startScreening}
+            <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
           </Link>
         </div>
       </section>
@@ -215,7 +215,7 @@ export default async function SituationPage({ params }: Props) {
       <section className="px-6 py-16">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-8 font-display text-2xl font-semibold text-text">
-            Frequently Asked Questions
+            {ts.faqTitle}
           </h2>
           <div>
             {situation.faqs.map((faq, i) => (
@@ -238,7 +238,7 @@ export default async function SituationPage({ params }: Props) {
         <section className="border-t border-border px-6 py-12">
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-6 font-display text-xl font-semibold text-text">
-              Related situations
+              {ts.related}
             </h2>
             <div className="flex flex-wrap gap-3">
               {relatedSituations.map((related) => (
@@ -248,7 +248,7 @@ export default async function SituationPage({ params }: Props) {
                   className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm text-text-muted transition-colors hover:border-brand/40 hover:text-text"
                 >
                   {related.title}
-                  <ChevronRight className="h-3.5 w-3.5" />
+                  <ChevronRight className="h-3.5 w-3.5 rtl:-scale-x-100" />
                 </Link>
               ))}
             </div>
