@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useWorkspace } from "@/lib/workspace/context";
 import { createClient } from "@/lib/supabase/client";
-import { createDocumentRow } from "@/lib/db/documents";
+import { saveDocumentRow } from "./actions";
 import {
   validateUploadFile,
   buildStoragePath,
@@ -112,20 +112,15 @@ export function UploadForm() {
       return;
     }
 
-    // Insert document row
-    const { data: doc, error: insertError } = await createDocumentRow(
-      supabase,
-      {
-        workspaceId: workspace.id,
-        uploadedByUserId: user.id,
-        filename: file.name,
-        storagePath,
-        mimeType: file.type || null,
-        byteSize: file.size,
-      },
-    );
+    // Insert document row on the server, which checks the plan
+    const doc = await saveDocumentRow({
+      filename: file.name,
+      storagePath,
+      mimeType: file.type || null,
+      byteSize: file.size,
+    }).catch(() => null);
 
-    if (insertError) {
+    if (!doc) {
       setState({
         status: "error",
         message: t.app.documents.saveFailed,

@@ -6,6 +6,7 @@ import { resultsPage } from "./messages/results-page";
 import { programs } from "./messages/programs";
 import { app } from "./messages/app";
 import { tools } from "./messages/tools";
+import { plans } from "./messages/plans";
 
 const en = {
   common: {
@@ -145,7 +146,7 @@ const en = {
       "Benefind is a free tool that helps you find government benefits you may qualify for. Answer a few questions about your household, and we'll match you with relevant programs like SNAP, Medicaid, WIC, and more.",
     faq2Q: "Is Benefind free?",
     faq2A:
-      "Checking your eligibility is 100% free, no account required. For guided application help, document tracking, and deadline reminders, plans start at $4.99/month or $99 for lifetime access.",
+      "Checking your eligibility is 100% free, no account required. Premium for personal use is $5/month or $50/year and adds screening history, document storage, and new-benefit email alerts. The Business plan is $29/month or $290/year and unlocks full program details for companies.",
     faq3Q: "What programs does Benefind check?",
     faq3A:
       "We check eligibility for over 50 federal and state programs including SNAP (food stamps), Medicaid, WIC, CHIP, SSI, SSDI, TANF, Section 8, LIHEAP, Pell Grants, EITC, and many more.",
@@ -406,7 +407,7 @@ const es: CoreDictionary = {
       "Benefind es una herramienta gratuita que le ayuda a encontrar beneficios gubernamentales para los que podría calificar. Responda algunas preguntas y le conectaremos con programas como SNAP, Medicaid, WIC y más.",
     faq2Q: "¿Benefind es gratis?",
     faq2A:
-      "Verificar su elegibilidad es 100% gratis, sin cuenta necesaria. Para ayuda guiada, seguimiento de documentos y recordatorios, los planes comienzan en $4.99/mes o $99 acceso de por vida.",
+      "Verificar su elegibilidad es 100% gratis, sin cuenta necesaria. Premium para uso personal cuesta $5/mes o $50/año e incluye historial de evaluaciones, almacenamiento de documentos y alertas por correo de nuevos beneficios. El plan Business cuesta $29/mes o $290/año y muestra el detalle completo de los programas para empresas.",
     faq3Q: "¿Qué programas verifica Benefind?",
     faq3A:
       "Verificamos elegibilidad para más de 50 programas federales y estatales incluyendo SNAP, Medicaid, WIC, CHIP, SSI, SSDI, TANF, Sección 8, LIHEAP, Becas Pell, EITC y muchos más.",
@@ -650,7 +651,7 @@ const zh: CoreDictionary = {
       "Benefind是一个免费工具，帮助您找到可能有资格获得的政府福利。回答几个关于家庭的问题，我们会为您匹配相关项目，如SNAP、Medicaid、WIC等。",
     faq2Q: "Benefind是免费的吗？",
     faq2A:
-      "检查资格100%免费，无需账户。申请指导、文件跟踪和截止提醒的方案从每月$4.99或$99终身使用开始。",
+      "检查资格100%免费，无需账户。个人 Premium 方案为每月$5或每年$50，提供筛查历史、文件存储和新福利邮件提醒。Business 方案为每月$29或每年$290，为企业提供完整的项目详情。",
     faq3Q: "Benefind检查哪些项目？",
     faq3A:
       "我们检查50多个联邦和州项目的资格，包括SNAP（食品券）、Medicaid、WIC、CHIP、SSI、SSDI、TANF、Section 8、LIHEAP、Pell Grant、EITC等。",
@@ -897,7 +898,7 @@ const vi: CoreDictionary = {
       "Benefind là công cụ miễn phí giúp bạn tìm phúc lợi chính phủ bạn có thể đủ điều kiện. Trả lời vài câu hỏi và chúng tôi sẽ kết nối bạn với các chương trình như SNAP, Medicaid, WIC và nhiều hơn nữa.",
     faq2Q: "Benefind có miễn phí không?",
     faq2A:
-      "Kiểm tra điều kiện 100% miễn phí, không cần tài khoản. Hướng dẫn đăng ký và theo dõi tài liệu từ $4.99/tháng hoặc $99 trọn đời.",
+      "Kiểm tra điều kiện 100% miễn phí, không cần tài khoản. Gói Premium cho cá nhân có giá $5/tháng hoặc $50/năm, gồm lịch sử kiểm tra, lưu trữ giấy tờ và email thông báo phúc lợi mới. Gói Business có giá $29/tháng hoặc $290/năm, mở toàn bộ chi tiết chương trình cho doanh nghiệp.",
     faq3Q: "Benefind kiểm tra những chương trình nào?",
     faq3A:
       "Chúng tôi kiểm tra điều kiện cho hơn 50 chương trình liên bang và tiểu bang bao gồm SNAP, Medicaid, WIC, CHIP, SSI, SSDI, TANF, Section 8, LIHEAP, Pell Grant, EITC và nhiều hơn nữa.",
@@ -1142,7 +1143,7 @@ const ar: CoreDictionary = {
       "Benefind أداة مجانية تساعدك في إيجاد المزايا الحكومية التي قد تكون مؤهلاً لها. أجب عن بضعة أسئلة وسنطابقك مع برامج مثل SNAP وMedicaid وWIC وغيرها.",
     faq2Q: "هل Benefind مجاني؟",
     faq2A:
-      "التحقق من الأهلية مجاني 100%، بدون حساب. إرشاد التقديم وتتبع المستندات يبدأ من $4.99/شهرياً أو $99 مدى الحياة.",
+      "التحقق من الأهلية مجاني 100%، بدون حساب. خطة Premium للاستخدام الشخصي بسعر $5/شهريًا أو $50/سنويًا، وتشمل سجل الفحوصات وتخزين المستندات وتنبيهات المزايا الجديدة بالبريد الإلكتروني. خطة Business بسعر $29/شهريًا أو $290/سنويًا، وتعرض تفاصيل البرامج كاملة للشركات.",
     faq3Q: "ما البرامج التي يفحصها Benefind؟",
     faq3A:
       "نفحص الأهلية لأكثر من 50 برنامجاً فيدرالياً وحكومياً بما في ذلك SNAP وMedicaid وWIC وCHIP وSSI وSSDI وTANF وSection 8 وLIHEAP وPell Grant وEITC وغيرها.",
@@ -1265,6 +1266,7 @@ function buildDictionary(locale: Locale) {
     programs: programs[locale],
     app: app[locale],
     tools: tools[locale],
+    plans: plans[locale],
   };
 }
 

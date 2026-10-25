@@ -3,12 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import type {
-  CompanyScreeningResult,
-  CompanyProgramCategory,
-} from "@/lib/benefits/company-types";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
+import type { CompanyScreeningResult } from "@/lib/benefits/company-types";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { STORAGE_KEYS } from "@/lib/constants";
@@ -18,42 +13,9 @@ import {
   localizeCompanyProgram,
   localizeCompanyResult,
 } from "@/lib/i18n/localize-company-program";
-import {
-  ExternalLink,
-  TrendingUp,
-  Receipt,
-  Landmark,
-  Award,
-  FileCheck,
-  HelpCircle,
-  RotateCcw,
-  AlertTriangle,
-  CheckCircle2,
-  Clock,
-} from "lucide-react";
-
-const CATEGORY_ICONS: Record<
-  CompanyProgramCategory,
-  React.ComponentType<{ className?: string }>
-> = {
-  "tax-credit": Receipt,
-  grant: Landmark,
-  incentive: Award,
-  contracting: FileCheck,
-};
-
-const CATEGORY_COLORS: Record<CompanyProgramCategory, string> = {
-  "tax-credit": "bg-brand/15 text-brand",
-  grant: "bg-brand/15 text-brand",
-  incentive: "bg-brand/15 text-brand",
-  contracting: "bg-brand/15 text-brand",
-};
-
-const STATUS_VARIANTS: Record<string, "success" | "warning" | "default"> = {
-  active: "success",
-  paused: "warning",
-  expired: "default",
-};
+import { toCompanyMatchViews } from "@/lib/billing/company-matches";
+import { CompanyMatchList } from "@/components/company/company-match-list";
+import { TrendingUp, RotateCcw } from "lucide-react";
 
 export default function CompanyResultsPage() {
   const router = useRouter();
@@ -130,28 +92,10 @@ export default function CompanyResultsPage() {
     program: localizeCompanyProgram(p.program, t),
     result: localizeCompanyResult(p.result, t),
   }));
-  const eligible = localized.filter((p) => p.result.eligible);
+  // Signed-out visitors are never on the Business plan, so only program
+  // names and categories are shown here.
+  const matches = toCompanyMatchViews(localized, false);
   const notEligible = localized.filter((p) => !p.result.eligible);
-
-  // Group eligible programs by category
-  const grouped = eligible.reduce<
-    Record<CompanyProgramCategory, typeof eligible>
-  >(
-    (acc, item) => {
-      const cat = item.program.category;
-      if (!acc[cat]) acc[cat] = [];
-      acc[cat].push(item);
-      return acc;
-    },
-    {} as Record<CompanyProgramCategory, typeof eligible>,
-  );
-
-  const categoryOrder: CompanyProgramCategory[] = [
-    "tax-credit",
-    "grant",
-    "incentive",
-    "contracting",
-  ];
 
   return (
     <main className="min-h-dvh bg-surface">
@@ -195,159 +139,7 @@ export default function CompanyResultsPage() {
       )}
 
       <div className="mx-auto max-w-2xl px-4 py-6 space-y-8">
-        {/* Eligible programs grouped by category */}
-        {categoryOrder.map((cat) => {
-          const items = grouped[cat];
-          if (!items || items.length === 0) return null;
-
-          const Icon = CATEGORY_ICONS[cat];
-          const colorClass = CATEGORY_COLORS[cat];
-          const label = c.results.categories[cat];
-
-          return (
-            <section key={cat}>
-              <div className="flex items-center gap-2 mb-3">
-                <div
-                  className={`flex h-7 w-7 items-center justify-center rounded-lg ${colorClass}`}
-                >
-                  <Icon className="h-4 w-4" />
-                </div>
-                <h2 className="text-sm font-semibold text-text uppercase tracking-wide">
-                  {label} ({items.length})
-                </h2>
-              </div>
-
-              <div className="space-y-3">
-                {items.map(({ program, result: r }) => {
-                  const statusVariant = STATUS_VARIANTS[program.status];
-                  const statusLabel =
-                    c.results.statuses[
-                      program.status as keyof typeof c.results.statuses
-                    ];
-
-                  return (
-                    <Card key={program.id} className="space-y-3">
-                      <div className="flex items-start gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <h3 className="font-semibold text-text">
-                                {program.shortName}
-                              </h3>
-                              <p className="text-xs text-text-subtle">
-                                {program.agency}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-1.5 shrink-0">
-                              {r.estimatedValue && (
-                                <Badge variant="success">
-                                  {r.estimatedValue}
-                                </Badge>
-                              )}
-                              <Badge variant={statusVariant ?? "default"}>
-                                {statusLabel ?? program.status}
-                              </Badge>
-                            </div>
-                          </div>
-                          <p className="mt-1.5 text-sm text-text-muted">
-                            {program.description}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Match score bar */}
-                      <div className="flex items-center gap-3">
-                        <div className="flex-1 h-2 rounded-full bg-surface-bright">
-                          <div
-                            className={`h-full rounded-full transition-all ${
-                              r.matchScore >= 80
-                                ? "bg-brand"
-                                : r.matchScore >= 50
-                                  ? "bg-brand/60"
-                                  : "bg-border"
-                            }`}
-                            style={{ width: `${r.matchScore}%` }}
-                          />
-                        </div>
-                        <span className="text-xs font-semibold text-text-muted tabular-nums w-10 text-end">
-                          {r.matchScore}%
-                        </span>
-                      </div>
-
-                      {/* Why you qualify */}
-                      {r.whyYouQualify && r.whyYouQualify.length > 0 && (
-                        <div className="rounded-lg bg-brand/10 px-3 py-2 space-y-1">
-                          <p className="text-xs font-semibold text-brand uppercase tracking-wide">
-                            {c.results.whyYouQualify}
-                          </p>
-                          {r.whyYouQualify.map((reason, i) => (
-                            <div
-                              key={i}
-                              className="flex items-start gap-1.5 text-sm text-text-muted"
-                            >
-                              <CheckCircle2 className="h-3.5 w-3.5 text-brand mt-0.5 shrink-0" />
-                              {reason}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Status warning for paused/expired */}
-                      {program.status !== "active" && program.deadlineInfo && (
-                        <div className="flex items-start gap-1.5 rounded-lg bg-yellow-500/5 px-3 py-2">
-                          <AlertTriangle className="h-3.5 w-3.5 text-yellow-500 mt-0.5 shrink-0" />
-                          <p className="text-xs text-yellow-700">
-                            {program.deadlineInfo}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Deadline info for active programs */}
-                      {program.status === "active" && program.deadlineInfo && (
-                        <div className="flex items-start gap-1.5 text-xs text-text-subtle">
-                          <Clock className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-                          {program.deadlineInfo}
-                        </div>
-                      )}
-
-                      {/* Next steps */}
-                      {r.nextSteps.length > 0 && (
-                        <div className="space-y-1.5">
-                          <p className="text-xs font-semibold text-text-muted uppercase tracking-wide">
-                            {c.results.nextSteps}
-                          </p>
-                          {r.nextSteps.map((step, i) => (
-                            <div
-                              key={i}
-                              className="flex items-start gap-2 text-sm text-text-muted"
-                            >
-                              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-xs font-semibold text-brand">
-                                {i + 1}
-                              </span>
-                              {step}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {program.applicationUrl && (
-                        <a
-                          href={program.applicationUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-brand-dark"
-                        >
-                          {t.common.learnMore}{" "}
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </a>
-                      )}
-                    </Card>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
+        <CompanyMatchList matches={matches} signedIn={false} />
 
         {/* Not eligible */}
         {notEligible.length > 0 && (

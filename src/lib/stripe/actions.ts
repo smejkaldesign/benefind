@@ -3,90 +3,81 @@
 import { getStripe } from "./client";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getSubscription } from "@/lib/db/billing";
-import { listWorkspacesForUser } from "@/lib/db/workspaces";
-import { cookies } from "next/headers";
+import { getWorkspaceAccess } from "@/lib/billing/workspace-access";
+import { selectPrice } from "@/lib/billing/plans";
 import { redirect } from "next/navigation";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3010";
 
-// Stub price IDs: Eric will configure real prices later.
-// Throws at checkout time if stubs are still in place.
-const PRICE_IDS = {
-  premium_monthly: process.env.STRIPE_PRICE_PREMIUM_MONTHLY,
-  premium_annual: process.env.STRIPE_PRICE_PREMIUM_ANNUAL,
-};
+const LIVE_STATUSES = new Set(["active", "trialing", "past_due"]);
 
-/**
- * Verify the authenticated user is a member of the workspace from the cookie.
- * Returns the verified workspace ID or throws.
- */
-async function verifyWorkspaceMembership(
-  supabase: Awaited<ReturnType<typeof createServerSupabase>>,
-  userId: string,
-): Promise<string> {
-  const cookieStore = await cookies();
-  const workspaceId = cookieStore.get("bf-workspace")?.value;
-  if (!workspaceId) throw new Error("No workspace selected");
-
-  const { data: memberships } = await listWorkspacesForUser(supabase, userId);
-  const isMember = memberships?.some((m) => m.workspace_id === workspaceId);
-  if (!isMember) throw new Error("Not a member of this workspace");
-
-  return workspaceId;
+function billingError(code: string): never {
+  redirect(`/dashboard/billing?error=${code}`);
 }
 
 /**
- * Create a Stripe Checkout session for a workspace subscription.
+ * Create a Stripe Checkout session for the active workspace. The price must
+ * belong to the plan for the workspace type (premium for personal, business
+ * for company); anything else is rejected here, not only hidden in the UI.
  */
-export async function createCheckoutSession(
-  priceKey: "premium_monthly" | "premium_annual",
-) {
-  const priceId = PRICE_IDS[priceKey];
-  if (!priceId) {
-    throw new Error(
-      `Stripe price not configured: STRIPE_PRICE_${priceKey.toUpperCase()} env var is missing`,
-    );
-  }
-
+export async function createCheckoutSession(priceKey: string) {
   const supabase = await createServerSupabase();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) throw new Error("Not authenticated");
+  if (!user) redirect("/auth/login?next=/dashboard/billing");
 
-  // SECURITY: verify workspace membership before creating checkout
-  const workspaceId = await verifyWorkspaceMembership(supabase, user.id);
+  // SECURITY: membership is verified against the database, not the cookie.
+  const access = await getWorkspaceAccess(supabase, user.id);
+  if (!access) billingError("no_workspace");
+  const { workspace } = access;
 
+  const selection = selectPrice(workspace.type, priceKey, process.env);
+  if (!selection.ok) {
+    console.error("Checkout rejected:", selection.error);
+    billingError(
+      selection.error === "price_not_configured"
+        ? "unavailable"
+        : selection.error,
+    );
+  }
+
+  // subscriptions has one row per user, so a user holds one paid plan at a time.
   const { data: existingSub } = await getSubscription(supabase, user.id);
-  let customerId = existingSub?.stripe_customer_id;
+  if (
+    workspace.tier === "premium" ||
+    (existingSub && LIVE_STATUSES.has(existingSub.status))
+  ) {
+    billingError("already_subscribed");
+  }
 
+  let customerId = existingSub?.stripe_customer_id;
   if (!customerId) {
     const customer = await getStripe().customers.create({
       email: user.email,
       metadata: {
         supabase_user_id: user.id,
-        workspace_id: workspaceId,
+        workspace_id: workspace.id,
       },
     });
     customerId = customer.id;
   }
 
+  const metadata = { workspace_id: workspace.id, user_id: user.id };
   const session = await getStripe().checkout.sessions.create({
     customer: customerId,
     mode: "subscription",
-    line_items: [{ price: priceId, quantity: 1 }],
+    line_items: [{ price: selection.priceId, quantity: 1 }],
     success_url: `${APP_URL}/dashboard/billing?success=true`,
     cancel_url: `${APP_URL}/dashboard/billing?canceled=true`,
-    metadata: {
-      workspace_id: workspaceId,
-      user_id: user.id,
-    },
+    client_reference_id: user.id,
+    metadata,
+    subscription_data: { metadata },
   });
 
-  if (session.url) {
-    redirect(session.url);
-  }
+  if (!session.url) billingError("unavailable");
+  redirect(session.url);
 }
 
 /**
@@ -98,16 +89,15 @@ export async function createPortalSession() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) throw new Error("Not authenticated");
+  if (!user) redirect("/auth/login?next=/dashboard/billing");
 
   // SECURITY: verify workspace membership
-  await verifyWorkspaceMembership(supabase, user.id);
+  const access = await getWorkspaceAccess(supabase, user.id);
+  if (!access) billingError("no_workspace");
 
   const { data: portalSub } = await getSubscription(supabase, user.id);
   const portalCustomerId = portalSub?.stripe_customer_id;
-  if (!portalCustomerId) {
-    throw new Error("No subscription found");
-  }
+  if (!portalCustomerId) billingError("no_subscription");
 
   const session = await getStripe().billingPortal.sessions.create({
     customer: portalCustomerId,
