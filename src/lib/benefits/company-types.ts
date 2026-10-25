@@ -50,10 +50,7 @@ export interface CompanyProgram {
 }
 
 export type CompanyProgramCategory =
-  | "tax-credit"
-  | "grant"
-  | "incentive"
-  | "contracting";
+  "tax-credit" | "grant" | "incentive" | "contracting";
 
 export interface CompanyEligibilityResult {
   eligible: boolean;
