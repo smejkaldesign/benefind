@@ -375,31 +375,46 @@ export default function ResultsPage() {
         aria-label={rp.summaryAria}
       >
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium text-stone-900/60">
-            {t.results.youMayQualify}
-          </p>
-          <p
-            className="mt-1 text-4xl font-bold"
-            aria-label={fmt(rp.estimatedAria, {
-              amount: result.totalEstimatedMonthly.toLocaleString(),
-            })}
-          >
-            ${result.totalEstimatedMonthly.toLocaleString()}
-            <span className="text-lg font-normal text-stone-900/60">
-              {rp.perMonth}
-            </span>
-          </p>
-          <p className="mt-1 text-sm text-stone-900/60">
-            {fmt(
-              pursuable.length === 1
-                ? rp.annualAcrossOne
-                : rp.annualAcrossOther,
-              {
-                amount: result.totalEstimatedAnnual.toLocaleString(),
-                count: pursuable.length,
-              },
-            )}
-          </p>
+          {result.totalEstimatedMonthly > 0 ? (
+            <>
+              <p className="text-sm font-medium text-stone-900/60">
+                {t.results.youMayQualify}
+              </p>
+              <p
+                className="mt-1 text-4xl font-bold"
+                aria-label={fmt(rp.estimatedAria, {
+                  amount: result.totalEstimatedMonthly.toLocaleString(),
+                })}
+              >
+                ${result.totalEstimatedMonthly.toLocaleString()}
+                <span className="text-lg font-normal text-stone-900/60">
+                  {rp.perMonth}
+                </span>
+              </p>
+              <p className="mt-1 text-sm text-stone-900/60">
+                {fmt(
+                  pursuable.length === 1
+                    ? rp.annualAcrossOne
+                    : rp.annualAcrossOther,
+                  {
+                    amount: result.totalEstimatedAnnual.toLocaleString(),
+                    count: pursuable.length,
+                  },
+                )}
+              </p>
+            </>
+          ) : (
+            <p className="text-2xl font-bold">
+              {pursuable.length === 0
+                ? t.screeningFlow.results.noMatches
+                : fmt(
+                    pursuable.length === 1
+                      ? t.screeningFlow.results.matchesOne
+                      : t.screeningFlow.results.matchesOther,
+                    { count: pursuable.length },
+                  )}
+            </p>
+          )}
           <div className="mt-4 flex items-center justify-center gap-2">
             <TrendingUp className="h-4 w-4 text-stone-900/60" />
             <p className="text-xs text-stone-900/60">{rp.estimatesBasis}</p>
@@ -409,7 +424,7 @@ export default function ResultsPage() {
 
       {/* Tabs + sticky summary */}
       <div className="sticky top-banner z-20 border-b border-border bg-surface">
-        {showStickyTotal && (
+        {showStickyTotal && result.totalEstimatedMonthly > 0 && (
           <div className="border-b border-border bg-brand/5 px-4 py-1.5 text-center">
             <p className="text-sm font-semibold text-brand">
               {fmt(

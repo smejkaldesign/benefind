@@ -6,7 +6,7 @@ import type {
   ScreeningInput,
   Signal,
 } from "../types";
-import { getFPL, isBelowFPLPercent } from "../types";
+import { CATEGORICAL_FPL_CEILING, getFPL, isBelowFPLPercent } from "../types";
 
 export const wic: BenefitProgram = {
   id: "wic",
@@ -56,7 +56,13 @@ export const wic: BenefitProgram = {
         label: "Household income below 185% of FPL",
         passed: isBelowFPLPercent(annualIncome, input.householdSize, 185),
         weight: 35,
-        veto: false, // adjunctive eligibility via SNAP/Medicaid/TANF can override
+        // Adjunctive eligibility via SNAP/Medicaid/TANF can override, but the
+        // Medicaid pathways that open it close at the categorical ceiling.
+        veto: !isBelowFPLPercent(
+          annualIncome,
+          input.householdSize,
+          CATEGORICAL_FPL_CEILING,
+        ),
         actual: `${incomePercent}% FPL`,
         threshold: "≤185% FPL",
       },
