@@ -342,12 +342,12 @@ function ScreeningPageInner() {
             addMessage("assistant", m.chat.notEligible);
             if (signedInEmail) {
               persisted.then(({ screeningId }) => {
-                if (screeningId) {
-                  addMessage(
-                    "assistant",
-                    fmt(m.chat.savedRescreen, { email: signedInEmail }),
-                  );
-                }
+                addMessage(
+                  "assistant",
+                  screeningId
+                    ? fmt(m.chat.savedRescreen, { email: signedInEmail })
+                    : m.chat.saveFailed,
+                );
                 setShowResults(true);
               });
               return;
