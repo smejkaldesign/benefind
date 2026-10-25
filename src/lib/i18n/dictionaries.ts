@@ -1,187 +1,16 @@
 import type { Locale } from "./types";
+import { marketing } from "./messages/marketing";
+import { screeningFlow } from "./messages/screening-flow";
+import { company } from "./messages/company";
+import { resultsPage } from "./messages/results-page";
+import { programs } from "./messages/programs";
+import { app } from "./messages/app";
+import { tools } from "./messages/tools";
 
-export interface Dictionary {
+const en = {
   common: {
-    appName: string;
-    tagline: string;
-    home: string;
-    screening: string;
-    dashboard: string;
-    results: string;
-    signIn: string;
-    signOut: string;
-    back: string;
-    continue_: string;
-    startOver: string;
-    loading: string;
-    learnMore: string;
-    applyNow: string;
-    free: string;
-  };
-  hero: {
-    title1: string;
-    title2: string;
-    subtitle: string;
-    cta: string;
-    noAccount: string;
-  };
-  screening: {
-    title: string;
-    welcome: string;
-    privacy: string;
-    calculating: string;
-    eligible: string;
-    notEligible: string;
-    perMonth: string;
-    perYear: string;
-    viewResults: string;
-  };
-  results: {
-    youMayQualify: string;
-    programs: string;
-    documents: string;
-    nextSteps: string;
-    confidence: string;
-    notCurrentlyEligible: string;
-    disclaimer: string;
-    totalEstimate: string;
-    gathered: string;
-  };
-  auth: {
-    signInTitle: string;
-    noPassword: string;
-    emailLabel: string;
-    sendLink: string;
-    checkEmail: string;
-    magicLinkSent: string;
-    differentEmail: string;
-  };
-  values: {
-    languages: string;
-    guidance: string;
-    privacy_: string;
-    languagesDesc: string;
-    guidanceDesc: string;
-    privacyDesc: string;
-  };
-  landing: {
-    badge: string;
-    heroTitle1: string;
-    heroTitle2: string;
-    heroSubtitle: string;
-    heroCta: string;
-    heroSecondaryCta: string;
-    statPrograms: string;
-    statLanguages: string;
-    statMinutes: string;
-    programsLabel: string;
-    howTitle: string;
-    howSubtitle: string;
-    step1Title: string;
-    step1Desc: string;
-    step2Title: string;
-    step2Desc: string;
-    step3Title: string;
-    step3Desc: string;
-    featuresTitle: string;
-    featuresSubtitle: string;
-    feat1Title: string;
-    feat1Desc: string;
-    feat2Title: string;
-    feat2Desc: string;
-    feat3Title: string;
-    feat3Desc: string;
-    feat4Title: string;
-    feat4Desc: string;
-    feat5Title: string;
-    feat5Desc: string;
-    feat6Title: string;
-    feat6Desc: string;
-    impactTitle: string;
-    impactSubtitle: string;
-    impact1Value: string;
-    impact1Label: string;
-    impact2Value: string;
-    impact2Label: string;
-    impact3Value: string;
-    impact3Label: string;
-    impact4Value: string;
-    impact4Label: string;
-    faqTitle: string;
-    faqSubtitle: string;
-    faq1Q: string;
-    faq1A: string;
-    faq2Q: string;
-    faq2A: string;
-    faq3Q: string;
-    faq3A: string;
-    faq4Q: string;
-    faq4A: string;
-    faq5Q: string;
-    faq5A: string;
-    faq6Q: string;
-    faq6A: string;
-    ctaTitle: string;
-    ctaSubtitle: string;
-    ctaButton: string;
-    ctaNote: string;
-    footerTagline: string;
-    footerProduct: string;
-    footerLegal: string;
-    footerLanguages: string;
-    footerAbout: string;
-    footerPrivacy: string;
-    footerTerms: string;
-    footerScreening: string;
-    footerCompanyGrants: string;
-    footerHowItWorks: string;
-    footerResources: string;
-    footerBlog: string;
-    footerDocs: string;
-    footerGuides: string;
-    footerDesignSystem: string;
-    footerTools: string;
-    footerBenefitsFor: string;
-    footerCompany: string;
-    // Problem section
-    problemTitle: string;
-    problemSubtitle: string;
-    pain1Stat: string;
-    pain1Label: string;
-    pain1Desc: string;
-    pain2Stat: string;
-    pain2Label: string;
-    pain2Desc: string;
-    pain3Stat: string;
-    pain3Label: string;
-    pain3Desc: string;
-    // Trust section
-    trustTitle: string;
-    trustSubtitle: string;
-    trust1Title: string;
-    trust1Desc: string;
-    trust2Title: string;
-    trust2Desc: string;
-    trust3Title: string;
-    trust3Desc: string;
-    // Testimonials section
-    testimonialsTitle: string;
-    testimonialsSubtitle: string;
-    testimonials: {
-      quote: string;
-      name: string;
-      location: string;
-      initials: string;
-    }[];
-    // Final CTA
-    ctaHeadline: string;
-    ctaDesc: string;
-    ctaFree: string;
-  };
-}
-
-const en: Dictionary = {
-  common: {
+    aiTranslationNotice:
+      "These translations are AI-generated and may contain grammatical errors.",
     appName: "Benefind",
     tagline: "Find Every Benefit You Deserve",
     home: "Home",
@@ -436,8 +265,12 @@ const en: Dictionary = {
   },
 };
 
-const es: Dictionary = {
+type CoreDictionary = typeof en;
+
+const es: CoreDictionary = {
   common: {
+    aiTranslationNotice:
+      "Estas traducciones fueron generadas por IA y pueden contener errores gramaticales.",
     appName: "Benefind",
     tagline: "Encuentra Todos los Beneficios que Mereces",
     home: "Inicio",
@@ -693,8 +526,9 @@ const es: Dictionary = {
   },
 };
 
-const zh: Dictionary = {
+const zh: CoreDictionary = {
   common: {
+    aiTranslationNotice: "这些翻译由 AI 生成，可能包含语法错误。",
     appName: "Benefind",
     tagline: "找到您应得的每一项福利",
     home: "首页",
@@ -884,8 +718,10 @@ const zh: Dictionary = {
   },
 };
 
-const vi: Dictionary = {
+const vi: CoreDictionary = {
   common: {
+    aiTranslationNotice:
+      "Các bản dịch này do AI tạo ra và có thể có lỗi ngữ pháp.",
     appName: "Benefind",
     tagline: "Tìm Mọi Quyền Lợi Bạn Xứng Đáng",
     home: "Trang chủ",
@@ -1090,8 +926,10 @@ const vi: Dictionary = {
   },
 };
 
-const ar: Dictionary = {
+const ar: CoreDictionary = {
   common: {
+    aiTranslationNotice:
+      "هذه الترجمات مُنشأة بالذكاء الاصطناعي وقد تحتوي على أخطاء نحوية.",
     appName: "Benefind",
     tagline: "اكتشف كل المزايا التي تستحقها",
     home: "الرئيسية",
@@ -1286,8 +1124,30 @@ const ar: Dictionary = {
   },
 };
 
-const dictionaries: Record<Locale, Dictionary> = { en, es, zh, vi, ar };
+const core: Record<Locale, CoreDictionary> = { en, es, zh, vi, ar };
+
+function buildDictionary(locale: Locale) {
+  return {
+    ...core[locale],
+    marketing: marketing[locale],
+    screeningFlow: screeningFlow[locale],
+    company: company[locale],
+    resultsPage: resultsPage[locale],
+    programs: programs[locale],
+    app: app[locale],
+    tools: tools[locale],
+  };
+}
+
+export type Dictionary = ReturnType<typeof buildDictionary>;
+
+const cache = new Map<Locale, Dictionary>();
 
 export function getDictionary(locale: Locale): Dictionary {
-  return dictionaries[locale] ?? dictionaries.en;
+  let dict = cache.get(locale);
+  if (!dict) {
+    dict = buildDictionary(core[locale] ? locale : "en");
+    cache.set(locale, dict);
+  }
+  return dict;
 }

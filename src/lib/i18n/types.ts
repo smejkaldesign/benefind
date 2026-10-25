@@ -20,3 +20,9 @@ export const DEFAULT_LOCALE: Locale = "en";
 export function getLocaleConfig(locale: Locale): LocaleConfig {
   return LOCALES.find((l) => l.code === locale) ?? LOCALES[0]!;
 }
+
+export const LOCALE_COOKIE = "benefind_locale";
+
+export function isLocale(value: unknown): value is Locale {
+  return LOCALES.some((l) => l.code === value);
+}

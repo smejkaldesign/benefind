@@ -400,7 +400,7 @@ export default function ResultsPage() {
       </div>
 
       {/* Tabs + sticky summary */}
-      <div className="sticky top-0 z-20 border-b border-border bg-surface">
+      <div className="sticky top-banner z-20 border-b border-border bg-surface">
         {showStickyTotal && (
           <div className="border-b border-border bg-brand/5 px-4 py-1.5 text-center">
             <p className="text-sm font-semibold text-brand">

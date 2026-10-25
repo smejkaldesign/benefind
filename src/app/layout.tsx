@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Geist } from "next/font/google";
 import { I18nProvider } from "@/lib/i18n/context";
+import { getServerI18n } from "@/lib/i18n/server";
+import { AiTranslationBanner } from "@/components/ai-translation-banner";
 import { ThemeProvider } from "@/lib/theme";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { OfflineBanner } from "@/components/offline-banner";
@@ -49,16 +51,19 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { locale, t, dir } = await getServerI18n();
   return (
     <html
-      lang="en"
+      lang={locale}
+      dir={dir}
       suppressHydrationWarning
       className={cn("font-sans", geist.variable)}
+      data-ai-translated={locale === "en" ? undefined : ""}
     >
       <body className={`${inter.variable} ${inter.className} min-h-dvh`}>
         <script
@@ -77,7 +82,8 @@ export default function RootLayout({
           }}
         />
         <ThemeProvider>
-          <I18nProvider>
+          <I18nProvider locale={locale} dictionary={t}>
+            <AiTranslationBanner />
             <SmoothScroll />
             {children}
             <HashAuthBootstrap />

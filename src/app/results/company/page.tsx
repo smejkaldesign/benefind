@@ -180,7 +180,7 @@ export default function CompanyResultsPage() {
 
       {/* Sticky summary */}
       {showStickyTotal && (
-        <div className="sticky top-0 z-20 border-b border-border bg-brand/5 px-4 py-1.5 text-center">
+        <div className="sticky top-banner z-20 border-b border-border bg-brand/5 px-4 py-1.5 text-center">
           <p className="text-sm font-semibold text-brand">
             {result.totalMatched} program{result.totalMatched !== 1 ? "s" : ""}{" "}
             matched

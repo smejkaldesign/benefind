@@ -23,7 +23,7 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="flex min-h-dvh flex-col">
       {/* Top nav — mobile-friendly */}
-      <header className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur-sm">
+      <header className="sticky top-banner z-30 border-b border-border bg-surface/95 backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center" aria-label="Benefind">
