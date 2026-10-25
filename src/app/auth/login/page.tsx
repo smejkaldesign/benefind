@@ -24,8 +24,14 @@ export default function LoginPage() {
       setError(
         "That sign-in link has expired or already been used. Request a new one below.",
       );
-    } else if (err === "auth_failed") {
+    } else if (err === "auth_failed" || err === "verification_failed") {
       setError("Sign-in failed. Please try again.");
+    } else if (err === "workspace_error") {
+      setError(
+        "You're signed in, but we couldn't set up your workspace. Please try again or contact support.",
+      );
+    } else if (err) {
+      setError("Something went wrong signing you in. Please try again.");
     }
   }, []);
   const [cooldownEnd, setCooldownEnd] = useState<number | null>(null);
