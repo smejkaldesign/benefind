@@ -12,6 +12,12 @@ import {
   CheckCircle2,
   FileText,
 } from "lucide-react";
+import { getServerI18n } from "@/lib/i18n/server";
+import { fmt } from "@/lib/i18n/format";
+import {
+  localizeCatalogProgram,
+  localizeCriteria,
+} from "@/lib/i18n/localize-catalog";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -56,27 +62,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProgramDetailPage({ params }: Props) {
   const { id } = await params;
   const supabase = await createServerSupabase();
-  const { data: program } = await getProgram(supabase, id);
+  const { data: row } = await getProgram(supabase, id);
 
-  if (!program) notFound();
+  if (!row) notFound();
 
-  const eligibility =
-    (program.eligibility_criteria as Record<string, unknown>) ?? {};
+  const { t, locale } = await getServerI18n();
+  const td = t.seoPages.detail;
+  const program = localizeCatalogProgram(row, t, locale);
+  const categoryLabel =
+    (t.seoPages.categories as Record<string, string>)[program.category] ??
+    program.category.replace("_", " ");
+  const criteria = localizeCriteria(row.eligibility_criteria, t, locale);
+  const [relatedBefore, relatedMiddle, relatedAfter] = td.relatedText.split(
+    /\{browse\}|\{screening\}/,
+  );
+  const browseFirst =
+    td.relatedText.indexOf("{browse}") < td.relatedText.indexOf("{screening}");
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "GovernmentService",
-    name: program.name,
-    description: program.plain_language_summary ?? program.description,
+    name: row.name,
+    description: row.plain_language_summary ?? row.description,
     provider: {
       "@type": "GovernmentOrganization",
-      name: program.agency ?? "U.S. Government",
+      name: row.agency ?? "U.S. Government",
     },
-    url: `https://benefind.app/programs/${program.id}`,
-    serviceType: program.category,
+    url: `https://benefind.app/programs/${row.id}`,
+    serviceType: row.category,
     audience: {
       "@type": "Audience",
-      audienceType: program.category.replace(/_/g, " "),
+      audienceType: row.category.replace(/_/g, " "),
     },
     areaServed: {
       "@type": "Country",
@@ -88,6 +104,20 @@ export default async function ProgramDetailPage({ params }: Props) {
       name: "Benefind Eligibility Screener",
     },
   };
+
+  const browseLink = (
+    <Link
+      href={`/programs?category=${program.category}`}
+      className="text-brand hover:text-brand-dark"
+    >
+      {fmt(td.relatedBrowse, { category: categoryLabel })}
+    </Link>
+  );
+  const screeningLink = (
+    <Link href="/screening" className="text-brand hover:text-brand-dark">
+      {td.relatedScreening}
+    </Link>
+  );
 
   return (
     <>
@@ -106,14 +136,17 @@ export default async function ProgramDetailPage({ params }: Props) {
             <Link
               href="/programs"
               className="mb-6 inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-brand transition-colors"
-              aria-label="Back to programs catalog"
+              aria-label={td.backLabel}
             >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              All Programs
+              <ArrowLeft
+                className="h-4 w-4 rtl:-scale-x-100"
+                aria-hidden="true"
+              />
+              {td.allPrograms}
             </Link>
 
             <p className="mb-3 font-mono text-xs uppercase tracking-widest text-brand">
-              [{program.category.replace("_", " ")}]
+              [{categoryLabel}]
             </p>
             <h1 className="mb-4 font-display text-3xl font-semibold tracking-tight text-text md:text-4xl">
               {program.name}
@@ -134,39 +167,34 @@ export default async function ProgramDetailPage({ params }: Props) {
         {/* Content */}
         <div className="mx-auto max-w-3xl px-6 py-12 md:py-16 space-y-10">
           {/* Eligibility */}
-          {Object.keys(eligibility).length > 0 && (
+          {(criteria.rows.length > 0 || criteria.notes) && (
             <section>
               <h2 className="mb-4 font-display text-xl font-semibold text-text">
-                Eligibility Requirements
+                {td.eligibility}
               </h2>
               <div className="space-y-3">
-                {Object.entries(eligibility).map(([key, value]) => {
-                  if (key === "notes") return null;
-                  const label = key
-                    .replace(/_/g, " ")
-                    .replace(/\b\w/g, (c) => c.toUpperCase());
-                  return (
-                    <div
-                      key={key}
-                      className="flex items-start gap-3 rounded-lg border border-border bg-surface-dim p-4"
-                    >
-                      <CheckCircle2
-                        className="mt-0.5 h-4 w-4 shrink-0 text-brand"
-                        aria-hidden="true"
-                      />
-                      <div>
-                        <p className="text-sm font-medium text-text">{label}</p>
-                        <p className="text-sm text-text-muted">
-                          {String(value)}
+                {criteria.rows.map(({ key, label, lines }) => (
+                  <div
+                    key={key}
+                    className="flex items-start gap-3 rounded-lg border border-border bg-surface-dim p-4"
+                  >
+                    <CheckCircle2
+                      className="mt-0.5 h-4 w-4 shrink-0 text-brand"
+                      aria-hidden="true"
+                    />
+                    <div>
+                      <p className="text-sm font-medium text-text">{label}</p>
+                      {lines.map((line, i) => (
+                        <p key={i} className="text-sm text-text-muted">
+                          {line}
                         </p>
-                      </div>
+                      ))}
                     </div>
-                  );
-                })}
-                {typeof (eligibility as Record<string, unknown>).notes ===
-                  "string" && (
+                  </div>
+                ))}
+                {criteria.notes && (
                   <p className="text-sm text-text-muted italic">
-                    {(eligibility as Record<string, unknown>).notes as string}
+                    {criteria.notes}
                   </p>
                 )}
               </div>
@@ -177,7 +205,7 @@ export default async function ProgramDetailPage({ params }: Props) {
           {program.typical_award && (
             <section>
               <h2 className="mb-4 font-display text-xl font-semibold text-text">
-                Typical Award
+                {td.typicalAward}
               </h2>
               <p className="text-base text-text-muted">
                 {program.typical_award}
@@ -193,7 +221,7 @@ export default async function ProgramDetailPage({ params }: Props) {
                 aria-hidden="true"
               />
               <div>
-                <p className="text-sm font-medium text-text">Deadline</p>
+                <p className="text-sm font-medium text-text">{td.deadline}</p>
                 <p className="text-sm text-text-muted">
                   {program.deadline_info}
                 </p>
@@ -205,19 +233,15 @@ export default async function ProgramDetailPage({ params }: Props) {
           <div className="flex flex-col items-center gap-4 rounded-xl border border-brand/20 bg-brand/5 p-8 text-center">
             <FileText className="h-8 w-8 text-brand" aria-hidden="true" />
             <div>
-              <p className="text-lg font-semibold text-text">
-                Check your eligibility
-              </p>
-              <p className="text-sm text-text-muted">
-                Answer a few questions and we will tell you if you qualify.
-              </p>
+              <p className="text-lg font-semibold text-text">{td.ctaTitle}</p>
+              <p className="text-sm text-text-muted">{td.ctaBody}</p>
             </div>
             <div className="flex gap-3">
               <Link
                 href="/screening"
                 className="rounded-lg bg-brand px-6 py-3 text-sm font-semibold text-stone-900 transition-colors hover:bg-brand-dark focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
               >
-                Start Screening
+                {td.startScreening}
               </Link>
               {program.application_url &&
                 program.application_url.startsWith("https://") && (
@@ -225,12 +249,12 @@ export default async function ProgramDetailPage({ params }: Props) {
                     href={program.application_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Apply for ${program.name} (opens in new tab)`}
+                    aria-label={fmt(td.applyLabel, { name: program.name })}
                     className="rounded-lg border border-border px-6 py-3 text-sm font-semibold text-text-muted transition-colors hover:border-brand hover:text-brand focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
                   >
-                    Apply Now{" "}
+                    {td.applyNow}{" "}
                     <ExternalLink
-                      className="ml-1 inline h-3.5 w-3.5"
+                      className="ms-1 inline h-3.5 w-3.5"
                       aria-hidden="true"
                     />
                   </a>
@@ -241,23 +265,14 @@ export default async function ProgramDetailPage({ params }: Props) {
           {/* Related programs */}
           <section>
             <h2 className="mb-4 font-display text-xl font-semibold text-text">
-              Related Programs
+              {td.related}
             </h2>
             <p className="text-sm text-text-muted">
-              <Link
-                href={`/programs?category=${program.category}`}
-                className="text-brand hover:text-brand-dark"
-              >
-                Browse all {program.category.replace("_", " ")} programs
-              </Link>{" "}
-              or{" "}
-              <Link
-                href="/screening"
-                className="text-brand hover:text-brand-dark"
-              >
-                run a full screening
-              </Link>{" "}
-              to see everything you qualify for.
+              {relatedBefore}
+              {browseFirst ? browseLink : screeningLink}
+              {relatedMiddle}
+              {browseFirst ? screeningLink : browseLink}
+              {relatedAfter}
             </p>
           </section>
         </div>

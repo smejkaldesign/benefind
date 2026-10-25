@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react";
 import type { TOCItem } from "@/lib/blog-toc";
+import { useI18n } from "@/lib/i18n/context";
+import { englishText } from "@/lib/i18n/format";
 
 interface StickyTOCProps {
   items: TOCItem[];
 }
 
 export function StickyTOC({ items }: StickyTOCProps) {
+  const { t, locale } = useI18n();
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
@@ -36,11 +39,14 @@ export function StickyTOC({ items }: StickyTOCProps) {
   if (items.length === 0) return null;
 
   return (
-    <nav aria-label="Table of contents" className="flex flex-col gap-1">
+    <nav
+      aria-label={t.seoPages.blog.tableOfContents}
+      className="flex flex-col gap-1"
+    >
       <p className="mb-2 font-mono text-[11px] uppercase tracking-widest text-text-subtle">
-        On this page
+        {t.seoPages.blog.onThisPage}
       </p>
-      <ul className="flex flex-col gap-0.5">
+      <ul {...englishText(locale)} className="flex flex-col gap-0.5">
         {items.map((item) => (
           <li key={item.id}>
             <a

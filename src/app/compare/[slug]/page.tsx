@@ -7,6 +7,9 @@ import { LandingNav } from "@/components/landing-nav";
 import { Footer } from "@/components/footer";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-jsonld";
 import { TrustBar } from "@/components/trust-bar";
+import { getServerI18n } from "@/lib/i18n/server";
+import { fmt } from "@/lib/i18n/format";
+import { localizeComparison } from "@/lib/i18n/localize-content";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -46,8 +49,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ComparisonPage({ params }: Props) {
   const { slug } = await params;
-  const comparison = getComparison(slug);
-  if (!comparison) notFound();
+  const source = getComparison(slug);
+  if (!source) notFound();
+
+  const { t, locale } = await getServerI18n();
+  const tc = t.seoPages.compare;
+  const comparison = localizeComparison(source, locale);
 
   const allDimensions = comparison.programA.dimensions.map((d, i) => ({
     label: d.label,
@@ -58,7 +65,7 @@ export default async function ComparisonPage({ params }: Props) {
   const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: comparison.faqs.map((faq) => ({
+    mainEntity: source.faqs.map((faq) => ({
       "@type": "Question",
       name: faq.q,
       acceptedAnswer: {
@@ -82,7 +89,7 @@ export default async function ComparisonPage({ params }: Props) {
         items={[
           { name: "Home", href: "/" },
           { name: "Compare Programs", href: "/compare" },
-          { name: comparison.title },
+          { name: source.title },
         ]}
       />
 
@@ -91,10 +98,10 @@ export default async function ComparisonPage({ params }: Props) {
         <div className="mx-auto max-w-4xl">
           <div className="mb-4 flex items-center gap-2 text-sm text-text-subtle">
             <Link href="/" className="transition-colors hover:text-text">
-              Home
+              {tc.home}
             </Link>
-            <ChevronRight className="h-3.5 w-3.5" />
-            <span className="text-text-muted">Compare Programs</span>
+            <ChevronRight className="h-3.5 w-3.5 rtl:-scale-x-100" />
+            <span className="text-text-muted">{tc.breadcrumb}</span>
           </div>
           <h1 className="mb-4 font-display text-3xl font-semibold tracking-tight text-text sm:text-4xl">
             {comparison.title}
@@ -113,8 +120,8 @@ export default async function ComparisonPage({ params }: Props) {
           <div className="overflow-hidden rounded-xl border border-border">
             {/* Header */}
             <div className="grid grid-cols-3 border-b border-border bg-surface-dim">
-              <div className="border-r border-border p-4" />
-              <div className="border-r border-border p-4">
+              <div className="border-e border-border p-4" />
+              <div className="border-e border-border p-4">
                 <p className="font-semibold text-text">
                   {comparison.programA.name}
                 </p>
@@ -140,16 +147,16 @@ export default async function ComparisonPage({ params }: Props) {
                   i % 2 === 0 ? "bg-surface" : "bg-surface-dim/50"
                 }`}
               >
-                <div className="border-r border-border p-4">
+                <div className="border-e border-border p-4">
                   <p className="text-sm font-medium text-text-muted">
                     {dim.label}
                   </p>
                 </div>
-                <div className="border-r border-border p-4">
-                  <p className="text-sm text-text">{dim.a || "—"}</p>
+                <div className="border-e border-border p-4">
+                  <p className="text-sm text-text">{dim.a || "-"}</p>
                 </div>
                 <div className="p-4">
-                  <p className="text-sm text-text">{dim.b || "—"}</p>
+                  <p className="text-sm text-text">{dim.b || "-"}</p>
                 </div>
               </div>
             ))}
@@ -163,7 +170,7 @@ export default async function ComparisonPage({ params }: Props) {
           <div className="mb-2 flex items-center gap-2">
             <Check className="h-5 w-5 text-brand" />
             <h2 className="font-display text-xl font-semibold text-text">
-              Which is right for you?
+              {tc.whichIsRight}
             </h2>
           </div>
           <p className="mb-4 font-medium text-text">{comparison.verdict}</p>
@@ -177,27 +184,28 @@ export default async function ComparisonPage({ params }: Props) {
       <section className="px-6 py-16">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="mb-3 font-display text-2xl font-semibold text-text">
-            Check eligibility for both programs
+            {tc.ctaTitle}
           </h2>
           <p className="mb-8 text-text-muted">
-            Answer a few questions and Benefind will tell you which programs you
-            qualify for — including both {comparison.programA.name} and{" "}
-            {comparison.programB.name}.
+            {fmt(tc.ctaBody, {
+              a: comparison.programA.name,
+              b: comparison.programB.name,
+            })}
           </p>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               href="/screening"
               className="inline-flex items-center gap-2 rounded-lg bg-brand px-8 py-4 font-medium text-white transition-opacity hover:opacity-90"
             >
-              Check {comparison.programA.name} Eligibility
-              <ArrowRight className="h-4 w-4" />
+              {fmt(tc.checkEligibility, { name: comparison.programA.name })}
+              <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
             </Link>
             <Link
               href="/screening"
               className="inline-flex items-center gap-2 rounded-lg border border-border px-8 py-4 font-medium text-text transition-colors hover:border-brand/40"
             >
-              Check {comparison.programB.name} Eligibility
-              <ArrowRight className="h-4 w-4" />
+              {fmt(tc.checkEligibility, { name: comparison.programB.name })}
+              <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
             </Link>
           </div>
         </div>
@@ -207,7 +215,7 @@ export default async function ComparisonPage({ params }: Props) {
       <section className="border-t border-border px-6 py-16">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-8 font-display text-2xl font-semibold text-text">
-            Frequently Asked Questions
+            {tc.faqTitle}
           </h2>
           <div>
             {comparison.faqs.map((faq, i) => (

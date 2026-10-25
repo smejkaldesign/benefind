@@ -1,4 +1,6 @@
 import { formatDate } from "@/lib/blog";
+import { getServerI18n } from "@/lib/i18n/server";
+import { fmt } from "@/lib/i18n/format";
 
 interface AuthorCardProps {
   author: string;
@@ -6,7 +8,13 @@ interface AuthorCardProps {
   readingTime: number;
 }
 
-export function AuthorCard({ author, date, readingTime }: AuthorCardProps) {
+export async function AuthorCard({
+  author,
+  date,
+  readingTime,
+}: AuthorCardProps) {
+  const { t: dict, locale } = await getServerI18n();
+  const t = dict.seoPages.blog;
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-3">
@@ -24,18 +32,20 @@ export function AuthorCard({ author, date, readingTime }: AuthorCardProps) {
 
       <div className="flex flex-col gap-1.5 border-t border-dashed border-border pt-4">
         <span className="font-mono text-[11px] uppercase tracking-wider text-text-subtle">
-          Published
+          {t.published}
         </span>
         <time dateTime={date} className="text-sm text-text-muted">
-          {formatDate(date)}
+          {formatDate(date, locale)}
         </time>
       </div>
 
       <div className="flex flex-col gap-1.5">
         <span className="font-mono text-[11px] uppercase tracking-wider text-text-subtle">
-          Read time
+          {t.readTime}
         </span>
-        <span className="text-sm text-text-muted">{readingTime} min read</span>
+        <span className="text-sm text-text-muted">
+          {fmt(t.minRead, { n: readingTime })}
+        </span>
       </div>
     </div>
   );

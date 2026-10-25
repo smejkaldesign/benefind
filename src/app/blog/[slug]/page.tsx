@@ -9,6 +9,9 @@ import { AuthorCard } from "@/components/blog/author-card";
 import { HeroImage } from "@/components/blog/hero-image";
 import { StickyTOC } from "@/components/blog/sticky-toc";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-jsonld";
+import { Info } from "lucide-react";
+import { getServerI18n } from "@/lib/i18n/server";
+import { englishText, fmt } from "@/lib/i18n/format";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -70,6 +73,14 @@ export default async function BlogPostPage({ params }: Props) {
   const tocItems = extractTOC(slug);
   const faqItems = extractFAQ(slug);
   const related = getRelatedPosts(slug, 3);
+
+  const { t: dict, locale } = await getServerI18n();
+  const t = dict.seoPages.blog;
+  const english = englishText(locale);
+  const author =
+    (t.authors as Record<string, string>)[post.author] ?? post.author;
+  const tagLabel = (tag: string) =>
+    (t.tags as Record<string, string>)[tag] ?? tag;
 
   const schemaImage = `https://benefind.app/blog/${slug}/opengraph-image`;
 
@@ -147,19 +158,29 @@ export default async function BlogPostPage({ params }: Props) {
               href="/blog"
               className="mb-6 inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm text-text-muted transition-colors hover:border-brand/40 hover:text-text"
             >
-              ← All posts
+              <span aria-hidden className="inline-block rtl:-scale-x-100">
+                ←
+              </span>
+              {t.allPosts}
             </Link>
+
+            {locale !== "en" && (
+              <p className="mb-4 flex items-center gap-2 text-sm text-text-muted">
+                <Info className="h-4 w-4 shrink-0" aria-hidden="true" />
+                {t.englishOnly}
+              </p>
+            )}
 
             <div className="mb-3 flex flex-wrap items-center gap-3">
               <time
                 dateTime={post.date}
                 className="font-mono text-[11px] text-text-subtle"
               >
-                {formatDate(post.date)}
+                {formatDate(post.date, locale)}
               </time>
               <span className="font-mono text-[11px] text-text-subtle">·</span>
               <span className="font-mono text-[11px] text-text-subtle">
-                {post.readingTime} min read
+                {fmt(t.minRead, { n: post.readingTime })}
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {post.tags.map((tag) => (
@@ -167,20 +188,28 @@ export default async function BlogPostPage({ params }: Props) {
                     key={tag}
                     className="rounded bg-surface-bright px-1.5 py-0.5 font-mono text-[10px] text-text-subtle"
                   >
-                    {tag}
+                    {tagLabel(tag)}
                   </span>
                 ))}
               </div>
             </div>
 
-            <h1 className="mb-4 font-display text-3xl font-semibold tracking-tight text-text md:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
+            <h1
+              {...english}
+              className="mb-4 font-display text-3xl font-semibold tracking-tight text-text md:text-4xl lg:text-[2.75rem] lg:leading-[1.15]"
+            >
               {post.title}
             </h1>
-            <p className="max-w-2xl text-base leading-relaxed text-text-muted md:text-lg">
+            <p
+              {...english}
+              className="max-w-2xl text-base leading-relaxed text-text-muted md:text-lg"
+            >
               {post.description}
             </p>
             <p className="mt-3 text-sm text-text-muted">
-              Last updated {formatDate(post.lastModified ?? post.date)}
+              {fmt(t.lastUpdated, {
+                date: formatDate(post.lastModified ?? post.date, locale),
+              })}
             </p>
           </div>
         </div>
@@ -198,7 +227,7 @@ export default async function BlogPostPage({ params }: Props) {
             <aside className="hidden lg:block">
               <div className="sticky top-24">
                 <AuthorCard
-                  author={post.author}
+                  author={author}
                   date={post.date}
                   readingTime={post.readingTime}
                 />
@@ -208,10 +237,10 @@ export default async function BlogPostPage({ params }: Props) {
             <article className="min-w-0">
               <div className="mb-8 flex items-center gap-3 lg:hidden">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-text-muted">{post.author}</span>
+                  <span className="text-sm text-text-muted">{author}</span>
                   <span className="text-text-subtle">·</span>
                   <span className="text-sm text-text-subtle">
-                    {post.readingTime} min read
+                    {fmt(t.minRead, { n: post.readingTime })}
                   </span>
                 </div>
               </div>
@@ -219,16 +248,16 @@ export default async function BlogPostPage({ params }: Props) {
               {tocItems.length > 0 && (
                 <details className="mb-8 rounded-lg border border-border bg-surface-dim lg:hidden">
                   <summary className="cursor-pointer px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-text-subtle">
-                    Table of contents
+                    {t.tableOfContents}
                   </summary>
                   <div className="border-t border-border px-4 py-3">
-                    <ul className="flex flex-col gap-1">
+                    <ul {...english} className="flex flex-col gap-1">
                       {tocItems.map((item) => (
                         <li key={item.id}>
                           <a
                             href={`#${item.id}`}
                             className={`block py-1 text-[13px] text-text-muted transition-colors hover:text-text ${
-                              item.level === 3 ? "pl-4" : ""
+                              item.level === 3 ? "ps-4" : ""
                             }`}
                           >
                             {item.text}
@@ -240,23 +269,22 @@ export default async function BlogPostPage({ params }: Props) {
                 </details>
               )}
 
-              <div className="benefind-prose max-w-none">
+              <div {...english} className="benefind-prose max-w-none">
                 <PostContent />
               </div>
 
               <div className="mt-16 border-t border-dashed border-border pt-8">
                 <p className="text-sm text-text-subtle">
-                  Written by{" "}
-                  <span className="font-medium text-text-muted">
-                    {post.author}
-                  </span>
+                  {t.writtenBy.split("{author}")[0]}
+                  <span className="font-medium text-text-muted">{author}</span>
+                  {t.writtenBy.split("{author}")[1]}
                 </p>
               </div>
 
               {related.length > 0 && (
                 <section className="mt-16">
                   <h2 className="mb-6 font-display text-xl font-semibold text-text">
-                    Related articles
+                    {t.related}
                   </h2>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {related.map((r) => (
@@ -276,7 +304,7 @@ export default async function BlogPostPage({ params }: Props) {
                             />
                           </div>
                         )}
-                        <div className="p-4">
+                        <div {...english} className="p-4">
                           <h3 className="font-display text-sm font-semibold text-text group-hover:text-brand">
                             {r.title}
                           </h3>

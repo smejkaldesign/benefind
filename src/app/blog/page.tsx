@@ -4,6 +4,20 @@ import Image from "next/image";
 import { getAllPosts, formatDate } from "@/lib/blog";
 import type { BlogPostWithMeta } from "@/lib/blog";
 import { LandingNav } from "@/components/landing-nav";
+import { getServerI18n } from "@/lib/i18n/server";
+import { englishText, fmt } from "@/lib/i18n/format";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
+import type { Locale } from "@/lib/i18n/types";
+
+interface CardProps {
+  post: BlogPostWithMeta;
+  t: Dictionary["seoPages"]["blog"];
+  locale: Locale;
+}
+
+function tagLabel(tag: string, t: CardProps["t"]): string {
+  return (t.tags as Record<string, string>)[tag] ?? tag;
+}
 
 export const metadata: Metadata = {
   title: "Government Programs Blog | Benefind",
@@ -27,7 +41,7 @@ export const metadata: Metadata = {
   },
 };
 
-function FeaturedCard({ post }: { post: BlogPostWithMeta }) {
+function FeaturedCard({ post, t, locale }: CardProps) {
   return (
     <Link href={`/blog/${post.slug}`} className="group block">
       <article className="overflow-hidden rounded-xl border border-border bg-surface-dim transition-all hover:border-brand/40 hover:bg-surface-bright">
@@ -50,11 +64,11 @@ function FeaturedCard({ post }: { post: BlogPostWithMeta }) {
               dateTime={post.date}
               className="font-mono text-[11px] text-text-subtle"
             >
-              {formatDate(post.date)}
+              {formatDate(post.date, locale)}
             </time>
             <span className="font-mono text-[11px] text-text-subtle">·</span>
             <span className="font-mono text-[11px] text-text-subtle">
-              {post.readingTime} min read
+              {fmt(t.minRead, { n: post.readingTime })}
             </span>
             <div className="flex flex-wrap gap-1.5">
               {post.tags.slice(0, 3).map((tag) => (
@@ -62,19 +76,24 @@ function FeaturedCard({ post }: { post: BlogPostWithMeta }) {
                   key={tag}
                   className="rounded bg-surface-bright px-1.5 py-0.5 font-mono text-[10px] text-text-subtle"
                 >
-                  {tag}
+                  {tagLabel(tag, t)}
                 </span>
               ))}
             </div>
           </div>
-          <h2 className="mb-3 font-display text-2xl font-semibold tracking-tight text-text transition-colors group-hover:text-brand md:text-3xl">
-            {post.title}
-          </h2>
-          <p className="max-w-2xl text-base leading-relaxed text-text-muted">
-            {post.description}
-          </p>
+          <div {...englishText(locale)}>
+            <h2 className="mb-3 font-display text-2xl font-semibold tracking-tight text-text transition-colors group-hover:text-brand md:text-3xl">
+              {post.title}
+            </h2>
+            <p className="max-w-2xl text-base leading-relaxed text-text-muted">
+              {post.description}
+            </p>
+          </div>
           <span className="mt-5 inline-block text-sm font-medium text-brand">
-            Read article →
+            {t.readArticle}{" "}
+            <span aria-hidden className="inline-block rtl:-scale-x-100">
+              →
+            </span>
           </span>
         </div>
       </article>
@@ -82,7 +101,7 @@ function FeaturedCard({ post }: { post: BlogPostWithMeta }) {
   );
 }
 
-function PostCard({ post }: { post: BlogPostWithMeta }) {
+function PostCard({ post, t, locale }: CardProps) {
   return (
     <Link href={`/blog/${post.slug}`} className="group block">
       <article className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-surface-dim transition-all hover:border-brand/40 hover:bg-surface-bright">
@@ -103,17 +122,23 @@ function PostCard({ post }: { post: BlogPostWithMeta }) {
               dateTime={post.date}
               className="font-mono text-[11px] text-text-subtle"
             >
-              {formatDate(post.date)}
+              {formatDate(post.date, locale)}
             </time>
             <span className="font-mono text-[11px] text-text-subtle">·</span>
             <span className="font-mono text-[11px] text-text-subtle">
-              {post.readingTime} min
+              {fmt(t.minShort, { n: post.readingTime })}
             </span>
           </div>
-          <h2 className="mb-2 font-display text-lg font-semibold text-text transition-colors group-hover:text-brand">
+          <h2
+            {...englishText(locale)}
+            className="mb-2 font-display text-lg font-semibold text-text transition-colors group-hover:text-brand"
+          >
             {post.title}
           </h2>
-          <p className="mb-4 flex-1 text-sm leading-relaxed text-text-muted">
+          <p
+            {...englishText(locale)}
+            className="mb-4 flex-1 text-sm leading-relaxed text-text-muted"
+          >
             {post.description}
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -122,7 +147,7 @@ function PostCard({ post }: { post: BlogPostWithMeta }) {
                 key={tag}
                 className="rounded bg-surface-bright px-1.5 py-0.5 font-mono text-[10px] text-text-subtle"
               >
-                {tag}
+                {tagLabel(tag, t)}
               </span>
             ))}
           </div>
@@ -142,6 +167,8 @@ export default async function BlogIndexPage({
 }) {
   const allPosts = getAllPosts();
   const params = await searchParams;
+  const { t: dict, locale } = await getServerI18n();
+  const t = dict.seoPages.blog;
   const pageFromParams = params.page ? parseInt(params.page, 10) : 1;
   const totalPages = Math.max(1, Math.ceil(allPosts.length / PAGE_SIZE));
   const currentPage = Math.min(Math.max(1, pageFromParams), totalPages);
@@ -185,15 +212,13 @@ export default async function BlogIndexPage({
         <div className="border-b border-dashed border-border">
           <div className="mx-auto max-w-[1520px] px-6 py-16 md:py-24">
             <p className="mb-4 font-mono text-xs uppercase tracking-widest text-brand">
-              [Government Programs]
+              {t.eyebrow}
             </p>
             <h1 className="mb-3 font-display text-3xl font-semibold tracking-tight text-text md:text-5xl">
-              Every program, in plain English.
+              {t.title}
             </h1>
             <p className="max-w-2xl text-base leading-relaxed text-text-muted md:text-lg">
-              Deep guides on SNAP, Medicaid, LIHEAP, R&amp;D tax credits, and
-              every other government benefit we screen for. Written for real
-              people, not policy wonks.
+              {t.intro}
             </p>
           </div>
         </div>
@@ -201,16 +226,21 @@ export default async function BlogIndexPage({
         {/* Posts */}
         <div className="mx-auto max-w-[1520px] px-6 py-12 md:py-16">
           {allPosts.length === 0 ? (
-            <p className="text-sm text-text-subtle">
-              No posts yet. Check back soon.
-            </p>
+            <p className="text-sm text-text-subtle">{t.empty}</p>
           ) : (
             <div className="flex flex-col gap-8">
-              {featured && <FeaturedCard post={featured} />}
+              {featured && (
+                <FeaturedCard post={featured} t={t} locale={locale} />
+              )}
               {gridPosts.length > 0 && (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {gridPosts.map((post) => (
-                    <PostCard key={post.slug} post={post} />
+                    <PostCard
+                      key={post.slug}
+                      post={post}
+                      t={t}
+                      locale={locale}
+                    />
                   ))}
                 </div>
               )}
@@ -218,7 +248,7 @@ export default async function BlogIndexPage({
               {/* Pagination controls (shown when >1 page) */}
               {totalPages > 1 && (
                 <nav
-                  aria-label="Blog pagination"
+                  aria-label={t.paginationLabel}
                   className="flex items-center justify-center gap-2 pt-8"
                 >
                   {currentPage > 1 && (
@@ -230,7 +260,7 @@ export default async function BlogIndexPage({
                       }
                       className="rounded-md border border-border px-4 py-2 text-sm text-text-muted transition-colors hover:border-brand/40 hover:text-text"
                     >
-                      Previous
+                      {t.previous}
                     </Link>
                   )}
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(
@@ -253,7 +283,7 @@ export default async function BlogIndexPage({
                       href={`/blog?page=${currentPage + 1}`}
                       className="rounded-md border border-border px-4 py-2 text-sm text-text-muted transition-colors hover:border-brand/40 hover:text-text"
                     >
-                      Next
+                      {t.next}
                     </Link>
                   )}
                 </nav>

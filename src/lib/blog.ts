@@ -515,9 +515,10 @@ export function getRelatedPosts(slug: string, limit = 3): BlogPostWithMeta[] {
     .map((x) => x.post);
 }
 
-/** Format an ISO date string for display: "April 9, 2026" */
-export function formatDate(iso: string): string {
-  return new Date(iso + "T00:00:00").toLocaleDateString("en-US", {
+/** Format an ISO date string for display: "April 9, 2026" in English. */
+export function formatDate(iso: string, locale?: string): string {
+  const tag = !locale || locale === "en" ? "en-US" : `${locale}-u-nu-latn`;
+  return new Date(iso + "T00:00:00").toLocaleDateString(tag, {
     year: "numeric",
     month: "long",
     day: "numeric",

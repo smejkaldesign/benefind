@@ -4,6 +4,9 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { listActivePrograms } from "@/lib/db/programs";
 import { LandingNav } from "@/components/landing-nav";
 import { ProgramFilters } from "./filters";
+import { getServerI18n } from "@/lib/i18n/server";
+import { fmt } from "@/lib/i18n/format";
+import { localizeCatalogProgram } from "@/lib/i18n/localize-catalog";
 import {
   Heart,
   DollarSign,
@@ -42,15 +45,6 @@ const CATEGORY_ICONS: Record<
   contracting: ShieldCheck,
 };
 
-const CATEGORY_LABELS: Record<string, string> = {
-  benefit: "Benefits",
-  assistance: "Assistance",
-  grant: "Grants",
-  tax_credit: "Tax Credits",
-  incentive: "Incentives",
-  contracting: "Contracting",
-};
-
 interface Props {
   searchParams: Promise<{ category?: string; q?: string }>;
 }
@@ -58,22 +52,28 @@ interface Props {
 export default async function ProgramsPage({ searchParams }: Props) {
   const params = await searchParams;
   const supabase = await createServerSupabase();
+  const { t, locale } = await getServerI18n();
+  const tc = t.seoPages.catalog;
+  const categoryLabels = t.seoPages.categories as Record<string, string>;
 
   const { data: programs, count } = await listActivePrograms(supabase, {
     category: params.category,
     pageSize: 100,
   });
 
-  // Client-side search filtering (q param)
+  // Search filtering (q param) matches English or translated text.
   const searchQuery = params.q?.toLowerCase().trim();
-  const filtered = searchQuery
-    ? (programs ?? []).filter(
-        (p) =>
-          p.name.toLowerCase().includes(searchQuery) ||
-          p.description?.toLowerCase().includes(searchQuery) ||
-          p.agency?.toLowerCase().includes(searchQuery),
-      )
-    : (programs ?? []);
+  const matches = (p: NonNullable<typeof programs>[number]) =>
+    !!searchQuery &&
+    (p.name.toLowerCase().includes(searchQuery) ||
+      !!p.description?.toLowerCase().includes(searchQuery) ||
+      !!p.agency?.toLowerCase().includes(searchQuery));
+  const filtered = (programs ?? []).filter(
+    (p) =>
+      !searchQuery ||
+      matches(p) ||
+      matches(localizeCatalogProgram(p, t, locale)),
+  );
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -108,15 +108,13 @@ export default async function ProgramsPage({ searchParams }: Props) {
         <div className="border-b border-dashed border-border">
           <div className="mx-auto max-w-[1520px] px-6 py-16 md:py-24">
             <p className="mb-4 font-mono text-xs uppercase tracking-widest text-brand">
-              [Programs Catalog]
+              {tc.eyebrow}
             </p>
             <h1 className="mb-3 font-display text-3xl font-semibold tracking-tight text-text md:text-5xl">
-              Every program we screen for.
+              {tc.title}
             </h1>
             <p className="max-w-2xl text-base leading-relaxed text-text-muted md:text-lg">
-              Browse {count ?? filtered.length} government benefit programs.
-              Filter by category, check eligibility requirements, and find your
-              next steps.
+              {fmt(tc.intro, { count: count ?? filtered.length })}
             </p>
           </div>
         </div>
@@ -127,7 +125,7 @@ export default async function ProgramsPage({ searchParams }: Props) {
             activeCategory={params.category}
             searchQuery={params.q}
             resultCount={filtered.length}
-            categories={Object.entries(CATEGORY_LABELS).map(([k, v]) => ({
+            categories={Object.entries(categoryLabels).map(([k, v]) => ({
               value: k,
               label: v,
             }))}
@@ -140,16 +138,15 @@ export default async function ProgramsPage({ searchParams }: Props) {
                 className="mx-auto mb-4 h-10 w-10 text-text-subtle"
                 aria-hidden="true"
               />
-              <p className="text-sm text-text-muted">
-                No programs match your filters. Try broadening your search.
-              </p>
+              <p className="text-sm text-text-muted">{tc.empty}</p>
             </div>
           ) : (
             <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((program) => {
+              {filtered.map((row) => {
+                const program = localizeCatalogProgram(row, t, locale);
                 const Icon = CATEGORY_ICONS[program.category] ?? ShieldCheck;
                 const categoryLabel =
-                  CATEGORY_LABELS[program.category] ?? program.category;
+                  categoryLabels[program.category] ?? program.category;
 
                 return (
                   <Link
@@ -185,9 +182,9 @@ export default async function ProgramsPage({ searchParams }: Props) {
                       )}
 
                       <div className="flex items-center gap-1 text-sm font-medium text-brand">
-                        View details
+                        {tc.viewDetails}
                         <ArrowRight
-                          className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                          className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5"
                           aria-hidden="true"
                         />
                       </div>

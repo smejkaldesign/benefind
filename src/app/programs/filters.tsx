@@ -3,6 +3,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState, useTransition } from "react";
 import { Search, X } from "lucide-react";
+import { useI18n } from "@/lib/i18n/context";
+import { fmt } from "@/lib/i18n/format";
 
 interface ProgramFiltersProps {
   activeCategory?: string;
@@ -17,6 +19,8 @@ export function ProgramFilters({
   resultCount,
   categories,
 }: ProgramFiltersProps) {
+  const { t } = useI18n();
+  const tc = t.seoPages.catalog;
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -52,16 +56,16 @@ export function ProgramFilters({
       {/* Search */}
       <form onSubmit={handleSearch} className="relative max-w-md">
         <Search
-          className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-subtle"
+          className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-subtle"
           aria-hidden="true"
         />
         <input
           type="search"
-          placeholder="Search programs..."
+          placeholder={tc.searchPlaceholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search programs"
-          className="w-full rounded-lg border border-border bg-surface-dim py-2.5 pl-10 pr-10 text-sm text-text placeholder:text-text-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
+          aria-label={tc.searchLabel}
+          className="w-full rounded-lg border border-border bg-surface-dim py-2.5 ps-10 pe-10 text-sm text-text placeholder:text-text-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         />
         {query && (
           <button
@@ -70,8 +74,8 @@ export function ProgramFilters({
               setQuery("");
               updateParams({ q: undefined });
             }}
-            aria-label="Clear search"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-subtle hover:text-text"
+            aria-label={tc.clearSearch}
+            className="absolute end-3 top-1/2 -translate-y-1/2 text-text-subtle hover:text-text"
           >
             <X className="h-4 w-4" />
           </button>
@@ -82,7 +86,7 @@ export function ProgramFilters({
       <div
         className="flex flex-wrap gap-2"
         role="group"
-        aria-label="Filter by category"
+        aria-label={tc.filterLabel}
       >
         <button
           aria-pressed={!activeCategory}
@@ -93,7 +97,7 @@ export function ProgramFilters({
               : "bg-surface-bright text-text-muted hover:text-text"
           }`}
         >
-          All
+          {tc.all}
         </button>
         {categories.map(({ value, label }) => (
           <button
@@ -118,13 +122,15 @@ export function ProgramFilters({
       {/* Live region for result count */}
       <p className="sr-only" aria-live="polite" role="status">
         {isPending
-          ? "Loading programs..."
-          : `Showing ${resultCount} program${resultCount !== 1 ? "s" : ""}`}
+          ? tc.loadingPrograms
+          : fmt(resultCount === 1 ? tc.showingOne : tc.showingOther, {
+              n: resultCount,
+            })}
       </p>
 
       {isPending && (
         <p className="text-xs text-text-muted animate-pulse" aria-hidden="true">
-          Loading...
+          {tc.loading}
         </p>
       )}
     </div>
