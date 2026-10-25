@@ -1,7 +1,12 @@
 import { createHash } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json, TablesInsert } from "@/types/database";
-import { findNewMatches, knownProgramIds, type NewMatch } from "./new-matches";
+import {
+  findNewMatches,
+  knownProgramIds,
+  toResultRows,
+  type NewMatch,
+} from "./new-matches";
 import { newMatchEmailsEnabled } from "./preferences";
 import { createUnsubscribeToken } from "./unsubscribe-token";
 import { renderNewMatchEmail } from "@/lib/email/new-match-alert";
@@ -244,23 +249,9 @@ async function recordAnnouncement(client: Client, w: WorkspaceMatches) {
     .in("program_id", programIds);
   if (deleteError) throw new Error("Failed to replace screening results");
 
-  const resultRows: TablesInsert<"screening_results">[] = w.matches.map(
-    (m) => ({
-      screening_id: w.screeningId,
-      workspace_id: w.workspaceId,
-      program_id: m.programId,
-      // eligibility_tier is generated from confidence_score by the DB.
-      confidence_score: Math.min(
-        100,
-        Math.max(0, Math.round(m.confidenceScore)),
-      ),
-      estimated_value: m.estimatedValue,
-      reasons: m.reasons as unknown as Json,
-    }),
-  );
   const { error: insertError } = await client
     .from("screening_results")
-    .insert(resultRows);
+    .insert(toResultRows(w.screeningId, w.workspaceId, w.matches));
   if (insertError) throw new Error("Failed to add screening results");
 }
 

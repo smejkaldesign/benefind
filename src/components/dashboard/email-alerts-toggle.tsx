@@ -52,7 +52,7 @@ export function EmailAlertsToggle() {
             may qualify for something new, we send you one email.
           </p>
           {failed && (
-            <p role="alert" className="mt-1 text-xs text-red-600">
+            <p role="alert" className="mt-1 text-xs text-error">
               We could not save this setting. Please try again.
             </p>
           )}

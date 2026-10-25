@@ -6,6 +6,7 @@ import type {
   ScreeningResult,
 } from "../benefits/types";
 import { answersToScreeningInput } from "../screening/steps";
+import type { Json, TablesInsert } from "../../types/database";
 
 export interface NewMatch {
   programId: string;
@@ -84,4 +85,24 @@ export function knownProgramIds(
     }
   }
   return known;
+}
+
+/**
+ * screening_results rows for announced matches. eligibility_tier is a
+ * generated column derived from confidence_score, so it is never written;
+ * confidence_score is a 0..100 smallint.
+ */
+export function toResultRows(
+  screeningId: string,
+  workspaceId: string,
+  matches: readonly NewMatch[],
+): TablesInsert<"screening_results">[] {
+  return matches.map((m) => ({
+    screening_id: screeningId,
+    workspace_id: workspaceId,
+    program_id: m.programId,
+    confidence_score: Math.max(0, Math.min(100, Math.round(m.confidenceScore))),
+    estimated_value: m.estimatedValue,
+    reasons: m.reasons as unknown as Json,
+  }));
 }

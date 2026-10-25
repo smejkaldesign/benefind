@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { findNewMatches, knownProgramIds } from "../new-matches";
+import { findNewMatches, knownProgramIds, toResultRows } from "../new-matches";
 import { ALL_PROGRAMS } from "../../benefits/engine";
 import type {
   BenefitProgram,
@@ -111,5 +111,36 @@ describe("knownProgramIds", () => {
 
   it("is empty for a screening with no results and no alerts", () => {
     expect(knownProgramIds([], []).size).toBe(0);
+  });
+});
+
+describe("toResultRows", () => {
+  const match = {
+    programId: "snap",
+    programName: "SNAP",
+    confidenceScore: 87.6,
+    eligibilityTier: "eligible_with_requirements" as const,
+    estimatedValue: "$100/mo",
+    reasons: {} as ScoredEligibilityResult["reasons"],
+  };
+
+  it("never writes the generated eligibility_tier column", () => {
+    const [row] = toResultRows("s1", "w1", [match]);
+    expect(row).not.toHaveProperty("eligibility_tier");
+    expect(row).toMatchObject({
+      screening_id: "s1",
+      workspace_id: "w1",
+      program_id: "snap",
+      estimated_value: "$100/mo",
+    });
+  });
+
+  it("rounds and clamps confidence_score to 0..100", () => {
+    const rows = toResultRows("s1", "w1", [
+      match,
+      { ...match, confidenceScore: 140 },
+      { ...match, confidenceScore: -3 },
+    ]);
+    expect(rows.map((r) => r.confidence_score)).toEqual([88, 100, 0]);
   });
 });
