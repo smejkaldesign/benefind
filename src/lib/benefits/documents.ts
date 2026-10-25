@@ -48,7 +48,7 @@ const PROGRAM_DOCUMENTS: Record<string, ProgramDocuments> = {
         description:
           "For every person in your household applying for benefits.",
         alternatives: ["SSN cards", "SSA letter", "Tax documents showing SSN"],
-        tip: "If someone does not have an SSN, they can still apply — the rest of the household may qualify.",
+        tip: "If someone does not have an SSN, they can still apply. The rest of the household may qualify.",
       },
     ],
     optional: [
@@ -180,7 +180,7 @@ const PROGRAM_DOCUMENTS: Record<string, ProgramDocuments> = {
       {
         name: "Immunization records",
         description:
-          "For children — your WIC office may be able to look these up.",
+          "For children. Your WIC office may be able to look these up.",
       },
       {
         name: "Proof of other benefits",
@@ -220,7 +220,7 @@ const PROGRAM_DOCUMENTS: Record<string, ProgramDocuments> = {
       {
         name: "Disconnection notice",
         description:
-          "If your utilities are about to be shut off, bring the notice — you may get emergency help faster.",
+          "If your utilities are about to be shut off, bring the notice. You may get emergency help faster.",
       },
     ],
   },
@@ -301,7 +301,7 @@ const PROGRAM_DOCUMENTS: Record<string, ProgramDocuments> = {
       {
         name: "Criminal background info",
         description:
-          "Some PHAs run background checks — be upfront about any issues.",
+          "Some PHAs run background checks. Be upfront about any issues.",
       },
     ],
   },
@@ -319,7 +319,7 @@ const PROGRAM_DOCUMENTS: Record<string, ProgramDocuments> = {
       {
         name: "Medical records",
         description:
-          "If applying based on disability �� doctor's notes, hospital records, test results.",
+          "If applying based on disability: doctor's notes, hospital records, test results.",
         tip: "The more medical evidence you provide, the stronger your application.",
       },
       {
@@ -336,7 +336,7 @@ const PROGRAM_DOCUMENTS: Record<string, ProgramDocuments> = {
       {
         name: "Previous work history",
         description:
-          "List of jobs for the past 15 years — helps evaluate disability claim.",
+          "List of jobs for the past 15 years. This helps evaluate disability claim.",
       },
       {
         name: "Medications list",

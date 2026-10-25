@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import { useI18n } from "@/lib/i18n/context";
 import type { ScreeningStep } from "@/lib/screening/steps";
 import { US_STATES } from "@/lib/screening/us-states";
 
@@ -27,6 +28,7 @@ export function InlineOptions({
   disabled,
   defaultValue,
 }: InlineOptionsProps) {
+  const { t } = useI18n();
   const [selected, setSelected] = useState<string[]>(
     defaultValue && step.type === "multi-select"
       ? defaultValue.split(",").filter(Boolean)
@@ -51,7 +53,7 @@ export function InlineOptions({
 
   if (step.type === "select") {
     return (
-      <div className="flex flex-wrap gap-2 pt-1 pl-1">
+      <div className="flex flex-wrap gap-2 pt-1 ps-1">
         {step.options?.map((opt, i) => (
           <button
             key={`${opt.value}-${i}`}
@@ -70,7 +72,7 @@ export function InlineOptions({
 
   if (step.type === "multi-select") {
     return (
-      <div className="space-y-3 pt-1 pl-1">
+      <div className="space-y-3 pt-1 ps-1">
         <div className="flex flex-wrap gap-2">
           {step.options?.map((opt, i) => {
             const isSelected = selected.includes(opt.value);
@@ -110,9 +112,13 @@ export function InlineOptions({
               if (!disabled) onSubmit(selected.join(","));
             }}
             disabled={disabled}
-            className="scroll-mb-28 rounded-lg bg-brand px-5 py-2 text-sm font-semibold text-stone-900 transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
+            className="scroll-mb-28 inline-flex items-center gap-1.5 rounded-lg bg-brand px-5 py-2 text-sm font-semibold text-stone-900 transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
           >
-            Continue &rarr;
+            {t.screeningFlow.input.continue}
+            <ArrowRight
+              aria-hidden="true"
+              className="h-4 w-4 rtl:-scale-x-100"
+            />
           </button>
         )}
       </div>
@@ -121,15 +127,15 @@ export function InlineOptions({
 
   if (step.type === "state") {
     return (
-      <div className="flex items-center gap-2 pt-1 pl-1">
+      <div className="flex items-center gap-2 pt-1 ps-1">
         <div className="relative">
           <select
             value={stateValue}
             onChange={(e) => setStateValue(e.target.value)}
             disabled={disabled}
-            className="h-10 appearance-none rounded-lg border border-border bg-surface-bright pr-10 pl-4 text-sm font-semibold text-text focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-40"
+            className="h-10 appearance-none rounded-lg border border-border bg-surface-bright pe-10 ps-4 text-sm font-semibold text-text focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-40"
           >
-            <option value="">Select your state...</option>
+            <option value="">{t.screeningFlow.input.selectState}</option>
             {US_STATES.map((s) => (
               <option key={s.value} value={s.value}>
                 {s.label}
@@ -138,7 +144,7 @@ export function InlineOptions({
           </select>
           <ChevronDown
             aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-text-muted"
+            className="pointer-events-none absolute top-1/2 end-3 h-4 w-4 -translate-y-1/2 text-text-muted"
           />
         </div>
         {stateValue && (
@@ -147,9 +153,13 @@ export function InlineOptions({
               if (!disabled) onSubmit(stateValue);
             }}
             disabled={disabled}
-            className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-stone-900 transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-stone-900 transition-all hover:bg-brand-dark active:scale-95 disabled:opacity-40"
           >
-            Continue &rarr;
+            {t.screeningFlow.input.continue}
+            <ArrowRight
+              aria-hidden="true"
+              className="h-4 w-4 rtl:-scale-x-100"
+            />
           </button>
         )}
       </div>

@@ -6,6 +6,7 @@ import {
   createPortalSession,
 } from "@/lib/stripe/actions";
 import { Settings } from "lucide-react";
+import { useI18n } from "@/lib/i18n/context";
 
 export function CheckoutButton({
   priceKey,
@@ -26,11 +27,12 @@ export function CheckoutButton({
 }
 
 export function PortalButton() {
+  const { t } = useI18n();
   return (
     <form action={() => createPortalSession()}>
       <Button type="submit" variant="secondary">
         <Settings className="h-4 w-4" aria-hidden="true" />
-        Manage Subscription
+        {t.app.billing.manageSubscription}
       </Button>
     </form>
   );

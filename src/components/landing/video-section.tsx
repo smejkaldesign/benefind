@@ -3,40 +3,16 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, User, Building2, Languages } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { useI18n } from "@/lib/i18n/context";
 
-interface Tab {
-  id: string;
-  label: string;
-  description: string;
-  icon: LucideIcon;
-}
-
-const tabs: Tab[] = [
-  {
-    id: "individuals",
-    label: "Individuals",
-    description:
-      "Answer a few simple questions about your household, income, and needs. Benefind instantly matches you with programs like SNAP, Medicaid, housing assistance, and more.",
-    icon: User,
-  },
-  {
-    id: "companies",
-    label: "Companies",
-    description:
-      "Tell us about your business, industry, and goals. We scan 20+ federal and state programs for grants, tax credits, incentives, and contracting preferences.",
-    icon: Building2,
-  },
-  {
-    id: "multilingual",
-    label: "Multilingual",
-    description:
-      "Complete the entire screening in your preferred language. Every program explanation, every result, every next step, all translated.",
-    icon: Languages,
-  },
-];
+const tabMeta = [
+  { id: "individuals", icon: User },
+  { id: "companies", icon: Building2 },
+  { id: "multilingual", icon: Languages },
+] as const;
 
 function VideoPlaceholder() {
+  const { t } = useI18n();
   return (
     <div className="relative aspect-video w-full overflow-hidden rounded-[20px] border border-border bg-surface-bright">
       {/* Subtle gradient overlay */}
@@ -46,19 +22,24 @@ function VideoPlaceholder() {
         <button
           type="button"
           className="flex h-20 w-20 items-center justify-center rounded-full bg-accent/20 backdrop-blur transition hover:bg-accent/30"
-          aria-label="Play demo video"
+          aria-label={t.marketing.bento.playDemo}
         >
           <Play className="ml-1 h-8 w-8 text-accent" fill="currentColor" />
         </button>
-        <p className="text-sm text-text-subtle">Demo coming soon</p>
+        <p className="text-sm text-text-subtle">
+          {t.marketing.video.comingSoon}
+        </p>
       </div>
     </div>
   );
 }
 
 export function VideoSection() {
-  const [activeTab, setActiveTab] = useState(tabs[0].id);
-  const active = tabs.find((t) => t.id === activeTab) ?? tabs[0];
+  const { t } = useI18n();
+  const tv = t.marketing.video;
+  const tabs = tabMeta.map((meta) => ({ ...meta, ...tv[meta.id] }));
+  const [activeTab, setActiveTab] = useState<string>(tabs[0].id);
+  const active = tabs.find((tab) => tab.id === activeTab) ?? tabs[0];
 
   return (
     <section className="px-6 py-20 sm:py-28">
@@ -72,7 +53,7 @@ export function VideoSection() {
             transition={{ duration: 0.5 }}
             className="font-display text-4xl font-semibold text-text sm:text-5xl"
           >
-            See It In Action
+            {tv.title}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -81,7 +62,7 @@ export function VideoSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mt-4 text-lg text-text-muted"
           >
-            Watch how Benefind finds benefits in minutes, not hours
+            {tv.subtitle}
           </motion.p>
         </div>
 
@@ -149,7 +130,7 @@ export function VideoSection() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`group relative rounded-[10px] border p-5 text-left transition ${
+                  className={`group relative rounded-[10px] border p-5 text-start transition ${
                     isActive
                       ? "border-border bg-surface-bright"
                       : "border-transparent hover:border-border/50 hover:bg-surface-dim"
@@ -157,7 +138,7 @@ export function VideoSection() {
                 >
                   {/* Accent left bar */}
                   <div
-                    className={`absolute left-0 top-3 bottom-3 w-[3px] rounded-full transition ${
+                    className={`absolute start-0 top-3 bottom-3 w-[3px] rounded-full transition ${
                       isActive ? "bg-accent" : "bg-transparent"
                     }`}
                   />

@@ -4,11 +4,9 @@ import { useEffect, useState, useCallback } from "react";
 import { useWorkspace } from "@/lib/workspace/context";
 import { createClient } from "@/lib/supabase/client";
 import { listDocuments, softDeleteDocument } from "@/lib/db/documents";
-import {
-  scanStatusLabel,
-  isScanPending,
-  isDocumentDownloadable,
-} from "@/lib/documents/types";
+import { isScanPending, isDocumentDownloadable } from "@/lib/documents/types";
+import { useI18n } from "@/lib/i18n/context";
+import { fmt } from "@/lib/i18n/format";
 import {
   DEFAULT_POLL_CONFIG,
   nextPollInterval,
@@ -31,6 +29,7 @@ type Document = Tables<"documents">;
 
 export function DocumentList() {
   const { workspace } = useWorkspace();
+  const { t } = useI18n();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -111,9 +110,7 @@ export function DocumentList() {
           className="mx-auto h-10 w-10 text-text-subtle"
           aria-hidden="true"
         />
-        <p className="mt-3 text-sm text-text-muted">
-          No documents yet. Upload your first file above.
-        </p>
+        <p className="mt-3 text-sm text-text-muted">{t.app.documents.empty}</p>
       </Card>
     );
   }
@@ -146,6 +143,7 @@ function DocumentRow({
   onDelete: () => void;
   onDownload: () => void;
 }) {
+  const { t, locale } = useI18n();
   const downloadable = isDocumentDownloadable(doc);
 
   return (
@@ -162,10 +160,11 @@ function DocumentRow({
             </span>
           )}
           <span className="text-xs text-text-subtle">
-            {new Date(doc.uploaded_at).toLocaleDateString("en-US", {
+            {new Date(doc.uploaded_at).toLocaleDateString(locale, {
               month: "short",
               day: "numeric",
               year: "numeric",
+              numberingSystem: "latn",
             })}
           </span>
         </div>
@@ -175,7 +174,9 @@ function DocumentRow({
         {downloadable && (
           <Button variant="ghost" size="icon-sm" onClick={onDownload}>
             <Download className="h-4 w-4" aria-hidden="true" />
-            <span className="sr-only">Download {doc.filename}</span>
+            <span className="sr-only">
+              {fmt(t.app.documents.download, { name: doc.filename })}
+            </span>
           </Button>
         )}
         <Button
@@ -189,7 +190,9 @@ function DocumentRow({
           ) : (
             <Trash2 className="h-4 w-4 text-text-muted" aria-hidden="true" />
           )}
-          <span className="sr-only">Delete {doc.filename}</span>
+          <span className="sr-only">
+            {fmt(t.app.documents.delete, { name: doc.filename })}
+          </span>
         </Button>
       </div>
     </div>
@@ -219,7 +222,14 @@ function ScanStatusIcon({ status }: { status: Document["scan_status"] }) {
 }
 
 function ScanBadge({ status }: { status: Document["scan_status"] }) {
-  const label = scanStatusLabel(status);
+  const { t } = useI18n();
+  const labels = {
+    pending: t.app.documents.statusPending,
+    clean: t.app.documents.statusClean,
+    infected: t.app.documents.statusInfected,
+    error: t.app.documents.statusError,
+  } satisfies Record<Document["scan_status"], string>;
+  const label = labels[status];
   const variant =
     status === "clean"
       ? "success"

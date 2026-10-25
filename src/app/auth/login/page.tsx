@@ -8,30 +8,37 @@ import Image from "next/image";
 import { LandingNav } from "@/components/landing-nav";
 import { GradientBlinds } from "@/components/gradient-blinds";
 import { getAppOrigin } from "@/lib/app-url";
+import { useI18n } from "@/lib/i18n/context";
+import { fmt } from "@/lib/i18n/format";
+
+type LoginError =
+  | "linkExpired"
+  | "authFailed"
+  | "workspaceError"
+  | "genericError"
+  | "rateLimited"
+  | "sendFailed";
 
 const RATE_LIMIT_SECONDS = 60;
 
 export default function LoginPage() {
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<LoginError | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const err = params.get("error");
     if (err === "link_expired") {
-      setError(
-        "That sign-in link has expired or already been used. Request a new one below.",
-      );
+      setError("linkExpired");
     } else if (err === "auth_failed" || err === "verification_failed") {
-      setError("Sign-in failed. Please try again.");
+      setError("authFailed");
     } else if (err === "workspace_error") {
-      setError(
-        "You're signed in, but we couldn't set up your workspace. Please try again or contact support.",
-      );
+      setError("workspaceError");
     } else if (err) {
-      setError("Something went wrong signing you in. Please try again.");
+      setError("genericError");
     }
   }, []);
   const [cooldownEnd, setCooldownEnd] = useState<number | null>(null);
@@ -92,11 +99,11 @@ export default function LoginPage() {
     });
 
     if (error) {
-      const msg =
-        error.message.charAt(0).toUpperCase() + error.message.slice(1);
-      setError(msg);
       if (error.message.toLowerCase().includes("rate limit")) {
+        setError("rateLimited");
         setCooldownEnd(Date.now() + RATE_LIMIT_SECONDS * 1000);
+      } else {
+        setError("sendFailed");
       }
       setLoading(false);
       return;
@@ -132,28 +139,31 @@ export default function LoginPage() {
                 <CheckCircle className="h-7 w-7 text-brand" />
               </div>
               <h1 className="font-display text-3xl font-semibold text-text">
-                Check your email
+                {t.auth.checkEmail}
               </h1>
               <p className="text-text-muted">
-                We sent a magic link to{" "}
-                <strong className="text-text">{email}</strong>. Click the link
-                to sign in.
+                {t.app.login.sentBody.split("{email}").map((part, i) => (
+                  <span key={i}>
+                    {i > 0 && <strong className="text-text">{email}</strong>}
+                    {part}
+                  </span>
+                ))}
               </p>
               <button
                 onClick={() => setSent(false)}
                 className="text-sm font-semibold text-brand hover:text-brand-dark"
               >
-                Use a different email
+                {t.auth.differentEmail}
               </button>
             </div>
           ) : (
             <div className="w-full space-y-6">
               <div className="space-y-2 text-center">
                 <h1 className="font-display text-3xl font-semibold text-text">
-                  Sign in to Benefind
+                  {t.auth.signInTitle}
                 </h1>
                 <p className="text-sm text-text-muted">
-                  No password needed — we&apos;ll email you a magic link.
+                  {t.app.login.noPassword}
                 </p>
               </div>
 
@@ -163,10 +173,10 @@ export default function LoginPage() {
                     htmlFor="email"
                     className="text-sm font-semibold leading-none text-text-muted"
                   >
-                    Email address
+                    {t.auth.emailLabel}
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-subtle" />
+                    <Mail className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-subtle" />
                     <input
                       id="email"
                       type="email"
@@ -175,8 +185,8 @@ export default function LoginPage() {
                       required
                       autoFocus
                       disabled={loading}
-                      placeholder="you@example.com"
-                      className="block h-11 w-full rounded-lg border border-border bg-surface-dim pl-10 pr-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
+                      placeholder={t.app.login.emailPlaceholder}
+                      className="block h-11 w-full rounded-lg border border-border bg-surface-dim ps-10 pe-3 text-sm text-text transition-colors placeholder:text-text-subtle focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none disabled:opacity-50"
                     />
                   </div>
                 </div>
@@ -186,9 +196,11 @@ export default function LoginPage() {
                     className="rounded-lg bg-error/10 px-3 py-2 text-sm font-medium text-error"
                     role="alert"
                   >
-                    {error}
+                    {t.app.login[error]}
                     {cooldown > 0 && (
-                      <span className="ml-1 tabular-nums">({cooldown}s)</span>
+                      <span className="ms-1 tabular-nums">
+                        {fmt(t.app.login.cooldown, { seconds: cooldown })}
+                      </span>
                     )}
                   </p>
                 )}
@@ -201,12 +213,12 @@ export default function LoginPage() {
                   {loading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Sending link...
+                      {t.app.login.sending}
                     </>
                   ) : cooldown > 0 ? (
-                    `Try again in ${cooldown}s`
+                    fmt(t.app.login.tryAgainIn, { seconds: cooldown })
                   ) : (
-                    "Send magic link"
+                    t.auth.sendLink
                   )}
                 </button>
               </form>
@@ -216,8 +228,8 @@ export default function LoginPage() {
                   href="/"
                   className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-brand"
                 >
-                  <ArrowLeft className="h-3 w-3" />
-                  Back to home
+                  <ArrowLeft className="h-3 w-3 rtl:-scale-x-100" />
+                  {t.app.login.backHome}
                 </Link>
               </div>
             </div>

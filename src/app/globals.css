@@ -93,6 +93,11 @@
   }
 }
 
+/* Fixed and sticky headers sit below the AI-translation banner. */
+@utility top-banner {
+  top: var(--ai-banner-h);
+}
+
 /* ── Base ────────────────────────────────────────────────── */
 @layer base {
   html {
@@ -101,8 +106,21 @@
     scroll-behavior: smooth;
     @apply font-sans;
   }
+  /* Height of the fixed AI-translation banner; 0 in English. */
+  html {
+    --ai-banner-h: 0px;
+  }
+  html[data-ai-translated] {
+    --ai-banner-h: 46px;
+  }
+  @media (min-width: 640px) {
+    html[data-ai-translated] {
+      --ai-banner-h: 30px;
+    }
+  }
   body {
     @apply bg-background text-foreground;
+    padding-top: var(--ai-banner-h);
   }
   a,
   button,

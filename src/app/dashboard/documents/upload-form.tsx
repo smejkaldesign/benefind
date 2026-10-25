@@ -7,11 +7,48 @@ import { createDocumentRow } from "@/lib/db/documents";
 import {
   validateUploadFile,
   buildStoragePath,
-  scanStatusMessage,
+  MAX_UPLOAD_BYTES,
 } from "@/lib/documents/scan";
+import { useI18n } from "@/lib/i18n/context";
+import { fmt } from "@/lib/i18n/format";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
+import type { Tables } from "@/types/database";
 import { Card } from "@/components/ui/card";
 import { Upload, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+
+function validationMessage(
+  file: { type: string },
+  error: string,
+  t: Dictionary,
+): string {
+  const m = t.app.documents;
+  if (error.startsWith("File is empty")) return m.fileEmpty;
+  if (error.startsWith("File is too large"))
+    return fmt(m.fileTooLarge, {
+      max: Math.round(MAX_UPLOAD_BYTES / 1024 / 1024),
+    });
+  if (error.startsWith("Invalid filename")) return m.invalidFilename;
+  return fmt(m.unsupportedType, { type: file.type || m.unknownType });
+}
+
+function scanMessage(
+  doc: Pick<Tables<"documents">, "scan_status" | "filename">,
+  t: Dictionary,
+): string {
+  const m = t.app.documents;
+  const name = doc.filename?.trim() || m.fallbackName;
+  switch (doc.scan_status) {
+    case "pending":
+      return fmt(m.scanPending, { name });
+    case "clean":
+      return fmt(m.scanClean, { name });
+    case "infected":
+      return fmt(m.scanInfected, { name });
+    case "error":
+      return fmt(m.scanError, { name });
+  }
+}
 
 type UploadState =
   | { status: "idle" }
@@ -22,6 +59,7 @@ type UploadState =
 
 export function UploadForm() {
   const { workspace } = useWorkspace();
+  const { t } = useI18n();
   const [state, setState] = useState<UploadState>({ status: "idle" });
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -34,7 +72,10 @@ export function UploadForm() {
     setState({ status: "validating" });
     const validation = validateUploadFile(file);
     if (!validation.ok) {
-      setState({ status: "error", message: validation.error! });
+      setState({
+        status: "error",
+        message: validationMessage(file, validation.error ?? "", t),
+      });
       resetInput();
       return;
     }
@@ -54,7 +95,7 @@ export function UploadForm() {
     if (uploadError) {
       setState({
         status: "error",
-        message: `Upload failed: ${uploadError.message}`,
+        message: t.app.documents.uploadFailed,
       });
       resetInput();
       return;
@@ -66,7 +107,7 @@ export function UploadForm() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      setState({ status: "error", message: "Session expired. Please log in." });
+      setState({ status: "error", message: t.app.documents.sessionExpired });
       resetInput();
       return;
     }
@@ -87,7 +128,7 @@ export function UploadForm() {
     if (insertError) {
       setState({
         status: "error",
-        message: `Failed to save document record: ${insertError.message}`,
+        message: t.app.documents.saveFailed,
       });
       resetInput();
       return;
@@ -95,11 +136,7 @@ export function UploadForm() {
 
     setState({
       status: "success",
-      message: scanStatusMessage({
-        scan_status: doc.scan_status,
-        filename: doc.filename,
-        scan_error: doc.scan_error,
-      }),
+      message: scanMessage(doc, t),
     });
 
     resetInput();
@@ -118,20 +155,21 @@ export function UploadForm() {
       <div className="flex items-center gap-3">
         <Upload className="h-5 w-5 text-text-muted" aria-hidden="true" />
         <div>
-          <h2 className="font-semibold text-text">Upload a file</h2>
+          <h2 className="font-semibold text-text">
+            {t.app.documents.uploadTitle}
+          </h2>
           <p className="text-sm text-text-muted">
-            PDF, images, and Office documents up to 25 MB
+            {t.app.documents.uploadHint}
           </p>
         </div>
       </div>
 
       <p id="upload-help" className="sr-only">
-        Accepted: PDF, plain text, Microsoft Office, and image files. Maximum 25
-        MB.
+        {t.app.documents.uploadHelp}
       </p>
       <div className="flex items-center gap-3">
         <label className="sr-only" htmlFor="document-upload">
-          Choose file to upload
+          {t.app.documents.chooseFile}
         </label>
         <input
           id="document-upload"
@@ -140,7 +178,7 @@ export function UploadForm() {
           onChange={handleFileChange}
           disabled={isUploading || !workspace}
           aria-describedby="upload-help"
-          className="block w-full text-sm text-text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-brand/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand hover:file:bg-brand/20 disabled:opacity-50"
+          className="block w-full text-sm text-text-muted file:me-3 file:rounded-lg file:border-0 file:bg-brand/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand hover:file:bg-brand/20 disabled:opacity-50"
           accept=".pdf,.txt,.doc,.docx,.xls,.xlsx,.pptx,.jpg,.jpeg,.png,.gif,.webp,.heic,.heif"
         />
         {isUploading && (
@@ -153,7 +191,7 @@ export function UploadForm() {
 
       {state.status === "uploading" && (
         <p className="text-sm text-text-muted">
-          Uploading &quot;{state.filename}&quot;...
+          {fmt(t.app.documents.uploading, { name: state.filename })}
         </p>
       )}
       {state.status === "success" && (

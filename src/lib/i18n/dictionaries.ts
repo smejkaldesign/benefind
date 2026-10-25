@@ -1,187 +1,16 @@
 import type { Locale } from "./types";
+import { marketing } from "./messages/marketing";
+import { screeningFlow } from "./messages/screening-flow";
+import { company } from "./messages/company";
+import { resultsPage } from "./messages/results-page";
+import { programs } from "./messages/programs";
+import { app } from "./messages/app";
+import { tools } from "./messages/tools";
 
-export interface Dictionary {
+const en = {
   common: {
-    appName: string;
-    tagline: string;
-    home: string;
-    screening: string;
-    dashboard: string;
-    results: string;
-    signIn: string;
-    signOut: string;
-    back: string;
-    continue_: string;
-    startOver: string;
-    loading: string;
-    learnMore: string;
-    applyNow: string;
-    free: string;
-  };
-  hero: {
-    title1: string;
-    title2: string;
-    subtitle: string;
-    cta: string;
-    noAccount: string;
-  };
-  screening: {
-    title: string;
-    welcome: string;
-    privacy: string;
-    calculating: string;
-    eligible: string;
-    notEligible: string;
-    perMonth: string;
-    perYear: string;
-    viewResults: string;
-  };
-  results: {
-    youMayQualify: string;
-    programs: string;
-    documents: string;
-    nextSteps: string;
-    confidence: string;
-    notCurrentlyEligible: string;
-    disclaimer: string;
-    totalEstimate: string;
-    gathered: string;
-  };
-  auth: {
-    signInTitle: string;
-    noPassword: string;
-    emailLabel: string;
-    sendLink: string;
-    checkEmail: string;
-    magicLinkSent: string;
-    differentEmail: string;
-  };
-  values: {
-    languages: string;
-    guidance: string;
-    privacy_: string;
-    languagesDesc: string;
-    guidanceDesc: string;
-    privacyDesc: string;
-  };
-  landing: {
-    badge: string;
-    heroTitle1: string;
-    heroTitle2: string;
-    heroSubtitle: string;
-    heroCta: string;
-    heroSecondaryCta: string;
-    statPrograms: string;
-    statLanguages: string;
-    statMinutes: string;
-    programsLabel: string;
-    howTitle: string;
-    howSubtitle: string;
-    step1Title: string;
-    step1Desc: string;
-    step2Title: string;
-    step2Desc: string;
-    step3Title: string;
-    step3Desc: string;
-    featuresTitle: string;
-    featuresSubtitle: string;
-    feat1Title: string;
-    feat1Desc: string;
-    feat2Title: string;
-    feat2Desc: string;
-    feat3Title: string;
-    feat3Desc: string;
-    feat4Title: string;
-    feat4Desc: string;
-    feat5Title: string;
-    feat5Desc: string;
-    feat6Title: string;
-    feat6Desc: string;
-    impactTitle: string;
-    impactSubtitle: string;
-    impact1Value: string;
-    impact1Label: string;
-    impact2Value: string;
-    impact2Label: string;
-    impact3Value: string;
-    impact3Label: string;
-    impact4Value: string;
-    impact4Label: string;
-    faqTitle: string;
-    faqSubtitle: string;
-    faq1Q: string;
-    faq1A: string;
-    faq2Q: string;
-    faq2A: string;
-    faq3Q: string;
-    faq3A: string;
-    faq4Q: string;
-    faq4A: string;
-    faq5Q: string;
-    faq5A: string;
-    faq6Q: string;
-    faq6A: string;
-    ctaTitle: string;
-    ctaSubtitle: string;
-    ctaButton: string;
-    ctaNote: string;
-    footerTagline: string;
-    footerProduct: string;
-    footerLegal: string;
-    footerLanguages: string;
-    footerAbout: string;
-    footerPrivacy: string;
-    footerTerms: string;
-    footerScreening: string;
-    footerCompanyGrants: string;
-    footerHowItWorks: string;
-    footerResources: string;
-    footerBlog: string;
-    footerDocs: string;
-    footerGuides: string;
-    footerDesignSystem: string;
-    footerTools: string;
-    footerBenefitsFor: string;
-    footerCompany: string;
-    // Problem section
-    problemTitle: string;
-    problemSubtitle: string;
-    pain1Stat: string;
-    pain1Label: string;
-    pain1Desc: string;
-    pain2Stat: string;
-    pain2Label: string;
-    pain2Desc: string;
-    pain3Stat: string;
-    pain3Label: string;
-    pain3Desc: string;
-    // Trust section
-    trustTitle: string;
-    trustSubtitle: string;
-    trust1Title: string;
-    trust1Desc: string;
-    trust2Title: string;
-    trust2Desc: string;
-    trust3Title: string;
-    trust3Desc: string;
-    // Testimonials section
-    testimonialsTitle: string;
-    testimonialsSubtitle: string;
-    testimonials: {
-      quote: string;
-      name: string;
-      location: string;
-      initials: string;
-    }[];
-    // Final CTA
-    ctaHeadline: string;
-    ctaDesc: string;
-    ctaFree: string;
-  };
-}
-
-const en: Dictionary = {
-  common: {
+    aiTranslationNotice:
+      "These translations are AI-generated and may contain grammatical errors.",
     appName: "Benefind",
     tagline: "Find Every Benefit You Deserve",
     home: "Home",
@@ -202,7 +31,7 @@ const en: Dictionary = {
     title1: "Find Every Benefit",
     title2: "You Deserve",
     subtitle:
-      "Answer a few simple questions and discover government programs you qualify for — explained in plain language, in your language.",
+      "Answer a few simple questions and discover government programs you qualify for, explained in plain language and in your language.",
     cta: "Check My Eligibility",
     noAccount: "100% free. No account required to check eligibility.",
   },
@@ -217,7 +46,7 @@ const en: Dictionary = {
     eligible:
       "You may qualify for {count} program{s} worth an estimated ${monthly}/month (${annual}/year). Scroll down to see your results.",
     notEligible:
-      "Based on the information provided, you may not qualify for the programs we currently check. This doesn't mean there aren't other programs available — check with your local social services office.",
+      "Based on the information provided, you may not qualify for the programs we currently check. This doesn't mean there aren't other programs available. Check with your local social services office.",
     perMonth: "/month",
     perYear: "/year",
     viewResults: "View Full Results",
@@ -236,7 +65,7 @@ const en: Dictionary = {
   },
   auth: {
     signInTitle: "Sign in to Benefind",
-    noPassword: "No password needed — we'll email you a magic link.",
+    noPassword: "No password needed. We'll email you a magic link.",
     emailLabel: "Email address",
     sendLink: "Send magic link",
     checkEmail: "Check your email",
@@ -436,10 +265,14 @@ const en: Dictionary = {
   },
 };
 
-const es: Dictionary = {
+type CoreDictionary = typeof en;
+
+const es: CoreDictionary = {
   common: {
+    aiTranslationNotice:
+      "Estas traducciones fueron generadas por IA y pueden contener errores gramaticales.",
     appName: "Benefind",
-    tagline: "Encuentra Todos los Beneficios que Mereces",
+    tagline: "Encuentre Todos los Beneficios que Merece",
     home: "Inicio",
     screening: "Evaluar",
     dashboard: "Panel",
@@ -452,51 +285,51 @@ const es: Dictionary = {
     loading: "Cargando...",
     learnMore: "Más información",
     applyNow: "Solicitar ahora",
-    free: "Encuentra todos los beneficios que mereces.",
+    free: "Encuentre todos los beneficios que merece.",
   },
   hero: {
-    title1: "Encuentra Todos los Beneficios",
-    title2: "que Mereces",
+    title1: "Encuentre Todos los Beneficios",
+    title2: "que Merece",
     subtitle:
-      "Responde unas preguntas sencillas y descubre los programas del gobierno para los que calificas — explicados en lenguaje simple, en tu idioma.",
+      "Responda unas preguntas sencillas y descubra los programas del gobierno para los que califica, explicados en lenguaje simple y en su idioma.",
     cta: "Verificar Mi Elegibilidad",
-    noAccount: "100% gratis. No necesitas cuenta para verificar elegibilidad.",
+    noAccount: "100% gratis. No necesita cuenta para verificar elegibilidad.",
   },
   screening: {
     title: "Evaluación de Elegibilidad",
     welcome:
-      "¡Hola! Estoy aquí para ayudarte a encontrar beneficios del gobierno para los que puedas calificar. Toma unos 3 minutos.",
+      "¡Hola! Estoy aquí para ayudarle a encontrar beneficios del gobierno para los que pueda calificar. Toma unos 3 minutos.",
     privacy:
-      "Tus respuestas son privadas y no se compartirán con nadie. ¡Comencemos!",
+      "Sus respuestas son privadas y no se compartirán con nadie. ¡Comencemos!",
     calculating:
-      "Perfecto, tengo todo lo que necesito. Déjame verificar para qué programas calificas...",
+      "Perfecto, tengo todo lo que necesito. Permítame verificar para qué programas califica...",
     eligible:
-      "Puedes calificar para {count} programa{s} con un valor estimado de ${monthly}/mes (${annual}/año). Desplázate hacia abajo para ver tus resultados.",
+      "Puede calificar para {count} programa{s} con un valor estimado de ${monthly}/mes (${annual}/año). Desplácese hacia abajo para ver sus resultados.",
     notEligible:
-      "Según la información proporcionada, es posible que no califiques para los programas que verificamos actualmente. Consulta con tu oficina local de servicios sociales.",
+      "Según la información proporcionada, es posible que no califique para los programas que verificamos actualmente. Consulte con su oficina local de servicios sociales.",
     perMonth: "/mes",
     perYear: "/año",
     viewResults: "Ver Resultados Completos",
   },
   results: {
-    youMayQualify: "Puedes calificar para",
+    youMayQualify: "Puede calificar para",
     programs: "Programas",
     documents: "Documentos",
     nextSteps: "Próximos Pasos",
     confidence: "confianza",
     notCurrentlyEligible: "No elegible actualmente",
     disclaimer:
-      "Estos resultados son estimaciones basadas en la información que proporcionaste. La elegibilidad real es determinada por la agencia administradora de cada programa.",
+      "Estos resultados son estimaciones basadas en la información que proporcionó. La elegibilidad real es determinada por la agencia administradora de cada programa.",
     totalEstimate: "Beneficio total estimado",
     gathered: "reunidos",
   },
   auth: {
     signInTitle: "Iniciar sesión en Benefind",
     noPassword:
-      "No necesitas contraseña — te enviaremos un enlace mágico por correo.",
+      "No necesita contraseña. Le enviaremos un enlace mágico por correo.",
     emailLabel: "Correo electrónico",
     sendLink: "Enviar enlace mágico",
-    checkEmail: "Revisa tu correo",
+    checkEmail: "Revise su correo",
     magicLinkSent: "Enviamos un enlace mágico a",
     differentEmail: "Usar otro correo",
   },
@@ -509,31 +342,31 @@ const es: Dictionary = {
     guidanceDesc:
       "Explicamos cada pregunta de cada formulario en lenguaje simple. Sin jerga.",
     privacyDesc:
-      "Tus datos permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tu información.",
+      "Sus datos permanecen en su dispositivo y nunca se envían a nuestros servidores. Nunca vendemos su información.",
   },
   landing: {
     badge: "Verificar elegibilidad gratis",
     heroTitle1: "Miles de millones en beneficios no se reclaman.",
-    heroTitle2: "Los tuyos podrían ser los próximos.",
+    heroTitle2: "Los suyos podrían ser los próximos.",
     heroSubtitle:
-      "Responde unas preguntas simples y te conectaremos con los programas gubernamentales para los que calificas. Guía paso a paso, en tu idioma.",
+      "Responda unas preguntas simples y le conectaremos con los programas gubernamentales para los que califica. Guía paso a paso, en su idioma.",
     heroCta: "Verificar Mi Elegibilidad",
     heroSecondaryCta: "Cómo Funciona",
     statPrograms: "Programas",
     statLanguages: "Idiomas",
     statMinutes: "Tiempo Promedio",
-    programsLabel: "Programas que te ayudamos a encontrar",
+    programsLabel: "Programas que le ayudamos a encontrar",
     howTitle: "Cómo Funciona",
-    howSubtitle: "Tres pasos para encontrar lo que te corresponde",
-    step1Title: "Cuéntanos sobre ti",
+    howSubtitle: "Tres pasos para encontrar lo que le corresponde",
+    step1Title: "Cuéntenos sobre usted",
     step1Desc:
-      "Responde preguntas sencillas sobre tu hogar. No se requiere identificación personal. Toma unos 3 minutos.",
-    step2Title: "Obtén resultados al instante",
+      "Responda preguntas sencillas sobre su hogar. No se requiere identificación personal. Toma unos 3 minutos.",
+    step2Title: "Obtenga resultados al instante",
     step2Desc:
-      "Nuestra IA verifica tu elegibilidad en más de 50 programas federales y estatales y te muestra para cuáles calificas.",
-    step3Title: "Aplica con confianza",
+      "Nuestra IA verifica su elegibilidad en más de 50 programas federales y estatales y le muestra para cuáles califica.",
+    step3Title: "Aplique con confianza",
     step3Desc:
-      "Recibe guía paso a paso para cada formulario, explicado en lenguaje simple, en el idioma que prefieras.",
+      "Reciba guía paso a paso para cada formulario, explicado en lenguaje simple, en el idioma que prefiera.",
     featuresTitle: "Diseñado para quienes más lo necesitan",
     featuresSubtitle:
       "Cada función existe porque alguien fue dejado atrás por el sistema.",
@@ -545,17 +378,17 @@ const es: Dictionary = {
       "Los formularios gubernamentales son confusos. Reescribimos cada pregunta para que cualquiera pueda entenderla.",
     feat3Title: "Privado y Seguro",
     feat3Desc:
-      "Tus datos permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tu información. Punto.",
+      "Sus datos permanecen en su dispositivo y nunca se envían a nuestros servidores. Nunca vendemos su información. Punto.",
     feat4Title: "Matching con IA",
     feat4Desc:
-      "Evaluación inteligente que cruza tu situación con docenas de programas simultáneamente.",
+      "Evaluación inteligente que cruza su situación con docenas de programas simultáneamente.",
     feat5Title: "Guía Paso a Paso",
     feat5Desc:
-      "No solo te decimos para qué calificas. Te guiamos en cómo obtenerlo.",
+      "No solo le decimos para qué califica. Le guiamos en cómo obtenerlo.",
     feat6Title: "Gratis para empezar",
     feat6Desc:
-      "Verifica tu elegibilidad sin costo. Mejora para obtener ayuda guiada, seguimiento de documentos y recordatorios.",
-    impactTitle: "El problema es mayor de lo que piensas",
+      "Verifique su elegibilidad sin costo. Mejore su plan para obtener ayuda guiada, seguimiento de documentos y recordatorios.",
+    impactTitle: "El problema es mayor de lo que piensa",
     impactSubtitle:
       "Cada año, miles de millones en beneficios gubernamentales no llegan a nadie.",
     impact1Value: "$80B+",
@@ -565,33 +398,33 @@ const es: Dictionary = {
     impact3Value: "50+",
     impact3Label: "Programas federales y estatales verificados",
     impact4Value: "~3 min",
-    impact4Label: "Para verificar tu elegibilidad",
+    impact4Label: "Para verificar su elegibilidad",
     faqTitle: "¿Preguntas? Tenemos respuestas.",
-    faqSubtitle: "Todo lo que necesitas saber sobre Benefind.",
+    faqSubtitle: "Todo lo que necesita saber sobre Benefind.",
     faq1Q: "¿Qué es Benefind?",
     faq1A:
-      "Benefind es una herramienta gratuita que te ayuda a encontrar beneficios gubernamentales para los que podrías calificar. Responde algunas preguntas y te conectaremos con programas como SNAP, Medicaid, WIC y más.",
+      "Benefind es una herramienta gratuita que le ayuda a encontrar beneficios gubernamentales para los que podría calificar. Responda algunas preguntas y le conectaremos con programas como SNAP, Medicaid, WIC y más.",
     faq2Q: "¿Benefind es gratis?",
     faq2A:
-      "Verificar tu elegibilidad es 100% gratis, sin cuenta necesaria. Para ayuda guiada, seguimiento de documentos y recordatorios, los planes comienzan en $4.99/mes o $99 acceso de por vida.",
+      "Verificar su elegibilidad es 100% gratis, sin cuenta necesaria. Para ayuda guiada, seguimiento de documentos y recordatorios, los planes comienzan en $4.99/mes o $99 acceso de por vida.",
     faq3Q: "¿Qué programas verifica Benefind?",
     faq3A:
       "Verificamos elegibilidad para más de 50 programas federales y estatales incluyendo SNAP, Medicaid, WIC, CHIP, SSI, SSDI, TANF, Sección 8, LIHEAP, Becas Pell, EITC y muchos más.",
     faq4Q: "¿Necesito crear una cuenta?",
     faq4A:
-      "No. Puedes verificar tu elegibilidad sin crear una cuenta. Si quieres guardar tus resultados, puedes crear una cuenta gratuita opcionalmente.",
+      "No. Puede verificar su elegibilidad sin crear una cuenta. Si quiere guardar sus resultados, puede crear una cuenta gratuita opcionalmente.",
     faq5Q: "¿Mi información es privada?",
     faq5A:
-      "Absolutamente. Tus datos de evaluación permanecen en tu dispositivo y nunca se envían a nuestros servidores. Nunca vendemos tus datos a terceros.",
+      "Absolutamente. Sus datos de evaluación permanecen en su dispositivo y nunca se envían a nuestros servidores. Nunca vendemos sus datos a terceros.",
     faq6Q: "¿Qué tan precisos son los resultados?",
     faq6A:
-      "Nuestra evaluación con IA proporciona elegibilidad estimada basada en la información que proporcionas. La elegibilidad final la determina la agencia administradora del programa.",
-    ctaTitle: "¿Listo para encontrar lo que te corresponde?",
+      "Nuestra evaluación con IA proporciona elegibilidad estimada basada en la información que proporciona. La elegibilidad final la determina la agencia administradora del programa.",
+    ctaTitle: "¿Está listo para encontrar lo que le corresponde?",
     ctaSubtitle:
       "Toma unos 3 minutos. Sin cuenta necesaria. Completamente gratis.",
     ctaButton: "Verificar Mi Elegibilidad",
-    ctaNote: "Únete a miles que ya encuentran sus beneficios.",
-    footerTagline: "Encuentra Todos los Beneficios que Mereces",
+    ctaNote: "Únase a miles que ya encuentran sus beneficios.",
+    footerTagline: "Encuentre Todos los Beneficios que Merece",
     footerProduct: "Producto",
     footerLegal: "Legal",
     footerLanguages: "Idiomas",
@@ -625,13 +458,13 @@ const es: Dictionary = {
     pain3Desc:
       "No porque no necesiten ayuda, sino porque el proceso se siente imposible.",
     // Trust section
-    trustTitle: "Tus Datos Son Tuyos",
+    trustTitle: "Sus Datos Son Suyos",
     trustSubtitle:
-      "Privacidad por diseño. Construimos Benefind para protegerte, no para lucrar contigo.",
-    trust1Title: "Almacenado en Tu Dispositivo",
+      "Privacidad por diseño. Construimos Benefind para protegerle, no para lucrar con usted.",
+    trust1Title: "Almacenado en Su Dispositivo",
     trust1Desc:
-      "Tus respuestas de evaluación permanecen en tu dispositivo y nunca se envían a nuestros servidores. No podemos verlas, aunque quisiéramos.",
-    trust2Title: "Nunca Vendemos Tus Datos",
+      "Sus respuestas de evaluación permanecen en su dispositivo y nunca se envían a nuestros servidores. No podemos verlas, aunque quisiéramos.",
+    trust2Title: "Nunca Vendemos Sus Datos",
     trust2Desc:
       "Ni a anunciantes. Ni a corredores de datos. Ni a nadie, nunca. Eso es una promesa.",
     trust3Title: "Código Abierto y Transparente",
@@ -686,15 +519,16 @@ const es: Dictionary = {
       },
     ],
     // Final CTA
-    ctaHeadline: "Podrías Estar Dejando Miles de Dólares Sobre la Mesa",
+    ctaHeadline: "Podría Estar Dejando Miles de Dólares Sobre la Mesa",
     ctaDesc:
       "Tanto individuos como empresas califican para programas que nunca reclaman. Ya sean beneficios personales o subvenciones empresariales, solo hay una forma de averiguarlo.",
     ctaFree: "Gratis. 5 minutos. Sin registro. 100% privado.",
   },
 };
 
-const zh: Dictionary = {
+const zh: CoreDictionary = {
   common: {
+    aiTranslationNotice: "这些翻译由 AI 生成，可能包含语法错误。",
     appName: "Benefind",
     tagline: "找到您应得的每一项福利",
     home: "首页",
@@ -715,7 +549,7 @@ const zh: Dictionary = {
     title1: "找到您应得的",
     title2: "每一项福利",
     subtitle:
-      "回答几个简单的问题，发现您有资格获得的政府项目——用简单的语言、用您的语言解释。",
+      "回答几个简单的问题，发现您有资格获得的政府项目，并用简单易懂的语言、用您的母语为您解释。",
     cta: "检查我的资格",
     noAccount: "100%免费。无需账户即可检查资格。",
   },
@@ -748,7 +582,7 @@ const zh: Dictionary = {
   },
   auth: {
     signInTitle: "登录Benefind",
-    noPassword: "无需密码——我们会发送一个魔法链接到您的邮箱。",
+    noPassword: "无需密码。我们会发送一个魔法链接到您的邮箱。",
     emailLabel: "电子邮箱",
     sendLink: "发送魔法链接",
     checkEmail: "请查看您的邮箱",
@@ -876,7 +710,50 @@ const zh: Dictionary = {
       "我们的代码是公开的。任何人都可以查看Benefind如何运作。没有黑箱，没有隐藏的把戏。",
     testimonialsTitle: "真实故事，真实影响",
     testimonialsSubtitle: "个人和企业正在发现他们从未知道的福利。",
-    testimonials: en.landing.testimonials,
+    testimonials: [
+      {
+        quote:
+          "我完全不知道自己符合 SNAP 和 LIHEAP 的资格。每个月多出 400 美元，我之前一直没有领取。",
+        name: "Maria G.",
+        location: "Houston, TX",
+        initials: "MG",
+      },
+      {
+        quote:
+          "我是单身爸爸，那些表格总是让我不知所措。Benefind 像朋友一样一步步带我完成。现在我的孩子们都有了 CHIP。",
+        name: "James R.",
+        location: "Atlanta, GA",
+        initials: "JR",
+      },
+      {
+        quote:
+          "我们是一家 12 人的初创公司，完全不知道自己符合研发税收抵免（R&D Tax Credit）的资格。Benefind 在不到 5 分钟内帮我们找到了每年 4.7 万美元的节省。",
+        name: "Priya K.",
+        location: "Austin, TX",
+        initials: "PK",
+      },
+      {
+        quote:
+          "我妈妈只会说越南语。她用自己的语言使用 Benefind，发现自己符合 Medicaid 的资格。",
+        name: "Linh T.",
+        location: "San Jose, CA",
+        initials: "LT",
+      },
+      {
+        quote:
+          "我们在一个农村县经营一家小型制造厂。Benefind 帮我们找到了 USDA 补助金和州政府的职业培训项目，这些我们自己根本找不到。",
+        name: "Tom 和 Linda B.",
+        location: "Asheville, NC",
+        initials: "TB",
+      },
+      {
+        quote:
+          "作为一家女性拥有的企业，我之前不知道 WOSB 政府合同项目。Benefind 告诉我如何获得专门留给像我这样企业的联邦合同。",
+        name: "Rachel M.",
+        location: "Denver, CO",
+        initials: "RM",
+      },
+    ],
     ctaHeadline: "您可能正在错失数千美元",
     ctaDesc:
       "个人和企业都有资格获得他们从未申请的项目。无论是个人福利还是企业补助，只有一种方式可以知道。",
@@ -884,8 +761,10 @@ const zh: Dictionary = {
   },
 };
 
-const vi: Dictionary = {
+const vi: CoreDictionary = {
   common: {
+    aiTranslationNotice:
+      "Các bản dịch này do AI tạo ra và có thể có lỗi ngữ pháp.",
     appName: "Benefind",
     tagline: "Tìm Mọi Quyền Lợi Bạn Xứng Đáng",
     home: "Trang chủ",
@@ -906,7 +785,7 @@ const vi: Dictionary = {
     title1: "Tìm Mọi Quyền Lợi",
     title2: "Bạn Xứng Đáng",
     subtitle:
-      "Trả lời vài câu hỏi đơn giản và khám phá các chương trình chính phủ bạn đủ điều kiện — giải thích bằng ngôn ngữ đơn giản, bằng ngôn ngữ của bạn.",
+      "Trả lời vài câu hỏi đơn giản và khám phá các chương trình chính phủ bạn đủ điều kiện, được giải thích bằng ngôn ngữ đơn giản và bằng ngôn ngữ của bạn.",
     cta: "Kiểm Tra Điều Kiện",
     noAccount: "Miễn phí 100%. Không cần tài khoản để kiểm tra điều kiện.",
   },
@@ -941,7 +820,7 @@ const vi: Dictionary = {
   auth: {
     signInTitle: "Đăng nhập Benefind",
     noPassword:
-      "Không cần mật khẩu — chúng tôi sẽ gửi liên kết đến email của bạn.",
+      "Không cần mật khẩu. Chúng tôi sẽ gửi liên kết đến email của bạn.",
     emailLabel: "Địa chỉ email",
     sendLink: "Gửi liên kết",
     checkEmail: "Kiểm tra email của bạn",
@@ -1082,7 +961,50 @@ const vi: Dictionary = {
     testimonialsTitle: "Câu chuyện thực, tác động thực",
     testimonialsSubtitle:
       "Cá nhân và doanh nghiệp đang tìm thấy các trợ cấp mà họ không bao giờ biết.",
-    testimonials: en.landing.testimonials,
+    testimonials: [
+      {
+        quote:
+          "Tôi không hề biết mình đủ điều kiện nhận SNAP và LIHEAP. Đó là thêm $400 mỗi tháng mà trước đây tôi đã bỏ lỡ.",
+        name: "Maria G.",
+        location: "Houston, TX",
+        initials: "MG",
+      },
+      {
+        quote:
+          "Tôi là một người cha đơn thân và các mẫu đơn luôn khiến tôi choáng ngợp. Benefind hướng dẫn tôi từng bước như một người bạn. Giờ các con tôi đã có CHIP.",
+        name: "James R.",
+        location: "Atlanta, GA",
+        initials: "JR",
+      },
+      {
+        quote:
+          "Chúng tôi là một công ty khởi nghiệp 12 người và không biết mình đủ điều kiện nhận Tín dụng Thuế R&D. Benefind đã tìm cho chúng tôi $47K tiết kiệm mỗi năm trong chưa đầy 5 phút.",
+        name: "Priya K.",
+        location: "Austin, TX",
+        initials: "PK",
+      },
+      {
+        quote:
+          "Mẹ tôi chỉ nói tiếng Việt. Bà đã dùng Benefind bằng tiếng mẹ đẻ và biết mình đủ điều kiện nhận Medicaid.",
+        name: "Linh T.",
+        location: "San Jose, CA",
+        initials: "LT",
+      },
+      {
+        quote:
+          "Chúng tôi điều hành một xưởng sản xuất nhỏ ở một quận nông thôn. Benefind đã kết nối chúng tôi với các khoản tài trợ của USDA và chương trình đào tạo nghề của tiểu bang mà tự chúng tôi sẽ không bao giờ tìm thấy.",
+        name: "Tom và Linda B.",
+        location: "Asheville, NC",
+        initials: "TB",
+      },
+      {
+        quote:
+          "Là một doanh nghiệp do phụ nữ làm chủ, tôi không biết về chương trình hợp đồng WOSB. Benefind đã chỉ cho tôi cách tiếp cận các hợp đồng liên bang dành riêng cho những doanh nghiệp như của tôi.",
+        name: "Rachel M.",
+        location: "Denver, CO",
+        initials: "RM",
+      },
+    ],
     ctaHeadline: "Bạn có thể đang bỏ lỡ hàng ngàn đô la",
     ctaDesc:
       "Cả cá nhân và doanh nghiệp đều đủ điều kiện cho các chương trình mà họ không bao giờ yêu cầu. Chỉ có một cách để biết.",
@@ -1090,8 +1012,10 @@ const vi: Dictionary = {
   },
 };
 
-const ar: Dictionary = {
+const ar: CoreDictionary = {
   common: {
+    aiTranslationNotice:
+      "هذه الترجمات مُنشأة بالذكاء الاصطناعي وقد تحتوي على أخطاء نحوية.",
     appName: "Benefind",
     tagline: "اكتشف كل المزايا التي تستحقها",
     home: "الرئيسية",
@@ -1112,7 +1036,7 @@ const ar: Dictionary = {
     title1: "اكتشف كل المزايا",
     title2: "التي تستحقها",
     subtitle:
-      "أجب عن بضعة أسئلة بسيطة واكتشف البرامج الحكومية التي تؤهل لها — موضحة بلغة بسيطة، بلغتك.",
+      "أجب عن بضعة أسئلة بسيطة واكتشف البرامج الحكومية التي تؤهل لها، موضحة بلغة بسيطة وبلغتك.",
     cta: "تحقق من أهليتي",
     noAccount: "مجاني 100%. لا حاجة لحساب للتحقق من الأهلية.",
   },
@@ -1146,7 +1070,7 @@ const ar: Dictionary = {
   auth: {
     signInTitle: "تسجيل الدخول إلى Benefind",
     noPassword:
-      "لا حاجة لكلمة مرور — سنرسل لك رابطاً سحرياً عبر البريد الإلكتروني.",
+      "لا حاجة لكلمة مرور. سنرسل لك رابطاً سحرياً عبر البريد الإلكتروني.",
     emailLabel: "البريد الإلكتروني",
     sendLink: "إرسال الرابط السحري",
     checkEmail: "تحقق من بريدك الإلكتروني",
@@ -1278,7 +1202,50 @@ const ar: Dictionary = {
       "شفرتنا عامة. يمكن لأي شخص فحص كيف يعمل Benefind. لا صناديق سوداء، لا حيل مخفية.",
     testimonialsTitle: "قصص حقيقية، تأثير حقيقي",
     testimonialsSubtitle: "الأفراد والشركات يجدون مزايا لم يعرفوا بوجودها.",
-    testimonials: en.landing.testimonials,
+    testimonials: [
+      {
+        quote:
+          "لم أكن أعرف أنني مؤهلة لبرنامجي SNAP وLIHEAP. هذا مبلغ إضافي قدره 400 دولار شهرياً كنت أفوّته.",
+        name: "Maria G.",
+        location: "Houston, TX",
+        initials: "MG",
+      },
+      {
+        quote:
+          "أنا أب أعزب وكانت الاستمارات تربكني دائماً. ساعدني Benefind خطوة بخطوة كما يفعل الصديق. أطفالي مسجلون الآن في CHIP.",
+        name: "James R.",
+        location: "Atlanta, GA",
+        initials: "JR",
+      },
+      {
+        quote:
+          "نحن شركة ناشئة من 12 شخصاً ولم نكن نعرف أننا مؤهلون لائتمان ضريبة البحث والتطوير (R&D Tax Credit). وجد لنا Benefind توفيراً سنوياً بقيمة 47 ألف دولار في أقل من 5 دقائق.",
+        name: "Priya K.",
+        location: "Austin, TX",
+        initials: "PK",
+      },
+      {
+        quote:
+          "أمي لا تتحدث إلا الفيتنامية. استطاعت استخدام Benefind بلغتها واكتشفت أنها مؤهلة لبرنامج Medicaid.",
+        name: "Linh T.",
+        location: "San Jose, CA",
+        initials: "LT",
+      },
+      {
+        quote:
+          "ندير ورشة تصنيع صغيرة في مقاطعة ريفية. ربطنا Benefind بمنح USDA وبرامج تدريب القوى العاملة في الولاية، ولم نكن لنجدها بأنفسنا.",
+        name: "Tom وLinda B.",
+        location: "Asheville, NC",
+        initials: "TB",
+      },
+      {
+        quote:
+          "بصفتي صاحبة شركة مملوكة لامرأة، لم أكن أعرف برنامج التعاقد WOSB. أوضح لي Benefind كيف أصل إلى العقود الفيدرالية المخصصة لشركات مثل شركتي.",
+        name: "Rachel M.",
+        location: "Denver, CO",
+        initials: "RM",
+      },
+    ],
     ctaHeadline: "قد تكون تترك آلاف الدولارات على الطاولة",
     ctaDesc:
       "الأفراد والشركات على حد سواء مؤهلون لبرامج لا يطالبون بها أبداً. سواء كانت مزايا شخصية أو منح تجارية، هناك طريقة واحدة فقط لمعرفة ذلك.",
@@ -1286,8 +1253,30 @@ const ar: Dictionary = {
   },
 };
 
-const dictionaries: Record<Locale, Dictionary> = { en, es, zh, vi, ar };
+const core: Record<Locale, CoreDictionary> = { en, es, zh, vi, ar };
+
+function buildDictionary(locale: Locale) {
+  return {
+    ...core[locale],
+    marketing: marketing[locale],
+    screeningFlow: screeningFlow[locale],
+    company: company[locale],
+    resultsPage: resultsPage[locale],
+    programs: programs[locale],
+    app: app[locale],
+    tools: tools[locale],
+  };
+}
+
+export type Dictionary = ReturnType<typeof buildDictionary>;
+
+const cache = new Map<Locale, Dictionary>();
 
 export function getDictionary(locale: Locale): Dictionary {
-  return dictionaries[locale] ?? dictionaries.en;
+  let dict = cache.get(locale);
+  if (!dict) {
+    dict = buildDictionary(core[locale] ? locale : "en");
+    cache.set(locale, dict);
+  }
+  return dict;
 }

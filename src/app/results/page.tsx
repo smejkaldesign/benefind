@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { EligibilityTier, ScreeningResult } from "@/lib/benefits/types";
 import { STORAGE_KEYS } from "@/lib/constants";
+import { useI18n } from "@/lib/i18n/context";
+import { fmt } from "@/lib/i18n/format";
+import { localizeProgram, localizeResult } from "@/lib/i18n/localize-program";
 import { DocumentChecklist } from "@/components/screening/document-checklist";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -58,8 +61,6 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 type TierMeta = {
-  label: string;
-  shortLabel: string;
   icon: React.ComponentType<{ className?: string }>;
   iconClass: string;
   badgeClass: string;
@@ -82,48 +83,38 @@ type TierMeta = {
 // "success" token.
 const TIER_META: Record<EligibilityTier, TierMeta> = {
   eligible_with_requirements: {
-    label: "Eligible (gather these docs)",
-    shortLabel: "Eligible",
     icon: CheckCircle2,
     iconClass: "text-success",
     badgeClass: "bg-success/15 text-success border-success/40",
-    accentClass: "border-l-4 border-success",
+    accentClass: "border-s-4 border-success",
     sortGroup: 1,
   },
   probably_eligible: {
-    label: "Probably eligible",
-    shortLabel: "Probably",
     icon: CircleDot,
     iconClass: "text-success",
     badgeClass: "bg-success/8 text-success border-success/25",
-    accentClass: "border-l-4 border-dashed border-success",
+    accentClass: "border-s-4 border-dashed border-success",
     sortGroup: 2,
   },
   maybe_eligible: {
-    label: "Maybe eligible",
-    shortLabel: "Maybe",
     icon: QuestionMark,
     iconClass: "text-warning",
     badgeClass: "bg-warning/10 text-warning border-warning/40",
-    accentClass: "border-l-4 border-warning",
+    accentClass: "border-s-4 border-warning",
     sortGroup: 3,
   },
   not_likely: {
-    label: "Not likely",
-    shortLabel: "Unlikely",
     icon: CircleSlash,
     iconClass: "text-text-muted",
     badgeClass: "bg-surface-dim text-text-muted border-border",
-    accentClass: "border-l-4 border-border",
+    accentClass: "border-s-4 border-border",
     sortGroup: 4,
   },
   ineligible: {
-    label: "Not eligible",
-    shortLabel: "No",
     icon: XCircle,
     iconClass: "text-text-subtle",
     badgeClass: "bg-surface-dim text-text-subtle border-border-dark",
-    accentClass: "border-l-4 border-border-dark",
+    accentClass: "border-s-4 border-border-dark",
     sortGroup: 5,
   },
 };
@@ -135,6 +126,8 @@ function WhyPanel({
   reasons: ScreeningResult["programs"][number]["result"]["reasons"];
   panelId: string;
 }) {
+  const { t } = useI18n();
+  const w = t.resultsPage.why;
   const [expanded, setExpanded] = useState(false);
 
   // Defensive defaults. The ReasonsPayload type declares these as required
@@ -163,7 +156,7 @@ function WhyPanel({
           }`}
           aria-hidden="true"
         />
-        Why this result?
+        {w.toggle}
       </button>
 
       {expanded && (
@@ -176,7 +169,7 @@ function WhyPanel({
           {rules.length > 0 && (
             <div>
               <p className="font-semibold text-text-muted uppercase tracking-wide mb-1.5">
-                Rules
+                {w.rules}
               </p>
               <ul className="space-y-1.5">
                 {rules.map((rule, i) => (
@@ -199,16 +192,20 @@ function WhyPanel({
                       <p className="text-text">{rule.label}</p>
                       {(rule.actual || rule.threshold) && (
                         <p className="text-text-muted">
-                          {rule.actual && <span>You: {rule.actual}</span>}
+                          {rule.actual && (
+                            <span>{fmt(w.you, { value: rule.actual })}</span>
+                          )}
                           {rule.actual && rule.threshold && " · "}
                           {rule.threshold && (
-                            <span>Required: {rule.threshold}</span>
+                            <span>
+                              {fmt(w.required, { value: rule.threshold })}
+                            </span>
                           )}
                         </p>
                       )}
                       {rule.veto && !rule.passed && (
                         <p className="mt-0.5 text-error font-medium">
-                          Critical requirement
+                          {w.critical}
                         </p>
                       )}
                     </div>
@@ -221,7 +218,7 @@ function WhyPanel({
           {signals.length > 0 && (
             <div>
               <p className="font-semibold text-text-muted uppercase tracking-wide mb-1.5">
-                Contributing factors
+                {w.factors}
               </p>
               <ul className="space-y-1">
                 {signals.map((signal, i) => (
@@ -251,7 +248,7 @@ function WhyPanel({
           {missing.length > 0 && (
             <div>
               <p className="font-semibold text-text-muted uppercase tracking-wide mb-1.5">
-                Missing information
+                {w.missing}
               </p>
               <ul className="space-y-1 text-text-muted">
                 {missing.map((m, i) => (
@@ -262,8 +259,8 @@ function WhyPanel({
           )}
 
           <div className="flex items-center justify-between border-t border-border pt-2 text-[11px] text-text-muted">
-            <span>Confidence score: {computedScore}/100</span>
-            <span>Engine v{engineVersion}</span>
+            <span>{fmt(w.score, { score: computedScore })}</span>
+            <span>{fmt(w.engine, { version: engineVersion })}</span>
           </div>
         </div>
       )}
@@ -273,6 +270,8 @@ function WhyPanel({
 
 export default function ResultsPage() {
   const router = useRouter();
+  const { t } = useI18n();
+  const rp = t.resultsPage;
   const [result, setResult] = useState<ScreeningResult | null>(null);
   const [activeTab, setActiveTab] = useState<"programs" | "documents">(
     "programs",
@@ -351,7 +350,10 @@ export default function ResultsPage() {
     ineligible: [],
   };
   for (const p of result.programs) {
-    byTier[p.result.eligibilityTier].push(p);
+    byTier[p.result.eligibilityTier].push({
+      program: localizeProgram(p.program, t),
+      result: localizeResult(p.result, t),
+    });
   }
 
   // Programs the user should actually pursue (top 2 tiers)
@@ -370,49 +372,62 @@ export default function ResultsPage() {
         ref={heroRef}
         className="bg-brand px-4 py-8 text-stone-900"
         role="region"
-        aria-label="Screening results summary"
+        aria-label={rp.summaryAria}
       >
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-medium text-stone-900/60">
-            You may qualify for
+            {t.results.youMayQualify}
           </p>
           <p
             className="mt-1 text-4xl font-bold"
-            aria-label={`Estimated ${result.totalEstimatedMonthly.toLocaleString()} dollars per month`}
+            aria-label={fmt(rp.estimatedAria, {
+              amount: result.totalEstimatedMonthly.toLocaleString(),
+            })}
           >
             ${result.totalEstimatedMonthly.toLocaleString()}
             <span className="text-lg font-normal text-stone-900/60">
-              /month
+              {rp.perMonth}
             </span>
           </p>
           <p className="mt-1 text-sm text-stone-900/60">
-            ${result.totalEstimatedAnnual.toLocaleString()}/year across{" "}
-            {pursuable.length} program
-            {pursuable.length !== 1 ? "s" : ""}
+            {fmt(
+              pursuable.length === 1
+                ? rp.annualAcrossOne
+                : rp.annualAcrossOther,
+              {
+                amount: result.totalEstimatedAnnual.toLocaleString(),
+                count: pursuable.length,
+              },
+            )}
           </p>
           <div className="mt-4 flex items-center justify-center gap-2">
             <TrendingUp className="h-4 w-4 text-stone-900/60" />
-            <p className="text-xs text-stone-900/60">
-              Estimates based on your household information
-            </p>
+            <p className="text-xs text-stone-900/60">{rp.estimatesBasis}</p>
           </div>
         </div>
       </div>
 
       {/* Tabs + sticky summary */}
-      <div className="sticky top-0 z-20 border-b border-border bg-surface">
+      <div className="sticky top-banner z-20 border-b border-border bg-surface">
         {showStickyTotal && (
           <div className="border-b border-border bg-brand/5 px-4 py-1.5 text-center">
             <p className="text-sm font-semibold text-brand">
-              ${result.totalEstimatedMonthly.toLocaleString()}/mo across{" "}
-              {pursuable.length} program{pursuable.length !== 1 ? "s" : ""}
+              {fmt(
+                pursuable.length === 1
+                  ? rp.monthlyAcrossOne
+                  : rp.monthlyAcrossOther,
+                {
+                  amount: result.totalEstimatedMonthly.toLocaleString(),
+                  count: pursuable.length,
+                },
+              )}
             </p>
           </div>
         )}
         <div
           className="mx-auto flex max-w-2xl"
           role="tablist"
-          aria-label="Results view"
+          aria-label={rp.viewAria}
         >
           <button
             id="tab-programs"
@@ -426,7 +441,7 @@ export default function ResultsPage() {
                 : "text-text-muted hover:text-text"
             }`}
           >
-            Programs ({pursuable.length})
+            {fmt(rp.programsTab, { count: pursuable.length })}
           </button>
           <button
             id="tab-documents"
@@ -440,7 +455,7 @@ export default function ResultsPage() {
                 : "text-text-muted hover:text-text"
             }`}
           >
-            Documents
+            {t.results.documents}
           </button>
         </div>
       </div>
@@ -483,11 +498,15 @@ export default function ResultsPage() {
                         </h3>
                         {r.estimatedMonthlyValue ? (
                           <Badge variant="success">
-                            ~${r.estimatedMonthlyValue.toLocaleString()}/mo
+                            {fmt(rp.badgeMonthly, {
+                              amount: r.estimatedMonthlyValue.toLocaleString(),
+                            })}
                           </Badge>
                         ) : r.estimatedAnnualValue ? (
                           <Badge variant="success">
-                            ~${r.estimatedAnnualValue.toLocaleString()}/yr
+                            {fmt(rp.badgeYearly, {
+                              amount: r.estimatedAnnualValue.toLocaleString(),
+                            })}
                           </Badge>
                         ) : null}
                       </div>
@@ -503,11 +522,13 @@ export default function ResultsPage() {
                       <Badge
                         className={`${tier.badgeClass} border text-xs font-medium`}
                       >
-                        {tier.label}
+                        {rp.tiers[r.eligibilityTier]}
                       </Badge>
                       <span
-                        className="text-xs text-text-muted ml-auto"
-                        aria-label={`Confidence score: ${r.confidenceScore} out of 100`}
+                        className="text-xs text-text-muted ms-auto"
+                        aria-label={fmt(rp.confidenceAria, {
+                          score: r.confidenceScore,
+                        })}
                       >
                         {r.confidenceScore}/100
                       </span>
@@ -522,7 +543,7 @@ export default function ResultsPage() {
                   {r.nextSteps && r.nextSteps.length > 0 && (
                     <div className="space-y-1.5">
                       <p className="text-xs font-semibold text-text-muted uppercase tracking-wide">
-                        Next Steps
+                        {t.results.nextSteps}
                       </p>
                       {r.nextSteps.map((step, i) => (
                         <div
@@ -543,10 +564,12 @@ export default function ResultsPage() {
                       href={program.applicationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`Apply now for ${program.shortName} (opens in new tab)`}
+                      aria-label={fmt(rp.applyAria, {
+                        name: program.shortName,
+                      })}
                       className="inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-brand-dark"
                     >
-                      Apply now{" "}
+                      {t.common.applyNow}{" "}
                       <ExternalLink
                         className="h-3.5 w-3.5"
                         aria-hidden="true"
@@ -557,12 +580,13 @@ export default function ResultsPage() {
               );
             })}
 
-            {/* Maybe eligible — worth knowing about */}
+            {/* Maybe eligible: worth knowing about */}
             {maybe.length > 0 && (
               <details className="rounded-xl border border-border bg-surface p-4">
                 <summary className="cursor-pointer text-sm font-medium text-text-muted">
-                  Maybe eligible ({maybe.length} program
-                  {maybe.length !== 1 ? "s" : ""})
+                  {fmt(maybe.length === 1 ? rp.maybeOne : rp.maybeOther, {
+                    count: maybe.length,
+                  })}
                 </summary>
                 <div className="mt-3 divide-y divide-border">
                   {maybe.map(({ program, result: r }) => {
@@ -579,8 +603,10 @@ export default function ResultsPage() {
                             {program.shortName}
                           </p>
                           <span
-                            className="text-xs text-text-muted ml-auto"
-                            aria-label={`Confidence score: ${r.confidenceScore} out of 100`}
+                            className="text-xs text-text-muted ms-auto"
+                            aria-label={fmt(rp.confidenceAria, {
+                              score: r.confidenceScore,
+                            })}
                           >
                             {r.confidenceScore}/100
                           </span>
@@ -597,12 +623,16 @@ export default function ResultsPage() {
               </details>
             )}
 
-            {/* Not likely / ineligible — hidden by default */}
+            {/* Not likely / ineligible: hidden by default */}
             {unlikely.length > 0 && (
               <details className="rounded-xl border border-border bg-surface p-4">
                 <summary className="cursor-pointer text-sm font-medium text-text-muted">
-                  Not currently eligible ({unlikely.length} program
-                  {unlikely.length !== 1 ? "s" : ""})
+                  {fmt(
+                    unlikely.length === 1
+                      ? rp.notEligibleOne
+                      : rp.notEligibleOther,
+                    { count: unlikely.length },
+                  )}
                 </summary>
                 <div className="mt-3 divide-y divide-border">
                   {unlikely.map(({ program, result: r }) => {
@@ -619,8 +649,10 @@ export default function ResultsPage() {
                             {program.shortName}
                           </p>
                           <span
-                            className="text-xs text-text-muted ml-auto"
-                            aria-label={`Confidence score: ${r.confidenceScore} out of 100`}
+                            className="text-xs text-text-muted ms-auto"
+                            aria-label={fmt(rp.confidenceAria, {
+                              score: r.confidenceScore,
+                            })}
                           >
                             {r.confidenceScore}/100
                           </span>
@@ -640,7 +672,7 @@ export default function ResultsPage() {
               <Link href="/screening">
                 <Button variant="secondary" size="default">
                   <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                  Update My Information
+                  {rp.updateInfo}
                 </Button>
               </Link>
             </div>
@@ -653,9 +685,7 @@ export default function ResultsPage() {
       {/* Disclaimer */}
       <div className="border-t border-border bg-surface-dim px-4 py-4 text-center">
         <p className="mx-auto max-w-lg text-xs text-text-subtle">
-          These results are estimates based on the information you provided.
-          Actual eligibility is determined by each program&apos;s administering
-          agency. Benefind does not guarantee eligibility or benefit amounts.
+          {rp.disclaimer}
         </p>
       </div>
     </main>

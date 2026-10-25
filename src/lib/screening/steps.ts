@@ -1,4 +1,6 @@
-/** Screening steps — defines the conversation flow */
+import type { Dictionary } from "@/lib/i18n/dictionaries";
+
+/** Screening steps: defines the conversation flow */
 export interface ScreeningStep {
   id: string;
   question: string;
@@ -9,107 +11,103 @@ export interface ScreeningStep {
   validation?: (value: string) => string | null;
 }
 
-export const SCREENING_STEPS: ScreeningStep[] = [
-  {
-    id: "state",
-    question: "What state do you live in?",
-    helpText:
-      "Benefits vary by state. We need this to give you accurate results.",
-    type: "state",
-    required: true,
-  },
-  {
-    id: "householdSize",
-    question: "How many people live in your household?",
-    helpText:
-      "Include yourself, your spouse/partner, and all dependents who live with you.",
-    type: "number",
-    required: true,
-    validation: (v) => {
-      const n = parseInt(v);
-      if (isNaN(n) || n < 1 || n > 20) return "Enter a number between 1 and 20";
-      return null;
+export function getScreeningSteps(t: Dictionary): ScreeningStep[] {
+  const m = t.screeningFlow.steps;
+  const yesNo = [
+    { label: m.yes, value: "yes" },
+    { label: m.no, value: "no" },
+  ];
+  const validAmount = (v: string) => {
+    const n = parseInt(v);
+    if (isNaN(n) || n < 0) return m.invalidAmount;
+    return null;
+  };
+
+  return [
+    {
+      id: "state",
+      question: m.state.question,
+      helpText: m.state.helpText,
+      type: "state",
+      required: true,
     },
-  },
-  {
-    id: "hasChildren",
-    question: "Do you have children under 19 in your household?",
-    type: "select",
-    options: [
-      { label: "Yes", value: "yes" },
-      { label: "No", value: "no" },
-    ],
-    required: true,
-  },
-  {
-    id: "childrenAges",
-    question: "What are the ages of your children?",
-    helpText: "Separate ages with commas (e.g., 2, 5, 12)",
-    type: "text",
-    required: false,
-  },
-  {
-    id: "annualIncome",
-    question: "What's your household's total yearly income before taxes?",
-    helpText:
-      "Include wages, salary, tips, Social Security, disability, child support — all sources. Use your best estimate.",
-    type: "number",
-    required: true,
-    validation: (v) => {
-      const n = parseInt(v);
-      if (isNaN(n) || n < 0) return "Enter a valid dollar amount";
-      return null;
+    {
+      id: "householdSize",
+      question: m.householdSize.question,
+      helpText: m.householdSize.helpText,
+      type: "number",
+      required: true,
+      validation: (v) => {
+        const n = parseInt(v);
+        if (isNaN(n) || n < 1 || n > 20) return m.householdSize.error;
+        return null;
+      },
     },
-  },
-  {
-    id: "isEmployed",
-    question: "Is anyone in your household currently employed?",
-    type: "select",
-    options: [
-      { label: "Yes", value: "yes" },
-      { label: "No", value: "no" },
-    ],
-    required: true,
-  },
-  {
-    id: "hasHealthInsurance",
-    question: "Does your household currently have health insurance?",
-    type: "select",
-    options: [
-      { label: "Yes, for everyone", value: "all" },
-      { label: "Yes, for some members", value: "some" },
-      { label: "No", value: "no" },
-    ],
-    required: true,
-  },
-  {
-    id: "monthlyRent",
-    question: "How much do you pay for rent or mortgage each month?",
-    helpText: "Enter 0 if you don't pay rent.",
-    type: "number",
-    required: false,
-    validation: (v) => {
-      const n = parseInt(v);
-      if (isNaN(n) || n < 0) return "Enter a valid dollar amount";
-      return null;
+    {
+      id: "hasChildren",
+      question: m.hasChildren.question,
+      type: "select",
+      options: yesNo,
+      required: true,
     },
-  },
-  {
-    id: "specialCircumstances",
-    question: "Do any of these apply to your household?",
-    helpText: "Select all that apply — these can unlock additional benefits.",
-    type: "multi-select",
-    options: [
-      { label: "Someone is pregnant", value: "pregnant" },
-      { label: "Someone is 60 or older", value: "elderly" },
-      { label: "Someone has a disability", value: "disabled" },
-      { label: "Someone is a veteran", value: "veteran" },
-      { label: "Someone is a student", value: "student" },
-      { label: "None of these", value: "none" },
-    ],
-    required: true,
-  },
-];
+    {
+      id: "childrenAges",
+      question: m.childrenAges.question,
+      helpText: m.childrenAges.helpText,
+      type: "text",
+      required: false,
+    },
+    {
+      id: "annualIncome",
+      question: m.annualIncome.question,
+      helpText: m.annualIncome.helpText,
+      type: "number",
+      required: true,
+      validation: validAmount,
+    },
+    {
+      id: "isEmployed",
+      question: m.isEmployed.question,
+      type: "select",
+      options: yesNo,
+      required: true,
+    },
+    {
+      id: "hasHealthInsurance",
+      question: m.hasHealthInsurance.question,
+      type: "select",
+      options: [
+        { label: m.hasHealthInsurance.all, value: "all" },
+        { label: m.hasHealthInsurance.some, value: "some" },
+        { label: m.no, value: "no" },
+      ],
+      required: true,
+    },
+    {
+      id: "monthlyRent",
+      question: m.monthlyRent.question,
+      helpText: m.monthlyRent.helpText,
+      type: "number",
+      required: false,
+      validation: validAmount,
+    },
+    {
+      id: "specialCircumstances",
+      question: m.specialCircumstances.question,
+      helpText: m.specialCircumstances.helpText,
+      type: "multi-select",
+      options: [
+        { label: m.specialCircumstances.pregnant, value: "pregnant" },
+        { label: m.specialCircumstances.elderly, value: "elderly" },
+        { label: m.specialCircumstances.disabled, value: "disabled" },
+        { label: m.specialCircumstances.veteran, value: "veteran" },
+        { label: m.specialCircumstances.student, value: "student" },
+        { label: m.specialCircumstances.none, value: "none" },
+      ],
+      required: true,
+    },
+  ];
+}
 
 /** Convert chat answers to ScreeningInput */
 export function answersToScreeningInput(

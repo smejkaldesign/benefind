@@ -1,11 +1,20 @@
 "use client";
 
 import { useWorkspace } from "@/lib/workspace/context";
+import { useI18n } from "@/lib/i18n/context";
 import { ChevronDown } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 
 export function WorkspacePicker() {
   const { workspace, workspaces, switchWorkspace } = useWorkspace();
+  const { t } = useI18n();
+  const displayName = (ws: { name: string; type: string } | null) => {
+    if (!ws) return t.app.shell.workspace;
+    // The default workspace is created with the English name "Personal".
+    if (ws.type === "individual" && ws.name === "Personal")
+      return t.app.shell.personalName;
+    return ws.name;
+  };
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -110,7 +119,7 @@ export function WorkspacePicker() {
   if (workspaces.length <= 1) {
     return (
       <span className="text-sm font-medium text-text-muted truncate max-w-[140px]">
-        {workspace?.name ?? "Workspace"}
+        {displayName(workspace)}
       </span>
     );
   }
@@ -123,11 +132,14 @@ export function WorkspacePicker() {
         onKeyDown={handleTriggerKeyDown}
         aria-expanded={open}
         aria-haspopup="listbox"
-        aria-label="Switch workspace"
+        aria-label={t.app.shell.switchWorkspace}
         className="flex items-center gap-1 rounded-lg px-2 py-2 text-sm font-medium text-text-muted hover:text-text hover:bg-surface-bright transition-colors min-h-[44px]"
       >
-        <span className="truncate max-w-[140px]" title={workspace?.name}>
-          {workspace?.name ?? "Workspace"}
+        <span
+          className="truncate max-w-[140px]"
+          title={workspace ? displayName(workspace) : undefined}
+        >
+          {displayName(workspace)}
         </span>
         <ChevronDown
           className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
@@ -139,13 +151,13 @@ export function WorkspacePicker() {
         <ul
           ref={listRef}
           role="listbox"
-          aria-label="Switch workspace"
+          aria-label={t.app.shell.switchWorkspace}
           aria-activedescendant={
             activeIndex >= 0 ? `ws-option-${activeIndex}` : undefined
           }
           tabIndex={0}
           onKeyDown={handleListKeyDown}
-          className="absolute left-0 top-full mt-1 z-50 min-w-[180px] rounded-lg border border-border bg-surface shadow-lg py-1 outline-none"
+          className="absolute start-0 top-full mt-1 z-50 min-w-[180px] rounded-lg border border-border bg-surface shadow-lg py-1 outline-none"
         >
           {workspaces.map((ws, i) => (
             <li
@@ -157,16 +169,16 @@ export function WorkspacePicker() {
               <button
                 onClick={() => selectOption(i)}
                 tabIndex={-1}
-                className={`w-full px-3 py-2 text-left text-sm transition-colors ${
+                className={`w-full px-3 py-2 text-start text-sm transition-colors ${
                   ws.id === workspace?.id
                     ? "text-brand font-medium bg-brand/5"
                     : "text-text-muted hover:text-text hover:bg-surface-bright"
                 } ${i === activeIndex ? "ring-2 ring-inset ring-brand bg-surface-bright" : ""}`}
               >
-                {ws.name}
+                {displayName(ws)}
                 {ws.type === "individual" && (
-                  <span className="ml-1.5 text-xs text-text-subtle">
-                    (personal)
+                  <span className="ms-1.5 text-xs text-text-subtle">
+                    {t.app.shell.personalTag}
                   </span>
                 )}
               </button>

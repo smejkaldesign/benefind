@@ -5,8 +5,11 @@ import Link from "next/link";
 import { ArrowLeft, ChevronDown } from "lucide-react";
 import { LandingNav } from "@/components/landing-nav";
 import { SUPPORT_EMAIL } from "@/lib/constants";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function ContactPage() {
+  const { t } = useI18n();
+  const c = t.marketing.contact;
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
@@ -25,15 +28,15 @@ export default function ContactPage() {
             href="/"
             className="inline-flex items-center gap-1.5 text-text-subtle hover:text-text-muted transition-colors mb-10"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back</span>
+            <ArrowLeft className="w-4 h-4 rtl:-scale-x-100" />
+            <span>{t.common.back}</span>
           </Link>
 
           {/* Logo */}
           <div className="mb-8">
             <Image
               src="/images/brand/logo-light.svg"
-              alt="Benefind"
+              alt={t.common.appName}
               width={100}
               height={18}
             />
@@ -41,11 +44,9 @@ export default function ContactPage() {
 
           {/* Headline */}
           <h1 className="font-display text-4xl sm:text-5xl text-text mb-3">
-            Get in Touch
+            {c.title}
           </h1>
-          <p className="text-text-muted text-lg mb-12">
-            Have questions about Benefind? We&apos;d love to hear from you.
-          </p>
+          <p className="text-text-muted text-lg mb-12">{c.subtitle}</p>
 
           {/* Contact form */}
           <form
@@ -60,13 +61,13 @@ export default function ContactPage() {
                   htmlFor="name"
                   className="text-sm font-medium text-text-muted mb-1.5"
                 >
-                  Name
+                  {c.name}
                 </label>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  placeholder="Your name"
+                  placeholder={c.namePlaceholder}
                   required
                   className="rounded-[10px] border border-border bg-surface-dim px-4 py-3 text-text placeholder:text-text-subtle focus:border-accent focus:outline-none transition-colors"
                 />
@@ -78,13 +79,13 @@ export default function ContactPage() {
                   htmlFor="email"
                   className="text-sm font-medium text-text-muted mb-1.5"
                 >
-                  Email
+                  {c.email}
                 </label>
                 <input
                   type="email"
                   id="email"
                   name="email"
-                  placeholder="you@example.com"
+                  placeholder={c.emailPlaceholder}
                   required
                   className="rounded-[10px] border border-border bg-surface-dim px-4 py-3 text-text placeholder:text-text-subtle focus:border-accent focus:outline-none transition-colors"
                 />
@@ -96,25 +97,25 @@ export default function ContactPage() {
                   htmlFor="subject"
                   className="text-sm font-medium text-text-muted mb-1.5"
                 >
-                  Subject
+                  {c.subject}
                 </label>
                 <div className="relative">
                   <select
                     id="subject"
                     name="subject"
                     required
-                    className="w-full appearance-none rounded-[10px] border border-border bg-surface-dim py-3 pr-10 pl-4 text-text focus:border-accent focus:outline-none transition-colors"
+                    className="w-full appearance-none rounded-[10px] border border-border bg-surface-dim py-3 pe-10 ps-4 text-text focus:border-accent focus:outline-none transition-colors"
                   >
-                    <option value="">Select a topic</option>
-                    <option value="general">General Inquiry</option>
-                    <option value="individual">Individual Benefits</option>
-                    <option value="company">Company Programs</option>
-                    <option value="partnership">Partnership</option>
-                    <option value="bug">Bug Report</option>
+                    <option value="">{c.selectTopic}</option>
+                    <option value="general">{c.topics.general}</option>
+                    <option value="individual">{c.topics.individual}</option>
+                    <option value="company">{c.topics.company}</option>
+                    <option value="partnership">{c.topics.partnership}</option>
+                    <option value="bug">{c.topics.bug}</option>
                   </select>
                   <ChevronDown
                     aria-hidden="true"
-                    className="pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 text-text-muted"
+                    className="pointer-events-none absolute top-1/2 end-4 h-4 w-4 -translate-y-1/2 text-text-muted"
                   />
                 </div>
               </div>
@@ -125,13 +126,13 @@ export default function ContactPage() {
                   htmlFor="message"
                   className="text-sm font-medium text-text-muted mb-1.5"
                 >
-                  Message
+                  {c.message}
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   rows={5}
-                  placeholder="How can we help?"
+                  placeholder={c.messagePlaceholder}
                   required
                   className="rounded-[10px] border border-border bg-surface-dim px-4 py-3 text-text placeholder:text-text-subtle focus:border-accent focus:outline-none transition-colors resize-none"
                 />
@@ -142,7 +143,7 @@ export default function ContactPage() {
                 type="submit"
                 className="bg-brand text-stone-900 rounded-lg px-8 py-3 font-semibold hover:opacity-90 transition-opacity"
               >
-                Send Message
+                {c.send}
               </button>
             </div>
 
@@ -150,14 +151,14 @@ export default function ContactPage() {
               id="success-msg"
               className="hidden mt-4 rounded-[10px] bg-brand/10 border border-brand/30 px-4 py-3 text-sm text-brand"
             >
-              Message sent! We&apos;ll get back to you soon.
+              {c.sent}
             </div>
           </form>
 
           {/* Alternative contact */}
           <div className="text-center mb-8">
             <p className="text-text-muted mb-1">
-              Or email us directly at{" "}
+              {c.emailDirect}{" "}
               <a
                 href={`mailto:${SUPPORT_EMAIL}`}
                 className="text-accent hover:underline"
@@ -165,16 +166,11 @@ export default function ContactPage() {
                 {SUPPORT_EMAIL}
               </a>
             </p>
-            <p className="text-text-subtle text-sm">
-              We typically respond within 24 hours
-            </p>
+            <p className="text-text-subtle text-sm">{c.responseTime}</p>
           </div>
 
           {/* Privacy note */}
-          <p className="text-xs text-text-subtle text-center">
-            Your information is only used to respond to your inquiry. We never
-            share your data.
-          </p>
+          <p className="text-xs text-text-subtle text-center">{c.privacy}</p>
         </div>
       </div>
     </>

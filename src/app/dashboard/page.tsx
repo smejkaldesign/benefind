@@ -19,17 +19,30 @@ import {
   RotateCcw,
   CheckCircle2,
 } from "lucide-react";
+import { getServerI18n } from "@/lib/i18n/server";
+import { fmt } from "@/lib/i18n/format";
+import { localizeProgram } from "@/lib/i18n/localize-program";
+import { getProgram } from "@/lib/benefits/engine";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
+import type { Locale } from "@/lib/i18n/types";
+
+type TierKey = keyof Dictionary["app"]["dashboard"]["tiers"];
 
 const TIER_LABELS: Record<
   string,
-  { label: string; variant: "success" | "warning" | "default" }
+  { key: TierKey; variant: "success" | "warning" | "default" }
 > = {
-  eligible_with_requirements: { label: "Eligible", variant: "success" },
-  probably_eligible: { label: "Probably", variant: "success" },
-  maybe_eligible: { label: "Maybe", variant: "warning" },
-  not_likely: { label: "Unlikely", variant: "default" },
-  ineligible: { label: "No", variant: "default" },
+  eligible_with_requirements: { key: "eligible", variant: "success" },
+  probably_eligible: { key: "probably", variant: "success" },
+  maybe_eligible: { key: "maybe", variant: "warning" },
+  not_likely: { key: "unlikely", variant: "default" },
+  ineligible: { key: "no", variant: "default" },
 };
+
+function programName(programId: string, t: Dictionary): string {
+  const program = getProgram(programId);
+  return program ? localizeProgram(program, t).name : programId;
+}
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -37,6 +50,7 @@ const UUID_RE =
 export default async function DashboardPage() {
   const user = await requireAuth();
   const supabase = await createServerSupabase();
+  const { t, locale } = await getServerI18n();
 
   // Read workspace from cookie and verify membership (defense-in-depth)
   const cookieStore = await cookies();
@@ -62,10 +76,10 @@ export default async function DashboardPage() {
       return (
         <div className="space-y-6">
           <PageHeader
-            title="Welcome back"
-            description="You don't have access to this workspace."
+            title={t.app.dashboard.welcomeBack}
+            description={t.app.dashboard.noAccess}
           />
-          <EmptyState />
+          <EmptyState t={t} />
         </div>
       );
     }
@@ -79,10 +93,10 @@ export default async function DashboardPage() {
           <PersistScreeningOnMount />
         </Suspense>
         <PageHeader
-          title="Welcome back"
+          title={t.app.dashboard.welcomeBack}
           description={user.email ?? undefined}
         />
-        <EmptyState />
+        <EmptyState t={t} />
       </div>
     );
   }
@@ -97,25 +111,31 @@ export default async function DashboardPage() {
         <PersistScreeningOnMount />
       </Suspense>
 
-      <PageHeader title="Welcome back" description={user.email ?? undefined} />
+      <PageHeader
+        title={t.app.dashboard.welcomeBack}
+        description={user.email ?? undefined}
+      />
 
       {latest ? (
         <>
           {/* Latest screening summary */}
-          <LatestScreeningCard screening={latest} />
+          <LatestScreeningCard screening={latest} t={t} locale={locale} />
 
           {/* Quick actions */}
           <div className="flex flex-wrap gap-3">
             <Link href="/screening?prefill=latest">
               <Button variant="secondary" size="default">
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                Re-screen
+                {t.app.dashboard.rescreen}
               </Button>
             </Link>
             <Link href="/dashboard/documents">
               <Button variant="secondary" size="default">
-                Documents
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                {t.app.dashboard.documents}
+                <ArrowRight
+                  className="h-4 w-4 rtl:-scale-x-100"
+                  aria-hidden="true"
+                />
               </Button>
             </Link>
           </div>
@@ -126,7 +146,7 @@ export default async function DashboardPage() {
           {history && history.length > 1 && (
             <section>
               <h2 className="mb-3 text-sm font-semibold text-text-muted uppercase tracking-wide">
-                Screening History
+                {t.app.dashboard.screeningHistory}
               </h2>
               <div className="space-y-2">
                 {history.map((s) => (
@@ -143,19 +163,22 @@ export default async function DashboardPage() {
                         />
                         <div>
                           <p className="text-sm font-medium text-text">
-                            {new Date(s.created_at).toLocaleDateString(
-                              "en-US",
-                              {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              },
-                            )}
+                            {new Date(s.created_at).toLocaleDateString(locale, {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                              numberingSystem: "latn",
+                            })}
                           </p>
                           <p className="text-xs text-text-muted">
                             {s.state ? `${s.state} · ` : ""}
                             {s.household_size
-                              ? `${s.household_size} person household`
+                              ? fmt(
+                                  s.household_size === 1
+                                    ? t.app.dashboard.householdOne
+                                    : t.app.dashboard.householdOther,
+                                  { count: s.household_size },
+                                )
                               : ""}
                           </p>
                         </div>
@@ -163,11 +186,11 @@ export default async function DashboardPage() {
                       <div className="flex items-center gap-2">
                         {s.is_latest && (
                           <Badge variant="success" className="text-xs">
-                            Latest
+                            {t.app.dashboard.latest}
                           </Badge>
                         )}
                         <ArrowRight
-                          className="h-4 w-4 text-text-subtle group-hover:text-brand transition-colors"
+                          className="h-4 w-4 text-text-subtle group-hover:text-brand transition-colors rtl:-scale-x-100"
                           aria-hidden="true"
                         />
                       </div>
@@ -179,28 +202,33 @@ export default async function DashboardPage() {
           )}
         </>
       ) : (
-        <EmptyState />
+        <EmptyState t={t} />
       )}
     </div>
   );
 }
 
-function EmptyState() {
+function EmptyState({ t }: { t: Dictionary }) {
   return (
     <Card className="text-center">
       <FileSearch
         className="mx-auto h-10 w-10 text-text-subtle"
         aria-hidden="true"
       />
-      <h2 className="mt-4 font-semibold text-text">No screenings yet</h2>
+      <h2 className="mt-4 font-semibold text-text">
+        {t.app.dashboard.noScreeningsTitle}
+      </h2>
       <p className="mt-2 text-sm text-text-muted">
-        Start a screening to discover benefits you qualify for.
+        {t.app.dashboard.noScreeningsBody}
       </p>
       <div className="mt-4">
         <Link href="/screening">
           <Button size="default">
-            Start Screening
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            {t.app.dashboard.startScreening}
+            <ArrowRight
+              className="h-4 w-4 rtl:-scale-x-100"
+              aria-hidden="true"
+            />
           </Button>
         </Link>
       </div>
@@ -210,7 +238,11 @@ function EmptyState() {
 
 function LatestScreeningCard({
   screening,
+  t,
+  locale,
 }: {
+  t: Dictionary;
+  locale: Locale;
   screening: {
     id: string;
     created_at: string;
@@ -238,36 +270,49 @@ function LatestScreeningCard({
         <div>
           <div className="flex items-center gap-2">
             <ClipboardList className="h-5 w-5 text-brand" aria-hidden="true" />
-            <h2 className="font-semibold text-text">Latest Screening</h2>
+            <h2 className="font-semibold text-text">
+              {t.app.dashboard.latestScreening}
+            </h2>
           </div>
           <p className="mt-1 text-xs text-text-muted">
-            {new Date(screening.created_at).toLocaleDateString("en-US", {
+            {new Date(screening.created_at).toLocaleDateString(locale, {
               month: "long",
               day: "numeric",
               year: "numeric",
+              numberingSystem: "latn",
             })}
             {screening.state ? ` · ${screening.state}` : ""}
           </p>
         </div>
         <Badge variant="success" className="text-xs">
-          <CheckCircle2 className="mr-1 h-3 w-3" aria-hidden="true" />
-          {eligible.length} program{eligible.length !== 1 ? "s" : ""}
+          <CheckCircle2 className="me-1 h-3 w-3" aria-hidden="true" />
+          {fmt(
+            eligible.length === 1
+              ? t.app.dashboard.programsOne
+              : t.app.dashboard.programsOther,
+            { count: eligible.length },
+          )}
         </Badge>
       </div>
 
       {results.length > 0 && (
         <div className="space-y-2">
           {results.slice(0, 5).map((r) => {
-            const tierInfo = TIER_LABELS[r.eligibility_tier] ?? {
-              label: r.eligibility_tier,
-              variant: "secondary",
-            };
+            const tier = TIER_LABELS[r.eligibility_tier];
+            const tierInfo = tier
+              ? {
+                  label: t.app.dashboard.tiers[tier.key],
+                  variant: tier.variant,
+                }
+              : { label: r.eligibility_tier, variant: "secondary" as const };
             return (
               <div
                 key={r.program_id}
                 className="flex items-center justify-between text-sm"
               >
-                <span className="text-text">{r.program_id}</span>
+                <span className="text-text">
+                  {programName(r.program_id, t)}
+                </span>
                 <div className="flex items-center gap-2">
                   {r.estimated_value && (
                     <span className="text-xs text-text-muted">
@@ -283,7 +328,12 @@ function LatestScreeningCard({
           })}
           {results.length > 5 && (
             <p className="text-xs text-text-muted">
-              +{results.length - 5} more programs
+              {fmt(
+                results.length - 5 === 1
+                  ? t.app.dashboard.moreProgramsOne
+                  : t.app.dashboard.moreProgramsOther,
+                { count: results.length - 5 },
+              )}
             </p>
           )}
         </div>

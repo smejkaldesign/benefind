@@ -10,9 +10,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { LanguageSelector } from "@/components/language-selector";
 import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const supabase = createClient();
 
   const [name, setName] = useState("");
@@ -98,22 +100,22 @@ export default function OnboardingPage() {
               <Sparkles className="h-6 w-6 text-brand" aria-hidden="true" />
             </div>
             <h1 className="text-2xl font-bold text-text">
-              Welcome to Benefind!
+              {t.app.onboarding.welcome}
             </h1>
             <p className="text-sm text-text-muted">
-              Just a few quick preferences before we show your results.
+              {t.app.onboarding.subtitle}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Name */}
             <div className="space-y-2">
-              <Label htmlFor="name">Your name (optional)</Label>
+              <Label htmlFor="name">{t.app.onboarding.nameLabel}</Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="How should we address you?"
+                placeholder={t.app.onboarding.namePlaceholder}
                 className="rounded-lg border-border bg-surface-dim"
               />
             </div>
@@ -132,24 +134,24 @@ export default function OnboardingPage() {
                 htmlFor="notify"
                 className="text-sm text-text-muted leading-snug cursor-pointer"
               >
-                Email me when my eligible programs change
+                {t.app.onboarding.notifyLabel}
               </Label>
             </div>
 
             {/* Language */}
             <div className="space-y-2">
-              <Label>Language</Label>
+              <Label>{t.app.onboarding.languageLabel}</Label>
               <div className="flex items-center gap-2 rounded-lg border border-border bg-surface-dim px-3 py-2">
                 <LanguageSelector />
                 <span className="text-sm text-text-muted">
-                  Change your preferred language
+                  {t.app.onboarding.languageHint}
                 </span>
               </div>
             </div>
 
             {/* Submit */}
             <Button type="submit" className="w-full" disabled={saving}>
-              {saving ? "Saving..." : "Continue to Results"}
+              {saving ? t.app.onboarding.saving : t.app.onboarding.continue_}
             </Button>
           </form>
         </Card>
