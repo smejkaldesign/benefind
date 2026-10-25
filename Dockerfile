@@ -1,8 +1,8 @@
-FROM node:22-alpine AS base
-# Pin pnpm rather than tracking @latest so a new pnpm release can't silently
-# break the build (pnpm@latest started requiring Node 22.13 + node:sqlite which
-# is unavailable on older Node, causing every Railway deploy to fail).
-RUN corepack enable && corepack prepare pnpm@10 --activate
+FROM node:26-alpine AS base
+# Pin pnpm to the packageManager version rather than tracking @latest so a new
+# pnpm release can't silently break the build. Node 25+ no longer bundles
+# corepack, so install pnpm with npm.
+RUN npm install -g pnpm@10.30.2
 
 FROM base AS deps
 WORKDIR /app
