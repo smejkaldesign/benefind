@@ -57,13 +57,18 @@ export async function createScreening(
   }
 
   if (input.results.length > 0) {
+    // eligibility_tier is a generated column (derived from confidence_score
+    // with the same buckets as tierFromScore), so it must not be written.
+    // confidence_score is a smallint.
     const resultRows: TablesInsert<"screening_results">[] = input.results.map(
       (r) => ({
         screening_id: screening.id,
         workspace_id: input.workspaceId,
         program_id: r.programId,
-        confidence_score: r.confidenceScore,
-        eligibility_tier: r.eligibilityTier ?? "unknown",
+        confidence_score: Math.max(
+          0,
+          Math.min(100, Math.round(r.confidenceScore)),
+        ),
         estimated_value: r.estimatedValue ?? null,
         reasons: r.reasons,
       }),
