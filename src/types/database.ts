@@ -553,6 +553,52 @@ export type Database = {
           },
         ];
       };
+      new_match_alerts: {
+        Row: {
+          id: string;
+          program_id: string;
+          screening_id: string | null;
+          sent_at: string;
+          workspace_id: string;
+        };
+        Insert: {
+          id?: string;
+          program_id: string;
+          screening_id?: string | null;
+          sent_at?: string;
+          workspace_id: string;
+        };
+        Update: {
+          id?: string;
+          program_id?: string;
+          screening_id?: string | null;
+          sent_at?: string;
+          workspace_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "new_match_alerts_program_id_fkey";
+            columns: ["program_id"];
+            isOneToOne: false;
+            referencedRelation: "programs";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "new_match_alerts_screening_id_fkey";
+            columns: ["screening_id"];
+            isOneToOne: false;
+            referencedRelation: "screenings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "new_match_alerts_workspace_id_fkey";
+            columns: ["workspace_id"];
+            isOneToOne: false;
+            referencedRelation: "workspaces";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       notifications: {
         Row: {
           body: string | null;
@@ -990,6 +1036,7 @@ export type Database = {
         Row: {
           email_notifications: boolean;
           last_viewed_workspace_id: string | null;
+          new_match_emails: boolean;
           notification_prefs: Json;
           timezone: string;
           updated_at: string;
@@ -998,6 +1045,7 @@ export type Database = {
         Insert: {
           email_notifications?: boolean;
           last_viewed_workspace_id?: string | null;
+          new_match_emails?: boolean;
           notification_prefs?: Json;
           timezone?: string;
           updated_at?: string;
@@ -1006,6 +1054,7 @@ export type Database = {
         Update: {
           email_notifications?: boolean;
           last_viewed_workspace_id?: string | null;
+          new_match_emails?: boolean;
           notification_prefs?: Json;
           timezone?: string;
           updated_at?: string;

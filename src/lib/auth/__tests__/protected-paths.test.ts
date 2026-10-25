@@ -33,6 +33,8 @@ describe("isProtectedPath", () => {
     "/feed.xml",
     "/api/webhooks/stripe",
     "/api/health",
+    "/api/cron/new-matches",
+    "/api/alerts/unsubscribe",
   ])("leaves %s public", (path) => {
     expect(isProtectedPath(path)).toBe(false);
   });
