@@ -9,8 +9,13 @@ import {
 } from "./new-matches";
 import { newMatchEmailsEnabled } from "./preferences";
 import { createUnsubscribeToken } from "./unsubscribe-token";
-import { renderNewMatchEmail } from "@/lib/email/new-match-alert";
-import { sendEmail } from "@/lib/email/resend";
+import { renderNewMatchEmail } from "../email/new-match-alert";
+import { sendEmail } from "../email/resend";
+import {
+  getEntitlements,
+  type WorkspaceTier,
+  type WorkspaceType,
+} from "../billing/entitlements";
 
 type Client = SupabaseClient<Database>;
 
@@ -21,7 +26,11 @@ interface LatestScreeningRow {
   workspace_id: string;
   answers: Json;
   screening_results: Array<{ program_id: string; eligibility_tier: string }>;
-  workspaces: { owner_user_id: string } | null;
+  workspaces: {
+    owner_user_id: string;
+    tier: WorkspaceTier;
+    type: WorkspaceType;
+  } | null;
 }
 
 interface WorkspaceMatches {
@@ -39,6 +48,7 @@ export interface NewMatchAlertSummary {
   programsAnnounced: number;
   skippedOptedOut: number;
   skippedNoVerifiedEmail: number;
+  skippedNotEntitled: number;
   failed: number;
 }
 
@@ -71,6 +81,7 @@ export async function runNewMatchAlerts(
     programsAnnounced: 0,
     skippedOptedOut: 0,
     skippedNoVerifiedEmail: 0,
+    skippedNotEntitled: 0,
     failed: 0,
   };
 
@@ -87,11 +98,14 @@ export async function runNewMatchAlerts(
     const { data, error } = await client
       .from("screenings")
       .select(
-        "id, workspace_id, answers, screening_results(program_id, eligibility_tier), workspaces!inner(owner_user_id)",
+        "id, workspace_id, answers, screening_results(program_id, eligibility_tier), workspaces!inner(owner_user_id, tier, type)",
       )
       .eq("is_latest", true)
       .is("deleted_at", null)
       .is("workspaces.deleted_at", null)
+      // New-match alerts are a Premium feature for personal workspaces.
+      .eq("workspaces.tier", "premium")
+      .eq("workspaces.type", "individual")
       .order("id")
       .range(from, from + PAGE_SIZE - 1);
     if (error) throw new Error("Failed to load screenings");
@@ -109,7 +123,11 @@ export async function runNewMatchAlerts(
     if (announcedError) throw new Error("Failed to load sent alerts");
 
     for (const row of rows) {
-      const ownerId = row.workspaces?.owner_user_id;
+      if (!row.workspaces || !getEntitlements(row.workspaces).newMatchAlerts) {
+        summary.skippedNotEntitled += 1;
+        continue;
+      }
+      const ownerId = row.workspaces.owner_user_id;
       if (!ownerId || !isAnswers(row.answers)) continue;
       const known = knownProgramIds(
         row.screening_results ?? [],

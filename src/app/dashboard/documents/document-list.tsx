@@ -3,7 +3,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { useWorkspace } from "@/lib/workspace/context";
 import { createClient } from "@/lib/supabase/client";
-import { listDocuments, softDeleteDocument } from "@/lib/db/documents";
+import { softDeleteDocument } from "@/lib/db/documents";
+import { listWorkspaceDocuments } from "./actions";
 import { isScanPending, isDocumentDownloadable } from "@/lib/documents/types";
 import { useI18n } from "@/lib/i18n/context";
 import { fmt } from "@/lib/i18n/format";
@@ -36,8 +37,7 @@ export function DocumentList() {
 
   const fetchDocuments = useCallback(async () => {
     if (!workspace) return;
-    const supabase = createClient();
-    const { data } = await listDocuments(supabase, workspace.id);
+    const data = await listWorkspaceDocuments().catch(() => null);
     if (data) setDocuments(data);
     setLoading(false);
   }, [workspace]);
