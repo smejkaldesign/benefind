@@ -569,12 +569,11 @@ export default function CompanyScreeningPage() {
           <div className="border-t border-border bg-surface-dim px-6 py-6">
             <div className="mx-auto max-w-xl space-y-4">
               <div className="rounded-[16px] border border-brand/30 bg-brand/5 p-5 text-center space-y-2">
-                <p className="font-display text-4xl font-semibold text-brand">
+                <p
+                  className="font-display text-4xl font-semibold text-brand"
+                  dir="ltr"
+                >
                   ${totalEstimatedAnnualValue(result.programs).toLocaleString()}
-                  <span className="text-base font-normal text-text-muted">
-                    {" "}
-                    {c.chat.perYear}
-                  </span>
                 </p>
                 <p className="text-sm text-text-muted">
                   {fmt(
@@ -584,6 +583,7 @@ export default function CompanyScreeningPage() {
                     { count: result.totalMatched },
                   )}
                 </p>
+                <p className="text-xs text-text-muted">{c.chat.valueNote}</p>
                 <div className="flex flex-wrap justify-center gap-1.5 pt-1">
                   {result.programs
                     .filter((p) => p.result.eligible)

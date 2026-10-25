@@ -229,7 +229,8 @@ const en = {
     sendingLink: "Sending link...",
     createAccount: "Create Account",
     skipForNow: "Skip for now",
-    perYear: "/ year",
+    valueNote:
+      "Some programs pay once and others repeat each year. Percentage-based and per-unit credits are not included in this total.",
     estimatedAcrossOne: "Estimated value across 1 program",
     estimatedAcrossOther: "Estimated value across {count} programs",
     more: "+{count} more",
@@ -518,7 +519,8 @@ const es: CompanyMessages = {
     sendingLink: "Enviando enlace...",
     createAccount: "Crear cuenta",
     skipForNow: "Omitir por ahora",
-    perYear: "/ año",
+    valueNote:
+      "Algunos programas pagan una sola vez y otros se repiten cada año. Los créditos basados en un porcentaje o por unidad no están incluidos en este total.",
     estimatedAcrossOne: "Valor estimado en 1 programa",
     estimatedAcrossOther: "Valor estimado en {count} programas",
     more: "+{count} más",
@@ -981,7 +983,8 @@ const zh: CompanyMessages = {
     sendingLink: "正在发送链接...",
     createAccount: "创建账户",
     skipForNow: "暂时跳过",
-    perYear: "/ 年",
+    valueNote:
+      "有些项目只支付一次，有些每年重复支付。按百分比或按单位计算的抵免未计入此总额。",
     estimatedAcrossOne: "1 个项目的估计价值",
     estimatedAcrossOther: "{count} 个项目的估计价值",
     more: "另外 {count} 个",
@@ -1434,7 +1437,8 @@ const vi: CompanyMessages = {
     sendingLink: "Đang gửi liên kết...",
     createAccount: "Tạo tài khoản",
     skipForNow: "Bỏ qua lúc này",
-    perYear: "/ năm",
+    valueNote:
+      "Một số chương trình chi trả một lần, một số khác lặp lại hằng năm. Các khoản tín dụng tính theo phần trăm hoặc theo đơn vị không được tính vào tổng này.",
     estimatedAcrossOne: "Giá trị ước tính của 1 chương trình",
     estimatedAcrossOther: "Giá trị ước tính của {count} chương trình",
     more: "+{count} chương trình khác",
@@ -1906,7 +1910,8 @@ const ar: CompanyMessages = {
     sendingLink: "جارٍ إرسال الرابط...",
     createAccount: "إنشاء حساب",
     skipForNow: "تخطَّ الآن",
-    perYear: "/ سنة",
+    valueNote:
+      "بعض البرامج تدفع مرة واحدة وبعضها يتكرر كل عام. الإعفاءات المحسوبة كنسبة مئوية أو لكل وحدة غير مشمولة في هذا المجموع.",
     estimatedAcrossOne: "القيمة المقدرة لبرنامج واحد",
     estimatedAcrossOther: "القيمة المقدرة لـ {count} برامج",
     more: "+{count} أخرى",
