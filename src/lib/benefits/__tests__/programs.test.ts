@@ -5,6 +5,8 @@ import { eitc } from "../programs/eitc";
 import { runScreening } from "../engine";
 import { isEvaluation } from "../scoring";
 import type { ScreeningInput } from "../types";
+import { PURSUABLE_TIERS } from "../types";
+import { answersToScreeningInput } from "../../screening/steps";
 
 // Sample inputs for common scenarios
 const lowIncomeFamily: ScreeningInput = {
@@ -204,6 +206,39 @@ describe("EITC — refactored to EligibilityEvaluation", () => {
       (s) => s.name === "state_has_matching_eitc",
     );
     expect(txSignal?.matched).toBe(false);
+  });
+
+  it("income over the limit vetoes EITC for a 2-person, $250k household", () => {
+    const input = answersToScreeningInput({
+      state: "OR",
+      householdSize: "2",
+      hasChildren: "no",
+      annualIncome: "250000",
+      isEmployed: "yes",
+      hasHealthInsurance: "all",
+      monthlyRent: "3750",
+      specialCircumstances: "none",
+    });
+    const result = runScreening(input);
+    const e = result.programs.find((p) => p.program.id === "eitc");
+    expect(e!.result.confidenceScore).toBe(0);
+    expect(e!.result.eligibilityTier).toBe("ineligible");
+    expect(
+      result.programs.filter((p) =>
+        PURSUABLE_TIERS.has(p.result.eligibilityTier),
+      ),
+    ).toEqual([]);
+    expect(result.totalEstimatedAnnual).toBe(0);
+  });
+
+  it("childless filer outside ages 25-64 is vetoed", () => {
+    const young: ScreeningInput = {
+      ...highIncomeSingle,
+      householdMembers: [{ age: 22, relationship: "self", isCitizen: true }],
+      monthlyIncome: 1000,
+    };
+    const e = runScreening(young).programs.find((p) => p.program.id === "eitc");
+    expect(e!.result.confidenceScore).toBe(0);
   });
 });
 
