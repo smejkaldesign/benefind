@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { getWorkspaceAccess } from "@/lib/billing/workspace-access";
+import { getEntitlements } from "@/lib/billing/entitlements";
+import { PremiumGate } from "@/components/premium-gate";
 import { getServerI18n } from "@/lib/i18n/server";
 import { fmt } from "@/lib/i18n/format";
 import { localizeProgramName } from "@/lib/i18n/localize-program";
@@ -72,7 +75,7 @@ export default async function ScreeningDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireAuth();
+  const user = await requireAuth();
   const { id } = await params;
   const { t, locale } = await getServerI18n();
   const d = t.resultsPage.detail;
@@ -97,6 +100,27 @@ export default async function ScreeningDetailPage({
   // Verify the screening belongs to the user's workspace
   if (screening.workspace_id !== workspaceId) {
     notFound();
+  }
+
+  const access = await getWorkspaceAccess(supabase, user.id);
+  const entitlements = getEntitlements(
+    access?.workspace.id === workspaceId ? access.workspace : null,
+  );
+
+  // Free plans can open only their latest screening.
+  if (!screening.is_latest && !entitlements.screeningHistory) {
+    return (
+      <div className="space-y-6">
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
+          {d.back}
+        </Link>
+        <PremiumGate allowed={false} feature="history" />
+      </div>
+    );
   }
 
   const results: Array<{
@@ -141,7 +165,13 @@ export default async function ScreeningDetailPage({
         </Link>
 
         <PageHeader title={d.title} description={formattedDate}>
-          <Link href="/screening?prefill=latest">
+          <Link
+            href={
+              entitlements.rescreenPrefill
+                ? "/screening?prefill=latest"
+                : "/screening"
+            }
+          >
             <Button variant="secondary" size="default">
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               {d.rescreen}

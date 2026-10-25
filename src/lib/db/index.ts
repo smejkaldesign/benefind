@@ -25,6 +25,6 @@ export {
   getDocument,
 } from "./documents";
 
-export { getSubscription, listInvoices, isWorkspacePremium } from "./billing";
+export { getSubscription, listInvoices } from "./billing";
 
 export { isUserAdmin, listAdminActions, listSupportTickets } from "./admin";

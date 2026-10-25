@@ -9,6 +9,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PersistScreeningOnMount } from "@/components/screening/persist-on-mount";
 import { EmailAlertsToggle } from "@/components/dashboard/email-alerts-toggle";
+import { PremiumGate } from "@/components/premium-gate";
+import { CompanyMatchList } from "@/components/company/company-match-list";
+import { getWorkspaceAccess } from "@/lib/billing/workspace-access";
+import { getEntitlements } from "@/lib/billing/entitlements";
+import { toCompanyMatchViews } from "@/lib/billing/company-matches";
+import { runCompanyScreening } from "@/lib/benefits/company-engine";
+import { answersToCompanyInput } from "@/lib/screening/company-steps";
+import {
+  localizeCompanyProgram,
+  localizeCompanyResult,
+} from "@/lib/i18n/localize-company-program";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import {
@@ -101,8 +112,36 @@ export default async function DashboardPage() {
     );
   }
 
+  const access = await getWorkspaceAccess(supabase, user.id);
+  const workspace =
+    access?.workspace.id === workspaceId ? access.workspace : null;
+  const entitlements = getEntitlements(workspace);
+
+  if (workspace?.type === "company") {
+    return (
+      <div className="space-y-6">
+        <Suspense fallback={null}>
+          <PersistScreeningOnMount />
+        </Suspense>
+        <PageHeader
+          title={t.app.dashboard.welcomeBack}
+          description={user.email ?? undefined}
+        />
+        <CompanyMatchesSection
+          workspaceId={workspaceId}
+          showDetails={entitlements.companyProgramDetails}
+          t={t}
+        />
+      </div>
+    );
+  }
+
   const { data: latest } = await getLatestScreening(supabase, workspaceId);
-  const { data: history } = await listScreenings(supabase, workspaceId);
+  // Free plans keep only the latest screening visible, so older rows are
+  // not loaded at all.
+  const { data: history } = entitlements.screeningHistory
+    ? await listScreenings(supabase, workspaceId)
+    : { data: null };
 
   return (
     <div className="space-y-6">
@@ -123,12 +162,21 @@ export default async function DashboardPage() {
 
           {/* Quick actions */}
           <div className="flex flex-wrap gap-3">
-            <Link href="/screening?prefill=latest">
-              <Button variant="secondary" size="default">
-                <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                {t.app.dashboard.rescreen}
-              </Button>
-            </Link>
+            {entitlements.rescreenPrefill ? (
+              <Link href="/screening?prefill=latest">
+                <Button variant="secondary" size="default">
+                  <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                  {t.app.dashboard.rescreen}
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/screening">
+                <Button variant="secondary" size="default">
+                  <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                  {t.plans.dashboard.newScreening}
+                </Button>
+              </Link>
+            )}
             <Link href="/dashboard/documents">
               <Button variant="secondary" size="default">
                 {t.app.dashboard.documents}
@@ -140,7 +188,11 @@ export default async function DashboardPage() {
             </Link>
           </div>
 
-          <EmailAlertsToggle />
+          <EmailAlertsToggle allowed={entitlements.newMatchAlerts} />
+
+          {!entitlements.screeningHistory && (
+            <PremiumGate allowed={false} feature="history" compact />
+          )}
 
           {/* Screening history */}
           {history && history.length > 1 && (
@@ -205,6 +257,80 @@ export default async function DashboardPage() {
         <EmptyState t={t} />
       )}
     </div>
+  );
+}
+
+async function CompanyMatchesSection({
+  workspaceId,
+  showDetails,
+  t,
+}: {
+  workspaceId: string;
+  showDetails: boolean;
+  t: Dictionary;
+}) {
+  const supabase = await createServerSupabase();
+  const { data: profile } = await supabase
+    .from("company_profiles")
+    .select("scan_data")
+    .eq("workspace_id", workspaceId)
+    .is("deleted_at", null)
+    .maybeSingle();
+
+  const answers = profile?.scan_data;
+  if (!answers || typeof answers !== "object" || Array.isArray(answers)) {
+    return (
+      <Card className="text-center">
+        <FileSearch
+          className="mx-auto h-10 w-10 text-text-subtle"
+          aria-hidden="true"
+        />
+        <p className="mt-4 text-sm text-text-muted">
+          {t.plans.dashboard.companyNoProfile}
+        </p>
+        <div className="mt-4">
+          <Link href="/screening/company">
+            <Button size="default">
+              {t.plans.dashboard.companyStart}
+              <ArrowRight
+                className="h-4 w-4 rtl:-scale-x-100"
+                aria-hidden="true"
+              />
+            </Button>
+          </Link>
+        </div>
+      </Card>
+    );
+  }
+
+  // The engine runs on the server so program details are only sent to the
+  // browser when the workspace is on the Business plan.
+  const result = runCompanyScreening(
+    answersToCompanyInput(answers as Record<string, string>),
+  );
+  const matches = toCompanyMatchViews(
+    result.programs.map((p) => ({
+      program: localizeCompanyProgram(p.program, t),
+      result: localizeCompanyResult(p.result, t),
+    })),
+    showDetails,
+  );
+
+  return (
+    <section className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted">
+          {t.plans.dashboard.companyMatchesTitle} ({matches.length})
+        </h2>
+        <Link href="/screening/company">
+          <Button variant="secondary" size="default">
+            <RotateCcw className="h-4 w-4" aria-hidden="true" />
+            {t.company.results.updateInfo}
+          </Button>
+        </Link>
+      </div>
+      <CompanyMatchList matches={matches} signedIn />
+    </section>
   );
 }
 

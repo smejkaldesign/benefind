@@ -10,6 +10,7 @@ import {
 import { listWorkspacesForUser } from "@/lib/db/workspaces";
 import { cookies } from "next/headers";
 import type { Json } from "@/types/database";
+import { getWorkspaceAccess } from "@/lib/billing/workspace-access";
 
 interface PersistScreeningInput {
   answers: Record<string, string>;
@@ -104,14 +105,16 @@ export async function getLatestAnswers(): Promise<{
     return { answers: null };
   }
 
-  const cookieStore = await cookies();
-  const workspaceId = cookieStore.get("bf-workspace")?.value;
-
-  if (!workspaceId) {
+  // SECURITY: membership verified in the database; prefill is a paid feature.
+  const access = await getWorkspaceAccess(supabase, user.id);
+  if (!access?.entitlements.rescreenPrefill) {
     return { answers: null };
   }
 
-  const { data: screening } = await getLatestScreening(supabase, workspaceId);
+  const { data: screening } = await getLatestScreening(
+    supabase,
+    access.workspace.id,
+  );
 
   if (!screening?.answers) {
     return { answers: null };

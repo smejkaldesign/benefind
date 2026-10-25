@@ -15,7 +15,6 @@ import {
 import { runCompanyScreening } from "@/lib/benefits/company-engine";
 import { ENGINE_VERSION } from "@/lib/benefits/types";
 import type { CompanyScreeningResult } from "@/lib/benefits/company-types";
-import { totalEstimatedAnnualValue } from "@/lib/benefits/company-types";
 import { persistCompanyScreening } from "../actions";
 import {
   ChatMessage,
@@ -569,21 +568,12 @@ export default function CompanyScreeningPage() {
           <div className="border-t border-border bg-surface-dim px-6 py-6">
             <div className="mx-auto max-w-xl space-y-4">
               <div className="rounded-[16px] border border-brand/30 bg-brand/5 p-5 text-center space-y-2">
-                <p
-                  className="font-display text-4xl font-semibold text-brand"
-                  dir="ltr"
-                >
-                  ${totalEstimatedAnnualValue(result.programs).toLocaleString()}
+                <p className="font-display text-4xl font-semibold text-brand">
+                  {result.totalMatched}
                 </p>
                 <p className="text-sm text-text-muted">
-                  {fmt(
-                    result.totalMatched === 1
-                      ? c.chat.estimatedAcrossOne
-                      : c.chat.estimatedAcrossOther,
-                    { count: result.totalMatched },
-                  )}
+                  {c.results.programsMatched}
                 </p>
-                <p className="text-xs text-text-muted">{c.chat.valueNote}</p>
                 <div className="flex flex-wrap justify-center gap-1.5 pt-1">
                   {result.programs
                     .filter((p) => p.result.eligible)

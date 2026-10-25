@@ -5,13 +5,22 @@ import { Mail } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { useI18n } from "@/lib/i18n/context";
+import { PremiumGate } from "@/components/premium-gate";
 import { getNewMatchEmails, setNewMatchEmails } from "./email-alerts-actions";
 
 /**
  * Opt-in/opt-out for "new benefit match" emails. Loads its own state so the
- * dashboard only needs to render <EmailAlertsToggle />.
+ * dashboard only needs to render <EmailAlertsToggle />. Workspaces without
+ * the alerts entitlement see an upgrade prompt; the daily job also skips them.
  */
-export function EmailAlertsToggle() {
+export function EmailAlertsToggle({ allowed }: { allowed: boolean }) {
+  if (!allowed) {
+    return <PremiumGate allowed={false} feature="alerts" compact />;
+  }
+  return <AlertsSwitch />;
+}
+
+function AlertsSwitch() {
   const m = useI18n().t.app.emailAlerts;
   const [enabled, setEnabled] = useState<boolean | null>(null);
   const [failed, setFailed] = useState(false);
