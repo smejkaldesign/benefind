@@ -249,8 +249,11 @@ async function recordAnnouncement(client: Client, w: WorkspaceMatches) {
       screening_id: w.screeningId,
       workspace_id: w.workspaceId,
       program_id: m.programId,
-      confidence_score: m.confidenceScore,
-      eligibility_tier: m.eligibilityTier,
+      // eligibility_tier is generated from confidence_score by the DB.
+      confidence_score: Math.min(
+        100,
+        Math.max(0, Math.round(m.confidenceScore)),
+      ),
       estimated_value: m.estimatedValue,
       reasons: m.reasons as unknown as Json,
     }),
