@@ -11,6 +11,9 @@ const PUBLIC_PATHS = [
   "/docs",
   "/blog",
   "/api/health",
+  // Authenticated by CRON_SECRET and a signed token, not a session
+  "/api/cron",
+  "/api/alerts/unsubscribe",
   "/sitemap.xml",
 ];
 
