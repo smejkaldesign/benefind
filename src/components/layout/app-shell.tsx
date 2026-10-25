@@ -25,8 +25,8 @@ export async function AppShell({ children }: AppShellProps) {
   return (
     <div className="flex min-h-dvh flex-col">
       {/* Top nav — mobile-friendly */}
-      <header className="sticky top-banner z-30 border-b border-border bg-surface/95 backdrop-blur-sm">
-        <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
+      <header className="sticky top-banner z-30 border-b border-border bg-surface/95 px-4 backdrop-blur-sm">
+        <div className="mx-auto flex h-14 max-w-3xl items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center" aria-label="Benefind">
               <Image
@@ -51,7 +51,7 @@ export async function AppShell({ children }: AppShellProps) {
             </span>
             <WorkspacePicker />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="-me-3 flex items-center gap-2">
             <HoverHint label={t.app.shell.toggleTheme}>
               <ThemeToggle />
             </HoverHint>
