@@ -19,10 +19,13 @@ export default async function DashboardLayout({
     redirect("/auth/login?next=/dashboard");
   }
 
-  const { data: memberships } = await ensureWorkspace(supabase, user.id);
+  const { data: memberships, error } = await ensureWorkspace(supabase, user.id);
 
   if (!memberships || memberships.length === 0) {
-    // Should not happen after ensureWorkspace, but handle gracefully
+    console.error(
+      "ensureWorkspace failed:",
+      error?.message ?? "no memberships",
+    );
     redirect("/auth/login?error=workspace_error");
   }
 
