@@ -17,7 +17,10 @@ function Card({
       data-size={size}
       className={cn(
         "group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
-        padding && "py-4 data-[size=sm]:py-3",
+        // Sections (CardHeader/CardContent/CardFooter) pad themselves; cards
+        // with direct children get horizontal padding here.
+        padding &&
+          "px-6 py-4 has-[>[data-slot^=card-]]:px-0 data-[size=sm]:px-4 data-[size=sm]:py-3 data-[size=sm]:has-[>[data-slot^=card-]]:px-0",
         className,
       )}
       {...props}

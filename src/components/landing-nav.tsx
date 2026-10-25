@@ -8,6 +8,7 @@ import { ChevronDown } from "lucide-react";
 import { useTheme } from "next-themes";
 import { LanguageSelector } from "@/components/language-selector";
 import { useI18n } from "@/lib/i18n/context";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -24,10 +25,17 @@ export function LandingNav() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
   const isDocsRoute = pathname.startsWith("/docs");
   const isDesignSystem = pathname.startsWith("/docs/design-system");
 
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    createClient()
+      .auth.getUser()
+      .then(({ data }) => setSignedIn(Boolean(data.user)));
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -115,9 +123,9 @@ export function LandingNav() {
             variant="outline"
             className="h-[44px] shrink-0 whitespace-nowrap px-5"
             nativeButton={false}
-            render={<Link href="/auth/login" />}
+            render={<Link href={signedIn ? "/dashboard" : "/auth/login"} />}
           >
-            {t.common.signIn}
+            {signedIn ? "Dashboard" : t.common.signIn}
           </Button>
 
           {/* Eligibility dropdown using shadcn/ui DropdownMenu */}

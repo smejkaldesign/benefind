@@ -45,19 +45,21 @@ export async function persistScreening(input: PersistScreeningInput) {
     return { screeningId: null };
   }
 
-  // Read active workspace from cookie and verify membership
+  // Read active workspace from cookie and verify membership. The cookie is
+  // only set once the dashboard has loaded, so a user who signs in and goes
+  // straight to screening falls back to their first workspace.
   const cookieStore = await cookies();
-  const workspaceId = cookieStore.get("bf-workspace")?.value;
-
-  if (!workspaceId) {
-    return { screeningId: null };
-  }
+  const cookieWorkspaceId = cookieStore.get("bf-workspace")?.value;
 
   // SECURITY: verify the user is actually a member of this workspace.
   // The cookie is set client-side and could be forged.
   const { data: memberships } = await listWorkspacesForUser(supabase, user.id);
-  const isMember = memberships?.some((m) => m.workspace_id === workspaceId);
-  if (!isMember) {
+  const workspaceId = memberships?.some(
+    (m) => m.workspace_id === cookieWorkspaceId,
+  )
+    ? cookieWorkspaceId
+    : memberships?.[0]?.workspace_id;
+  if (!workspaceId) {
     return { screeningId: null };
   }
 
