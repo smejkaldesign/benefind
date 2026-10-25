@@ -154,11 +154,6 @@ const en = {
       "Checks eligibility across {highlight} including SNAP, Medicaid, WIC, SSI, and more.",
     programsHighlight: "12+ federal and state programs",
   },
-  errors: {
-    sendFailed: "Failed to send message",
-    noStream: "No response stream",
-    generic: "Something went wrong",
-  },
 };
 
 export type ScreeningFlowMessages = typeof en;
@@ -319,11 +314,6 @@ const es: ScreeningFlowMessages = {
       "Revisa su elegibilidad en {highlight}, como SNAP (cupones de alimentos), Medicaid, WIC, SSI y más.",
     programsHighlight: "más de 12 programas federales y estatales",
   },
-  errors: {
-    sendFailed: "No se pudo enviar el mensaje",
-    noStream: "No hubo respuesta",
-    generic: "Algo salió mal",
-  },
 };
 
 const zh: ScreeningFlowMessages = {
@@ -465,11 +455,6 @@ const zh: ScreeningFlowMessages = {
     programsCount:
       "检查 {highlight} 的资格，包括 SNAP（食品券）、Medicaid、WIC、SSI 等。",
     programsHighlight: "12 个以上联邦和州项目",
-  },
-  errors: {
-    sendFailed: "消息发送失败",
-    noStream: "没有收到回复",
-    generic: "出了点问题",
   },
 };
 
@@ -631,11 +616,6 @@ const vi: ScreeningFlowMessages = {
       "Kiểm tra điều kiện với {highlight}, gồm SNAP (phiếu thực phẩm), Medicaid, WIC, SSI và nhiều chương trình khác.",
     programsHighlight: "hơn 12 chương trình liên bang và tiểu bang",
   },
-  errors: {
-    sendFailed: "Không gửi được tin nhắn",
-    noStream: "Không nhận được phản hồi",
-    generic: "Đã có lỗi xảy ra",
-  },
 };
 
 const ar: ScreeningFlowMessages = {
@@ -785,11 +765,6 @@ const ar: ScreeningFlowMessages = {
     programsCount:
       "يفحص الأهلية لـ {highlight}، ومنها SNAP (قسائم الطعام) وMedicaid وWIC وSSI وغيرها.",
     programsHighlight: "أكثر من 12 برنامجًا فيدراليًا وولائيًا",
-  },
-  errors: {
-    sendFailed: "تعذّر إرسال الرسالة",
-    noStream: "لم يصل أي رد",
-    generic: "حدث خطأ ما",
   },
 };
 
